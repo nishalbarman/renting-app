@@ -17,7 +17,7 @@ Inside this monorepo we have 3 different repo's -- Admin, Native, and Server;
 npm install  ## run on root directory
 ```
 
-## How to run the native application
+## How to run the application
 
 ### Native App
 
