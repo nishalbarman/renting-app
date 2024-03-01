@@ -13,25 +13,29 @@ Inside this monorepo we have 3 different repo's -- Admin, Native, and Server;
 
 ## Installing the dependencies for project
 
+Run the command on the root directory
+
 ```sh
-npm install  ## run on root directory
+npm install
 ```
 
 ## How to run the application
 
+\*NOTE:- Node modules should be installed first before starting up the application
+
 ### Native App
 
 ```sh
-## npm install is requried to install the necessary modules
-npm run start --workspace=native ## start the native application
+npm run start --workspace=native
 ```
 
 ### Admin Panel and Server
 
 ```sh
-## npm install is requried to install the necessary modules
-npm run dev --workspace=<>WORKSPACE_NAME<> ## can be either server or admin.
+npm run dev --workspace=<>WORKSPACE_NAME<>
 ```
+
+\*NOTE:- Replace workspace name with the respective name of the workspace (can be either server or admin).
 
 ### Technologies Used
 
