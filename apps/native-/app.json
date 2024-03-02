@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "native",
+    "scheme": "native",
+    "slug": "native-",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/appIcons/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/appIcons/splash1.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/appIcons/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/appIcons/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": ["expo-router", "expo-secure-store"]
+  }
+}
