@@ -1,5 +1,18 @@
 import { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Button,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Link } from "expo-router";
+
+import { FontAwesome5 } from "@expo/vector-icons";
+import { Foundation } from "@expo/vector-icons";
 
 export default function Page() {
   const [formData, setFormData] = useState({
@@ -7,36 +20,46 @@ export default function Page() {
     password: { value: null, isTouched: null, isError: null },
   });
 
-  const handleFieldChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: {
-        ...prev[e.target.name],
-        value: e.target.value,
-        isTouched: true,
-        isError: null,
-      },
-    }));
-  };
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  // const handleFieldChange = (e) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [e.target.name]: {
+  //       ...prev[e.target.name],
+  //       value: e.target.value,
+  //       isTouched: true,
+  //       isError: null,
+  //     },
+  //   }));
+  // };
 
   return (
-    <View className="p-[15px] h-[100%] flex flex-col items-center justify-between">
+    <ScrollView
+      className="p-[15px] h-[100%] pt-[5%]"
+      contentContainerStyle={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
       <View className="w-[100%] flex flex-col items-center gap-3">
         <Image
-          className=""
-          source={require("../../../assets/illustrations/user_on_bike.png")}
+          className="w-[200px] h-[200px]"
+          source={require("../../../assets/illustrations/shopp_man.gif")}
         />
         <Text className="text-[30px] font-[mrt-mid]">Welcome back</Text>
         <Text className="text-[18px] font-[mrt-light]">
           sign in to access your account
         </Text>
       </View>
-      <View className="w-[100%] flex flex-col gap-3 justify-start items-center h-[100%] mt-4">
-        <View className="h-[60px] w-[100%] p-[0px_5%] border-none outline-none bg-[#F1F0F0] ">
+      <View className="w-[100%] flex flex-col gap-[5.5%] items-center mt-4">
+        <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
           <TextInput
-            className="h-[100%] w-[100%] rounded-[10px] placeholder:text-[mrt-light] placeholder:text-[16px] "
+            className="h-[100%] w-[100%] inline-block rounded-lg font-[mrt-mid] placeholder:text-[16px]"
             editable={true}
             multiline={false}
+            inputMode="numeric"
             placeholder="Enter your mobile no"
             onChangeText={(text) => {
               setFormData((prev) => ({
@@ -50,20 +73,70 @@ export default function Page() {
               }));
             }}
             value={formData.mobileNo.value}
-            style={{ padding: 10 }}
           />
-          <
+          <Foundation name="telephone" size={29} color="#A9A8A8" />
         </View>
+        <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
+          <TextInput
+            className="h-[100%] w-[100%] rounded-lg font-[mrt-mid] placeholder:text-[16px]"
+            editable={true}
+            multiline={false}
+            inputMode="text"
+            secureTextEntry={!isPasswordVisible}
+            placeholder="Password"
+            onChangeText={(text) => {
+              setFormData((prev) => ({
+                ...prev,
+                password: {
+                  ...prev["password"],
+                  value: text,
+                  isTouched: true,
+                  isError: null,
+                },
+              }));
+            }}
+            value={formData.password.value}
+          />
+
+          {isPasswordVisible ? (
+            <TouchableOpacity
+              onPress={() => {
+                setIsPasswordVisible((prev) => !prev);
+              }}>
+              <FontAwesome5 name="eye" size={24} color="#A9A8A8" />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                setIsPasswordVisible((prev) => !prev);
+              }}>
+              <FontAwesome5 name="eye-slash" size={24} color="#A9A8A8" />
+            </TouchableOpacity>
+          )}
+        </View>
+        <Link
+          replace
+          href="/resetpass"
+          className="text-[13px] text-[#6C63FF] self-end underline underline-offset-[5px] font-[mrt-mid]">
+          Forgot password?
+        </Link>
       </View>
-    </View>
+      <View className="w-[100%] flex flex-col gap-5 items-center mt-[2%]">
+        <TouchableOpacity className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg">
+          <Text className="text-[20px] text-white font-[mrt-bold]">Login</Text>
+        </TouchableOpacity>
+        <Link
+          className="underline text-center font-[mrt-bold] text-[15px]"
+          href={"/auth/signup"}>
+          Create an account now
+        </Link>
+        <Text className="text-center font-[mrt-mid]">
+          By continueing you are agreeing to our{" "}
+          <Link className="underline text-[#6C63FF]" href={"/terms"}>
+            Terms & Conditions
+          </Link>
+        </Text>
+      </View>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
-});
