@@ -1,0 +1,10 @@
+{
+  "name": "validators",
+  "version": "1.0.0",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "build": "tsup ./src/index.js",
+    "dev": "npm run build -- --watch"
+  }
+}

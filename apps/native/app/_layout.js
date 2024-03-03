@@ -1,6 +1,14 @@
-import React from "react";
+import { Slot } from "expo-router";
 import { Provider } from "react-redux";
+import { store } from "@store/rtk";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function _Layout({ children }) {
-  return <Provider store={{}}>{children}</Provider>;
+export default function RootLayout() {
+  return (
+    <Provider store={store}>
+      <SafeAreaView>
+        <Slot />
+      </SafeAreaView>
+    </Provider>
+  );
 }

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import { Image, Text, View } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { Link, Redirect } from "expo-router";
+import { Text, View } from "react-native";
+
+import { Redirect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -12,36 +12,31 @@ SplashScreen.preventAutoHideAsync(); // disable auto hide of splash screen
 export default function Page() {
   const [isFontLoaded] = useFonts({
     mrt: require("../assets/fonts/montserrat/static/Montserrat-Black.ttf"),
+    "mrt-light": require("../assets/fonts/montserrat/static/Montserrat-Light.ttf"),
     "mrt-mid": require("../assets/fonts/montserrat/static/Montserrat-Medium.ttf"),
     "mrt-bold": require("../assets/fonts/montserrat/static/Montserrat-Bold.ttf"),
     "mrt-xbold": require("../assets/fonts/montserrat/static/Montserrat-ExtraBold.ttf"),
   }); // load the fonts
 
-  const [isAppReady, setIsAppReady] = useState(true);
+  const userToken = useSelector((state) => state.user.jwtToken);
 
-  const userToken = useSelector((state) => state.user.jwtToken) || null;
-
-  const handleOnLayout = useCallback(async () => {
-    if (!!isFontLoaded && !!isAppReady) {
-      await SplashScreen.hideAsync(); //hide the splashscreen
-    }
-  }, [isLoaded]);
-
-  const retrieveUserDetails = () => {
-    SecureStore.getItemAsync();
+  const hideSplashScreen = async () => {
+    await SplashScreen.hideAsync();
   };
 
-  if (!isLoaded) {
+  useEffect(() => {
+    if (isFontLoaded) {
+      hideSplashScreen();
+    }
+  }, [isFontLoaded]);
+
+  if (!isFontLoaded) {
     return null;
   }
 
-  return (
-    <View onLayout={handleOnLayout}>
-      {!!userToken ? (
-        <Redirect href={"/dashboard"} />
-      ) : (
-        <Redirect href={"/auth/login"} />
-      )}
-    </View>
-  );
+  if (!userToken) {
+    return <Redirect href={"/auth/login"} />;
+  }
+
+  return <Redirect href={"/dashboard"} />;
 }
