@@ -32,7 +32,7 @@ yarn workspace native start
 ### Admin Panel and Server
 
 ```sh
-yarn workspace workspace=<>WORKSPACE_NAME<> dev
+yarn workspace <>WORKSPACE_NAME<> dev
 ```
 
 \*NOTE:- Replace <>WORKSPACE_NAME<> with the respective name of the workspace you want to run (can be either server or admin).
