@@ -4,11 +4,11 @@
 
 Inside this monorepo we have 3 different repo's -- Admin, Native, and Server;
 
-- Admin
+- admin
   - Admin contains the source code for admin panel. created with ReactJS (vite).
-- Native
+- native
   - Native contains the source code for the native application, created with expo react native.
-- Server
+- server
   - Server contains the source code for the server of the whole application, created with ExpressJS
 
 ## Installing the dependencies for project
@@ -26,16 +26,16 @@ yarn install
 ### Native App
 
 ```sh
-npm run start --workspace=native
+yarn workspace native start
 ```
 
 ### Admin Panel and Server
 
 ```sh
-npm run dev --workspace=<>WORKSPACE_NAME<>
+yarn workspace workspace=<>WORKSPACE_NAME<> dev
 ```
 
-\*NOTE:- Replace workspace name with the respective name of the workspace (can be either server or admin).
+\*NOTE:- Replace <>WORKSPACE_NAME<> with the respective name of the workspace you want to run (can be either server or admin).
 
 ### Technologies Used
 

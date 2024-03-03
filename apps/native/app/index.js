@@ -25,7 +25,7 @@ export default function Page() {
   }, [isLoaded]);
 
   const retrieveUserDetails = () => {
-    SecureStore.
+    SecureStore.getItemAsync();
   };
 
   if (!isLoaded) {
