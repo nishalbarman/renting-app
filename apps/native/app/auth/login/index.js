@@ -34,6 +34,10 @@ export default function Page() {
   //   }));
   // };
 
+  const handleLogin = () => {
+    console.log(formData);
+  };
+
   return (
     <ScrollView
       className="p-[15px] h-[100%] pt-[5%]"
@@ -115,28 +119,32 @@ export default function Page() {
           )}
         </View>
         <Link
-          replace
+          push
           href="/resetpass"
           className="text-[13px] text-[#6C63FF] self-end underline underline-offset-[5px] font-[mrt-mid]">
           Forgot password?
         </Link>
       </View>
       <View className="w-[100%] flex flex-col gap-5 items-center mt-[2%]">
-        <TouchableOpacity className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg">
+        <TouchableOpacity
+          className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg"
+          onPress={handleLogin}>
           <Text className="text-[20px] text-white font-[mrt-bold]">Login</Text>
         </TouchableOpacity>
         <Link
+          push
           className="underline text-center font-[mrt-bold] text-[15px]"
           href={"/auth/signup"}>
           Create an account now
         </Link>
         <Text className="text-center font-[mrt-mid]">
           By continueing you are agreeing to our{" "}
-          <Link className="underline text-[#6C63FF]" href={"/terms"}>
+          <Link push className="underline text-[#6C63FF]" href={"/terms"}>
             Terms & Conditions
           </Link>
         </Text>
       </View>
+      <View className="min-h-[100px]"></View>
     </ScrollView>
   );
 }

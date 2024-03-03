@@ -26,17 +26,9 @@ export default function Page() {
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  // const handleFieldChange = (e) => {
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [e.target.name]: {
-  //       ...prev[e.target.name],
-  //       value: e.target.value,
-  //       isTouched: true,
-  //       isError: null,
-  //     },
-  //   }));
-  // };
+  const handleSignup = () => {
+    console.log(formData);
+  };
 
   return (
     <ScrollView
@@ -164,21 +156,27 @@ export default function Page() {
         </View>
       </View>
       <View className="w-[100%] flex flex-col gap-5 items-center mt-[4%]">
-        <TouchableOpacity className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg">
-          <Text className="text-[20px] text-white font-[mrt-bold]">Login</Text>
+        <TouchableOpacity
+          className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg"
+          onPress={handleSignup}>
+          <Text className="text-[20px] text-white font-[mrt-bold]">
+            Create account
+          </Text>
         </TouchableOpacity>
         <Link
+          push
           className="underline text-center font-[mrt-bold] text-[15px]"
           href={"/auth/login"}>
           Login Now
         </Link>
         <Text className="text-center font-[mrt-mid]">
           By continueing you are agreeing to our{" "}
-          <Link className="underline text-[#6C63FF]" href={"/terms"}>
+          <Link push className="underline text-[#6C63FF]" href={"/terms"}>
             Terms & Conditions
           </Link>
         </Text>
       </View>
+      <View className="min-h-[100px]"></View>
     </ScrollView>
   );
 }
