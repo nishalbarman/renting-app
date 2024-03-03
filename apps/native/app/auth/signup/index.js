@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 export default function Page() {
   return (
     <View>
-      <Text>Signup screen</Text>
+      <Text>I am on Signup Screen</Text>
     </View>
   );
 }
