@@ -1,4 +1,4 @@
-# Monorepo for Application
+# Monorepo for the Renting Application
 
 This monorepo contains three distinct repositories, each dedicated to a specific component of our application.
 
