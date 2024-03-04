@@ -1,4 +1,4 @@
-import { Link, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ScrollView,
@@ -12,14 +12,58 @@ import { isValid4DigitOtp } from "../../../../../packages/validators/src";
 export default function Page() {
   const searchParams = useLocalSearchParams();
 
+  console.log("Search Paramas Verify OTP -->", searchParams);
+
   const name = searchParams.name || "Anonymous";
   const mobileNo = searchParams.mobileNo || "910*****906";
   const email = searchParams.email || "user@email.test";
   const password = searchParams.password || "123";
 
+  const [isResendOTPEnabled, setIsResendOTPEnabled] = useState(false);
+  const [resendOTPTimeout, setResendOTPTimeout] = useState(30);
+
+  const handleResendOTP = async () => {
+    try {
+      if (isResendOTPEnabled) {
+        // const response = await doFetch()
+        // { name, mobileNo, email }
+      }
+    } catch (error) {
+      console.error("Resend OTP error => ", error);
+    }
+  };
+
+  useEffect(() => {
+    let resendTimer;
+    console.log(isResendOTPEnabled);
+    if (!isResendOTPEnabled) {
+      resendTimer = setInterval(() => {
+        setResendOTPTimeout((prev) => {
+          const newTimer = prev - 1;
+          console.log(newTimer);
+
+          if (newTimer <= 0) {
+            clearInterval(resendTimer);
+            setIsResendOTPEnabled(true);
+          }
+          return newTimer;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(resendTimer);
+    };
+  }, [isResendOTPEnabled]);
+
   const [otp, setOtp] = useState(["_", "_", "_", "_"]);
   const [otpFieldIndex, setOtpFieldIndex] = useState(0);
   const [finalOtp, setFinalOtp] = useState(otp.join(""));
+
+  const [formSubmitError, setFormSubmitError] = useState({
+    isError: false,
+    message: "",
+  });
 
   const otpBoxesRefs = [useRef(null), useRef(null), useRef(null), useRef(null)]; // references for input fields
 
@@ -62,13 +106,27 @@ export default function Page() {
   );
 
   useEffect(() => {
+    setFormSubmitError(false);
     setFinalOtp(otp.join(""));
   }, [otp]);
+
+  const router = useRouter();
 
   const handleOTPSubmit = () => {
     try {
       // TODO : post the object
-      if (finalOtp === "1234") {
+
+      console.log(finalOtp);
+
+      if (finalOtp !== "1234") {
+        setFormSubmitError({
+          isError: true,
+          message:
+            "OTP verification failed, kindly check and enter correct OTP.",
+        });
+      } else {
+        router.dismissAll();
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error("OTP verfication page: -->", error);
@@ -150,8 +208,13 @@ export default function Page() {
           <Text className="font-[mrt-mid] text-[#EA4335]">
             Enter proper 4 digit OTP
           </Text>
-        ) : (
+        ) : !formSubmitError?.isError ? (
           <Text className="font-[mrt-mid]">All set hit the verify button</Text>
+        ) : (
+          <Text className="animate-pulse font-[mrt-bold] text-[#EA4335]">
+            {formSubmitError?.message ||
+              "Server error, kindly try after some time!"}
+          </Text>
         )}
         <TouchableOpacity
           className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg"
@@ -162,10 +225,19 @@ export default function Page() {
       <View className="flex flex-col gap-y-2">
         <Text className="font-[mrt-bold] text-[15.8px] text-center">
           Didn't recieve any code?{" "}
-          <Text className="underline">Resend Again</Text>
+          <Text
+            onPress={() => {
+              if (resendOTPTimeout <= 0) {
+                handleResendOTP();
+              }
+            }}
+            className={`underline ${resendOTPTimeout <= 0 ? "text-[#6C63FF]" : "text-[#CBE2FF]"}`}>
+            Resend Again
+          </Text>
         </Text>
         <Text className="text-center font-[mrt-mid] text-[#7F7E7F] text-[16px]">
-          Request new code in 00:30s
+          Request new code in{" "}
+          <Text className="font-[mrt-bold]">00:{resendOTPTimeout}s</Text>
         </Text>
       </View>
     </ScrollView>

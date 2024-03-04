@@ -5,7 +5,6 @@ import { Redirect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import * as SecureStore from "expo-secure-store";
 
 SplashScreen.preventAutoHideAsync(); // disable auto hide of splash screen
 
@@ -35,8 +34,8 @@ export default function Page() {
   }
 
   if (!userToken) {
-    // return <Redirect href={"/auth/login"} />;
-    return <Redirect href={"/auth/verify_otp"} />;
+    return <Redirect href={"/auth/login"} />;
+    // return <Redirect href={"/auth/verify_otp"} />;
   }
 
   return <Redirect href={"/dashboard"} />;

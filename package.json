@@ -20,6 +20,7 @@
   ],
   "dependencies": {
     "react-redux": "^9.1.0",
+    "redux-persist": "^6.0.0",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3"
   }
