@@ -1,15 +1,25 @@
-# RENTING_APP
+# Monorepo for Application
 
-## What's inside?
+This monorepo contains three distinct repositories, each dedicated to a specific component of our application.
 
-Inside this monorepo we have 3 different repo's -- Admin, Native, and Server;
+## Admin Repository (admin)
 
-- admin
-  - Admin contains the source code for admin panel. created with ReactJS (vite).
-- native
-  - Native contains the source code for the native application, created with expo react native.
-- server
-  - Server contains the source code for the server of the whole application, created with ExpressJS
+- Source code for the admin panel.
+- Developed with ReactJS using Vite as the build tool.
+
+## Native Repository (native)
+
+- Source code for the native application.
+- Developed using Expo for React Native.
+
+## Server Repository (server)
+
+- Source code for the server powering the entire application.
+- Developed with ExpressJS.
+
+This modular structure allows for clear separation of concerns, making it easier to independently develop and maintain the admin panel, native application, and server components.
+
+Feel free to explore each repository for more details on their respective implementations.
 
 ## Installing the dependencies for project
 
