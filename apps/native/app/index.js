@@ -35,7 +35,8 @@ export default function Page() {
   }
 
   if (!userToken) {
-    return <Redirect href={"/auth/login"} />;
+    // return <Redirect href={"/auth/login"} />;
+    return <Redirect href={"/auth/verify_otp"} />;
   }
 
   return <Redirect href={"/dashboard"} />;

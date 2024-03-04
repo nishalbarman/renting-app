@@ -47,7 +47,7 @@ export default function Page() {
         justifyContent: "center",
         alignItems: "center",
       }}>
-      <View className="w-[100%] flex flex-col items-center gap-3">
+      <View className="w-[100%] flex flex-col items-center gap-y-3">
         <Image
           className="w-[200px] h-[200px]"
           source={require("../../../assets/illustrations/shopp_man.gif")}

@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 
 import { Fontisto } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -26,8 +26,20 @@ export default function Page() {
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+  const router = useRouter();
+
   const handleSignup = () => {
-    console.log(formData);
+    // TODO : send fetch request to
+    router.push({
+      pathname: "/auth/verfiy_otp",
+      // /* 1. Navigate to the details route with query params */
+      params: Object.keys(formData).reduce(
+        (newFormData, keyName) => {
+          return { ...newFormData, [keyName]: formData[keyName].value };
+        },
+        { name: "", email: "", mobileNo: "", password: "" }
+      ),
+    });
   };
 
   return (
@@ -39,7 +51,7 @@ export default function Page() {
         justifyContent: "center",
         alignItems: "center",
       }}>
-      <View className="w-[100%] flex flex-col items-center gap-3">
+      <View className="w-[100%] flex flex-col items-center gap-y-3">
         <Image
           className="w-[150px] h-[150px]"
           source={require("../../../assets/illustrations/shopp_man.gif")}
