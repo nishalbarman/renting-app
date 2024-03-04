@@ -48,3 +48,8 @@ export function isValidUrl(url) {
 
   return urlRegex.test(url);
 }
+
+export function isValid4DigitOtp(value) {
+  const otpRegex = /^\d{4}$/;
+  return otpRegex.test(value);
+}

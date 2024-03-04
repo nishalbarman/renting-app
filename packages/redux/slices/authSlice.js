@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const userSlice = createSlice({
-  name: "user",
+export const authSlice = createSlice({
+  name: "auth",
   initialState: {
     name: null,
     email: null,
@@ -9,10 +9,10 @@ export const userSlice = createSlice({
     jwtToken: null,
   },
   reducers: {
-    setUserData: (state, action) => {
+    setUserAuthData: (state, action) => {
       state = action.payload;
     },
   },
 });
 
-export const { setUserData } = userSlice.actions;
+export const { setUserAuthData } = authSlice.actions;

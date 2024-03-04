@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
+  "license": "MIT",
   "scripts": {
     "build": "tsup ./src/index.js",
     "dev": "npm run build -- --watch"

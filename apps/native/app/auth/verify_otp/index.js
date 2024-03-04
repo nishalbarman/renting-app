@@ -1,68 +1,79 @@
-import { useLocalSearchParams } from "expo-router";
-import React, { useRef, useState } from "react";
-import { ScrollView, Text, TextInput, View } from "react-native";
+import { Link, useLocalSearchParams } from "expo-router";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { isValid4DigitOtp } from "../../../../../packages/validators/src";
 
 export default function Page() {
-  const mobileNo = "_blank_ hai bhaiya";
   const searchParams = useLocalSearchParams();
 
-  const [otp, setOtp] = useState([-1, -1, -1, -1]);
+  const name = searchParams.name || "Anonymous";
+  const mobileNo = searchParams.mobileNo || "910*****906";
+  const email = searchParams.email || "user@email.test";
+  const password = searchParams.password || "123";
+
+  const [otp, setOtp] = useState(["_", "_", "_", "_"]);
   const [otpFieldIndex, setOtpFieldIndex] = useState(0);
+  const [finalOtp, setFinalOtp] = useState(otp.join(""));
 
-  const otpFirstFieldRef = useRef(null);
-  const otpSecondFieldRef = useRef(null);
-  const otpThirdFieldRef = useRef(null);
-  const otpFourthFieldRef = useRef(null);
+  const otpBoxesRefs = [useRef(null), useRef(null), useRef(null), useRef(null)]; // references for input fields
 
-  const otpBoxesRefs = [
-    otpFirstFieldRef,
-    otpSecondFieldRef,
-    otpThirdFieldRef,
-    otpFourthFieldRef,
-  ];
+  const handleOTPkeyPress = useCallback(
+    ({ nativeEvent: { key } }) => {
+      if (key === "Enter") {
+        return;
+      }
 
-  const handleOTPkeyPress = ({ nativeEvent: { key } }) => {
-    console.log("What does key have -->", key);
+      setOtp((prevOtp) => {
+        if (key === "Backspace") {
+          const newOTPArray = [...prevOtp];
 
-    if (key === "Enter") {
-      return;
-    }
+          if (!newOTPArray[otpFieldIndex]) {
+            otpBoxesRefs[
+              otpFieldIndex - 1 < 0 ? 0 : otpFieldIndex - 1
+            ]?.current?.focus();
+            setOtpFieldIndex((prevOTPField) =>
+              prevOTPField <= 0 ? 0 : prevOTPField - 1
+            );
+            return newOTPArray;
+          }
 
-    setOtp((prevOtp) => {
-      if (key === "Backspace") {
-        const newOTPArray = [...prevOtp];
-
-        if (!!!newOTPArray[otpFieldIndex]) {
-          console.log("Current OTPBox Index -->", otpFieldIndex);
-
-          otpBoxesRefs[
-            otpFieldIndex - 1 < 0 ? 0 : otpFieldIndex - 1
-          ]?.current?.focus();
+          newOTPArray[otpFieldIndex] = "";
+          return newOTPArray;
         }
 
-        newOTPArray[otpFieldIndex] = "";
+        const newOTPArray = [...prevOtp];
+        newOTPArray[otpFieldIndex] = parseInt(key);
+        otpBoxesRefs[otpFieldIndex + 1]?.current?.focus();
 
-        setOtpFieldIndex((prevOTPField) =>
-          prevOTPField <= 0 ? 0 : prevOTPField - 1
+        setOtpFieldIndex((otpFieldIndex) =>
+          otpFieldIndex >= 3 ? 3 : otpFieldIndex + 1
         );
 
         return newOTPArray;
+      });
+    },
+    [otpFieldIndex]
+  );
+
+  useEffect(() => {
+    setFinalOtp(otp.join(""));
+  }, [otp]);
+
+  const handleOTPSubmit = () => {
+    try {
+      // TODO : post the object
+      if (finalOtp === "1234") {
       }
-
-      const newOTPArray = [...prevOtp];
-      newOTPArray[otpFieldIndex] = parseInt(key);
-
-      otpBoxesRefs[otpFieldIndex + 1]?.current?.focus();
-
-      setOtpFieldIndex((otpFieldIndex) =>
-        otpFieldIndex >= 3 ? 3 : otpFieldIndex + 1
-      );
-
-      return newOTPArray;
-    });
+    } catch (error) {
+      console.error("OTP verfication page: -->", error);
+    }
   };
-
-  console.log(searchParams);
 
   return (
     <ScrollView
@@ -72,61 +83,90 @@ export default function Page() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        rowGap: "40px",
       }}>
       <View className="flex flex-col gap-y-10 items-center w-[100%]">
         <Text className="self-start w-[100%] text-[28px] font-[mrt-mid]">
           Almost there
         </Text>
-        <Text className="font-[mrt-light] text-[18px]">
-          Please enter the 6-digit code sent to your mobile no{" "}
+        <Text className="font-[mrt-light] text-[18px] self-start">
+          Hi <Text className="font-[mrt-mid]">{name}</Text>, Please enter
+          4-digit code sent to your mobile no{" "}
           <Text className="font-[mrt-mid]">{mobileNo}</Text> for verification
         </Text>
         <View className="flex flex-row items-center justify-center gap-x-4 w-[100%]">
           <TextInput
-            ref={otpFirstFieldRef}
+            ref={otpBoxesRefs[0]}
             inputMode="numeric"
             className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
             maxLength={1}
             minLength={1}
             onKeyPress={handleOTPkeyPress}
+            placeholder="_"
             onFocus={() => {
               setOtpFieldIndex(0);
             }}
           />
           <TextInput
-            ref={otpSecondFieldRef}
+            ref={otpBoxesRefs[1]}
             inputMode="numeric"
             className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
             maxLength={1}
             minLength={1}
+            placeholder="_"
             onKeyPress={handleOTPkeyPress}
             onFocus={() => {
               setOtpFieldIndex(1);
             }}
           />
           <TextInput
-            ref={otpThirdFieldRef}
+            ref={otpBoxesRefs[2]}
             inputMode="numeric"
             className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
             maxLength={1}
             minLength={1}
+            placeholder="_"
             onKeyPress={handleOTPkeyPress}
             onFocus={() => {
               setOtpFieldIndex(2);
             }}
           />
           <TextInput
-            ref={otpFourthFieldRef}
+            ref={otpBoxesRefs[3]}
             inputMode="numeric"
             className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
             maxLength={1}
             minLength={1}
+            placeholder="_"
             onKeyPress={handleOTPkeyPress}
             onFocus={() => {
               setOtpFieldIndex(3);
             }}
           />
         </View>
+        {finalOtp === "____" ? (
+          <Text className="font-[mrt-mid]">Enter 4 digit OTP</Text>
+        ) : !isValid4DigitOtp(finalOtp) ? (
+          <Text className="font-[mrt-mid] text-[#EA4335]">
+            Enter proper 4 digit OTP
+          </Text>
+        ) : (
+          <Text className="font-[mrt-mid]">All set hit the verify button</Text>
+        )}
+        <TouchableOpacity
+          className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg"
+          onPress={handleOTPSubmit}>
+          <Text className="text-[20px] text-white font-[mrt-bold]">Verify</Text>
+        </TouchableOpacity>
+      </View>
+      <View className="flex flex-col gap-y-2">
+        <Text className="font-[mrt-bold] text-[15.8px] text-center">
+          Didn't recieve any code?{" "}
+          <Text className="underline">Resend Again</Text>
+        </Text>
+        <Text className="text-center font-[mrt-mid] text-[#7F7E7F] text-[16px]">
+          Request new code in 00:30s
+        </Text>
       </View>
     </ScrollView>
   );

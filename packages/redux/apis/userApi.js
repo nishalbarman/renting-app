@@ -1,67 +1,133 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { setUserData } from "../slices/userSlice";
+import { setUserAuthData } from "../slices/authSlice";
+
+const SERVER_URL = process.env.SERVER_URL || "http://localhost:8000";
 
 export const userAPI = createApi({
   reducerPath: "user",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:8000/user" }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${SERVER_URL}/user` }),
   tagTypes: ["Post"],
   endpoints: (builder) => ({
-    // get all user endpoint needs admin role
+    /** REQUIRED ADMIN ROLE **/
     getAllUser: builder.query({
       query: () => ({
         url: `/`,
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState()?.user?.jwtToken}`,
+          Authorization: `Bearer ${getState()?.auth?.jwtToken}`,
         },
       }),
       onQueryStarted: async (args, { dispatch, queryFulfilled, getState }) => {
         try {
           const response = await queryFulfilled;
-          dispatch(setUserData(response.data));
+          dispatch(setUserAuthData(response.data));
         } catch (error) {
           console.error("Get User --->", error);
         }
       },
     }),
 
-    // get user endpoint needs admin role
+    /** REQUIRED ADMIN ROLE **/
     getOneUser: builder.query({
       query: (id) => ({
         url: `/${id}`,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState()?.user?.jwtToken}`,
+          Authorization: `Bearer ${getState()?.auth?.jwtToken}`,
         },
       }),
       onQueryStarted: async (args, { dispatch, queryFulfilled, getState }) => {
         try {
           const response = await queryFulfilled;
-          dispatch(setUserData(response.data));
+          dispatch(setUserAuthData(response.data));
         } catch (error) {
           console.error("Get User --->", error);
         }
       },
     }),
-    // user callable endpoint
-    updateEmailUser: builder.mutation({
-      query: ({ id, newEmail }) => ({
+
+    /* UPDATES LOGGED IN USERS DATA, ID GETS RETRIEVED FROM JWT TOKEN WHILE UPDATING */
+    updateUserEmail: builder.mutation({
+      query: ({ newEmail, prevEmailOTP, newEmailOTP }) => ({
         url: "/update_email",
-        method: "DELETE",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState()?.user?.jwtToken}`, // we will get the getState in the onQueryStarted
+          Authorization: `Bearer ${getState()?.auth?.jwtToken}`, // we will get the getState in the onQueryStarted
         },
-        body: { id, email: newEmail },
+        body: { email: newEmail, prevEmailOTP, newEmailOTP },
       }),
       onQueryStarted: async (args, { dispatch, getState, queryFulfilled }) => {
         try {
           const response = await queryFulfilled;
-          dispatch(setUserData(response.data));
+          dispatch(setUserAuthData(response.data));
         } catch (error) {
           console.error("Update user Email -->> ", error);
         }
       },
     }),
+
+    /* UPDATES LOGGED IN USERS DATA, ID GETS RETRIEVED FROM JWT TOKEN WHILE UPDATING */
+    updateUserMobile: builder.mutation({
+      query: ({ newMobileNo, prevMobileOTP, newMobileOTP }) => ({
+        url: "/update_mobile",
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState()?.auth?.jwtToken}`, // we will get the getState in the onQueryStarted
+        },
+        body: { id, mobileNo: newMobileNo, prevMobileOTP, newMobileOTP },
+      }),
+      onQueryStarted: async (args, { dispatch, getState, queryFulfilled }) => {
+        try {
+          const response = await queryFulfilled;
+          dispatch(setUserAuthData(response.data));
+        } catch (error) {
+          console.error("Update user Email -->> ", error);
+        }
+      },
+    }),
+
+    /** REQUIRED ADMIN ROLE **/
+    updateUser: builder.mutation({
+      query: (id, newUserObject) => ({
+        url: `/${id}`,
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState()?.auth?.jwtToken}`,
+        },
+        body: newUserObject,
+      }),
+      // onQueryStarted: async (args, { dispatch, getState, queryFulfilled }) => {
+      //   try {
+      //     const response = await queryFulfilled;
+      //   } catch (error) {
+      //     console.error("Update User Data -->", error);
+      //   }
+      // },
+    }),
+
+    /** REQUIRED ADMIN ROLE **/
+    updateUser: builder.mutation({
+      query: (id, newUserObject) => ({
+        url: `/${id}`,
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState()?.auth?.jwtToken}`,
+        },
+        body: newUserObject,
+      }),
+    }),
   }),
 });
+
+export const {
+  useGetAllUserQuery,
+  useGetOneUserQuery,
+  useUpdateUserMutation,
+  useUpdateUserMobileMutation,
+  useUpdateUserEmailMutation,
+} = userAPI;

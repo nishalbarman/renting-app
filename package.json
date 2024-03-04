@@ -19,6 +19,8 @@
     "packages/*"
   ],
   "dependencies": {
-    "react-redux": "^9.1.0"
+    "react-redux": "^9.1.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3"
   }
 }

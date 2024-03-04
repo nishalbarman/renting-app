@@ -1,5 +1,3 @@
-import type from "tsup";
-
 const env = process.env.NODE_ENV;
 
 export const tsup = {
