@@ -15,20 +15,20 @@ import { Fontisto } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Foundation } from "@expo/vector-icons";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 export default function Page() {
   const [formData, setFormData] = useState({
     name: { value: null, isTouched: null, isError: null },
     email: { value: null, isTouched: null, isError: null },
     mobileNo: { value: null, isTouched: null, isError: null },
+    isAgreementChecked: { value: null, isTouched: null, isError: null },
     password: { value: null, isTouched: null, isError: null },
   });
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const router = useRouter();
-
-  console.log(router);
 
   const handleSignup = () => {
     // TODO : send fetch request to
@@ -42,8 +42,11 @@ export default function Page() {
 
     console.log(extractedData);
 
-    router.setParams(extractedData);
-    router.push("/auth/verify_otp");
+    router.push({
+      pathname: "/auth/verify_otp",
+      // /* 1. Navigate to the details route with query params */
+      params: extractedData,
+    });
   };
 
   return (
@@ -57,7 +60,8 @@ export default function Page() {
       }}>
       <View className="w-[100%] flex flex-col items-center gap-y-3">
         <Image
-          className="w-[150px] h-[150px]"
+          // className="w-[150px] h-[150px]"
+          className="w-[90px] h-[90px]"
           source={require("../../../assets/illustrations/shopp_man.gif")}
         />
         <Text className="text-[30px] font-[mrt-mid]">Get Started</Text>
@@ -65,7 +69,7 @@ export default function Page() {
           by creating a free account.
         </Text>
       </View>
-      <View className="w-[100%] flex flex-col gap-[5.5%] items-center mt-4">
+      <View className="w-[100%] flex flex-col gap-y-[5.5%] items-center mt-4">
         <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
           <TextInput
             className="h-[100%] w-[100%] inline-block rounded-lg font-[mrt-mid] placeholder:text-[16px]"
@@ -170,8 +174,47 @@ export default function Page() {
             </TouchableOpacity>
           )}
         </View>
+
+        <View className="h-[60px] w-[100%] pr-[6%] border-none outline-none flex flex-row justify-start items-center">
+          <BouncyCheckbox
+            size={25}
+            fillColor="#6C63FF"
+            unfillColor="#FFFFFF"
+            iconStyle={{ borderColor: "red" }}
+            innerIconStyle={{ borderWidth: 2 }}
+            textStyle={{ fontFamily: "JosefinSans-Regular" }}
+            onPress={(isChecked) => {
+              setFormData((prev) => ({
+                ...prev,
+                isAgreementChecked: {
+                  ...prev["isAgreementChecked"],
+                  value: isChecked,
+                  isTouched: isChecked,
+                  isError: null,
+                },
+              }));
+            }}
+          />
+          <Text className="text-[13px] text-left font-[mrt-mid] leading-[23px]">
+            By continuing you are agree to our{" "}
+            <Link
+              push
+              className="underline text-[#6C63FF] font-[mrt-bold]"
+              href={"/terms"}>
+              Terms & Conditions
+            </Link>{" "}
+            and{" "}
+            <Link
+              push
+              className="underline text-[#6C63FF] font-[mrt-bold]"
+              href={"/terms"}>
+              Privacy Policy
+            </Link>
+          </Text>
+        </View>
       </View>
-      <View className="w-[100%] flex flex-col gap-5 items-center mt-[4%]">
+
+      <View className="w-[100%] flex flex-col gap-y-6 items-center mt-[-1px]">
         <TouchableOpacity
           className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg"
           onPress={handleSignup}>
@@ -179,16 +222,13 @@ export default function Page() {
             Create account
           </Text>
         </TouchableOpacity>
-        <Link
-          push
-          className="underline text-center font-[mrt-bold] text-[15px]"
-          href={"/auth/login"}>
-          Login Now
-        </Link>
-        <Text className="text-center font-[mrt-mid]">
-          By continueing you are agreeing to our{" "}
-          <Link push className="underline text-[#6C63FF]" href={"/terms"}>
-            Terms & Conditions
+        <Text className="text-center font-[mrt-mid] text-[16px]">
+          Already have an account?{" "}
+          <Link
+            push
+            className="underline text-center font-[mrt-bold]"
+            href={"/auth/login"}>
+            Login Now
           </Link>
         </Text>
       </View>

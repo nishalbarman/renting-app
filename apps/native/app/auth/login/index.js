@@ -121,28 +121,31 @@ export default function Page() {
         <Link
           push
           href="/resetpass"
-          className="text-[13px] text-[#6C63FF] self-end underline underline-offset-[5px] font-[mrt-mid]">
+          className="text-[15px] text-[#6C63FF] self-end underline underline-offset-[5px] font-[mrt-mid]">
           Forgot password?
         </Link>
       </View>
-      <View className="w-[100%] flex flex-col gap-5 items-center mt-[2%]">
+      <View className="w-[100%] flex flex-col gap-y-7 items-center mt-[-1px]">
         <TouchableOpacity
           className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg"
           onPress={handleLogin}>
           <Text className="text-[20px] text-white font-[mrt-bold]">Login</Text>
         </TouchableOpacity>
-        <Link
-          push
-          className="underline text-center font-[mrt-bold] text-[15px]"
-          href={"/auth/signup"}>
-          Create an account now
-        </Link>
-        <Text className="text-center font-[mrt-mid]">
+        <Text className="text-center font-[mrt-mid] text-[16px]">
+          New here?{" "}
+          <Link
+            push
+            className="underline font-[mrt-bold]"
+            href={"/auth/signup"}>
+            Create an account
+          </Link>
+        </Text>
+        {/* <Text className="text-center font-[mrt-mid]">
           By continueing you are agreeing to our{" "}
           <Link push className="underline text-[#6C63FF]" href={"/terms"}>
             Terms & Conditions
           </Link>
-        </Text>
+        </Text> */}
       </View>
       <View className="min-h-[100px]"></View>
     </ScrollView>

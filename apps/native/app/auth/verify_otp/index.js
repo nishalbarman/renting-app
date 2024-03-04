@@ -231,7 +231,8 @@ export default function Page() {
                 handleResendOTP();
               }
             }}
-            className={`underline ${resendOTPTimeout <= 0 ? "text-[#6C63FF]" : "text-[#CBE2FF]"}`}>
+            className={` ${resendOTPTimeout <= 0 ? "underline" : "line-through"} text-[#6C63FF]`}>
+            {/* ${resendOTPTimeout <= 0 ? "text-[#6C63FF]" : "text-[#CBE2FF]"} */}
             Resend Again
           </Text>
         </Text>

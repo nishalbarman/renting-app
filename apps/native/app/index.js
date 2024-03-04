@@ -10,7 +10,7 @@ SplashScreen.preventAutoHideAsync(); // disable auto hide of splash screen
 
 export default function Page() {
   const [isFontLoaded] = useFonts({
-    mrt: require("../assets/fonts/montserrat/static/Montserrat-Black.ttf"),
+    mrt: require("../assets/fonts/montserrat/static/Montserrat-Regular.ttf"),
     "mrt-light": require("../assets/fonts/montserrat/static/Montserrat-Light.ttf"),
     "mrt-mid": require("../assets/fonts/montserrat/static/Montserrat-Medium.ttf"),
     "mrt-bold": require("../assets/fonts/montserrat/static/Montserrat-Bold.ttf"),
