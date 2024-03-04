@@ -28,18 +28,22 @@ export default function Page() {
 
   const router = useRouter();
 
+  console.log(router);
+
   const handleSignup = () => {
     // TODO : send fetch request to
-    router.push({
-      pathname: "/auth/verfiy_otp",
-      // /* 1. Navigate to the details route with query params */
-      params: Object.keys(formData).reduce(
-        (newFormData, keyName) => {
-          return { ...newFormData, [keyName]: formData[keyName].value };
-        },
-        { name: "", email: "", mobileNo: "", password: "" }
-      ),
-    });
+
+    const extractedData = Object.keys(formData).reduce(
+      (newFormData, keyName) => {
+        return { ...newFormData, [keyName]: formData[keyName].value };
+      },
+      { name: "", email: "", mobileNo: "", password: "" }
+    );
+
+    console.log(extractedData);
+
+    router.setParams(extractedData);
+    router.push("/auth/verify_otp");
   };
 
   return (
