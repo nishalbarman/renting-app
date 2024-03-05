@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { isValid4DigitOtp } from "../../../../../packages/validators/src";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { isValid4DigitOtp } from "validator";
 
 export default function Page() {
   const searchParams = useLocalSearchParams();
@@ -60,6 +61,8 @@ export default function Page() {
   const [otpFieldIndex, setOtpFieldIndex] = useState(0);
   const [finalOtp, setFinalOtp] = useState(otp.join(""));
 
+  const [isFinalOTPValid, setIsFinalOTPValid] = useState(false);
+
   const [formSubmitError, setFormSubmitError] = useState({
     isError: false,
     message: "",
@@ -110,6 +113,10 @@ export default function Page() {
     setFinalOtp(otp.join(""));
   }, [otp]);
 
+  useEffect(() => {
+    setIsFinalOTPValid(isValid4DigitOtp(finalOtp));
+  }, [finalOtp]);
+
   const router = useRouter();
 
   const handleOTPSubmit = () => {
@@ -134,113 +141,117 @@ export default function Page() {
   };
 
   return (
-    <ScrollView
-      className="p-[15px] h-[100%] pt-[10%] w-[100%]"
-      contentContainerStyle={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        rowGap: "40px",
-      }}>
-      <View className="flex flex-col gap-y-10 items-center w-[100%]">
-        <Text className="self-start w-[100%] text-[28px] font-[mrt-mid]">
-          Almost there
-        </Text>
-        <Text className="font-[mrt-light] text-[18px] self-start">
-          Hi <Text className="font-[mrt-mid]">{name}</Text>, Please enter
-          4-digit code sent to your mobile no{" "}
-          <Text className="font-[mrt-mid]">{mobileNo}</Text> for verification
-        </Text>
-        <View className="flex flex-row items-center justify-center gap-x-4 w-[100%]">
-          <TextInput
-            ref={otpBoxesRefs[0]}
-            inputMode="numeric"
-            className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
-            maxLength={1}
-            minLength={1}
-            onKeyPress={handleOTPkeyPress}
-            placeholder="_"
-            onFocus={() => {
-              setOtpFieldIndex(0);
-            }}
-          />
-          <TextInput
-            ref={otpBoxesRefs[1]}
-            inputMode="numeric"
-            className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
-            maxLength={1}
-            minLength={1}
-            placeholder="_"
-            onKeyPress={handleOTPkeyPress}
-            onFocus={() => {
-              setOtpFieldIndex(1);
-            }}
-          />
-          <TextInput
-            ref={otpBoxesRefs[2]}
-            inputMode="numeric"
-            className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
-            maxLength={1}
-            minLength={1}
-            placeholder="_"
-            onKeyPress={handleOTPkeyPress}
-            onFocus={() => {
-              setOtpFieldIndex(2);
-            }}
-          />
-          <TextInput
-            ref={otpBoxesRefs[3]}
-            inputMode="numeric"
-            className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
-            maxLength={1}
-            minLength={1}
-            placeholder="_"
-            onKeyPress={handleOTPkeyPress}
-            onFocus={() => {
-              setOtpFieldIndex(3);
-            }}
-          />
+    <SafeAreaView>
+      <ScrollView
+        className="p-[15px] h-[100%] pt-[10%] w-[100%]"
+        contentContainerStyle={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          rowGap: "40px",
+        }}>
+        <View className="flex flex-col gap-y-10 items-center w-[100%]">
+          <Text className="self-start w-[100%] text-[28px] font-[mrt-mid]">
+            Almost there
+          </Text>
+          <Text className="font-[mrt-light] text-[18px] self-start">
+            Hi <Text className="font-[mrt-mid]">{name}</Text>, Please enter
+            4-digit code sent to your mobile no{" "}
+            <Text className="font-[mrt-mid]">{mobileNo}</Text> for verification
+          </Text>
+          <View className="flex flex-row items-center justify-center gap-x-4 w-[100%]">
+            <TextInput
+              ref={otpBoxesRefs[0]}
+              inputMode="numeric"
+              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
+              maxLength={1}
+              minLength={1}
+              onKeyPress={handleOTPkeyPress}
+              placeholder="_"
+              onFocus={() => {
+                setOtpFieldIndex(0);
+              }}
+            />
+            <TextInput
+              ref={otpBoxesRefs[1]}
+              inputMode="numeric"
+              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
+              maxLength={1}
+              minLength={1}
+              placeholder="_"
+              onKeyPress={handleOTPkeyPress}
+              onFocus={() => {
+                setOtpFieldIndex(1);
+              }}
+            />
+            <TextInput
+              ref={otpBoxesRefs[2]}
+              inputMode="numeric"
+              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
+              maxLength={1}
+              minLength={1}
+              placeholder="_"
+              onKeyPress={handleOTPkeyPress}
+              onFocus={() => {
+                setOtpFieldIndex(2);
+              }}
+            />
+            <TextInput
+              ref={otpBoxesRefs[3]}
+              inputMode="numeric"
+              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
+              maxLength={1}
+              minLength={1}
+              placeholder="_"
+              onKeyPress={handleOTPkeyPress}
+              onFocus={() => {
+                setOtpFieldIndex(3);
+              }}
+            />
+          </View>
+          {finalOtp === "____" ? (
+            <Text className="font-[mrt-mid]">Enter 4 digit OTP</Text>
+          ) : !isFinalOTPValid ? (
+            <Text className="font-[mrt-mid] text-[#EA4335]">
+              Enter proper 4 digit OTP
+            </Text>
+          ) : !formSubmitError?.isError ? (
+            <Text className="font-[mrt-mid]">All set hit verify button</Text>
+          ) : (
+            <Text className="animate-pulse font-[mrt-bold] text-[#EA4335]">
+              {formSubmitError?.message ||
+                "Server error, kindly try after some time!"}
+            </Text>
+          )}
+          <TouchableOpacity
+            className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg"
+            onPress={handleOTPSubmit}>
+            <Text className="text-[20px] text-white font-[mrt-bold]">
+              Verify
+            </Text>
+          </TouchableOpacity>
         </View>
-        {finalOtp === "____" ? (
-          <Text className="font-[mrt-mid]">Enter 4 digit OTP</Text>
-        ) : !isValid4DigitOtp(finalOtp) ? (
-          <Text className="font-[mrt-mid] text-[#EA4335]">
-            Enter proper 4 digit OTP
+        <View className="flex flex-col gap-y-2">
+          <Text className="font-[mrt-bold] text-[15.8px] text-center">
+            Didn't recieve any code?{" "}
+            <Text
+              onPress={() => {
+                if (resendOTPTimeout <= 0) {
+                  handleResendOTP();
+                }
+              }}
+              className={` ${resendOTPTimeout <= 0 ? "underline" : "line-through"} text-[#6C63FF]`}>
+              {/* ${resendOTPTimeout <= 0 ? "text-[#6C63FF]" : "text-[#CBE2FF]"} */}
+              Resend Again
+            </Text>
           </Text>
-        ) : !formSubmitError?.isError ? (
-          <Text className="font-[mrt-mid]">All set hit the verify button</Text>
-        ) : (
-          <Text className="animate-pulse font-[mrt-bold] text-[#EA4335]">
-            {formSubmitError?.message ||
-              "Server error, kindly try after some time!"}
+          <Text className="text-center font-[mrt-mid] text-[#7F7E7F] text-[16px]">
+            Request new code in{" "}
+            <Text className="font-[mrt-bold]">00:{resendOTPTimeout}s</Text>
           </Text>
-        )}
-        <TouchableOpacity
-          className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg"
-          onPress={handleOTPSubmit}>
-          <Text className="text-[20px] text-white font-[mrt-bold]">Verify</Text>
-        </TouchableOpacity>
-      </View>
-      <View className="flex flex-col gap-y-2">
-        <Text className="font-[mrt-bold] text-[15.8px] text-center">
-          Didn't recieve any code?{" "}
-          <Text
-            onPress={() => {
-              if (resendOTPTimeout <= 0) {
-                handleResendOTP();
-              }
-            }}
-            className={` ${resendOTPTimeout <= 0 ? "underline" : "line-through"} text-[#6C63FF]`}>
-            {/* ${resendOTPTimeout <= 0 ? "text-[#6C63FF]" : "text-[#CBE2FF]"} */}
-            Resend Again
-          </Text>
-        </Text>
-        <Text className="text-center font-[mrt-mid] text-[#7F7E7F] text-[16px]">
-          Request new code in{" "}
-          <Text className="font-[mrt-bold]">00:{resendOTPTimeout}s</Text>
-        </Text>
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
