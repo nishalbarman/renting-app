@@ -10,15 +10,8 @@ export default function RootLayout() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <SafeAreaProvider>
-          <Slot />
+          <Stack screenOptions={{ headerShown: false }} />
         </SafeAreaProvider>
-        {/* <Stack>
-          <Stack.Screen
-            name="auth/login/index"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack> */}
       </PersistGate>
     </Provider>
   );

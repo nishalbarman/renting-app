@@ -33,7 +33,7 @@ export default function Page() {
     return null;
   }
 
-  if (!userToken) {
+  if (!!userToken) {
     console.log("There is no token");
     return <Redirect href={"/auth/login"} />;
   }

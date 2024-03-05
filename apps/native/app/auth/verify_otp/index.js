@@ -149,7 +149,7 @@ export default function Page() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          rowGap: "40px",
+          rowGap: 40,
         }}>
         <View className="flex flex-col gap-y-10 items-center w-[100%]">
           <Text className="self-start w-[100%] text-[28px] font-[mrt-mid]">

@@ -24,12 +24,20 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Page() {
+  // const [formData, setFormData] = useState({
+  //   name: { value: null, isTouched: null, isError: null },
+  //   email: { value: null, isTouched: null, isError: null },
+  //   mobileNo: { value: null, isTouched: null, isError: null },
+  //   isAgreementChecked: { value: null, isTouched: null, isError: null },
+  //   password: { value: null, isTouched: null, isError: null },
+  // });
+
   const [formData, setFormData] = useState({
-    name: { value: null, isTouched: null, isError: null },
-    email: { value: null, isTouched: null, isError: null },
-    mobileNo: { value: null, isTouched: null, isError: null },
-    isAgreementChecked: { value: null, isTouched: null, isError: null },
-    password: { value: null, isTouched: null, isError: null },
+    name: { value: "Nishal Barman", isTouched: true, isError: null },
+    email: { value: "nishalbarman@gmail.com", isTouched: true, isError: null },
+    mobileNo: { value: "9101114906", isTouched: true, isError: null },
+    isAgreementChecked: { value: true, isTouched: true, isError: null },
+    password: { value: "@NishalBoss21", isTouched: true, isError: null },
   });
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
@@ -39,22 +47,23 @@ export default function Page() {
   const router = useRouter();
 
   const handleSignup = () => {
-    // TODO : send fetch request to
+    try {
+      // TODO : send fetch request to
 
-    const extractedData = Object.keys(formData).reduce(
-      (newFormData, keyName) => {
-        return { ...newFormData, [keyName]: formData[keyName].value };
-      },
-      { name: "", email: "", mobileNo: "", password: "" }
-    );
+      const extractedData = Object.keys(formData).reduce(
+        (newFormData, keyName) => {
+          return { ...newFormData, [keyName]: formData[keyName].value };
+        },
+        { name: "", email: "", mobileNo: "", password: "" }
+      ); // postable form data
 
-    console.log(extractedData);
-
-    router.push({
-      pathname: "/auth/verify_otp",
-      // /* 1. Navigate to the details route with query params */
-      params: extractedData,
-    });
+      router.push({
+        pathname: "/auth/verify_otp",
+        // params: extractedData,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -249,7 +258,7 @@ export default function Page() {
               unfillColor="#FFFFFF"
               iconStyle={{ borderColor: "red" }}
               innerIconStyle={{ borderWidth: 2 }}
-              textStyle={{ fontFamily: "JosefinSans-Regular" }}
+              textStyle={{ fontFamily: "mrt" }}
               onPress={(isChecked) => {
                 setFormData((prev) => ({
                   ...prev,
@@ -293,7 +302,7 @@ export default function Page() {
           <Text className="text-center font-[mrt-mid] text-[16px]">
             Already have an account?{" "}
             <Link
-              push
+              replace
               className="underline text-center font-[mrt-bold]"
               href={"/auth/login"}>
               Login Now

@@ -39,7 +39,7 @@ export default function Page() {
   return (
     <SafeAreaView className="bg-white">
       <ScrollView
-        className="p-[15px] h-[100%] pt-[5%]"
+        className="p-[15px] h-[100%] pt-[5%] bg-white"
         contentContainerStyle={{
           display: "flex",
           flexDirection: "column",
@@ -159,7 +159,7 @@ export default function Page() {
           <Text className="text-center font-[mrt-mid] text-[16px]">
             New here?{" "}
             <Link
-              push
+              replace
               className="underline font-[mrt-bold]"
               href={"/auth/signup"}>
               Create an account

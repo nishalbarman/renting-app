@@ -12,11 +12,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
+      "userInterfaceStyle": "light",
       "config": {
         "usesNonExemptEncryption": false
       }
@@ -26,6 +25,7 @@
         "foregroundImage": "./assets/appIcons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "userInterfaceStyle": "light",
       "package": "com.onlinerent.test"
     },
     "web": {
@@ -34,7 +34,8 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      "./plugins/withDisableForcedDarkModeAndroid.js"
     ]
   }
 }
