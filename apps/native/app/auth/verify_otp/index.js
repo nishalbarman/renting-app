@@ -113,10 +113,6 @@ export default function Page() {
     setFinalOtp(otp.join(""));
   }, [otp]);
 
-  useEffect(() => {
-    setIsFinalOTPValid(isValid4DigitOtp(finalOtp));
-  }, [finalOtp]);
-
   const router = useRouter();
 
   const handleOTPSubmit = () => {
@@ -139,6 +135,10 @@ export default function Page() {
       console.error("OTP verfication page: -->", error);
     }
   };
+
+  useEffect(() => {
+    setIsFinalOTPValid(isValid4DigitOtp(finalOtp));
+  }, [finalOtp]);
 
   return (
     <SafeAreaView>
@@ -225,7 +225,7 @@ export default function Page() {
             </Text>
           )}
           <TouchableOpacity
-            className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg"
+            className={`flex justify-center items-center h-[60px] w-[100%] ${!isFinalOTPValid ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
             onPress={handleOTPSubmit}>
             <Text className="text-[20px] text-white font-[mrt-bold]">
               Verify

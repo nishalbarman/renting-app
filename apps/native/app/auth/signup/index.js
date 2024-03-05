@@ -1,9 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Button,
   Image,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -286,7 +284,7 @@ export default function Page() {
         <View className="w-[100%] flex flex-col gap-y-6 items-center mt-[-1px]">
           <TouchableOpacity
             disabled={isSubmitDisabled}
-            className="flex justify-center items-center h-[60px] w-[100%] bg-[#6C63FF] border-none outline-none rounded-lg"
+            className={`flex justify-center items-center h-[60px] w-[100%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
             onPress={handleSignup}>
             <Text className="text-[20px] text-white font-[mrt-bold]">
               Create account
