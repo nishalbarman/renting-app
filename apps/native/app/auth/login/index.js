@@ -37,7 +37,7 @@ export default function Page() {
   }, [formData]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="bg-white">
       <ScrollView
         className="p-[15px] h-[100%] pt-[5%]"
         contentContainerStyle={{

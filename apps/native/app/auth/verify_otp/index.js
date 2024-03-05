@@ -129,7 +129,7 @@ export default function Page() {
         });
       } else {
         router.dismissAll();
-        router.push("/dashboard");
+        router.push("/(tabs)");
       }
     } catch (error) {
       console.error("OTP verfication page: -->", error);
@@ -141,7 +141,7 @@ export default function Page() {
   }, [finalOtp]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="bg-white">
       <ScrollView
         className="p-[15px] h-[100%] pt-[10%] w-[100%]"
         contentContainerStyle={{
