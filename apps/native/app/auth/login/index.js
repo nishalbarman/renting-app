@@ -1,9 +1,7 @@
 import { useState } from "react";
 import {
-  Button,
   Image,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -14,6 +12,8 @@ import { Link } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Foundation } from "@expo/vector-icons";
 
+import { isValidIndianMobileNumber } from "validators";
+
 export default function Page() {
   const [formData, setFormData] = useState({
     mobileNo: { value: null, isTouched: null, isError: null },
@@ -22,21 +22,7 @@ export default function Page() {
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  // const handleFieldChange = (e) => {
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [e.target.name]: {
-  //       ...prev[e.target.name],
-  //       value: e.target.value,
-  //       isTouched: true,
-  //       isError: null,
-  //     },
-  //   }));
-  // };
-
-  const handleLogin = () => {
-    console.log(formData);
-  };
+  const handleLogin = () => {};
 
   return (
     <ScrollView
@@ -72,7 +58,7 @@ export default function Page() {
                   ...prev["mobileNo"],
                   value: text,
                   isTouched: true,
-                  isError: null,
+                  isError: isValidIndia(),
                 },
               }));
             }}

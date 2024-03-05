@@ -34,9 +34,9 @@ export default function Page() {
   }
 
   if (!userToken) {
-    // return <Redirect href={"/auth/login"} />;
-    return <Redirect href={"/dashboard/(tabs)/home"} />;
+    console.log("There is no token");
+    return <Redirect href={"/auth/login"} />;
   }
 
-  return <Redirect href={"/dashboard"} />;
+  return <Redirect href={"/(tabs)"} />;
 }
