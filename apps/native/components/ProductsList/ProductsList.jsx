@@ -9,6 +9,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
       previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
       title: "DSG mens DSG RACE PRO V2 JACKET",
       category: { _id: "random_id_32423", name: "Biking" },
+      isPurchasable: true,
       rentingPrice: 100,
       discountedPrice: 11000,
       originalPrice: 23131,
@@ -41,9 +42,9 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
         "https://rukminim2.flixcart.com/image/416/416/l3t2fm80/smartwatch/b/7/n/33-52-sw300-android-ios-syska-yes-original-imageubkesquqz8p.jpeg?q=70&crop=false",
       title: "DSG mens DSG RACE PRO V2 JACKET",
       category: { _id: "random_id_32423", name: "Biking" },
+      isRentable: true,
       rentingPrice: 100,
       discountedPrice: 11000,
-      originalPrice: 23131,
       showPictures: [
         "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
         "https://m.media-amazon.com/images/I/5161uV9BXAL._SX679_.jpg",
@@ -72,6 +73,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
       previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
       title: "DSG mens DSG RACE PRO V2 JACKET",
       category: { _id: "random_id_32423", name: "Biking" },
+      isPurchasable: true,
       rentingPrice: 100,
       discountedPrice: 11000,
       originalPrice: 23131,
@@ -96,13 +98,15 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
           originalPrice: 10,
         },
       ],
-      availableSizes: ["S", "M", "L", "XL", "XXL"],
-      availableColors: ["Red", "Blue", "Black"],
+      availableSizes: ["S"],
+      availableColors: ["Red"],
     },
     {
       previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
       title: "DSG mens DSG RACE PRO V2 JACKET",
       category: { _id: "random_id_32423", name: "Biking" },
+      isRentable: true,
+      isPurchasable: true,
       rentingPrice: 100,
       discountedPrice: 11000,
       originalPrice: 23131,
@@ -126,9 +130,16 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
           discountedPrice: 12,
           originalPrice: 10,
         },
+        {
+          color: "Blue",
+          size: "M",
+          rentPrice: 10,
+          discountedPrice: 12,
+          originalPrice: 10,
+        },
       ],
-      availableSizes: ["S", "M", "L", "XL", "XXL"],
-      availableColors: ["Red", "Blue", "Black"],
+      availableSizes: ["S", "M"],
+      availableColors: ["Red", "Blue"],
     },
     {
       previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
@@ -199,7 +210,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
       style={{
         backgroundColor: bgColor,
       }}
-      className={`w-[100%] p-[20px_10px] rounded-xl`}>
+      className={`w-[100%] p-[20px_10px] h-fit rounded-xl`}>
       <View className="flex flex-row justify-between p-[0px_1px] items-center mb-[16px]">
         <Text
           style={{
