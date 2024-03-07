@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <!-- Optionally, add your custom trusted certificates here -->
+            <!--<certificates src="resource:certificates/my_custom_certificate.crt" />-->
+        </trust-anchors>
+    </base-config>
+    <!-- Add additional configurations as needed -->
+</network-security-config>

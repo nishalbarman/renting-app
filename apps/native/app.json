@@ -14,10 +14,16 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "allowsArbitraryLoads": true
+        }
+      },
       "supportsTablet": true,
       "userInterfaceStyle": "light",
       "config": {
-        "usesNonExemptEncryption": false
+        "usesNonExemptEncryption": false,
+        "usesCleartextTraffic": true
       }
     },
     "android": {
@@ -26,7 +32,11 @@
         "backgroundColor": "#ffffff"
       },
       "userInterfaceStyle": "light",
-      "package": "com.onlinerent.test"
+      "permissions": ["INTERNET"],
+      "package": "com.onlinerent.test",
+      "config": {
+        "networkSecurityConfig": "./network_security_config.xml"
+      }
     },
     "web": {
       "favicon": "./assets/appIcons/favicon.png",

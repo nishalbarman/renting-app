@@ -1,21 +1,21 @@
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { Image } from "expo-image";
 
 function CategoryItem({ categoryImage, categoryName }) {
   return (
     <View className="w-fit h-fit flex flex-col align-center justify-center gap-y-2 m-2">
-      <View className="bg-[#f1d5cd] w-fit h-fit rounded-full flex justify-center align-center">
+      <View className="bg-white w-fit h-fit rounded-full flex justify-center align-center shadow-sm">
         <Image
-          style={{
-            resizeMode: "contain",
-          }}
-          className="bg-[#f1d5cd] h-[90px] w-[90px] mix-blend-multiply rounded-full aspect-square"
+          className="h-[70px] w-[70px] rounded-full aspect-square"
           source={{
             uri: categoryImage,
           }}
+          contentFit="contain"
+          contentPosition={"center"}
         />
       </View>
-      <Text className="font-[mrt-bold] self-center text-[15px] text-nowrap">
+      <Text className="font-[mrt-mid] self-center text-[12px] text-nowrap">
         {categoryName}
       </Text>
     </View>

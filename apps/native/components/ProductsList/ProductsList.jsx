@@ -1,0 +1,230 @@
+import { Link } from "expo-router";
+import React from "react";
+import { FlatList, Text, View } from "react-native";
+import Product from "./Product";
+
+function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
+  const data = [
+    {
+      previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+      title: "DSG mens DSG RACE PRO V2 JACKET",
+      category: { _id: "random_id_32423", name: "Biking" },
+      rentingPrice: 100,
+      discountedPrice: 11000,
+      originalPrice: 23131,
+      showPictures: [
+        "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/5161uV9BXAL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/51bOhEXhdrL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/41QZ7+muJhL._SX679_.jpg",
+      ],
+      description: `<><p>Well designed comfortable to wear material, no money no problem you can now rent out this item easily without any hassle. Just click once and buy instantly.</p> <h5><strong>About the product</strong></h5> <ul> <li>Very comfortable to wear</li> <li>Less price than the market</li> <li>Best quality</li> <li>You can buy the item if you also want to take it.</li> </ul></>`,
+      stars: 3,
+      totalFeedbacks: 223,
+      shippingPrice: 5,
+      isSizeVaries: true,
+      isColorVaries: true,
+      availableVarients: [
+        {
+          color: "Red",
+          size: "S",
+          rentPrice: 10,
+          discountedPrice: 12,
+          originalPrice: 10,
+        },
+      ],
+      availableSizes: ["S", "M", "L", "XL", "XXL"],
+      availableColors: ["Red", "Blue", "Black"],
+    },
+    {
+      previewUrl:
+        "https://rukminim2.flixcart.com/image/416/416/l3t2fm80/smartwatch/b/7/n/33-52-sw300-android-ios-syska-yes-original-imageubkesquqz8p.jpeg?q=70&crop=false",
+      title: "DSG mens DSG RACE PRO V2 JACKET",
+      category: { _id: "random_id_32423", name: "Biking" },
+      rentingPrice: 100,
+      discountedPrice: 11000,
+      originalPrice: 23131,
+      showPictures: [
+        "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/5161uV9BXAL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/51bOhEXhdrL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/41QZ7+muJhL._SX679_.jpg",
+      ],
+      description: `<><p>Well designed comfortable to wear material, no money no problem you can now rent out this item easily without any hassle. Just click once and buy instantly.</p> <h5><strong>About the product</strong></h5> <ul> <li>Very comfortable to wear</li> <li>Less price than the market</li> <li>Best quality</li> <li>You can buy the item if you also want to take it.</li> </ul></>`,
+      stars: 3,
+      totalFeedbacks: 223,
+      shippingPrice: 5,
+      isSizeVaries: true,
+      isColorVaries: true,
+      availableVarients: [
+        {
+          color: "Red",
+          size: "S",
+          rentPrice: 10,
+          discountedPrice: 12,
+          originalPrice: 10,
+        },
+      ],
+      availableSizes: ["S", "M", "L", "XL", "XXL"],
+      availableColors: ["Red", "Blue", "Black"],
+    },
+    {
+      previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+      title: "DSG mens DSG RACE PRO V2 JACKET",
+      category: { _id: "random_id_32423", name: "Biking" },
+      rentingPrice: 100,
+      discountedPrice: 11000,
+      originalPrice: 23131,
+      showPictures: [
+        "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/5161uV9BXAL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/51bOhEXhdrL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/41QZ7+muJhL._SX679_.jpg",
+      ],
+      description: `<><p>Well designed comfortable to wear material, no money no problem you can now rent out this item easily without any hassle. Just click once and buy instantly.</p> <h5><strong>About the product</strong></h5> <ul> <li>Very comfortable to wear</li> <li>Less price than the market</li> <li>Best quality</li> <li>You can buy the item if you also want to take it.</li> </ul></>`,
+      stars: 3,
+      totalFeedbacks: 223,
+      shippingPrice: 5,
+      isSizeVaries: true,
+      isColorVaries: true,
+      availableVarients: [
+        {
+          color: "Red",
+          size: "S",
+          rentPrice: 10,
+          discountedPrice: 12,
+          originalPrice: 10,
+        },
+      ],
+      availableSizes: ["S", "M", "L", "XL", "XXL"],
+      availableColors: ["Red", "Blue", "Black"],
+    },
+    {
+      previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+      title: "DSG mens DSG RACE PRO V2 JACKET",
+      category: { _id: "random_id_32423", name: "Biking" },
+      rentingPrice: 100,
+      discountedPrice: 11000,
+      originalPrice: 23131,
+      showPictures: [
+        "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/5161uV9BXAL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/51bOhEXhdrL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/41QZ7+muJhL._SX679_.jpg",
+      ],
+      description: `<><p>Well designed comfortable to wear material, no money no problem you can now rent out this item easily without any hassle. Just click once and buy instantly.</p> <h5><strong>About the product</strong></h5> <ul> <li>Very comfortable to wear</li> <li>Less price than the market</li> <li>Best quality</li> <li>You can buy the item if you also want to take it.</li> </ul></>`,
+      stars: 3,
+      totalFeedbacks: 223,
+      shippingPrice: 5,
+      isSizeVaries: true,
+      isColorVaries: true,
+      availableVarients: [
+        {
+          color: "Red",
+          size: "S",
+          rentPrice: 10,
+          discountedPrice: 12,
+          originalPrice: 10,
+        },
+      ],
+      availableSizes: ["S", "M", "L", "XL", "XXL"],
+      availableColors: ["Red", "Blue", "Black"],
+    },
+    {
+      previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+      title: "DSG mens DSG RACE PRO V2 JACKET",
+      category: { _id: "random_id_32423", name: "Biking" },
+      rentingPrice: 100,
+      discountedPrice: 11000,
+      originalPrice: 23131,
+      showPictures: [
+        "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/5161uV9BXAL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/51bOhEXhdrL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/41QZ7+muJhL._SX679_.jpg",
+      ],
+      description: `<><p>Well designed comfortable to wear material, no money no problem you can now rent out this item easily without any hassle. Just click once and buy instantly.</p> <h5><strong>About the product</strong></h5> <ul> <li>Very comfortable to wear</li> <li>Less price than the market</li> <li>Best quality</li> <li>You can buy the item if you also want to take it.</li> </ul></>`,
+      stars: 3,
+      totalFeedbacks: 223,
+      shippingPrice: 5,
+      isSizeVaries: true,
+      isColorVaries: true,
+      availableVarients: [
+        {
+          color: "Red",
+          size: "S",
+          rentPrice: 10,
+          discountedPrice: 12,
+          originalPrice: 10,
+        },
+      ],
+      availableSizes: ["S", "M", "L", "XL", "XXL"],
+      availableColors: ["Red", "Blue", "Black"],
+    },
+    {
+      previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+      title: "DSG mens DSG RACE PRO V2 JACKET",
+      category: { _id: "random_id_32423", name: "Biking" },
+      rentingPrice: 100,
+      discountedPrice: 11000,
+      originalPrice: 23131,
+      showPictures: [
+        "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/5161uV9BXAL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/51bOhEXhdrL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/41QZ7+muJhL._SX679_.jpg",
+      ],
+      description: `<><p>Well designed comfortable to wear material, no money no problem you can now rent out this item easily without any hassle. Just click once and buy instantly.</p> <h5><strong>About the product</strong></h5> <ul> <li>Very comfortable to wear</li> <li>Less price than the market</li> <li>Best quality</li> <li>You can buy the item if you also want to take it.</li> </ul></>`,
+      stars: 3,
+      totalFeedbacks: 223,
+      shippingPrice: 5,
+      isSizeVaries: true,
+      isColorVaries: true,
+      availableVarients: [
+        {
+          color: "Red",
+          size: "S",
+          rentPrice: 10,
+          discountedPrice: 12,
+          originalPrice: 10,
+        },
+      ],
+      availableSizes: ["S", "M", "L", "XL", "XXL"],
+      availableColors: ["Red", "Blue", "Black"],
+    },
+  ];
+
+  return (
+    <View
+      style={{
+        backgroundColor: bgColor,
+      }}
+      className={`w-[100%] p-[20px_10px] rounded-xl`}>
+      <View className="flex flex-row justify-between p-[0px_1px] items-center mb-[16px]">
+        <Text
+          style={{
+            color: titleColor,
+          }}
+          className="font-[mrt-xbold] text-[22px]">
+          {title}
+        </Text>
+        <Link
+          className="text-[15px] text-purple font-[mrt-bold] underline"
+          href={`/products?section=${viewAllPath}`}>
+          See All
+        </Link>
+      </View>
+
+      <View>
+        <FlatList
+          data={data}
+          renderItem={({ item }) => <Product {...item} />}
+          numColumns={2}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
+    </View>
+  );
+}
+
+export default ProductsList;

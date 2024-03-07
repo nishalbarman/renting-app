@@ -1,0 +1,73 @@
+import React from "react";
+import { Text, Touchable, TouchableOpacity, View } from "react-native";
+import { Image } from "expo-image";
+import { FontAwesome } from "@expo/vector-icons";
+
+function Product({
+  previewUrl,
+  title,
+  category,
+  rentingPrice,
+  discountedPrice,
+  originalPrice,
+  showPictures,
+  description,
+  stars,
+  totalFeedbacks,
+  shippingPrice,
+  isSizeVaries,
+  isColorVaries,
+  availableVarients,
+  availableSizes,
+  availableColors,
+}) {
+  const blurhash =
+    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+
+  return (
+    <View className="relative border-[1px] border-[#F0F3F4] flex flex-col h-fit w-[150px] flex-1 mb-[0.5px] bg-white p-[3%] rounded-lg m-1 shadow-sm pb-[20px]">
+      <Text className="bg-[#41a63f] text-white rounded-[10px] p-[4px_10px] absolute top-2 left-2 z-[1] text-[10px] font-[mrt-xbold]">
+        SALE
+      </Text>
+
+      <TouchableOpacity className="absolute top-2 right-3 shadow bg-white p-3 rounded-full w-fit h-fit flex flex-col items-center justify-center z-[1]">
+        {/* <FontAwesome name="heart" size={20} color={"black"} /> */}
+        <FontAwesome name="heart-o" size={20} color={"black"} />
+      </TouchableOpacity>
+
+      <Image
+        style={{ width: 150, height: 200 }}
+        className="w-[150px] h-[200px] bg-[transparent] rounded-lg flex-1"
+        source={{ uri: previewUrl }}
+        contentFit="contain"
+        contentPosition={"center"}
+        onError={(error) => console.error("Image load error:", error)}
+      />
+
+      <View className="flex flex-col gap-y-1 w-[100%] mt-[5px]">
+        <Text className="text-[13px] text-center p-[5px] font-[mrt-mid] uppercase inline-block w-fit border-dashed border-[1px] border-black mb-[4px]">
+          {category?.name}
+        </Text>
+
+        <Text className="text-[14px] font-[mrt-bold] leading-[23px] w-[100%] underline">
+          {title}
+        </Text>
+        <Text className="text-[18px] font-[mrt-bold] align-center">
+          ⭐ {stars}{" "}
+          <Text className="text-[#A7A6A7] text-[18px] font-[mrt-mid] align-middle">
+            ({totalFeedbacks})
+          </Text>
+        </Text>
+        <Text className="font-[mrt-bold] text-[18px] align-middle leading-[30px] text-[#1d610e]">
+          ₹{5.99}
+          {"  "}
+          <Text className="text-[15px] text-[#727273] line-through line-offset-[2px]">
+            ₹{10.99}
+          </Text>
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+export default Product;

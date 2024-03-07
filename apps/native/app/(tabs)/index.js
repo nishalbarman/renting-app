@@ -15,6 +15,7 @@ import { Foundation } from "@expo/vector-icons";
 import { isValidIndianMobileNumber, isValidPassword } from "validator";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CategoryItem from "../../components/Category/CategoryItem";
+import ProductsList from "../../components/ProductsList/ProductsList";
 
 export default function Tab() {
   const [formData, setFormData] = useState({
@@ -39,12 +40,16 @@ export default function Tab() {
   return (
     <SafeAreaView className="bg-white">
       <ScrollView
-        className="p-[15px] h-[100%] pt-[5%]"
+        showsVerticalScrollIndicator={false}
+        ounces={false} // Set this to false to disable overscroll effect
+        className="p-[5px] h-[100%] pt-[5%]"
         contentContainerStyle={{
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          rowGap: 10,
+          flexGrow: 1,
         }}>
         <View className="flex flex-row gap-x-2 w-[100%]">
           <CategoryItem
@@ -55,9 +60,36 @@ export default function Tab() {
           />
           <CategoryItem
             categoryImage={
-              "https://p7.hiclipart.com/preview/226/888/857/smartwatch-apple-watch-wearable-technology-watch.jpg"
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzJVW44RYdtl5oVB548Hqz8Iqw9GIiZoYyQXUcm-qw6ttb_YDGLT_3jxYX4unE-TEZLFA&usqp=CAU"
             }
             categoryName={"Watches"}
+          />
+          <CategoryItem
+            categoryImage={
+              "https://shop.tvsmotor.com/cdn/shop/products/NF600520_1.png?v=1691651575"
+            }
+            categoryName={"Gloves"}
+          />
+        </View>
+        <View className="flex-1 w-[100%]">
+          <ProductsList
+            title="🔥 New Arrivals"
+            viewAllPath="/new-arrivals"
+            bgColor="#faf0ff"
+            titleColor="black"
+          />
+          <ProductsList
+            title="✌️ Rent Products"
+            viewAllPath="/rent"
+            bgColor="#fff9f2"
+            titleColor="black"
+          />
+
+          <ProductsList
+            title="😍 Sale Products"
+            viewAllPath="/buy"
+            bgColor="#f5fffd"
+            titleColor="black"
           />
         </View>
       </ScrollView>
