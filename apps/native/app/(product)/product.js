@@ -169,27 +169,80 @@ export default function Page() {
             </Text>
           </Text>
 
-          <View className="mt-3">
-            <Text className="text-[13px] text-[#32a852] font-[mrt-bold]">
-              (10 items) In stock
-            </Text>
-            {/* <Text className="text-[15px] text-[#d12626] font-[mrt-mid]">
-              Out of stock
-            </Text> */}
+          <View className="flex flex-col rounded-[10px] shadow bg-[#ededed] p-2">
+            <View className="bg-white rounded-[10px] p-4 pt-5 pb-5">
+              {/* // size section */}
+              <View className="flex flex-col pb-2">
+                <Text className="text-[17px] font-[mrt]">
+                  Size: <Text className="uppercase font-[mrt-bold]">S</Text>
+                </Text>
+                <FlatList
+                  horizontal
+                  data={["S", "M", "L", "XL"]}
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor:
+                          activeSize === item ? "black" : "white",
+                      }}
+                      className="w-[40px] h-[40px] rounded-lg m-2 flex items-center justify-center shadow-sm text-white">
+                      {/* bg-[#343434]  */}
+                      <Text
+                        style={{
+                          color: activeSize === item ? "white" : "black",
+                        }}
+                        className="text-[15px] font-[mrt-bold]">
+                        {item}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              </View>
+
+              {/* // Colors section */}
+              <View className="flex flex-col pb-2">
+                <Text className="text-[17px] font-[mrt]">
+                  Color:{" "}
+                  <Text className="uppercase font-[mrt-bold]">
+                    {data[setSelectedId - 1]?.value}
+                  </Text>
+                </Text>
+
+                <RadioGroup
+                  inital={0}
+                  layout="row"
+                  radioButtons={data}
+                  onPress={(item) => {
+                    console.log(item);
+                    setSelectedId(item);
+                  }}
+                  selectedId={selectedId}
+                  containerStyle={{
+                    marginRight: 10,
+                    marginTop: 10,
+                    padding: 0,
+                    width: 25,
+                    height: 25,
+                  }}
+                />
+              </View>
+            </View>
           </View>
 
           <View>
-            <View className="flex flex-row justify-between items-center gap-y-1">
+            <View className="flex flex-row justify-between items-center gap-y-1 p-[0px_10px]">
               <View className="flex gap-y-2">
                 {toogleSale ? (
-                  <Text className="text-[25px] font-[mrt-bold]">
+                  <Text className="text-[30px] font-[mrt-bold]">
                     ₹1799{" "}
                     <Text className="text-[15px] text-[#787878] font-[mrt] line-through">
                       ₹2799
                     </Text>
                   </Text>
                 ) : (
-                  <Text className="text-[25px] font-[mrt-bold]">
+                  <Text className="text-[30px] font-[mrt-bold]">
                     ₹179
                     <Text className="text-[15px] font-[mrt-bold]"> / Day</Text>
                   </Text>
@@ -200,7 +253,7 @@ export default function Page() {
                     onPress={() => {
                       setToogleSale((prev) => !prev);
                     }}
-                    className="flex flex-row p-1 w-[73px] rounded-[15px] mt-2 border-[1px] border-[#a8a8a8]">
+                    className="flex flex-row items-center p-1 w-[73px] rounded-[15px] mt-2 border-[1px] border-[#a8a8a8]">
                     {toogleSale ? (
                       <>
                         <View className="self-start w-[20px] h-[20px] rounded-full bg-[#339c39]"></View>
@@ -216,82 +269,33 @@ export default function Page() {
                 </View>
               </View>
 
-              <View className="flex flex-row bg-[#F2F3F2] justify-center items-center p-[8px] rounded-[30px]">
-                <TouchableOpacity
-                  onPress={() => {
-                    setQuantity((prev) => (prev == 1 ? 1 : prev - 1));
-                  }}
-                  className="rounded-full w-[37px] h-[37px] flex flex items-center justify-center bg-white">
-                  <AntDesign name="minus" size={29} color="black" />
-                </TouchableOpacity>
-                <Text className="font-[mrt-xbold] mr-4 ml-4">{quantity}</Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    setQuantity((prev) => prev + 1);
-                  }}
-                  className="rounded-full w-[37px] h-[37px] flex flex items-center justify-center bg-white">
-                  <AntDesign name="plus" size={24} color="black" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-
-          <View className="flex flex-col pt-2">
-            {/* // size section */}
-            <View className="flex flex-col pb-2">
-              <Text className="text-[17px] font-[mrt]">
-                Size: <Text className="uppercase font-[mrt-bold]">S</Text>
-              </Text>
-              <FlatList
-                horizontal
-                data={["S", "M", "L", "XL"]}
-                showsHorizontalScrollIndicator={false}
-                renderItem={({ item }) => (
+              <View>
+                <View className="flex flex-row bg-[#F2F3F2] justify-center items-center p-[8px] rounded-[30px] self-start">
                   <TouchableOpacity
-                    style={{
-                      backgroundColor: activeSize === item ? "black" : "white",
+                    onPress={() => {
+                      setQuantity((prev) => (prev == 1 ? 1 : prev - 1));
                     }}
-                    className="w-[50px] h-[50px] rounded-lg m-2 flex items-center justify-center shadow-sm text-white">
-                    {/* bg-[#343434]  */}
-                    <Text
-                      style={{
-                        color: activeSize === item ? "white" : "black",
-                      }}
-                      className="text-[15px] font-[mrt-bold]">
-                      {item}
-                    </Text>
+                    className="rounded-full w-[37px] h-[37px] flex flex items-center justify-center bg-white">
+                    <AntDesign name="minus" size={29} color="black" />
                   </TouchableOpacity>
-                )}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            </View>
-
-            {/* // Colors section */}
-            <View className="flex flex-col pb-2">
-              <Text className="text-[17px] font-[mrt]">
-                Color:{" "}
-                <Text className="uppercase font-[mrt-bold]">
-                  {data[setSelectedId - 1]?.value}
-                </Text>
-              </Text>
-
-              <RadioGroup
-                inital={0}
-                layout="row"
-                radioButtons={data}
-                onPress={(item) => {
-                  console.log(item);
-                  setSelectedId(item);
-                }}
-                selectedId={selectedId}
-                containerStyle={{
-                  marginRight: 10,
-                  marginTop: 10,
-                  padding: 0,
-                  width: 25,
-                  height: 25,
-                }}
-              />
+                  <Text className="font-[mrt-xbold] mr-4 ml-4">{quantity}</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setQuantity((prev) => prev + 1);
+                    }}
+                    className="rounded-full w-[37px] h-[37px] flex flex items-center justify-center bg-white">
+                    <AntDesign name="plus" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
+                <View className="mt-3">
+                  <Text className="text-[13px] text-[#32a852] font-[mrt-bold]">
+                    (10 items) In stock
+                  </Text>
+                  {/* <Text className="text-[15px] text-[#d12626] font-[mrt-mid]">
+              Out of stock
+            </Text> */}
+                </View>
+              </View>
             </View>
           </View>
         </View>
