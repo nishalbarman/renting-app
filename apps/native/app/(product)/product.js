@@ -16,9 +16,12 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import RadioGroup from "react-native-radio-buttons-group";
 
 export default function Page() {
+  const [toogleSale, setToogleSale] = useState(true);
+
   const [selectedColor, setSelectedColor] = useState();
   const [selectedId, setSelectedId] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [activeSize, setActiveSize] = useState("S");
 
   const width = Dimensions.get("window").width;
 
@@ -166,26 +169,50 @@ export default function Page() {
             </Text>
           </Text>
 
+          <View className="mt-3">
+            <Text className="text-[13px] text-[#32a852] font-[mrt-bold]">
+              (10 items) In stock
+            </Text>
+            {/* <Text className="text-[15px] text-[#d12626] font-[mrt-mid]">
+              Out of stock
+            </Text> */}
+          </View>
+
           <View>
             <View className="flex flex-row justify-between items-center gap-y-1">
               <View className="flex gap-y-2">
-                <Text className="text-[25px] font-[mrt-bold]">
-                  ₹1799{" "}
-                  <Text className="text-[15px] text-[#787878] font-[mrt] line-through">
-                    ₹2799
+                {toogleSale ? (
+                  <Text className="text-[25px] font-[mrt-bold]">
+                    ₹1799{" "}
+                    <Text className="text-[15px] text-[#787878] font-[mrt] line-through">
+                      ₹2799
+                    </Text>
                   </Text>
-                </Text>
-
-                {/* <Text className="text-[20px] font-[mrt-bold]">
-                  ₹179
-                  <Text className="text-[15px] font-[mrt-bold]"> / perday</Text>
-                </Text> */}
+                ) : (
+                  <Text className="text-[25px] font-[mrt-bold]">
+                    ₹179
+                    <Text className="text-[15px] font-[mrt-bold]"> / Day</Text>
+                  </Text>
+                )}
 
                 <View className="">
-                  <View className="flex flex-row justify-end p-1 w-[50px] rounded-[15px] mt-2 border-[1px] border-[#a8a8a8]">
-                    {/* <View className="w-[20px] h-[20px] rounded-full bg-[#339c39]"></View> */}
-                    <View className="w-[20px] h-[20px] rounded-full bg-[#d91111]"></View>
-                  </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setToogleSale((prev) => !prev);
+                    }}
+                    className="flex flex-row p-1 w-[73px] rounded-[15px] mt-2 border-[1px] border-[#a8a8a8]">
+                    {toogleSale ? (
+                      <>
+                        <View className="self-start w-[20px] h-[20px] rounded-full bg-[#339c39]"></View>
+                        <Text className="pr-2"> Sale</Text>
+                      </>
+                    ) : (
+                      <>
+                        <View className="self-end w-[20px] h-[20px] rounded-full bg-[#d91111]"></View>
+                        <Text className="pr-2"> Rent</Text>
+                      </>
+                    )}
+                  </TouchableOpacity>
                 </View>
               </View>
 
@@ -217,12 +244,22 @@ export default function Page() {
               </Text>
               <FlatList
                 horizontal
-                data={["S", "M", "L", "XL", "S", "M", "L"]}
+                data={["S", "M", "L", "XL"]}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
-                  <TouchableOpacity className="w-[50px] h-[50px] rounded-lg m-2 flex items-center justify-center shadow-sm">
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: activeSize === item ? "black" : "white",
+                    }}
+                    className="w-[50px] h-[50px] rounded-lg m-2 flex items-center justify-center shadow-sm text-white">
                     {/* bg-[#343434]  */}
-                    <Text className="text-[15px] font-[mrt-bold]">{item}</Text>
+                    <Text
+                      style={{
+                        color: activeSize === item ? "white" : "black",
+                      }}
+                      className="text-[15px] font-[mrt-bold]">
+                      {item}
+                    </Text>
                   </TouchableOpacity>
                 )}
                 keyExtractor={(item, index) => index.toString()}
@@ -251,18 +288,11 @@ export default function Page() {
                   marginRight: 10,
                   marginTop: 10,
                   padding: 0,
+                  width: 25,
+                  height: 25,
                 }}
               />
             </View>
-          </View>
-
-          <View className="mt-3">
-            <Text className="text-[15px] text-[#32a852] font-[mrt-bold]">
-              In stock
-            </Text>
-            <Text className="text-[15px] text-[#d12626] font-[mrt-bold]">
-              Out of stock
-            </Text>
           </View>
         </View>
       </ScrollView>
