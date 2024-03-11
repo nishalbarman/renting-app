@@ -24,6 +24,8 @@ function Product({
   availableVarients,
   availableSizes,
   availableColors,
+
+  width,
 }) {
   const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
@@ -44,7 +46,7 @@ function Product({
     <TouchableOpacity
       onPress={handleProductClick}
       activeOpacity={0.6}
-      className="relative border-[1px] border-[#F0F3F4] flex flex-col h-fit w-[150px] flex-1 mb-[0.5px] bg-white p-[3%] rounded-lg m-1 shadow-sm pb-[20px]">
+      className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-white p-[3%] rounded-lg m-1 shadow-sm pb-[20px]`}>
       {(isRentable && isPurchasable) || (
         <Text
           style={{
@@ -66,8 +68,8 @@ function Product({
       </TouchableOpacity>
 
       <Image
-        style={{ width: 150, height: 200 }}
-        className="w-[150px] h-[200px] bg-[transparent] rounded-lg flex-1"
+        // style={{ width: 150, height: 200 }}
+        className="w-[100%] h-[200px] bg-[transparent] rounded-lg flex-1"
         source={{ uri: previewUrl }}
         contentFit="contain"
         contentPosition={"center"}

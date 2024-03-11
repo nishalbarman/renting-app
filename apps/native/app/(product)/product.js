@@ -13,6 +13,8 @@ import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import HTML from "react-native-render-html";
+import FeedbackCard from "../../components/Feedback/FeedbackCard";
+import RelatedProductList from "../../components/RelatedProductList/RelatedProductList";
 
 export default function Page() {
   const [toogleSale, setToogleSale] = useState(true);
@@ -281,13 +283,13 @@ export default function Page() {
           </View>
 
           {/* product description */}
-          <View className="pt-4 pb-6">
+          <View className="pt-4 pb-6 pl-1 pr-1">
             <Text className="text-[17px] font-[mrt-bold]">Product Details</Text>
             <HTML source={{ html: customHTML }} />
           </View>
 
           {/* rating and reviews */}
-          <View className="pt-4 pb-6">
+          <View className="pt-4 pb-6 flex flex-col gap-y-2 pl-1 pr-1">
             <Text className="text-[17px] font-[mrt-bold]">Feedbacks</Text>
             <View>
               <View>
@@ -299,37 +301,36 @@ export default function Page() {
                 </Text>
               </View>
             </View>
-            <View className="flex flex-col gap-y-3">
-              <View className="p-[0_20px]">
-                <View className="relative w-[100%] h-fit p-5">
-                  <Image
-                    className="h-[45px] w-[45px] absolute top-[-10px] left-[-10px] z-[999]"
-                    source={{
-                      uri: "https://harleydietitians.co.uk/wp-content/uploads/2018/11/no_profile_img.png",
-                    }}
-                    contentFit="cover"
-                    contentPosition={"center"}
-                  />
-                  <View className="bg-white shadow rounded-md">
-                    <Text className="font-[mrt-bold] text-[15px]">
-                      Nishal Barman
-                    </Text>
-                    <View className="flex flex-row justify-between gap-x-4">
-                      <View className="flex gap-x-1 flex-row">
-                        <Text>⭐</Text>
-                        <Text>⭐</Text>
-                        <Text>⭐</Text>
-                        <Text>⭐</Text>
-                        <Text>⭐</Text>
-                        <Text>⭐</Text>
-                      </View>
-                      <View>
-                        <Text>24 June 2023</Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
+            <View className={"flex flex-col items-center"}>
+              <View className="flex flex-col pt-5">
+                <FeedbackCard
+                  userIcon="https://harleydietitians.co.uk/wp-content/uploads/2018/11/no_profile_img.png"
+                  feedbackGivenBy="Nishal Barman"
+                  feedBackDate="24 June 2023"
+                  feedbackText="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eos placeat libero laborum mollitia. Accusantium numquam minima voluptas, cupiditate, et praesentium, a quae illum alias quidem molestiae molestias eius nesciunt repellat?"
+                />
+
+                <FeedbackCard
+                  userIcon="https://harleydietitians.co.uk/wp-content/uploads/2018/11/no_profile_img.png"
+                  feedbackGivenBy="Tanmay Barman"
+                  feedBackDate="25 June 2023"
+                  feedbackText="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eos placeat libero laborum mollitia. Accusantium numquam minima voluptas, cupiditate, et praesentium, a quae illum alias quidem molestiae molestias eius nesciunt repellat?"
+                />
               </View>
+              <TouchableOpacity className="flex items-center justify-center w-[200px] h-[40px] p-[0px_20px] bg-[#d875ff] rounded-lg">
+                <Text className="text-white font-bold">Load More</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* related products */}
+          <View className="pt-4 pb-6 flex flex-col gap-y-2 pl-1 pr-1">
+            <Text className="text-[17px] font-[mrt-bold]">
+              Related Products
+            </Text>
+
+            <View className="flex flex-col pt-5">
+              <RelatedProductList />
             </View>
           </View>
         </View>
