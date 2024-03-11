@@ -1,10 +1,12 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
+  Button,
   Dimensions,
   FlatList,
   ScrollView,
   Text,
+  TouchableHighlight,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -100,15 +102,15 @@ export default function Page() {
         </View>
 
         {/* product body */}
-        <View className="flex flex-1 p-[12px] flex-col gap-3">
-          <Text className="font-[mrt-mid] leading-[21px] text-grey text-[15px]">
+        <View className="flex flex-1 p-[12px] flex-col gap-y-5">
+          <Text className="font-[mrt-inter] leading-[24px] text-grey text-[16px]">
             ZEBRONICS ZIUM Mid-Tower gaming cabinet, M-ATX/M-Itx, Fins Foccussed
             Multicolor Rear Fan, Multi Color Led Strip, Acryflic Glass Side
             Panel, USB 3.0, USB 2.0
           </Text>
 
           {/* rating and start */}
-          <Text className="font-[mrt-mid] leading-[20px] text-grey text-[15px]">
+          <Text className="font-[mrt-mid] leading-[20px] text-grey text-[18px]">
             ⭐ {productDetails.stars}{" "}
             <Text className="text-[#787878]">
               ({productDetails.totalFeedbacks})
@@ -165,29 +167,7 @@ export default function Page() {
 
                 <FlatList
                   horizontal
-                  data={[
-                    "red",
-                    "blue",
-                    "green",
-                    "black",
-                    "white",
-                    "blue",
-                    "green",
-                    "black",
-                    "white",
-                    "blue",
-                    "green",
-                    "black",
-                    "white",
-                    "blue",
-                    "green",
-                    "black",
-                    "white",
-                    "blue",
-                    "green",
-                    "black",
-                    "white",
-                  ]}
+                  data={["red", "blue", "green", "black"]}
                   showsHorizontalScrollIndicator={false}
                   renderItem={({ item }) => (
                     <TouchableOpacity
@@ -280,6 +260,21 @@ export default function Page() {
                 </View>
               </View>
             </View>
+
+            {/* buy now or add to cart button */}
+            <View className="pt-7 flex flex-col gap-y-4">
+              <TouchableHighlight className="bg-dark-purple h-[60px] w-[100%] text-[16px] text-white flex flex-row justify-center items-center rounded-md">
+                <Text className="text-white text-[20px] font-[mrt-xbold]">
+                  Add To Cart
+                </Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight className="bg-[#f07354] h-[60px] w-[100%] text-[16px] text-white flex flex-row justify-center items-center rounded-md">
+                <Text className="text-white text-[20px] font-[mrt-xbold]">
+                  By Now
+                </Text>
+              </TouchableHighlight>
+            </View>
           </View>
 
           {/* product description */}
@@ -290,17 +285,28 @@ export default function Page() {
 
           {/* rating and reviews */}
           <View className="pt-4 pb-6 flex flex-col gap-y-2 pl-1 pr-1">
-            <Text className="text-[17px] font-[mrt-bold]">Feedbacks</Text>
-            <View>
-              <View>
-                <Text className="font-[mrt-mid] leading-[20px] text-grey text-[15px]">
-                  ⭐ {productDetails.stars}{" "}
-                  <Text className="text-[#787878]">
-                    ({productDetails.totalFeedbacks})
-                  </Text>
-                </Text>
+            <View className="flex flex-row justify-between items-center">
+              <View className="flex flex-col gap-y-2">
+                <Text className="text-[17px] font-[mrt-bold]">Feedbacks</Text>
+                <View>
+                  <View>
+                    <Text className="font-[mrt-mid] leading-[20px] text-grey text-[15px]">
+                      ⭐ {productDetails.stars}{" "}
+                      <Text className="text-[#787878]">
+                        ({productDetails.totalFeedbacks})
+                      </Text>
+                    </Text>
+                  </View>
+                </View>
               </View>
+
+              <TouchableOpacity
+                onPress={() => {}}
+                className="rounded-full w-[40px] h-[40px] flex flex-row self-start items-center justify-center bg-dark-purple shadow">
+                <AntDesign name="plus" size={24} color="white" />
+              </TouchableOpacity>
             </View>
+
             <View className={"flex flex-col items-center"}>
               <View className="flex flex-col pt-5">
                 <FeedbackCard

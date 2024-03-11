@@ -15,7 +15,7 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
+            <FontAwesome size={23} name="home" color={color} />
           ),
         }}
       />
@@ -24,7 +24,7 @@ export default function TabLayout() {
         options={{
           title: "Wishlist",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={26} name="heart" color={color} />
+            <FontAwesome size={20} name="heart" color={color} />
           ),
         }}
       />
@@ -33,7 +33,7 @@ export default function TabLayout() {
         options={{
           title: "Cart",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={32} name="shopping-cart" color={color} />
+            <FontAwesome size={26} name="shopping-cart" color={color} />
           ),
         }}
       />
@@ -42,7 +42,7 @@ export default function TabLayout() {
         options={{
           title: "Orders",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={27} name="shopping-bag" color={color} />
+            <FontAwesome size={21} name="shopping-bag" color={color} />
           ),
         }}
       />
@@ -51,7 +51,7 @@ export default function TabLayout() {
         options={{
           title: "Account",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="user" color={color} />
+            <FontAwesome size={23} name="user" color={color} />
           ),
         }}
       />

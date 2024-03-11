@@ -209,7 +209,7 @@ function RelatedProduct() {
       horizontal
       showsHorizontalScrollIndicator={false}
       data={data}
-      renderItem={({ item }) => <Product width={"250px"} {...item} />}
+      renderItem={({ item }) => <Product width={"205px"} {...item} />}
       numColumns={1}
       keyExtractor={(item, index) => index.toString()}
     />

@@ -129,7 +129,7 @@ export default function Page() {
         });
       } else {
         router.dismissAll();
-        router.push("/(tabs)");
+        router.replace("/(tabs)");
       }
     } catch (error) {
       console.error("OTP verfication page: -->", error);

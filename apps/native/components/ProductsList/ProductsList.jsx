@@ -210,7 +210,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
       style={{
         backgroundColor: bgColor,
       }}
-      className={`w-[100%] p-[20px_10px] h-fit rounded-xl`}>
+      className={`w-[100%] p-[20px_10px] h-fit rounded`}>
       <View className="flex flex-row justify-between p-[0px_1px] items-center mb-[16px]">
         <Text
           style={{

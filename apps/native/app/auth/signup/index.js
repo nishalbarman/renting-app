@@ -255,7 +255,7 @@ export default function Page() {
             <Text className="text-[13px] text-left font-[mrt-mid] leading-[23px]">
               Gender
             </Text>
-            <RadioGroup
+            {/* <RadioGroup
               inital={0}
               layout="row"
               radioButtons={[
@@ -313,7 +313,7 @@ export default function Page() {
                 width: 25,
                 height: 25,
               }}
-            />
+            /> */}
           </View>
 
           <View className="h-[60px] w-[100%] pr-[6%] border-none outline-none flex flex-row justify-start items-center">

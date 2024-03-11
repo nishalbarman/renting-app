@@ -42,7 +42,7 @@ export default function Tab() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         ounces={false} // Set this to false to disable overscroll effect
-        className="p-[5px] h-[100%] pt-[5%]"
+        className="p-[2px] h-[100%] pt-[5%]"
         contentContainerStyle={{
           display: "flex",
           flexDirection: "column",
