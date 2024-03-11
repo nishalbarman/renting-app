@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -12,7 +12,7 @@ import Carousel from "react-native-reanimated-carousel";
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
-import { WebView } from "react-native-webview";
+import HTML from "react-native-render-html";
 
 export default function Page() {
   const [toogleSale, setToogleSale] = useState(true);
@@ -60,6 +60,17 @@ export default function Page() {
     availableSizes: ["S", "M", "L", "XL", "XXL"],
     availableColors: ["Red", "Blue", "Black"],
   };
+
+  const customHTML = `<p style="line-height: 200%;"><span style="font-size: 18px; color: rgb(128, 128, 128);">Our product is the most attractive product that is available on the market. At a very low price rate you can either buy or rent out this procut.</span></p>
+  <p><span style="font-size: 18px; color: rgb(128, 128, 128);">Features:</span></p>
+  <ul>
+    <li><span style="font-size: 18px; color: rgb(128, 128, 128);">Better price in market</span></li>
+    <li><span style="font-size: 18px; color: rgb(128, 128, 128);">Good question&nbsp;</span></li>
+    <li><span style="font-size: 18px; color: rgb(128, 128, 128);">nice explanation</span></li>
+    <li><span style="font-size: 18px; color: rgb(128, 128, 128);">op means over powered</span></li>
+    <li><span style="font-size: 18px; color: rgb(128, 128, 128);">omg means oh my god!</span></li>
+  </ul>
+  `;
 
   return (
     <SafeAreaView className="bg-white flex-1">
@@ -270,8 +281,56 @@ export default function Page() {
           </View>
 
           {/* product description */}
-          <View>
-            <WebView source={{ uri: "http://google.com" }} />
+          <View className="pt-4 pb-6">
+            <Text className="text-[17px] font-[mrt-bold]">Product Details</Text>
+            <HTML source={{ html: customHTML }} />
+          </View>
+
+          {/* rating and reviews */}
+          <View className="pt-4 pb-6">
+            <Text className="text-[17px] font-[mrt-bold]">Feedbacks</Text>
+            <View>
+              <View>
+                <Text className="font-[mrt-mid] leading-[20px] text-grey text-[15px]">
+                  ⭐ {productDetails.stars}{" "}
+                  <Text className="text-[#787878]">
+                    ({productDetails.totalFeedbacks})
+                  </Text>
+                </Text>
+              </View>
+            </View>
+            <View className="flex flex-col gap-y-3">
+              <View className="p-[0_20px]">
+                <View className="relative w-[100%] h-fit p-5">
+                  <Image
+                    className="h-[45px] w-[45px] absolute top-[-10px] left-[-10px] z-[999]"
+                    source={{
+                      uri: "https://harleydietitians.co.uk/wp-content/uploads/2018/11/no_profile_img.png",
+                    }}
+                    contentFit="cover"
+                    contentPosition={"center"}
+                  />
+                  <View className="bg-white shadow rounded-md">
+                    <Text className="font-[mrt-bold] text-[15px]">
+                      Nishal Barman
+                    </Text>
+                    <View className="flex flex-row justify-between gap-x-4">
+                      <View className="flex gap-x-1 flex-row">
+                        <Text>⭐</Text>
+                        <Text>⭐</Text>
+                        <Text>⭐</Text>
+                        <Text>⭐</Text>
+                        <Text>⭐</Text>
+                        <Text>⭐</Text>
+                      </View>
+                      <View>
+                        <Text>24 June 2023</Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
           </View>
         </View>
       </ScrollView>
