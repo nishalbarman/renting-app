@@ -252,6 +252,71 @@ export default function Page() {
           )}
 
           <View className="h-[60px] w-[100%] pr-[6%] border-none outline-none flex flex-row justify-start items-center">
+            <Text className="text-[13px] text-left font-[mrt-mid] leading-[23px]">
+              Gender
+            </Text>
+            <RadioGroup
+              inital={0}
+              layout="row"
+              radioButtons={[
+                {
+                  id: 0,
+                  outerStyle: {
+                    width: 50,
+                    height: 50,
+                    borderColor: "black",
+                    borderRadius: 25,
+                  },
+                  innerStyle: {
+                    borderRadius: 25,
+                  },
+                  text: "Rainbow",
+                  value: "MALE",
+                },
+                {
+                  id: 1,
+                  outerStyle: {
+                    width: 50,
+                    height: 50,
+                    borderColor: "#FB4009",
+                    borderRadius: 25,
+                  },
+                  innerStyle: {
+                    borderRadius: 25,
+                  },
+                  text: "Rainbow",
+                  value: "FEMALE",
+                },
+                {
+                  id: 2,
+                  outerStyle: {
+                    width: 50,
+                    height: 50,
+                    borderColor: "#F6800F",
+                    borderRadius: 25,
+                  },
+                  innerStyle: {
+                    borderRadius: 25,
+                  },
+                  text: "Rainbow",
+                  value: "RAINBOW",
+                },
+              ]}
+              onPress={(item) => {
+                console.log(item);
+                setSelectedId(item);
+              }}
+              containerStyle={{
+                marginRight: 10,
+                marginTop: 10,
+                padding: 0,
+                width: 25,
+                height: 25,
+              }}
+            />
+          </View>
+
+          <View className="h-[60px] w-[100%] pr-[6%] border-none outline-none flex flex-row justify-start items-center">
             <BouncyCheckbox
               size={25}
               fillColor="#6C63FF"

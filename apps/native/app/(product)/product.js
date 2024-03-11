@@ -11,17 +11,19 @@ import {
 import Carousel from "react-native-reanimated-carousel";
 import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { AntDesign } from "@expo/vector-icons";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import RadioGroup from "react-native-radio-buttons-group";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { WebView } from "react-native-webview";
 
 export default function Page() {
   const [toogleSale, setToogleSale] = useState(true);
 
-  const [selectedColor, setSelectedColor] = useState();
+  const [selectedProductSize, setSelectedProductSize] = useState("S");
+  const [selectedProductColor, setSelectedProductColor] = useState("red");
+
   const [selectedId, setSelectedId] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [activeSize, setActiveSize] = useState("S");
+
+  const [availableStocks] = useState(10);
 
   const width = Dimensions.get("window").width;
 
@@ -59,79 +61,6 @@ export default function Page() {
     availableColors: ["Red", "Blue", "Black"],
   };
 
-  const data = [
-    {
-      id: 0,
-      outerStyle: {
-        width: 50,
-        height: 50,
-        borderColor: "black",
-        borderRadius: 25,
-      },
-      innerStyle: {
-        borderRadius: 25,
-      },
-      color: "black",
-      value: "black",
-    },
-    {
-      id: 1,
-      outerStyle: {
-        width: 50,
-        height: 50,
-        borderColor: "#FB4009",
-        borderRadius: 25,
-      },
-      innerStyle: {
-        borderRadius: 25,
-      },
-      color: "#FB4009",
-      value: "red",
-    },
-    {
-      id: 2,
-      outerStyle: {
-        width: 50,
-        height: 50,
-        borderColor: "#F6800F",
-        borderRadius: 25,
-      },
-      innerStyle: {
-        borderRadius: 25,
-      },
-      color: "#F6800F",
-      value: "yellow",
-    },
-    {
-      id: 4,
-      outerStyle: {
-        width: 50,
-        height: 50,
-        borderColor: "#F4A012",
-        borderRadius: 25,
-      },
-      innerStyle: {
-        borderRadius: 25,
-      },
-      color: "#F4A012",
-      value: "red",
-    },
-    {
-      id: 5,
-      outerStyle: {
-        width: 50,
-        height: 50,
-        borderColor: "#F0E017",
-        borderRadius: 25,
-      },
-      innerStyle: {
-        borderRadius: 25,
-      },
-      color: "#F0E017",
-      value: "blue",
-    },
-  ];
-
   return (
     <SafeAreaView className="bg-white flex-1">
       <ScrollView>
@@ -156,12 +85,16 @@ export default function Page() {
             }}
           />
         </View>
+
+        {/* product body */}
         <View className="flex flex-1 p-[12px] flex-col gap-3">
           <Text className="font-[mrt-mid] leading-[21px] text-grey text-[15px]">
             ZEBRONICS ZIUM Mid-Tower gaming cabinet, M-ATX/M-Itx, Fins Foccussed
             Multicolor Rear Fan, Multi Color Led Strip, Acryflic Glass Side
             Panel, USB 3.0, USB 2.0
           </Text>
+
+          {/* rating and start */}
           <Text className="font-[mrt-mid] leading-[20px] text-grey text-[15px]">
             ⭐ {productDetails.stars}{" "}
             <Text className="text-[#787878]">
@@ -169,12 +102,16 @@ export default function Page() {
             </Text>
           </Text>
 
-          <View className="flex flex-col rounded-[10px] shadow bg-[#ededed] p-2">
+          {/* size and color section */}
+          <View className="flex flex-col rounded-[10px] shadow bg-[#ededed] p-2 justify-center">
             <View className="bg-white rounded-[10px] p-4 pt-5 pb-5">
               {/* // size section */}
-              <View className="flex flex-col pb-2">
+              <View className="flex flex-col pb-4 gap-y-2">
                 <Text className="text-[17px] font-[mrt]">
-                  Size: <Text className="uppercase font-[mrt-bold]">S</Text>
+                  Size:{" "}
+                  <Text className="uppercase font-[mrt-bold] text-[16px]">
+                    {selectedProductSize}
+                  </Text>
                 </Text>
                 <FlatList
                   horizontal
@@ -182,15 +119,18 @@ export default function Page() {
                   showsHorizontalScrollIndicator={false}
                   renderItem={({ item }) => (
                     <TouchableOpacity
+                      onPress={() => {
+                        setSelectedProductSize(item);
+                      }}
                       style={{
                         backgroundColor:
-                          activeSize === item ? "black" : "white",
+                          selectedProductSize === item ? "#9470B5" : "white",
                       }}
                       className="w-[40px] h-[40px] rounded-lg m-2 flex items-center justify-center shadow-sm text-white">
-                      {/* bg-[#343434]  */}
                       <Text
                         style={{
-                          color: activeSize === item ? "white" : "black",
+                          color:
+                            selectedProductSize === item ? "white" : "black",
                         }}
                         className="text-[15px] font-[mrt-bold]">
                         {item}
@@ -202,35 +142,60 @@ export default function Page() {
               </View>
 
               {/* // Colors section */}
-              <View className="flex flex-col pb-2">
+              <View className="flex flex-col pb-2 gap-y-2">
                 <Text className="text-[17px] font-[mrt]">
                   Color:{" "}
-                  <Text className="uppercase font-[mrt-bold]">
-                    {data[setSelectedId - 1]?.value}
+                  <Text className="uppercase font-[mrt-bold] text-[16px]">
+                    {selectedProductColor}
                   </Text>
                 </Text>
 
-                <RadioGroup
-                  inital={0}
-                  layout="row"
-                  radioButtons={data}
-                  onPress={(item) => {
-                    console.log(item);
-                    setSelectedId(item);
-                  }}
-                  selectedId={selectedId}
-                  containerStyle={{
-                    marginRight: 10,
-                    marginTop: 10,
-                    padding: 0,
-                    width: 25,
-                    height: 25,
-                  }}
+                <FlatList
+                  horizontal
+                  data={[
+                    "red",
+                    "blue",
+                    "green",
+                    "black",
+                    "white",
+                    "blue",
+                    "green",
+                    "black",
+                    "white",
+                    "blue",
+                    "green",
+                    "black",
+                    "white",
+                    "blue",
+                    "green",
+                    "black",
+                    "white",
+                    "blue",
+                    "green",
+                    "black",
+                    "white",
+                  ]}
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSelectedProductColor(item);
+                      }}
+                      style={{
+                        backgroundColor: item,
+                        // opacity: item === selectedProductColor ? 0.2 : 1,
+                      }}
+                      className={`w-[39px] h-[39px] rounded-lg m-2 flex items-center justify-center shadow-sm text-white ${selectedProductColor === item && "rounded-full"}`}>
+                      {/* <AntDesign name="pushpino" size={24} color={"black"} /> */}
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={(item, index) => index.toString()}
                 />
               </View>
             </View>
           </View>
 
+          {/* price and quantity section */}
           <View>
             <View className="flex flex-row justify-between items-center gap-y-1 p-[0px_10px]">
               <View className="flex gap-y-2">
@@ -257,7 +222,7 @@ export default function Page() {
                     {toogleSale ? (
                       <>
                         <View className="self-start w-[20px] h-[20px] rounded-full bg-[#339c39]"></View>
-                        <Text className="pr-2"> Sale</Text>
+                        <Text className="pr-2"> Buy</Text>
                       </>
                     ) : (
                       <>
@@ -278,7 +243,9 @@ export default function Page() {
                     className="rounded-full w-[37px] h-[37px] flex flex items-center justify-center bg-white">
                     <AntDesign name="minus" size={29} color="black" />
                   </TouchableOpacity>
-                  <Text className="font-[mrt-xbold] mr-4 ml-4">{quantity}</Text>
+                  <Text className="font-[mrt-xbold] text-[18px] mr-4 ml-4">
+                    {quantity}
+                  </Text>
                   <TouchableOpacity
                     onPress={() => {
                       setQuantity((prev) => prev + 1);
@@ -288,15 +255,23 @@ export default function Page() {
                   </TouchableOpacity>
                 </View>
                 <View className="mt-3">
-                  <Text className="text-[13px] text-[#32a852] font-[mrt-bold]">
-                    (10 items) In stock
-                  </Text>
-                  {/* <Text className="text-[15px] text-[#d12626] font-[mrt-mid]">
-              Out of stock
-            </Text> */}
+                  {availableStocks === 0 || quantity > availableStocks ? (
+                    <Text className="text-[13px] text-[#d12626] font-[mrt-bold]">
+                      Out of stock
+                    </Text>
+                  ) : (
+                    <Text className="text-[13px] text-[#32a852] font-[mrt-bold]">
+                      ({availableStocks} items) In stock
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>
+          </View>
+
+          {/* product description */}
+          <View>
+            <WebView source={{ uri: "http://google.com" }} />
           </View>
         </View>
       </ScrollView>
