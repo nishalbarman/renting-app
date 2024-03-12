@@ -42,12 +42,14 @@ router.post("/", async (req, res) => {
       });
     }
 
-    if (!user?.isMobileNoVerified) {
-      return res.status(403).json({
-        status: true,
-        message: "Account not verified yet!",
-      });
-    }
+    // if (!user?.isMobileNoVerified) {
+    //   return res.status(403).json({
+    //     status: true,
+    //     message: "Account not verified yet!",
+    //   });
+    // }
+
+    const oneDay = 24 * 60 * 60 * 1000;
 
     const jwtToken = jwt.sign(
       {
@@ -61,26 +63,26 @@ router.post("/", async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       status: true,
       message: "Login successful",
-      jwt: jwtToken,
+      user: {
+        name: user.name,
+        email: user.email,
+        mobileNo: user.mobileNo,
+        jwtToken: jwtToken,
+      },
     });
-
-    const oneDay = 24 * 60 * 60 * 1000;
-    res.cookie("token", jwtToken, { expires: new Date(Date.now() + oneDay) });
-    res.cookie("name", user.name, { expires: new Date(Date.now() + oneDay) });
-    res.cookie("email", user.email, { expires: new Date(Date.now() + oneDay) });
   } catch (error) {
     console.log(error);
     if (error instanceof mongoose.Error) {
-      const errArray = [];
-      for (let key in error.errors) {
-        errArray.push(error.errors[key].properties.message);
-      }
+      const errArray = Object.values(error.errors).map(
+        (properties) => properties.message
+      );
+
       return res.status(400).json({
         status: false,
-        message: errArray.join(", ").replace(/ Path/g, ""),
+        message: errArray.join(", "),
       });
     }
     return res

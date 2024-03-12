@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -9,59 +10,22 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { isValid4DigitOtp } from "validator";
+import { setUserAuthData } from "@store/rtk";
+import { useDispatch } from "react-redux";
 
 export default function Page() {
   const searchParams = useLocalSearchParams();
 
   console.log("Search Paramas Verify OTP -->", searchParams);
 
-  const name = searchParams.name || "Anonymous";
-  const mobileNo = searchParams.mobileNo || "910*****906";
-  const email = searchParams.email || "user@email.test";
-  const password = searchParams.password || "123";
-
-  const [isResendOTPEnabled, setIsResendOTPEnabled] = useState(false);
-  const [resendOTPTimeout, setResendOTPTimeout] = useState(30);
-
-  const handleResendOTP = async () => {
-    try {
-      if (isResendOTPEnabled) {
-        // const response = await doFetch()
-        // { name, mobileNo, email }
-      }
-    } catch (error) {
-      console.error("Resend OTP error => ", error);
-    }
-  };
-
-  useEffect(() => {
-    let resendTimer;
-    console.log(isResendOTPEnabled);
-    if (!isResendOTPEnabled) {
-      resendTimer = setInterval(() => {
-        setResendOTPTimeout((prev) => {
-          const newTimer = prev - 1;
-          console.log(newTimer);
-
-          if (newTimer <= 0) {
-            clearInterval(resendTimer);
-            setIsResendOTPEnabled(true);
-          }
-          return newTimer;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      clearInterval(resendTimer);
-    };
-  }, [isResendOTPEnabled]);
+  const name = searchParams.name;
+  const mobileNo = searchParams.mobileNo;
 
   const [otp, setOtp] = useState(["_", "_", "_", "_"]);
   const [otpFieldIndex, setOtpFieldIndex] = useState(0);
   const [finalOtp, setFinalOtp] = useState(otp.join(""));
 
-  const [isFinalOTPValid, setIsFinalOTPValid] = useState(false);
+  const [isFinalOTPValid, setIsFinalOTPValid] = useState(true);
 
   const [formSubmitError, setFormSubmitError] = useState({
     isError: false,
@@ -69,6 +33,35 @@ export default function Page() {
   });
 
   const otpBoxesRefs = [useRef(null), useRef(null), useRef(null), useRef(null)]; // references for input fields
+
+  const [isResendOTPEnabled, setIsResendOTPEnabled] = useState(false);
+  const [resendOTPTimeout, setResendOTPTimeout] = useState(30);
+
+  const dispatch = useDispatch();
+
+  const handleResendOTP = async () => {
+    try {
+      if (isResendOTPEnabled) {
+        delete searchParams.otp;
+        const response = await axios.post(
+          `http://192.168.118.210:8000/auth/sendOtp`,
+          searchParams
+        );
+        setIsResendOTPEnabled(false);
+        setOtp(["_", "_", "_", "_"]);
+        setOtpFieldIndex(0);
+        setFinalOtp("");
+        setFormSubmitError({
+          isError: false,
+          message: "",
+        });
+        setResendOTPTimeout(30);
+        setIsFinalOTPValid(false);
+      }
+    } catch (error) {
+      console.error("Resend OTP error => ", error.response.data.message);
+    }
+  };
 
   const handleOTPkeyPress = useCallback(
     ({ nativeEvent: { key } }) => {
@@ -108,33 +101,66 @@ export default function Page() {
     [otpFieldIndex]
   );
 
+  const handleOTPSubmit = async () => {
+    try {
+      // TODO : post the object
+      if (!isFinalOTPValid) return;
+
+      searchParams.otp = finalOtp;
+      const response = await axios.post(
+        `http://192.168.118.210:8000/auth/signup`,
+        searchParams
+      );
+
+      console.log(response);
+
+      dispatch(setUserAuthData(response.data.user));
+      router.dismissAll();
+      router.replace("/(tabs)");
+
+      setFormSubmitError({
+        isError: true,
+        message: response.data.message,
+      });
+    } catch (error) {
+      console.error("OTP verfication page: -->", error.response.data.message);
+      setFormSubmitError({
+        isError: true,
+        message: error.response.data.message,
+      });
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    let resendTimer;
+    console.log(isResendOTPEnabled);
+    if (!isResendOTPEnabled) {
+      resendTimer = setInterval(() => {
+        setResendOTPTimeout((prev) => {
+          const newTimer = prev - 1;
+          console.log(newTimer);
+
+          if (newTimer <= 0) {
+            clearInterval(resendTimer);
+            setIsResendOTPEnabled(true);
+          }
+          return newTimer;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(resendTimer);
+    };
+  }, [isResendOTPEnabled]);
+
   useEffect(() => {
     setFormSubmitError(false);
     setFinalOtp(otp.join(""));
   }, [otp]);
 
   const router = useRouter();
-
-  const handleOTPSubmit = () => {
-    try {
-      // TODO : post the object
-
-      console.log(finalOtp);
-
-      if (finalOtp !== "1234") {
-        setFormSubmitError({
-          isError: true,
-          message:
-            "OTP verification failed, kindly check and enter correct OTP.",
-        });
-      } else {
-        router.dismissAll();
-        router.replace("/(tabs)");
-      }
-    } catch (error) {
-      console.error("OTP verfication page: -->", error);
-    }
-  };
 
   useEffect(() => {
     setIsFinalOTPValid(isValid4DigitOtp(finalOtp));
@@ -164,7 +190,7 @@ export default function Page() {
           <View className="flex flex-row items-center justify-center gap-x-4 w-[100%]">
             <TextInput
               style={
-                formSubmitError?.isError || !isFinalOTPValid
+                formSubmitError?.isError
                   ? {
                       borderWidth: 1,
                       borderColor: "red",
@@ -185,7 +211,7 @@ export default function Page() {
             />
             <TextInput
               style={
-                formSubmitError?.isError || !isFinalOTPValid
+                formSubmitError?.isError
                   ? {
                       borderWidth: 1,
                       borderColor: "red",
@@ -206,7 +232,7 @@ export default function Page() {
             />
             <TextInput
               style={
-                formSubmitError?.isError || !isFinalOTPValid
+                formSubmitError?.isError
                   ? {
                       borderWidth: 1,
                       borderColor: "red",
@@ -227,7 +253,7 @@ export default function Page() {
             />
             <TextInput
               style={
-                formSubmitError?.isError || !isFinalOTPValid
+                formSubmitError?.isError
                   ? {
                       borderWidth: 1,
                       borderColor: "red",
@@ -264,6 +290,7 @@ export default function Page() {
             </Text>
           )}
           <TouchableOpacity
+            disabled={formSubmitError.isError || !isFinalOTPValid}
             className={`flex justify-center items-center h-[55px] w-[90%] ${!isFinalOTPValid ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
             onPress={handleOTPSubmit}>
             <Text className="text-[20px] text-white font-[poppins-bold]">

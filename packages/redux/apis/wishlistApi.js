@@ -7,7 +7,7 @@ export const wishlistApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER_URL,
   }),
-  // tagTypes: ["Wishlist"],
+  tagTypes: ["Wishlist"],
   endpoints: (builder) => ({
     getWishlist: builder.query({
       query: () => "wishlist",

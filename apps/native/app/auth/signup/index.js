@@ -23,6 +23,8 @@ import {
 } from "validator";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import axios from "axios";
+
 export default function Page() {
   // const [formData, setFormData] = useState({
   //   name: { value: null, isTouched: null, isError: null },
@@ -46,7 +48,7 @@ export default function Page() {
 
   const router = useRouter();
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     try {
       // TODO : send fetch request to
 
@@ -57,12 +59,19 @@ export default function Page() {
         { name: "", email: "", mobileNo: "", password: "" }
       ); // postable form data
 
+      const response = await axios.post(
+        `http://192.168.118.210:8000/auth/sendOtp`,
+        extractedData
+      );
+
+      console.log(response);
+
       router.push({
         pathname: "/auth/verify_otp",
-        // params: extractedData,
+        params: extractedData,
       });
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
     }
   };
 

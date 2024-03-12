@@ -7,7 +7,7 @@ export const cartApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER_URL,
   }),
-  // tagTypes: ["Cart"],
+  tagTypes: ["Cart"],
   endpoints: (builder) => ({
     getCart: builder.query({
       query: () => "cart",

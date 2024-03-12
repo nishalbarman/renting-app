@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const dbConnect = require("./config/dbConfig");
 
 dbConnect(); // connect to databse
@@ -8,18 +9,34 @@ const app = express();
 
 const extractToken = async (req, res, next) => {
   try {
+    const publicRout =
+      req.url === "/auth/login" ||
+      req.url === "/auth/signup" ||
+      req.url === "/auth/sendOtp" ||
+      req.url === "/pay/razorpay/hook" ||
+      req.url === "/get-image-bg-color";
+
+    if (publicRout) {
+      return next();
+    }
+
     const authorization = req.headers.get("Authorization");
     const token = authorization.split("")[1];
     if (!token) {
       return res.status(403).json({ message: "No token provided" });
     }
     req.jwt = { token: token };
-    next();
+    return next();
   } catch (error) {
     return res.status(403).json({ message: "No token provided" });
   }
 };
 
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
 app.use(extractToken);
 

@@ -7,13 +7,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Foundation } from "@expo/vector-icons";
 
 import { isValidIndianMobileNumber, isValidPassword } from "validator";
 import { SafeAreaView } from "react-native-safe-area-context";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setUserAuthData } from "@store/rtk";
 
 export default function Page() {
   const [formData, setFormData] = useState({
@@ -22,10 +25,34 @@ export default function Page() {
   });
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const handleLogin = () => {};
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleLogin = async () => {
+    try {
+      const extractedData = Object.keys(formData).reduce(
+        (newFormData, keyName) => {
+          return { ...newFormData, [keyName]: formData[keyName].value };
+        },
+        { mobileNo: "", password: "" }
+      ); // postable form data
+
+      const response = await axios.post(
+        `http://192.168.118.210:8000/auth/sendOtp`,
+        extractedData
+      );
+
+      console.log(response);
+
+      dispatch(setUserAuthData(response.data.user));
+      router.dismissAll();
+      router.replace("/(tabs)");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     setIsSubmitDisabled(
@@ -85,9 +112,10 @@ export default function Page() {
               * Not a valid indian mobile number
             </Text>
           ) : (
-            formData.password.isTouched && (
-              <Text className="self-start text-[14px] font-[poppins]">✔️</Text>
-            )
+            <>
+              {/* formData.password.isTouched && (
+              <Text className="self-start text-[14px] font-[poppins]">✔️</Text>) */}
+            </>
           )}
 
           <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
@@ -135,9 +163,11 @@ export default function Page() {
               uppercase letter, and one special character.
             </Text>
           ) : (
-            formData.password.isTouched && (
-              <Text className="self-start text-[14px] font-[poppins]">✔️</Text>
-            )
+            <>
+              {/* ( formData.password.isTouched && (
+              <Text className="self-start text-[14px] font-[poppins]">✔️</Text>)
+              ) */}
+            </>
           )}
 
           <Link

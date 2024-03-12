@@ -1,17 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setUserAuthData } from "../slices/authSlice";
 
-const SERVER_URL = process.env.SERVER_URL || "http://localhost:8000";
+const SERVER_URL = process.env.SERVER_URL || "http://localhost:8000/";
 
 export const userAPI = createApi({
   reducerPath: "user",
-  baseQuery: fetchBaseQuery({ baseUrl: `${SERVER_URL}/user` }),
+  baseQuery: fetchBaseQuery({ baseUrl: SERVER_URL }),
   tagTypes: ["Post"],
   endpoints: (builder) => ({
     /** REQUIRED ADMIN ROLE **/
     getAllUser: builder.query({
       query: () => ({
-        url: `/`,
+        url: `user`,
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -31,7 +31,7 @@ export const userAPI = createApi({
     /** REQUIRED ADMIN ROLE **/
     getOneUser: builder.query({
       query: (id) => ({
-        url: `/${id}`,
+        url: `${id}`,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getState()?.auth?.jwtToken}`,
@@ -50,7 +50,7 @@ export const userAPI = createApi({
     /* UPDATES LOGGED IN USERS DATA, ID GETS RETRIEVED FROM JWT TOKEN WHILE UPDATING */
     updateUserEmail: builder.mutation({
       query: ({ newEmail, prevEmailOTP, newEmailOTP }) => ({
-        url: "/update_email",
+        url: "update_email",
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export const userAPI = createApi({
     /* UPDATES LOGGED IN USERS DATA, ID GETS RETRIEVED FROM JWT TOKEN WHILE UPDATING */
     updateUserMobile: builder.mutation({
       query: ({ newMobileNo, prevMobileOTP, newMobileOTP }) => ({
-        url: "/update_mobile",
+        url: "update_mobile",
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export const userAPI = createApi({
     /** REQUIRED ADMIN ROLE **/
     updateUser: builder.mutation({
       query: (id, newUserObject) => ({
-        url: `/${id}`,
+        url: `${id}`,
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +112,7 @@ export const userAPI = createApi({
     /** REQUIRED ADMIN ROLE **/
     updateUser: builder.mutation({
       query: (id, newUserObject) => ({
-        url: `/${id}`,
+        url: `${id}`,
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

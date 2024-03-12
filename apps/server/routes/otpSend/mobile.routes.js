@@ -1,28 +1,54 @@
 const express = require("express");
 const { Otp } = require("../../models/models");
-const { generateRandomCode, isValidIndianMobileNumber } = require("validator");
-const otpSender = require("../../helpter/otpSender");
+const {
+  generateRandomCode,
+  isValidIndianMobileNumber,
+  hasOneSpaceBetweenNames,
+  isValidEmail,
+} = require("validator");
+const fast2SMS = require("../../helpter/fast2SMS");
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const mobileNo = req.query.mobileNo;
+    const error = [];
+    const { email, name, mobileNo } = req.body;
+
+    console.log({ email, name, mobileNo });
+
+    if (!hasOneSpaceBetweenNames(name)) {
+      error.push("Full name required");
+    }
+
+    if (!isValidEmail(email)) {
+      error.push("Invalid email");
+    }
 
     if (!isValidIndianMobileNumber(mobileNo)) {
-      return res.status(400).json({
-        status: false,
-        message: "Invalid phone number",
-      });
+      error.push("Invalid phone number");
+    }
+
+    if (error.length > 0) {
+      return res.status(200).json({ status: false, message: error.join(", ") });
     }
 
     const randomCode = generateRandomCode();
+
+    console.log(randomCode);
+
     const text = `Your Renting App verification code is: ${randomCode}. Don't share this code with anyone; our employees will never ask for the code.`;
 
-    const otpObject = new Otp({ mobileNo: mobileNo, otp: randomCode });
+    const otpObject = new Otp({
+      email: email,
+      name: name,
+      mobileNo: mobileNo,
+      otp: randomCode,
+    });
     await otpObject.save();
 
-    await otpSender({ numbers: mobileNo, message: text });
+    // await fast2SMS({ numbers: mobileNo, message: randomCode });
+
     return res.status(200).json({
       status: true,
       message: "OTP sent to your mobile number",

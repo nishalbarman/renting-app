@@ -7,17 +7,20 @@ const { Vonage } = require("@vonage/server-sdk");
 
 const vonage = new Vonage({
   apiKey: "4025a7f7",
-  apiSecret: "cjBhwtjYZ8yGnrgW",
+  apiSecret: "45ddgsfg3gA",
 });
 
-export async function sendSMS(messageObject) {
-  // messageObject = {
-  //   from: '',
-  //   to: '',
-  //   text: ''
-  // };
+async function sendSMS({ numbers, message }) {
+  const messageObject = {
+    from: "54453",
+    to: numbers,
+    text: message,
+  };
+
   const response = await vonage.sms.send(messageObject);
   console.log("Message sent successfully");
   console.log(response);
   return response;
 }
+
+module.exports = sendSMS;

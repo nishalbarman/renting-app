@@ -16,9 +16,11 @@
   "author": "Nishal Barman",
   "license": "ISC",
   "dependencies": {
+    "@vonage/server-sdk": "^3.13.1",
     "axios": "^1.6.7",
     "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5",
     "express": "^4.18.3",
     "firebase-admin": "^12.0.0",
     "firebase-utils": "*",
@@ -28,6 +30,7 @@
     "multer": "^1.4.5-lts.1",
     "password-validator": "^5.3.0",
     "razorpay": "^2.9.2",
+    "twilio": "^5.0.0",
     "uuid": "^9.0.1",
     "validator": "*"
   },

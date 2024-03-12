@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setUserAuthData } from "../slices/authSlice";
 
-const SERVER_URL = process.env.SERVER_URL || "http://localhost:8000";
+const SERVER_URL = process.env.SERVER_URL || "http://localhost:8000/";
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -9,7 +9,7 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (user) => ({
-        url: `/auth/login`,
+        url: `auth/login`,
         method: "POST",
         body: user,
       }),
@@ -25,7 +25,7 @@ export const authApi = createApi({
 
     signup: builder.mutation({
       query: (user) => ({
-        url: `/auth/signup`,
+        url: `auth/signup`,
         method: "POST",
         body: user,
       }),

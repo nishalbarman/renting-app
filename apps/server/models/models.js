@@ -28,8 +28,8 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     isEmailVerfied: { type: Boolean, default: false },
     emailVerifyToken: { type: String, default: "" },
-    isMobileNoVerified: { type: Boolean, default: false },
-    mobileNoVerifyToken: { type: String, default: "" },
+    isMobileNoVerified: { type: Boolean, default: true },
+    // mobileNoVerifyToken: { type: String, default: "" },
     resetToken: { type: String, default: "" },
     role: { type: mongoose.Types.ObjectId, ref: "roles" }, // 0 means normal user, 1 means admin, 2 means seller
     address: { type: mongoose.Types.ObjectId, ref: "addresses", default: null },
@@ -262,8 +262,8 @@ const paymentGatewaySchema = new mongoose.Schema({
 
 const User = mongoose.models.users || mongoose.model("users", userSchema);
 
-const Coupon =
-  mongoose.models.coupons || mongoose.model("coupons", couponSchema);
+// const Coupon =
+//   mongoose.models.coupons || mongoose.model("coupons", couponSchema);
 
 const Role = mongoose.models.roles || mongoose.model("roles", roleSchema);
 
@@ -446,10 +446,10 @@ module.exports = {
   Wishlist,
   Address,
   Order,
-  Coupon,
   Size,
   Color,
   RazorPayOrder,
   PaymentGateway,
   ProductVarient,
 };
+// Coupon,
