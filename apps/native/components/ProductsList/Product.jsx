@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
-import { FontAwesome } from "@expo/vector-icons";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 function Product({
@@ -34,6 +34,10 @@ function Product({
 
   const [onCart, setOnCart] = useState(false);
 
+  const starsArray = useMemo(() => {
+    return Array.from({ length: 5 });
+  }, []);
+
   const handleAddToWishlist = () => {
     setOnCart((prev) => !prev);
   };
@@ -46,7 +50,7 @@ function Product({
     <TouchableOpacity
       onPress={handleProductClick}
       activeOpacity={0.6}
-      className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-white rounded-md shadow-sm pb-[20px]`}>
+      className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-white rounded-md shadow-sm pb-[1%]`}>
       <View className="w-[100%] h-[200px] p-[3%] ">
         {(isRentable && isPurchasable) || (
           <Text
@@ -83,15 +87,33 @@ function Product({
           {category?.name}
         </Text>
 
-        <Text className="text-[14px] font-[poppins-mid] leading-[22px] w-[100%]">
+        <Text
+          numberOfLines={2}
+          className="text-[14px] font-[poppins-mid] leading-[22px] w-[100%]">
           {title}
         </Text>
-        <Text className="text-[15px] font-[poppins-bold] align-center mb-[5px]">
-          ⭐ {stars}{" "}
-          <Text className="text-[#A7A6A7] text-[15px] font-[poppins-mid] align-middle">
+
+        <View className="flex flex-row items-center">
+          <View className="flex flex-row items-center justify-center">
+            {starsArray.map((item, index) => {
+              return (
+                <AntDesign
+                  key={index}
+                  onPress={() => {
+                    setCurrentUserReview(index + 1);
+                  }}
+                  name="star"
+                  size={18}
+                  color={index + 1 <= Math.round(stars) ? "orange" : "black"}
+                />
+              );
+            })}
+          </View>
+          <Text className="text-[#A7A6A7] text-[13px] font-[poppins-mid] align-middle">
             ({totalFeedbacks})
           </Text>
-        </Text>
+        </View>
+
         {isPurchasable && isRentable ? (
           <View className="flex flex-col gap-y-[0.8px]">
             {/* <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">

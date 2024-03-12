@@ -43,6 +43,6 @@ export default function Page() {
     return <Redirect href={"/auth/login"} />;
   }
 
-  return <Redirect href={"/product"} />;
+  // return <Redirect href={"/product"} />;
   return <Redirect href={"/(tabs)"} />;
 }

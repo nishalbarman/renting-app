@@ -1,12 +1,18 @@
-import React from "react";
+import { AntDesign } from "@expo/vector-icons";
+import React, { useMemo } from "react";
 import { Image, Text, View } from "react-native";
 
 function FeedbackCard({
   userIcon,
   feedbackGivenBy,
+  starsGiven,
   feedBackDate,
   feedbackText,
 }) {
+  const starsArray = useMemo(() => {
+    return Array.from({ length: 5 });
+  }, []);
+
   return (
     <View className="p-[0_0_0_10px] mt-[5px] mb-[18px]">
       <View className="relative w-[100%] h-fit p-1">
@@ -22,19 +28,24 @@ function FeedbackCard({
           <Text className="font-[poppins-bold] text-[15px]">
             {feedbackGivenBy}
           </Text>
-          <View className="flex flex-row justify-between gap-x-4 pb-2">
-            <View className="flex gap-x-1 flex-row flex-wrap">
-              <Text>⭐</Text>
-              <Text>⭐</Text>
-              <Text>⭐</Text>
-              <Text>⭐</Text>
-              <Text>⭐</Text>
+          <View className="flex flex-row justify-between items-center pb-2">
+            <View className="flex flex-row items-center justify-center gap-x-1">
+              {starsArray.map((item, index) => {
+                return (
+                  <AntDesign
+                    key={index}
+                    name="star"
+                    size={20}
+                    color={
+                      index + 1 <= Math.round(starsGiven) ? "orange" : "black"
+                    }
+                  />
+                );
+              })}
             </View>
-            <View>
-              <Text>{feedBackDate}</Text>
-            </View>
+            <Text>{feedBackDate}</Text>
           </View>
-          <Text className="leading-[22px] font-[poppins-mid] text-[15px]">
+          <Text className="leading-[22px] font-[poppins] text-[16px]">
             {feedbackText}
           </Text>
         </View>
