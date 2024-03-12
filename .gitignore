@@ -23,9 +23,9 @@ build
 dist
 
 # debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+npm-debug.*
+yarn-debug.*
+yarn-error.*
 
 # local env files
 .env
@@ -36,7 +36,6 @@ yarn-error.log*
 
 # turbo
 .turbo
-
 
 # Expo
 .expo/
@@ -56,17 +55,9 @@ ios
 # Metro
 .metro-health-check*
 
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
-
 # macOS
 .DS_Store
 *.pem
-
-# local env files
-.env*.local
 
 # typescript
 *.tsbuildinfo
