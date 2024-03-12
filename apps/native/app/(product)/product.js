@@ -1,11 +1,18 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Button,
   Dimensions,
   FlatList,
   ScrollView,
   Text,
+  TextInput,
   TouchableHighlight,
   TouchableOpacity,
   View,
@@ -15,6 +22,9 @@ import { Image } from "expo-image";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import HTML from "react-native-render-html";
+
+import ActionSheet from "react-native-actions-sheet";
+
 import FeedbackCard from "../../components/Feedback/FeedbackCard";
 import RelatedProductList from "../../components/RelatedProductList/RelatedProductList";
 
@@ -29,7 +39,16 @@ export default function Page() {
 
   const [availableStocks] = useState(10);
 
-  const width = Dimensions.get("window").width;
+  const reviewSheetModalRef = useRef(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  const handleReviewSheetOpen = useCallback(() => {
+    reviewSheetModalRef.current?.open();
+  }, []);
+
+  const { width, height } = Dimensions.get("window");
 
   const productDetails = {
     previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
@@ -103,28 +122,26 @@ export default function Page() {
 
         {/* product body */}
         <View className="flex flex-1 p-[12px] flex-col gap-y-5">
-          <Text className="font-[mrt-inter] leading-[24px] text-grey text-[16px]">
+          <Text className="font-[poppins-mid] leading-[24px] text-grey text-[16px]">
             ZEBRONICS ZIUM Mid-Tower gaming cabinet, M-ATX/M-Itx, Fins Foccussed
             Multicolor Rear Fan, Multi Color Led Strip, Acryflic Glass Side
             Panel, USB 3.0, USB 2.0
           </Text>
-
           {/* rating and start */}
-          <Text className="font-[mrt-mid] leading-[20px] text-grey text-[18px]">
+          <Text className="font-[poppins-mid] leading-[20px] text-grey text-[18px]">
             ⭐ {productDetails.stars}{" "}
             <Text className="text-[#787878]">
               ({productDetails.totalFeedbacks})
             </Text>
           </Text>
-
           {/* size and color section */}
           <View className="flex flex-col rounded-[10px] shadow bg-[#ededed] p-2 justify-center">
             <View className="bg-white rounded-[10px] p-4 pt-5 pb-5">
               {/* // size section */}
               <View className="flex flex-col pb-4 gap-y-2">
-                <Text className="text-[17px] font-[mrt]">
+                <Text className="text-[17px] font-[poppins]">
                   Size:{" "}
-                  <Text className="uppercase font-[mrt-bold] text-[16px]">
+                  <Text className="uppercase font-[poppins-bold] text-[16px]">
                     {selectedProductSize}
                   </Text>
                 </Text>
@@ -147,7 +164,7 @@ export default function Page() {
                           color:
                             selectedProductSize === item ? "white" : "black",
                         }}
-                        className="text-[15px] font-[mrt-bold]">
+                        className="text-[15px] font-[poppins-bold]">
                         {item}
                       </Text>
                     </TouchableOpacity>
@@ -158,9 +175,9 @@ export default function Page() {
 
               {/* // Colors section */}
               <View className="flex flex-col pb-2 gap-y-2">
-                <Text className="text-[17px] font-[mrt]">
+                <Text className="text-[17px] font-[poppins]">
                   Color:{" "}
-                  <Text className="uppercase font-[mrt-bold] text-[16px]">
+                  <Text className="uppercase font-[poppins-bold] text-[16px]">
                     {selectedProductColor}
                   </Text>
                 </Text>
@@ -187,22 +204,24 @@ export default function Page() {
               </View>
             </View>
           </View>
-
           {/* price and quantity section */}
           <View>
             <View className="flex flex-row justify-between items-center gap-y-1 p-[0px_10px]">
               <View className="flex gap-y-2">
                 {toogleSale ? (
-                  <Text className="text-[30px] font-[mrt-bold]">
+                  <Text className="text-[30px] font-[poppins-bold]">
                     ₹1799{" "}
-                    <Text className="text-[15px] text-[#787878] font-[mrt] line-through">
+                    <Text className="text-[15px] text-[#787878] font-[poppins] line-through">
                       ₹2799
                     </Text>
                   </Text>
                 ) : (
-                  <Text className="text-[30px] font-[mrt-bold]">
+                  <Text className="text-[30px] font-[poppins-bold]">
                     ₹179
-                    <Text className="text-[15px] font-[mrt-bold]"> / Day</Text>
+                    <Text className="text-[15px] font-[poppins-bold]">
+                      {" "}
+                      / Day
+                    </Text>
                   </Text>
                 )}
 
@@ -236,7 +255,7 @@ export default function Page() {
                     className="rounded-full w-[37px] h-[37px] flex flex items-center justify-center bg-white">
                     <AntDesign name="minus" size={29} color="black" />
                   </TouchableOpacity>
-                  <Text className="font-[mrt-xbold] text-[18px] mr-4 ml-4">
+                  <Text className="font-[poppins-xbold] text-[18px] mr-4 ml-4">
                     {quantity}
                   </Text>
                   <TouchableOpacity
@@ -249,11 +268,11 @@ export default function Page() {
                 </View>
                 <View className="mt-3">
                   {availableStocks === 0 || quantity > availableStocks ? (
-                    <Text className="text-[13px] text-[#d12626] font-[mrt-bold]">
+                    <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
                       Out of stock
                     </Text>
                   ) : (
-                    <Text className="text-[13px] text-[#32a852] font-[mrt-bold]">
+                    <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
                       ({availableStocks} items) In stock
                     </Text>
                   )}
@@ -264,33 +283,35 @@ export default function Page() {
             {/* buy now or add to cart button */}
             <View className="pt-7 flex flex-col gap-y-4">
               <TouchableHighlight className="bg-dark-purple h-[60px] w-[100%] text-[16px] text-white flex flex-row justify-center items-center rounded-md">
-                <Text className="text-white text-[20px] font-[mrt-xbold]">
+                <Text className="text-white text-[20px] font-[poppins-xbold]">
                   Add To Cart
                 </Text>
               </TouchableHighlight>
 
               <TouchableHighlight className="bg-[#f07354] h-[60px] w-[100%] text-[16px] text-white flex flex-row justify-center items-center rounded-md">
-                <Text className="text-white text-[20px] font-[mrt-xbold]">
+                <Text className="text-white text-[20px] font-[poppins-xbold]">
                   By Now
                 </Text>
               </TouchableHighlight>
             </View>
           </View>
-
           {/* product description */}
           <View className="pt-4 pb-6 pl-1 pr-1">
-            <Text className="text-[17px] font-[mrt-bold]">Product Details</Text>
-            <HTML source={{ html: customHTML }} />
+            <Text className="text-[17px] font-[poppins-bold]">
+              Product Details
+            </Text>
+            <HTML contentWidth={width} source={{ html: customHTML }} />
           </View>
-
           {/* rating and reviews */}
           <View className="pt-4 pb-6 flex flex-col gap-y-2 pl-1 pr-1">
             <View className="flex flex-row justify-between items-center">
               <View className="flex flex-col gap-y-2">
-                <Text className="text-[17px] font-[mrt-bold]">Feedbacks</Text>
+                <Text className="text-[17px] font-[poppins-bold]">
+                  Feedbacks
+                </Text>
                 <View>
                   <View>
-                    <Text className="font-[mrt-mid] leading-[20px] text-grey text-[15px]">
+                    <Text className="font-[poppins-mid] leading-[20px] text-grey text-[15px]">
                       ⭐ {productDetails.stars}{" "}
                       <Text className="text-[#787878]">
                         ({productDetails.totalFeedbacks})
@@ -301,7 +322,7 @@ export default function Page() {
               </View>
 
               <TouchableOpacity
-                onPress={() => {}}
+                onPress={handleReviewSheetOpen}
                 className="rounded-full w-[40px] h-[40px] flex flex-row self-start items-center justify-center bg-dark-purple shadow">
                 <AntDesign name="plus" size={24} color="white" />
               </TouchableOpacity>
@@ -328,10 +349,9 @@ export default function Page() {
               </TouchableOpacity>
             </View>
           </View>
-
           {/* related products */}
           <View className="pt-4 pb-6 flex flex-col gap-y-2 pl-1 pr-1">
-            <Text className="text-[17px] font-[mrt-bold]">
+            <Text className="text-[17px] font-[poppins-bold]">
               Related Products
             </Text>
 
@@ -339,6 +359,36 @@ export default function Page() {
               <RelatedProductList />
             </View>
           </View>
+
+          <ActionSheet ref={reviewSheetModalRef}>
+            <View className="pt-8 flex flex-col items-center gap-y-5">
+              <Text className="font-[poppins-bold] text-[21px]">
+                What is your rate?
+              </Text>
+              <View className="flex flex-row items-center justify-center gap-x-3">
+                <AntDesign name="star" size={35} color="orange" />
+                <AntDesign name="star" size={35} color="orange" />
+                <AntDesign name="star" size={35} color="orange" />
+                <AntDesign name="staro" size={35} color="black" />
+                <AntDesign name="staro" size={35} color="black" />
+              </View>
+              <View className="pl-10 pr-10 pt-4">
+                <Text className="font-[poppins-mid] text-[21px] text-center">
+                  Please share your opinion about the product
+                </Text>
+              </View>
+              <View className={"w-[100%] pl-2 pr-2"}>
+                <TextInput
+                  style={{
+                    width: width - 50,
+                    color: "black",
+                  }}
+                  className={`h-[250px] shadow-lg border text-black flex items-start justify-start`}
+                  placeholder="Your review"
+                />
+              </View>
+            </View>
+          </ActionSheet>
         </View>
       </ScrollView>
     </SafeAreaView>

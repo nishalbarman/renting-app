@@ -26,11 +26,13 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.73.4",
+    "react-native-actions-sheet": "^0.9.3",
     "react-native-appearance": "^0.3.4",
     "react-native-bouncy-checkbox": "^3.0.7",
-    "react-native-gesture-handler": "2.14.0",
+    "react-native-gesture-handler": "^2.15.0",
     "react-native-picker-select": "^9.0.1",
     "react-native-radio-buttons-group": "^3.0.8",
+    "react-native-raw-bottom-sheet": "^2.2.1",
     "react-native-reanimated": "3.6.2",
     "react-native-reanimated-carousel": "^3.5.1",
     "react-native-render-html": "^6.3.4",
@@ -43,6 +45,10 @@
     "@babel/core": "^7.20.0",
     "expo-system-ui": "^2.9.3",
     "tailwindcss": "3.3.2"
+  },
+  "resolutions": {
+    "wrap-ansi": "7.0.0",
+    "string-width": "4.1.0"
   },
   "private": true
 }

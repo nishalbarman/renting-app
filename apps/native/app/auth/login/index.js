@@ -51,15 +51,15 @@ export default function Page() {
             className="w-[200px] h-[200px]"
             source={require("../../../assets/illustrations/shopp_man.gif")}
           />
-          <Text className="text-[30px] font-[mrt-mid]">Welcome back</Text>
-          <Text className="text-[18px] font-[mrt-light]">
+          <Text className="text-[30px] font-[poppins-mid]">Welcome back</Text>
+          <Text className="text-[18px] font-[poppins-light]">
             sign in to access your account
           </Text>
         </View>
-        <View className="w-[100%] flex flex-col gap-y-[5.5%] items-center mt-4">
+        <View className="w-[100%] flex flex-col gap-y-[13px] items-center mt-4">
           <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
             <TextInput
-              className="h-[100%] w-[100%] inline-block rounded-lg font-[mrt-mid] placeholder:text-[16px]"
+              className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="numeric"
@@ -81,18 +81,18 @@ export default function Page() {
           </View>
 
           {formData.mobileNo.isError ? (
-            <Text className="self-start text-[14px] font-[mrt-bold] text-[#EA1E24]">
+            <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
               * Not a valid indian mobile number
             </Text>
           ) : (
             formData.password.isTouched && (
-              <Text className="self-start text-[14px] font-[mrt]">✔️</Text>
+              <Text className="self-start text-[14px] font-[poppins]">✔️</Text>
             )
           )}
 
           <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
             <TextInput
-              className="h-[100%] w-[100%] rounded-lg font-[mrt-mid] placeholder:text-[16px]"
+              className="h-[100%] w-[100%] rounded-lg font-[poppins-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="text"
@@ -130,37 +130,37 @@ export default function Page() {
           </View>
 
           {formData.password.isError ? (
-            <Text className="self-start text-[14px] font-[mrt-bold] text-[#EA1E24]">
+            <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
               * Password should be of atleast 8 digits and should contain one
               uppercase letter, and one special character.
             </Text>
           ) : (
             formData.password.isTouched && (
-              <Text className="self-start text-[14px] font-[mrt]">✔️</Text>
+              <Text className="self-start text-[14px] font-[poppins]">✔️</Text>
             )
           )}
 
           <Link
             push
             href="/resetpass"
-            className="text-[15px] text-[#6C63FF] self-end underline underline-offset-[5px] font-[mrt-mid]">
+            className="text-[15px] text-[#6C63FF] self-end underline underline-offset-[5px] font-[poppins-mid]">
             Forgot password?
           </Link>
         </View>
         <View className="w-[100%] flex flex-col gap-y-7 items-center mt-[-1px]">
           <TouchableOpacity
             disabled={isSubmitDisabled}
-            className={`flex justify-center items-center h-[60px] w-[100%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg disabled:bg-[rgba(40,40,41,0.8)]`}
+            className={`flex justify-center items-center h-[55px] w-[90%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg disabled:bg-[rgba(40,40,41,0.8)]`}
             onPress={handleLogin}>
-            <Text className="text-[20px] text-white font-[mrt-bold]">
+            <Text className="text-[20px] text-white font-[poppins-bold]">
               Login
             </Text>
           </TouchableOpacity>
-          <Text className="text-center font-[mrt-mid] text-[16px]">
+          <Text className="text-center font-[poppins-mid] text-[16px]">
             New here?{" "}
             <Link
               replace
-              className="underline font-[mrt-bold]"
+              className="underline font-[poppins-bold]"
               href={"/auth/signup"}>
               Create an account
             </Link>

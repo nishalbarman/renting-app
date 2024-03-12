@@ -152,19 +152,29 @@ export default function Page() {
           rowGap: 40,
         }}>
         <View className="flex flex-col gap-y-10 items-center w-[100%]">
-          <Text className="self-start w-[100%] text-[28px] font-[mrt-mid]">
+          <Text className="self-start w-[100%] text-[28px] font-[poppins-mid]">
             Almost there
           </Text>
-          <Text className="font-[mrt-light] text-[18px] self-start">
-            Hi <Text className="font-[mrt-mid]">{name}</Text>, Please enter
+          <Text className="font-[poppins-light] text-[18px] self-start">
+            Hi <Text className="font-[poppins-mid]">{name}</Text>, Please enter
             4-digit code sent to your mobile no{" "}
-            <Text className="font-[mrt-mid]">{mobileNo}</Text> for verification
+            <Text className="font-[poppins-mid]">{mobileNo}</Text> for
+            verification
           </Text>
           <View className="flex flex-row items-center justify-center gap-x-4 w-[100%]">
             <TextInput
+              style={
+                formSubmitError?.isError || !isFinalOTPValid
+                  ? {
+                      borderWidth: 1,
+                      borderColor: "red",
+                      color: "red",
+                    }
+                  : {}
+              }
               ref={otpBoxesRefs[0]}
               inputMode="numeric"
-              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
+              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[poppins-mid] text-[16px] text-center text-[black]"
               maxLength={1}
               minLength={1}
               onKeyPress={handleOTPkeyPress}
@@ -174,9 +184,18 @@ export default function Page() {
               }}
             />
             <TextInput
+              style={
+                formSubmitError?.isError || !isFinalOTPValid
+                  ? {
+                      borderWidth: 1,
+                      borderColor: "red",
+                      color: "red",
+                    }
+                  : {}
+              }
               ref={otpBoxesRefs[1]}
               inputMode="numeric"
-              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
+              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[poppins-mid] text-[16px] text-center text-[black]"
               maxLength={1}
               minLength={1}
               placeholder="_"
@@ -186,9 +205,18 @@ export default function Page() {
               }}
             />
             <TextInput
+              style={
+                formSubmitError?.isError || !isFinalOTPValid
+                  ? {
+                      borderWidth: 1,
+                      borderColor: "red",
+                      color: "red",
+                    }
+                  : {}
+              }
               ref={otpBoxesRefs[2]}
               inputMode="numeric"
-              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
+              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[poppins-mid] text-[16px] text-center text-[black]"
               maxLength={1}
               minLength={1}
               placeholder="_"
@@ -198,9 +226,18 @@ export default function Page() {
               }}
             />
             <TextInput
+              style={
+                formSubmitError?.isError || !isFinalOTPValid
+                  ? {
+                      borderWidth: 1,
+                      borderColor: "red",
+                      color: "red",
+                    }
+                  : {}
+              }
               ref={otpBoxesRefs[3]}
               inputMode="numeric"
-              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[mrt-mid] text-[16px] text-center text-[black]"
+              className={`h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[poppins-mid] text-[16px] text-center text-[black]`}
               maxLength={1}
               minLength={1}
               placeholder="_"
@@ -211,44 +248,47 @@ export default function Page() {
             />
           </View>
           {finalOtp === "____" ? (
-            <Text className="font-[mrt-mid]">Enter 4 digit OTP</Text>
+            <Text className="font-[poppins-mid]">Enter 4 digit OTP</Text>
           ) : !isFinalOTPValid ? (
-            <Text className="font-[mrt-mid] text-[#EA4335]">
+            <Text className="font-[poppins-mid] text-[#EA4335]">
               Enter proper 4 digit OTP
             </Text>
           ) : !formSubmitError?.isError ? (
-            <Text className="font-[mrt-mid]">All set hit verify button</Text>
+            <Text className="font-[poppins-mid]">
+              All set hit verify button
+            </Text>
           ) : (
-            <Text className="animate-pulse font-[mrt-bold] text-[#EA4335]">
+            <Text className="animate-pulse font-[poppins-bold] text-[#EA4335]">
               {formSubmitError?.message ||
                 "Server error, kindly try after some time!"}
             </Text>
           )}
           <TouchableOpacity
-            className={`flex justify-center items-center h-[60px] w-[100%] ${!isFinalOTPValid ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
+            className={`flex justify-center items-center h-[55px] w-[90%] ${!isFinalOTPValid ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
             onPress={handleOTPSubmit}>
-            <Text className="text-[20px] text-white font-[mrt-bold]">
+            <Text className="text-[20px] text-white font-[poppins-bold]">
               Verify
             </Text>
           </TouchableOpacity>
         </View>
         <View className="flex flex-col gap-y-2">
-          <Text className="font-[mrt-bold] text-[15.8px] text-center">
+          <Text className="font-[poppins-bold] text-[15.8px] text-center">
             Didn't recieve any code?{" "}
-            <Text
-              onPress={() => {
-                if (resendOTPTimeout <= 0) {
-                  handleResendOTP();
-                }
-              }}
-              className={` ${resendOTPTimeout <= 0 ? "underline" : "line-through"} text-[#6C63FF]`}>
-              {/* ${resendOTPTimeout <= 0 ? "text-[#6C63FF]" : "text-[#CBE2FF]"} */}
-              Resend Again
-            </Text>
+            {resendOTPTimeout <= 0 && (
+              <Text
+                onPress={() => {
+                  if (resendOTPTimeout <= 0) {
+                    handleResendOTP();
+                  }
+                }}
+                className={`underline text-[#6C63FF]`}>
+                Resend Again
+              </Text>
+            )}
           </Text>
-          <Text className="text-center font-[mrt-mid] text-[#7F7E7F] text-[16px]">
+          <Text className="text-center font-[poppins-mid] text-[#7F7E7F] text-[16px]">
             Request new code in{" "}
-            <Text className="font-[mrt-bold]">00:{resendOTPTimeout}s</Text>
+            <Text className="font-[poppins-bold]">00:{resendOTPTimeout}s</Text>
           </Text>
         </View>
       </ScrollView>

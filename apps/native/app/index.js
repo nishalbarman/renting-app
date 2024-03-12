@@ -15,6 +15,11 @@ export default function Page() {
     "mrt-mid": require("../assets/fonts/montserrat/static/Montserrat-Medium.ttf"),
     "mrt-bold": require("../assets/fonts/montserrat/static/Montserrat-Bold.ttf"),
     "mrt-xbold": require("../assets/fonts/montserrat/static/Montserrat-ExtraBold.ttf"),
+    poppins: require("../assets/fonts/Poppins/Poppins-Regular.ttf"),
+    "poppins-light": require("../assets/fonts/Poppins/Poppins-Light.ttf"),
+    "poppins-mid": require("../assets/fonts/Poppins/Poppins-Medium.ttf"),
+    "poppins-bold": require("../assets/fonts/Poppins/Poppins-Bold.ttf"),
+    "poppins-xbold": require("../assets/fonts/Poppins/Poppins-ExtraBold.ttf"),
   }); // load the fonts
 
   const userToken = useSelector((state) => state.user.jwtToken);
@@ -38,6 +43,6 @@ export default function Page() {
     return <Redirect href={"/auth/login"} />;
   }
 
-  // return <Redirect href={"/product"} />;
+  return <Redirect href={"/product"} />;
   return <Redirect href={"/(tabs)"} />;
 }

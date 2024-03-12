@@ -96,15 +96,15 @@ export default function Page() {
             className="w-[90px] h-[90px]"
             source={require("../../../assets/illustrations/shopp_man.gif")}
           />
-          <Text className="text-[30px] font-[mrt-mid]">Get Started</Text>
-          <Text className="text-[18px] font-[mrt-light]">
+          <Text className="text-[30px] font-[poppins-mid]">Get Started</Text>
+          <Text className="text-[18px] font-[poppins-light]">
             by creating a free account.
           </Text>
         </View>
-        <View className="w-[100%] flex flex-col gap-y-[5.5%] items-center mt-4">
+        <View className="w-[100%] flex flex-col gap-y-[13px] items-center mt-4">
           <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
             <TextInput
-              className="h-[100%] w-[100%] inline-block rounded-lg font-[mrt-mid] placeholder:text-[16px]"
+              className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="text"
@@ -126,18 +126,20 @@ export default function Page() {
           </View>
 
           {formData.name.isError ? (
-            <Text className="self-start text-[14px] font-[mrt-bold] text-[#EA1E24]">
+            <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
               * Enter your full name
             </Text>
           ) : (
             formData.name.isTouched && (
-              <Text className="self-start text-[14px] font-[mrt]">✔️</Text>
+              <>
+                {/* <Text className="self-start text-[14px] font-[poppins]">✔️</Text> */}
+              </>
             )
           )}
 
           <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
             <TextInput
-              className="h-[100%] w-[100%] inline-block rounded-lg font-[mrt-mid] placeholder:text-[16px]"
+              className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="numeric"
@@ -159,18 +161,20 @@ export default function Page() {
           </View>
 
           {formData.mobileNo.isError ? (
-            <Text className="self-start text-[14px] font-[mrt-bold] text-[#EA1E24]">
+            <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
               * Not a valid mobile number
             </Text>
           ) : (
             formData.mobileNo.isTouched && (
-              <Text className="self-start text-[14px] font-[mrt]">✔️</Text>
+              <>
+                {/* <Text className="self-start text-[14px] font-[poppins]">✔️</Text> */}
+              </>
             )
           )}
 
           <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
             <TextInput
-              className="h-[100%] w-[100%] inline-block rounded-lg font-[mrt-mid] placeholder:text-[16px]"
+              className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="email"
@@ -192,18 +196,20 @@ export default function Page() {
           </View>
 
           {formData.email.isError ? (
-            <Text className="self-start text-[14px] font-[mrt-bold] text-[#EA1E24]">
+            <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
               * Not a valid email address
             </Text>
           ) : (
             formData.email.isTouched && (
-              <Text className="self-start text-[14px] font-[mrt]">✔️</Text>
+              <>
+                {/* <Text className="self-start text-[14px] font-[poppins]">✔️</Text> */}
+              </>
             )
           )}
 
           <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
             <TextInput
-              className="h-[100%] w-[100%] rounded-lg font-[mrt-mid] placeholder:text-[16px]"
+              className="h-[100%] w-[100%] rounded-lg font-[poppins-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="text"
@@ -241,80 +247,17 @@ export default function Page() {
           </View>
 
           {formData.password.isError ? (
-            <Text className="self-start text-[14px] font-[mrt-bold] text-[#EA1E24]">
+            <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
               * Password should be of atleast 8 digits and should contain one
               uppercase letter, and one special character.
             </Text>
           ) : (
             formData.password.isTouched && (
-              <Text className="self-start text-[14px] font-[mrt]">✔️</Text>
+              <>
+                {/* <Text className="self-start text-[14px] font-[poppins]">✔️</Text> */}
+              </>
             )
           )}
-
-          <View className="h-[60px] w-[100%] pr-[6%] border-none outline-none flex flex-row justify-start items-center">
-            <Text className="text-[13px] text-left font-[mrt-mid] leading-[23px]">
-              Gender
-            </Text>
-            {/* <RadioGroup
-              inital={0}
-              layout="row"
-              radioButtons={[
-                {
-                  id: 0,
-                  outerStyle: {
-                    width: 50,
-                    height: 50,
-                    borderColor: "black",
-                    borderRadius: 25,
-                  },
-                  innerStyle: {
-                    borderRadius: 25,
-                  },
-                  text: "Rainbow",
-                  value: "MALE",
-                },
-                {
-                  id: 1,
-                  outerStyle: {
-                    width: 50,
-                    height: 50,
-                    borderColor: "#FB4009",
-                    borderRadius: 25,
-                  },
-                  innerStyle: {
-                    borderRadius: 25,
-                  },
-                  text: "Rainbow",
-                  value: "FEMALE",
-                },
-                {
-                  id: 2,
-                  outerStyle: {
-                    width: 50,
-                    height: 50,
-                    borderColor: "#F6800F",
-                    borderRadius: 25,
-                  },
-                  innerStyle: {
-                    borderRadius: 25,
-                  },
-                  text: "Rainbow",
-                  value: "RAINBOW",
-                },
-              ]}
-              onPress={(item) => {
-                console.log(item);
-                setSelectedId(item);
-              }}
-              containerStyle={{
-                marginRight: 10,
-                marginTop: 10,
-                padding: 0,
-                width: 25,
-                height: 25,
-              }}
-            /> */}
-          </View>
 
           <View className="h-[60px] w-[100%] pr-[6%] border-none outline-none flex flex-row justify-start items-center">
             <BouncyCheckbox
@@ -336,18 +279,18 @@ export default function Page() {
                 }));
               }}
             />
-            <Text className="text-[13px] text-left font-[mrt-mid] leading-[23px]">
+            <Text className="text-[13px] text-left font-[poppins-mid] leading-[23px]">
               By continuing you are agree to our{" "}
               <Link
                 push
-                className="underline text-[#6C63FF] font-[mrt-bold]"
+                className="underline text-[#6C63FF] font-[poppins-bold]"
                 href={"/terms-&-conditions"}>
                 Terms & Conditions
               </Link>{" "}
               and{" "}
               <Link
                 push
-                className="underline text-[#6C63FF] font-[mrt-bold]"
+                className="underline text-[#6C63FF] font-[poppins-bold]"
                 href={"/privacy-policy"}>
                 Privacy Policy
               </Link>
@@ -358,17 +301,17 @@ export default function Page() {
         <View className="w-[100%] flex flex-col gap-y-6 items-center mt-[-1px]">
           <TouchableOpacity
             disabled={isSubmitDisabled}
-            className={`flex justify-center items-center h-[60px] w-[100%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
+            className={`flex justify-center items-center h-[55px] w-[90%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
             onPress={handleSignup}>
-            <Text className="text-[20px] text-white font-[mrt-bold]">
+            <Text className="text-[20px] text-white font-[poppins-bold]">
               Create account
             </Text>
           </TouchableOpacity>
-          <Text className="text-center font-[mrt-mid] text-[16px]">
+          <Text className="text-center font-[poppins-mid] text-[16px]">
             Already have an account?{" "}
             <Link
               replace
-              className="underline text-center font-[mrt-bold]"
+              className="underline text-center font-[poppins-bold]"
               href={"/auth/login"}>
               Login Now
             </Link>

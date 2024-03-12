@@ -216,11 +216,11 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
           style={{
             color: titleColor,
           }}
-          className="font-[mrt-xbold] text-[22px]">
+          className="font-[poppins-xbold] text-[22px]">
           {title}
         </Text>
         <Link
-          className="text-[15px] text-purple font-[mrt-bold] underline"
+          className="text-[15px] text-purple font-[poppins-bold] underline"
           href={`/products?section=${viewAllPath}`}>
           See All
         </Link>

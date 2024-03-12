@@ -15,7 +15,7 @@ function CategoryItem({ categoryImage, categoryName }) {
           contentPosition={"center"}
         />
       </View>
-      <Text className="font-[mrt-mid] self-center text-[12px] text-nowrap">
+      <Text className="font-[poppins-mid] self-center text-[12px] text-nowrap">
         {categoryName}
       </Text>
     </View>
