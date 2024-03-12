@@ -6,6 +6,6 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup ./src/index.js",
-    "dev": "yarn workspace validator run build -- --watch"
+    "dev": "yarn workspace validator run build --watch"
   }
 }

@@ -4,7 +4,7 @@ const MONGO_URI = process.env.MONGO_URI;
 
 module.exports = function connect() {
   try {
-    mongoose.conncet(MONGO_URI);
+    mongoose.connect(MONGO_URI);
     const connection = mongoose.connection;
 
     connection.on("connected", () => {

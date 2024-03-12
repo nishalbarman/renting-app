@@ -4,9 +4,34 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently \"yarn start:validator\" \"yarn start:firebase-utils\" \"yarn start\"",
+    "start": "nodemon index.js",
+    "start:validator": "yarn workspace validator dev",
+    "start:firebase-utils": "yarn workspace firebase-utils dev",
+    "build": "concurrently \"yarn build:firebase-utils\" \"yarn build:validator\" \"yarn build:tsup-build\"",
+    "build:tsup-build": "tsup ./index.js",
+    "build:firebase-utils": "yarn workspace firebase-utils build",
+    "build:validator": "yarn workspace validator build"
   },
-  "author": "Nishal",
-  "license": "ISC"
+  "author": "Nishal Barman",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0-rc.12",
+    "express": "^4.18.3",
+    "firebase-admin": "^12.0.0",
+    "firebase-utils": "*",
+    "get-image-colors": "^4.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.2.1",
+    "multer": "^1.4.5-lts.1",
+    "password-validator": "^5.3.0",
+    "razorpay": "^2.9.2",
+    "uuid": "^9.0.1",
+    "validator": "*"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
 }
