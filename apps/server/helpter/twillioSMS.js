@@ -6,8 +6,8 @@ const twillioSendSMS = async ({ numbers, message }) => {
   try {
     const response = await client.messages.create({
       body: message,
-      from: "whatsapp:+14155238886",
-      to: "whatsapp:+919101114906",
+      from: "whatsapp:",
+      to: "whatsapp:",
     });
 
     console.log(response.data.sid);
