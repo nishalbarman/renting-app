@@ -32,9 +32,10 @@ app.use("/wishlist", require("./routes/wishlist/wishlist.routes"));
 app.use("/cart", require("./routes/cart/cart.routes"));
 app.use("/order", require("./routes/order/order.routes"));
 app.use(
-  "/pay/razorpay",
+  "/pay/razorpay/create-cart-order",
   require("./routes/payment/razorpay/create-cart-order/razorpay.routes")
 );
+app.use("/pay/razorpay/hook", require("./hooks/hook.routes"));
 
 app.use(
   "/get-image-bg-color",

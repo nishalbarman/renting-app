@@ -216,6 +216,8 @@ const orderSchema = new mongoose.Schema(
     discountedPrice: { type: Number, required: true },
     originalPrice: { type: Number },
     shippingPrice: { type: Number, default: 0 },
+    orderType: { type: String, required: true, enum: ["buy", "rent"] },
+    rentDays: { type: Number, default: null },
     orderStatus: { type: String, default: "Pending" },
     paymentStatus: { type: Boolean, default: false },
     trackingLink: { type: String, default: null },
@@ -225,12 +227,12 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-const couponSchema = new mongoose.Schema({
-  code: { type: String, required: true },
-  off: { type: Number, required: true },
-  isPercentage: { type: Boolean, required: true },
-  description: { type: String, required: true },
-});
+// const couponSchema = new mongoose.Schema({
+//   code: { type: String, required: true },
+//   off: { type: Number, required: true },
+//   isPercentage: { type: Boolean, required: true },
+//   description: { type: String, required: true },
+// });
 
 const razorpayOrderIdSchema = new mongoose.Schema({
   razorPayOrderId: { type: String, required: true },
