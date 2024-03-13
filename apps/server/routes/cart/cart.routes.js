@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Cart } = require("../../models/models");
+const Cart = require("../../models/cart.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 
 router.get("/", async (req, res) => {

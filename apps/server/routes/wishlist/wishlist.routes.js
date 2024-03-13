@@ -1,20 +1,22 @@
 const express = require("express");
 const router = express.Router();
-const { User, Wishlist } = require("../../models/models");
+const Wishlist = require("../../models/wishlist.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 
 router.get("/", async (req, res) => {
   try {
-    const token = req.jwt.token || null;
+    const token = req?.jwt?.token;
 
     if (!token) {
-      return res.redirect("/login?redirect=wishlist");
+      return res.status(400).json({ message: "No token provided." });
     }
 
     const userDetails = getTokenDetails(token);
 
+    console.log(userDetails);
+
     if (!userDetails) {
-      return res.redirect("/login?redirect=wishlist");
+      return res.status(400).json({ message: "No token provided." });
     }
 
     const wishlistDetails = await Wishlist.find({
@@ -38,18 +40,22 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const token = req.jwt.token || null;
+    const token = req?.jwt?.token;
 
     if (!token) {
-      return res.redirect("/login?redirect=wishlist");
+      return res.status(400).json({ message: "No token provided." });
     }
 
-    const userDetails = getTokenDetails(userToken.value);
+    const userDetails = getTokenDetails(token);
     if (!userDetails) {
-      return res.redirect("/login?redirect=wishlist");
+      return res.status(400).json({ message: "No token provided." });
     }
+
+    console.log("RequestBody-->", req.body);
 
     const { productId } = req.body;
+
+    console.log("Wishlist Product ID-->", productId);
 
     const wishlistItem = await Wishlist.findOne({
       product: productId,
@@ -57,7 +63,7 @@ router.post("/", async (req, res) => {
     });
 
     if (wishlistItem) {
-      return res.json({
+      return res.status(409).json({
         status: true,
         message: "Already in wishlist",
       });

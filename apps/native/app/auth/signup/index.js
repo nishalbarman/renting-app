@@ -50,8 +50,6 @@ export default function Page() {
 
   const handleSignup = async () => {
     try {
-      // TODO : send fetch request to
-
       const extractedData = Object.keys(formData).reduce(
         (newFormData, keyName) => {
           return { ...newFormData, [keyName]: formData[keyName].value };
@@ -64,14 +62,12 @@ export default function Page() {
         extractedData
       );
 
-      console.log(response);
-
       router.push({
         pathname: "/auth/verify_otp",
         params: extractedData,
       });
     } catch (error) {
-      console.log(error.response);
+      console.log(error?.response);
     }
   };
 

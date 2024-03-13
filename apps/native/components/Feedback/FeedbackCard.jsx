@@ -34,7 +34,9 @@ function FeedbackCard({
                 return (
                   <AntDesign
                     key={index}
-                    name="star"
+                    name={
+                      index + 1 <= Math.round(starsGiven) ? "star" : "staro"
+                    }
                     size={20}
                     color={
                       index + 1 <= Math.round(starsGiven) ? "orange" : "black"

@@ -1,6 +1,8 @@
-require("dotenv").config();
+const dotEnv = require("dotenv");
 const express = require("express");
 const cors = require("cors");
+
+dotEnv.config();
 const dbConnect = require("./config/dbConfig");
 
 dbConnect(); // connect to databse
@@ -9,23 +11,30 @@ const app = express();
 
 const extractToken = async (req, res, next) => {
   try {
-    const publicRout =
+    console.log("Request found for router -->>", req.url);
+    console.log("Request Method -->>", req.method);
+
+    const publicRoute =
       req.url === "/auth/login" ||
       req.url === "/auth/signup" ||
       req.url === "/auth/sendOtp" ||
       req.url === "/pay/razorpay/hook" ||
       req.url === "/get-image-bg-color";
 
-    if (publicRout) {
+    console.log("Is public router -->", publicRoute);
+
+    if (publicRoute) {
       return next();
     }
 
-    const authorization = req.headers.get("Authorization");
-    const token = authorization.split("")[1];
+    const authorization = req.headers["authorization"];
+    const token = authorization.split(" ")[1];
+
     if (!token) {
       return res.status(403).json({ message: "No token provided" });
     }
     req.jwt = { token: token };
+    console.log(req.jwt);
     return next();
   } catch (error) {
     return res.status(403).json({ message: "No token provided" });

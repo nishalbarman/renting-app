@@ -16,7 +16,7 @@ import { isValidIndianMobileNumber, isValidPassword } from "validator";
 import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setUserAuthData } from "@store/rtk";
+import { setUserAuthData } from "@store/rtk/slices/authSlice";
 
 export default function Page() {
   const [formData, setFormData] = useState({
@@ -40,14 +40,12 @@ export default function Page() {
       ); // postable form data
 
       const response = await axios.post(
-        `http://192.168.118.210:8000/auth/sendOtp`,
+        `http://192.168.118.210:8000/auth/login`,
         extractedData
       );
 
-      console.log(response);
+      dispatch(setUserAuthData({ ...response.data.user }));
 
-      dispatch(setUserAuthData(response.data.user));
-      router.dismissAll();
       router.replace("/(tabs)");
     } catch (error) {
       console.log(error);

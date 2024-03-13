@@ -15,11 +15,13 @@ import {
 } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setupListeners } from "@reduxjs/toolkit/query";
+import { wishlistApi } from "./apis/wishlistApi";
 
 const rootReducer = combineReducers({
   [userAPI.reducerPath]: userAPI.reducer,
   [authApi.reducerPath]: authApi.reducer,
   [authSlice.name]: authSlice.reducer,
+  [wishlistApi.reducerPath]: wishlistApi.reducer,
 });
 
 const persistConfig = {
@@ -37,9 +39,14 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     })
+      .concat(wishlistApi.middleware)
       .concat(userAPI.middleware)
       .concat(authApi.middleware),
 });
+
+// store.subscribe(() => {
+//   console.log("State after change:", store.getState().wishlistApi);
+// });
 
 export const persistor = persistStore(store);
 

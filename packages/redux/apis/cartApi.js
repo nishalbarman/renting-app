@@ -6,6 +6,10 @@ export const cartApi = createApi({
   reducerPath: "cart",
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER_URL,
+    prepareHeaders: (headers, { getState }) => {
+      headers.set("authorization", `Bearer ${getState().auth.jwtToken}`);
+      return headers;
+    },
   }),
   tagTypes: ["Cart"],
   endpoints: (builder) => ({
@@ -22,9 +26,6 @@ export const cartApi = createApi({
         method: "POST",
         body: {
           productId: productId,
-        },
-        headers: {
-          Authorization: ` Bearer ${getState().auth.jwtToken}`,
         },
       }),
       invalidatesTags: ["Cart"],
@@ -50,9 +51,6 @@ export const cartApi = createApi({
       query: (id) => ({
         url: `cart/${id}`,
         method: "DELETE",
-        headers: {
-          Authorization: ` Bearer ${getState().auth.jwtToken}`,
-        },
       }),
       invalidatesTags: ["Cart"],
       transformErrorResponse: (res, meta, arg) => res.message,

@@ -2,8 +2,9 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
-const { User } = require("../../../models/models");
-const { isValidEmail } = require("validator");
+const User = require("../../../models/user.model");
+const Role = require("../../../models/role.model");
+const { isValidIndianMobileNumber } = require("validator");
 
 const router = express.Router();
 const secret = process.env.JWT_SECRET;
@@ -16,9 +17,11 @@ router.get("/", (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const error = [];
-    const { email, password } = req.body;
+    const { mobileNo, password } = req.body;
 
-    if (!isValidEmail(email)) {
+    console.log(req.body);
+
+    if (!isValidIndianMobileNumber(mobileNo)) {
       error.push("Invalid email address");
     }
 
@@ -26,7 +29,10 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ status: false, message: error.join(", ") });
     }
 
-    const user = await User.findOne({ email }).populate("role");
+    const user = await User.findOne({ mobileNo }).populate("role");
+
+    console.log(user);
+
     if (!user) {
       return res.status(400).json({
         status: true,
@@ -75,7 +81,7 @@ router.post("/", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    if (error instanceof mongoose.Error) {
+    if (error instanceof mongoose.Error && error?.errors) {
       const errArray = Object.values(error.errors).map(
         (properties) => properties.message
       );

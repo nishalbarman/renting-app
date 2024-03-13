@@ -1,5 +1,5 @@
 const express = require("express");
-const { Otp } = require("../../models/models");
+const Otp = require("../../models/otp.model");
 const {
   generateRandomCode,
   isValidIndianMobileNumber,

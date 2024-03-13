@@ -3,43 +3,53 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useAddWishlistMutation } from "@store/rtk/apis/wishlistApi";
 
 function Product({
-  _id,
-  previewUrl,
-  title,
-  category,
-  isRentable,
-  isPurchasable,
-  rentingPrice,
-  discountedPrice,
-  originalPrice,
-  showPictures,
-  description,
-  stars,
-  totalFeedbacks,
-  shippingPrice,
-  isSizeVaries,
-  isColorVaries,
-  availableVarients,
-  availableSizes,
-  availableColors,
-
+  details: {
+    _id,
+    previewUrl,
+    title,
+    category,
+    isRentable,
+    isPurchasable,
+    rentingPrice,
+    discountedPrice,
+    originalPrice,
+    showPictures,
+    description,
+    stars,
+    totalFeedbacks,
+    shippingPrice,
+    isSizeVaries,
+    isColorVaries,
+    availableVarients,
+    availableSizes,
+    availableColors,
+  },
   width,
+  wishlistData,
 }) {
   const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
   const router = useRouter();
 
+  const [addWishlist] = useAddWishlistMutation();
   const [onCart, setOnCart] = useState(false);
 
   const starsArray = useMemo(() => {
     return Array.from({ length: 5 });
   }, []);
 
-  const handleAddToWishlist = () => {
-    setOnCart((prev) => !prev);
+  const handleAddToWishlist = async () => {
+    try {
+      setOnCart((prev) => !prev);
+      const resPayload = await addWishlist({ id: _id }).unwrap();
+      console.log("Add to Wishlist response -->", resPayload);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleProductClick = () => {
@@ -102,7 +112,7 @@ function Product({
                   onPress={() => {
                     setCurrentUserReview(index + 1);
                   }}
-                  name="star"
+                  name={index + 1 <= Math.round(stars) ? "star" : "staro"}
                   size={18}
                   color={index + 1 <= Math.round(stars) ? "orange" : "black"}
                 />

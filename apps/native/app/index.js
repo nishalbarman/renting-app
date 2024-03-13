@@ -22,7 +22,7 @@ export default function Page() {
     "poppins-xbold": require("../assets/fonts/Poppins/Poppins-ExtraBold.ttf"),
   }); // load the fonts
 
-  const userToken = useSelector((state) => state.user.jwtToken);
+  const userToken = useSelector((state) => state.auth.jwtToken);
 
   const hideSplashScreen = async () => {
     await SplashScreen.hideAsync();
@@ -38,7 +38,7 @@ export default function Page() {
     return null;
   }
 
-  if (!userToken) {
+  if (userToken) {
     return <Redirect href={"/auth/login"} />;
   }
 

@@ -187,7 +187,11 @@ export default function Page() {
                     onPress={() => {
                       setCurrentUserReviewStar(index + 1);
                     }}
-                    name="star"
+                    name={
+                      index + 1 <= Math.round(productDetails.stars)
+                        ? "star"
+                        : "staro"
+                    }
                     size={20}
                     color={
                       index + 1 <= Math.round(productDetails.stars)
@@ -414,12 +418,13 @@ export default function Page() {
                   Feedbacks
                 </Text>
                 <View>
-                  <View>
-                    <Text className="font-[poppins-mid] leading-[20px] text-grey text-[15px]">
-                      ⭐ {productDetails.stars}{" "}
-                      <Text className="text-[#787878]">
-                        ({productDetails.totalFeedbacks})
-                      </Text>
+                  <View className="flex flex-row items-center gap-x-1">
+                    <AntDesign name={"star"} size={20} color={"black"} />
+                    <Text className="text-[18px] align-middle">
+                      {productDetails.stars}{" "}
+                    </Text>
+                    <Text className="text-[#787878] text-[15px] align-middle">
+                      ({productDetails.totalFeedbacks})
                     </Text>
                   </View>
                 </View>

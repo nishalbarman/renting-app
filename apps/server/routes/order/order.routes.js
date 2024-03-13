@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Order } = require("../../models/models");
+const Order = require("../../models/order.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 
 // GET endpoint

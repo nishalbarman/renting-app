@@ -5,7 +5,9 @@ const bcrypt = require("bcryptjs");
 const passValidator = require("password-validator");
 const { v4: uuidv4 } = require("uuid");
 
-const { Otp, User } = require("../../../models/models");
+const User = require("../../../models/user.model");
+const Otp = require("../../../models/otp.model");
+
 const {
   isValidEmail,
   isValidIndianMobileNumber,
@@ -14,6 +16,8 @@ const {
 
 const validatePass = new passValidator();
 validatePass.is().min(8).has().uppercase().has().lowercase();
+
+const secret = process.env.JWT_SECRET;
 
 const router = express.Router();
 
@@ -52,14 +56,18 @@ router.post("/", async (req, res) => {
       error.push("OTP is invalid");
     }
 
+    const dateObject = new Date(otpFromDatabase?.createdAt);
+    const dueTimestamp = dateObject.getTime() + 10 * 60 * 1000;
+
     console.log(req.body.otp);
     console.log("retrieved OTP from db", otpFromDatabase.otp);
-    console.log(req.body.otp == otpFromDatabase.otp);
-    console.log(otpFromDatabase.dueDate > Date.now());
+    console.log("Due time ==>", Math.round(dueTimestamp));
+    console.log("Current time ==>", Date.now());
+    console.log(Math.round(dueTimestamp) < Date.now());
 
     if (
       otpFromDatabase.otp != req.body.otp ||
-      otpFromDatabase.dueTime < Date.now()
+      Math.round(dueTimestamp) < Date.now()
     ) {
       error.push("OTP is invalid");
     }
@@ -79,7 +87,7 @@ router.post("/", async (req, res) => {
       mobileNo,
       password: hashedPass,
       mobileNoVerifyToken: verifyToken,
-      role: "65c9b4c9a52cbc05d8c7c543", // default id for user role
+      role: "65f1c390dd964b2b01a2ee64", // default id for user role
     });
 
     await userObject.save();
@@ -96,6 +104,8 @@ router.post("/", async (req, res) => {
       { expiresIn: "1h" }
     );
 
+    console.log("User Created");
+
     return res.status(200).json({
       status: true,
       message: "Registration successful",
@@ -108,8 +118,7 @@ router.post("/", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    if (error instanceof mongoose.Error) {
-     
+    if (error instanceof mongoose.Error && error?.errors) {
       const errArray = Object.values(error.errors).map(
         (properties) => properties.message
       );

@@ -1,46 +1,45 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const SERVER_URL = process.env.SERVER_URL || "http://localhost:8000/";
+const SERVER_URL = process.env.SERVER_URL || "http://192.168.118.210:8000/";
 
 export const wishlistApi = createApi({
   reducerPath: "wishlistApi",
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER_URL,
+    prepareHeaders: (headers, { getState }) => {
+      headers.set("authorization", `Bearer ${getState().auth.jwtToken}`);
+      return headers;
+    },
   }),
   tagTypes: ["Wishlist"],
   endpoints: (builder) => ({
     getWishlist: builder.query({
-      query: () => "wishlist",
+      query: () => ({
+        url: `wishlist`,
+        method: "GET",
+      }),
       providesTags: ["Wishlist"],
       transformResponse: (response, meta, arg) => response.data,
-      transformErrorResponse: (response, meta, arg) => response.message,
+      // transformErrorResponse: (response, meta, arg) => response.message,
     }),
 
     addWishlist: builder.mutation({
-      query: (id) => ({
+      query: ({ id }) => ({
         url: `wishlist`,
         method: "POST",
-        body: {
-          productId: id,
-        },
-        headers: {
-          Authorization: ` Bearer ${getState().auth.jwtToken}`,
-        },
+        body: { productId: id },
       }),
       invalidatesTags: ["Wishlist"],
-      transformErrorResponse: (response, meta, arg) => response.message,
+      // transformErrorResponse: (response, meta, arg) => response.message,
     }),
 
     deleteWishlist: builder.mutation({
       query: (id) => ({
         url: `wishlist/${id}`,
         method: "DELETE",
-        headers: {
-          Authorization: ` Bearer ${getState().auth.jwtToken}`,
-        },
       }),
       invalidatesTags: ["Wishlist"],
-      transformErrorResponse: (response, meta, arg) => response.message,
+      // transformErrorResponse: (response, meta, arg) => response.message,
     }),
 
     updateWishlist: builder.mutation({
@@ -49,11 +48,8 @@ export const wishlistApi = createApi({
         method: "PATCH",
         body: item,
       }),
-      headers: {
-        Authorization: ` Bearer ${getState().auth.jwtToken}`,
-      },
       invalidatesTags: ["Wishlist"],
-      transformErrorResponse: (response, meta, arg) => response.message,
+      // transformErrorResponse: (response, meta, arg) => response.message,
     }),
   }),
 });

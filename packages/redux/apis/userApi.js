@@ -5,7 +5,13 @@ const SERVER_URL = process.env.SERVER_URL || "http://localhost:8000/";
 
 export const userAPI = createApi({
   reducerPath: "user",
-  baseQuery: fetchBaseQuery({ baseUrl: SERVER_URL }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: SERVER_URL,
+    prepareHeaders: (headers, { getState }) => {
+      headers.set("authorization", `Bearer ${getState().auth.jwtToken}`);
+      return headers;
+    },
+  }),
   tagTypes: ["Post"],
   endpoints: (builder) => ({
     /** REQUIRED ADMIN ROLE **/
@@ -87,26 +93,6 @@ export const userAPI = createApi({
           console.error("Update user Email -->> ", error);
         }
       },
-    }),
-
-    /** REQUIRED ADMIN ROLE **/
-    updateUser: builder.mutation({
-      query: (id, newUserObject) => ({
-        url: `${id}`,
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getState()?.auth?.jwtToken}`,
-        },
-        body: newUserObject,
-      }),
-      // onQueryStarted: async (args, { dispatch, getState, queryFulfilled }) => {
-      //   try {
-      //     const response = await queryFulfilled;
-      //   } catch (error) {
-      //     console.error("Update User Data -->", error);
-      //   }
-      // },
     }),
 
     /** REQUIRED ADMIN ROLE **/

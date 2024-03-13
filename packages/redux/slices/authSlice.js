@@ -9,8 +9,11 @@ export const authSlice = createSlice({
     jwtToken: null,
   },
   reducers: {
-    setUserAuthData: (state, action) => {
-      state = action.payload;
+    setUserAuthData: (state, { payload }) => {
+      state.name = payload.name;
+      state.email = payload.email;
+      state.mobileNo = payload.mobileNo;
+      state.jwtToken = payload.jwtToken;
     },
   },
 });

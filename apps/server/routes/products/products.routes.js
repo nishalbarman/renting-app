@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const cheerio = require("cheerio");
-const { Product } = require("../../models/models");
+const Product = require("../../models/product.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 const { isValidUrl } = require("validator");
 

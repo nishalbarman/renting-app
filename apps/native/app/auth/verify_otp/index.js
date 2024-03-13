@@ -1,6 +1,12 @@
 import axios from "axios";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ScrollView,
   Text,
@@ -10,16 +16,19 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { isValid4DigitOtp } from "validator";
-import { setUserAuthData } from "@store/rtk";
+import { setUserAuthData } from "@store/rtk/slices/authSlice";
 import { useDispatch } from "react-redux";
 
 export default function Page() {
   const searchParams = useLocalSearchParams();
 
-  console.log("Search Paramas Verify OTP -->", searchParams);
+  const name = useMemo(() => {
+    return searchParams.name;
+  }, []);
 
-  const name = searchParams.name;
-  const mobileNo = searchParams.mobileNo;
+  const mobileNo = useMemo(() => {
+    return searchParams.mobileNo;
+  }, []);
 
   const [otp, setOtp] = useState(["_", "_", "_", "_"]);
   const [otpFieldIndex, setOtpFieldIndex] = useState(0);
@@ -103,32 +112,38 @@ export default function Page() {
 
   const handleOTPSubmit = async () => {
     try {
-      // TODO : post the object
       if (!isFinalOTPValid) return;
 
       searchParams.otp = finalOtp;
+
       const response = await axios.post(
         `http://192.168.118.210:8000/auth/signup`,
         searchParams
       );
 
-      console.log(response);
+      const data = response?.data;
 
-      dispatch(setUserAuthData(response.data.user));
+      console.log(data);
+
+      try {
+        dispatch(setUserAuthData({ ...data.user }));
+      } catch (error) {
+        console.log("Dispatch Error -->", error);
+      }
+
       router.dismissAll();
       router.replace("/(tabs)");
 
-      setFormSubmitError({
-        isError: true,
-        message: response.data.message,
-      });
+      // setFormSubmitError({
+      //   isError: false,
+      //   message: response?.data?.message,
+      // });
     } catch (error) {
-      console.error("OTP verfication page: -->", error.response.data.message);
+      console.error("OTP verfication page: -->", error);
       setFormSubmitError({
         isError: true,
-        message: error.response.data.message,
+        message: error?.response?.data?.message,
       });
-    } finally {
     }
   };
 
@@ -139,8 +154,6 @@ export default function Page() {
       resendTimer = setInterval(() => {
         setResendOTPTimeout((prev) => {
           const newTimer = prev - 1;
-          console.log(newTimer);
-
           if (newTimer <= 0) {
             clearInterval(resendTimer);
             setIsResendOTPEnabled(true);

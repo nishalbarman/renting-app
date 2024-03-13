@@ -1,6 +1,7 @@
 import React from "react";
 import Product from "../ProductsList/Product";
 import { FlatList } from "react-native";
+import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
 
 function RelatedProduct() {
   const data = [
@@ -204,12 +205,24 @@ function RelatedProduct() {
     },
   ];
 
+  const {
+    data: wishlistData,
+    isLoading,
+    isError,
+    error,
+  } = useGetWishlistQuery();
+
+  console.log(wishlistData);
+  console.log(error);
+
   return (
     <FlatList
       horizontal
       showsHorizontalScrollIndicator={false}
       data={data}
-      renderItem={({ item }) => <Product width={"205px"} {...item} />}
+      renderItem={({ item }) => (
+        <Product width={"205px"} details={item} wishlistData={wishlistData} />
+      )}
       numColumns={1}
       keyExtractor={(item, index) => index.toString()}
     />

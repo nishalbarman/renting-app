@@ -2,6 +2,7 @@ import { Link } from "expo-router";
 import React from "react";
 import { FlatList, Text, View } from "react-native";
 import Product from "./Product";
+import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
 
 function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
   const data = [
@@ -205,6 +206,16 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
     },
   ];
 
+  const {
+    data: wishlistData,
+    isLoading,
+    isError,
+    error,
+  } = useGetWishlistQuery();
+
+  console.log(wishlistData);
+  console.log(error);
+
   return (
     <View
       style={{
@@ -229,7 +240,9 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
       <View>
         <FlatList
           data={data}
-          renderItem={({ item }) => <Product {...item} />}
+          renderItem={({ item }) => (
+            <Product details={item} wishlistData={wishlistData || []} />
+          )}
           numColumns={2}
           keyExtractor={(item, index) => index.toString()}
         />
