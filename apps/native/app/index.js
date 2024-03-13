@@ -38,7 +38,7 @@ export default function Page() {
     return null;
   }
 
-  if (userToken) {
+  if (!userToken) {
     return <Redirect href={"/auth/login"} />;
   }
 

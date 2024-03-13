@@ -7,6 +7,7 @@ import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
 function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
   const data = [
     {
+      _id: "65f1eb08dd964b2b01a2ee85",
       previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
       title: "DSG mens DSG RACE PRO V2 JACKET",
       category: { _id: "random_id_32423", name: "Biking" },
@@ -71,6 +72,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
       availableColors: ["Red", "Blue", "Black"],
     },
     {
+      _id: "65f1eb08dd964b2b01a2ee85",
       previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
       title: "DSG mens DSG RACE PRO V2 JACKET",
       category: { _id: "random_id_32423", name: "Biking" },
@@ -103,6 +105,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
       availableColors: ["Red"],
     },
     {
+      _id: "65f1eb08dd964b2b01a2ee85",
       previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
       title: "DSG mens DSG RACE PRO V2 JACKET",
       category: { _id: "random_id_32423", name: "Biking" },
@@ -143,6 +146,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
       availableColors: ["Red", "Blue"],
     },
     {
+      _id: "65f1eb08dd964b2b01a2ee85",
       previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
       title: "DSG mens DSG RACE PRO V2 JACKET",
       category: { _id: "random_id_32423", name: "Biking" },
@@ -174,6 +178,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
       availableColors: ["Red", "Blue", "Black"],
     },
     {
+      _id: "65f1eb08dd964b2b01a2ee85",
       previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
       title: "DSG mens DSG RACE PRO V2 JACKET",
       category: { _id: "random_id_32423", name: "Biking" },
