@@ -100,8 +100,7 @@ router.post("/", async (req, res) => {
         email: userObject.email,
         mobileNo: userObject.mobileNo,
       },
-      secret,
-      { expiresIn: "1h" }
+      secret
     );
 
     console.log("User Created");

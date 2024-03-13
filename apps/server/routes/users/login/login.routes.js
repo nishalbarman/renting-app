@@ -65,8 +65,7 @@ router.post("/", async (req, res) => {
         email: user.email,
         mobileNo: user.mobileNo,
       },
-      secret,
-      { expiresIn: "1h" }
+      secret
     );
 
     return res.status(200).json({
