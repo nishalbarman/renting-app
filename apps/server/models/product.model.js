@@ -20,6 +20,9 @@ const productSchema = new mongoose.Schema(
     shippingPrice: { type: Number, required: true, default: 0 },
     availableStocks: { type: Number, required: true, default: 0 },
 
+    isPurchasable: { type: Boolean, default: false },
+
+    rentingPrice: { type: Number, required: true }, // if no varient is available then default renting price would be this
     discountedPrice: { type: Number, required: true }, // if no varient is available then default price would be this
     originalPrice: { type: Number }, // if no varient is available then default price would be this
 
@@ -55,6 +58,8 @@ const productVarientSchema = new mongoose.Schema(
     product: { type: mongoose.Types.ObjectId, ref: "products" },
     size: { type: mongoose.Types.ObjectId, ref: "product_sizes" },
     color: { type: mongoose.Types.ObjectId, ref: "product_colors" },
+
+    rentingPrice: { type: Number, required: true },
     discountedPrice: { type: Number, required: true },
     originalPrice: { type: Number },
   },

@@ -7,6 +7,8 @@ const cartSchema = new mongoose.Schema(
 
     quantity: { type: Number, default: 1 },
 
+    buyOrRent: { type: String, enum: ["buy", "rent"], required: true },
+
     size: {
       type: mongoose.Types.ObjectId,
       ref: "product_sizes",
