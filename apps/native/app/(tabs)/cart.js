@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,9 +7,13 @@ import {
   Image,
   TouchableOpacity,
   SafeAreaView,
+  ScrollView,
+  TextInput,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { EvilIcons } from "@expo/vector-icons";
+import ActionSheet, { useScrollHandlers } from "react-native-actions-sheet";
+import { NativeViewGestureHandler } from "react-native-gesture-handler";
 
 export default function Cart() {
   const data = [
@@ -85,6 +89,9 @@ export default function Cart() {
     },
   ];
 
+  const handlers = useScrollHandlers();
+  const addressActionSheetRef = useRef(null);
+
   const calculateTotalPrice = () => {
     return data.reduce(
       (total, item) => total + item.discountedPrice * item.quantity,
@@ -94,8 +101,11 @@ export default function Cart() {
 
   const renderCartItem = ({ item }) => (
     <View className="mb-[10px] flex-row bg-white p-[10px] rounded-lg shadow ml-2 mr-2">
-      <Image source={{ uri: item.previewUrl }} style={styles.cartItemImage} />
-      <View style={styles.cartItemDetails}>
+      <Image
+        source={{ uri: item.previewUrl }}
+        className="w-[80px] h-[80px] mr-5"
+      />
+      <View className="flex-1">
         <Text numberOfLines={2} className="text-[15px] font-[poppins-mid]">
           {item.title}
         </Text>
@@ -179,11 +189,18 @@ export default function Cart() {
     </View>
   );
 
+  const handleAdressSheet = () => {
+    console.log("Clicling");
+    addressActionSheetRef?.current?.show();
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="rounded-lg bg-white p-[10px] pl-3 pr-3 pb-[30px]">
         <Text className="font-[poppins-bold] text-[23px] mb-3">Cart</Text>
-        <TouchableOpacity className="flex flex-row bg-[#F1F1F3] rounded-lg items-center justify-between p-3 h-[55px]">
+        <TouchableOpacity
+          onPress={handleAdressSheet}
+          className="flex flex-row bg-[#F1F1F3] rounded-lg items-center justify-between p-3 h-[55px]">
           <View className="flex flex-row gap-x-1 items-center justify-center">
             <EvilIcons name="location" size={30} color="black" />
             <Text className="font-[poppins-mid] text-[17px]">
@@ -209,84 +226,40 @@ export default function Cart() {
           <Text className="text-white text-[16px] font-bold">Checkout</Text>
         </TouchableOpacity>
       </View>
+
+      <ActionSheet
+        closeOnPressBack={true}
+        gestureEnabled={true}
+        ref={addressActionSheetRef}>
+        <NativeViewGestureHandler
+          simultaneousHandlers={handlers.simultaneousHandlers}>
+          <ScrollView {...handlers}>
+            <View className="pt-8 flex flex-col items-center gap-y-5 pb-10">
+              <Text className="font-[poppins-bold] text-[21px]">
+                What is your rate?
+              </Text>
+
+              <View className="pl-10 pr-10 pt-4">
+                <Text className="font-[poppins-mid] text-[18px] text-center">
+                  Please share your opinion about the product
+                </Text>
+              </View>
+
+              <View className={"w-[90%] border rounded-lg"}>
+                <TextInput
+                  multiline={true}
+                  className={`h-[250px] shadow-lg text-black p-4 placeholder:text-[18px] text-[18px] font-[poppins-mid]`}
+                  placeholder="Your review"
+                  placeholderTextColor={"grey"}
+                />
+              </View>
+              <TouchableOpacity className="flex items-center justify-center w-[200px] h-[52px] p-[0px_20px] bg-[#d875ff] rounded-lg">
+                <Text className="text-white font-bold">Add Address</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </NativeViewGestureHandler>
+      </ActionSheet>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  deliveryAddress: {
-    fontSize: 16,
-    marginBottom: 16,
-  },
-  selectAllContainer: {
-    marginBottom: 16,
-  },
-  selectAllText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  cartItemContainer: {
-    flexDirection: "row",
-    marginBottom: 16,
-  },
-  cartItemImage: {
-    width: 80,
-    height: 80,
-    marginRight: 16,
-  },
-  cartItemDetails: {
-    flex: 1,
-  },
-  cartItemName: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  cartItemPrice: {
-    fontSize: 14,
-    marginTop: 4,
-  },
-  quantityContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 8,
-  },
-  quantityButton: {
-    backgroundColor: "#ccc",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 4,
-  },
-  quantityButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  quantityText: {
-    fontSize: 16,
-    marginHorizontal: 8,
-  },
-  totalContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 16,
-  },
-  totalText: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  checkoutButton: {
-    backgroundColor: "green",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 4,
-  },
-  checkoutButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});
