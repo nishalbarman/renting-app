@@ -6,6 +6,7 @@ import "../global.css";
 import { PersistGate } from "redux-persist/integration/react";
 import { SheetProvider } from "react-native-actions-sheet";
 import "../sheetManager/sheets";
+import ToastManager, { Toast } from "expo-react-native-toastify";
 
 export default function RootLayout() {
   return (
@@ -13,6 +14,7 @@ export default function RootLayout() {
       <PersistGate loading={null} persistor={persistor}>
         <SheetProvider>
           <SafeAreaProvider>
+            <ToastManager />
             <Stack
               screenOptions={{
                 headerShown: false,
