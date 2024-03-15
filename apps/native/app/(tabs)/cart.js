@@ -12,7 +12,10 @@ import {
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { EvilIcons } from "@expo/vector-icons";
-import ActionSheet, { useScrollHandlers } from "react-native-actions-sheet";
+import ActionSheet, {
+  SheetManager,
+  useScrollHandlers,
+} from "react-native-actions-sheet";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
 
 export default function Cart() {
@@ -191,7 +194,7 @@ export default function Cart() {
 
   const handleAdressSheet = () => {
     console.log("Clicling");
-    addressActionSheetRef?.current?.show();
+    SheetManager.show("address-list-sheet");
   };
 
   return (
@@ -201,13 +204,13 @@ export default function Cart() {
         <TouchableOpacity
           onPress={handleAdressSheet}
           className="flex flex-row bg-[#F1F1F3] rounded-lg items-center justify-between p-3 h-[55px]">
-          <View className="flex flex-row gap-x-1 items-center justify-center">
+          <View className="flex flex-row gap-x-1 items-center justify-center h-[100%]">
             <EvilIcons name="location" size={30} color="black" />
-            <Text className="font-[poppins-mid] text-[17px]">
+            <Text className="font-[poppins-mid] text-[17px] align-middle">
               Nalbari to kaithalkuchi road
             </Text>
           </View>
-          <AntDesign name="right" size={20} color="black" />
+          <AntDesign name="right" size={20} color="gray" />
         </TouchableOpacity>
       </View>
       <FlatList
@@ -226,40 +229,6 @@ export default function Cart() {
           <Text className="text-white text-[16px] font-bold">Checkout</Text>
         </TouchableOpacity>
       </View>
-
-      <ActionSheet
-        closeOnPressBack={true}
-        gestureEnabled={true}
-        ref={addressActionSheetRef}>
-        <NativeViewGestureHandler
-          simultaneousHandlers={handlers.simultaneousHandlers}>
-          <ScrollView {...handlers}>
-            <View className="pt-8 flex flex-col items-center gap-y-5 pb-10">
-              <Text className="font-[poppins-bold] text-[21px]">
-                What is your rate?
-              </Text>
-
-              <View className="pl-10 pr-10 pt-4">
-                <Text className="font-[poppins-mid] text-[18px] text-center">
-                  Please share your opinion about the product
-                </Text>
-              </View>
-
-              <View className={"w-[90%] border rounded-lg"}>
-                <TextInput
-                  multiline={true}
-                  className={`h-[250px] shadow-lg text-black p-4 placeholder:text-[18px] text-[18px] font-[poppins-mid]`}
-                  placeholder="Your review"
-                  placeholderTextColor={"grey"}
-                />
-              </View>
-              <TouchableOpacity className="flex items-center justify-center w-[200px] h-[52px] p-[0px_20px] bg-[#d875ff] rounded-lg">
-                <Text className="text-white font-bold">Add Address</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </NativeViewGestureHandler>
-      </ActionSheet>
     </SafeAreaView>
   );
 }

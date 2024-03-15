@@ -1,5 +1,5 @@
 import React from "react";
-import Product from "../ProductsList/Product";
+import Product from "../ProductSection/Product";
 import { FlatList } from "react-native";
 import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
 

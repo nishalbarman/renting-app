@@ -30,8 +30,8 @@ function Product({
   width,
   wishlistData,
 }) {
-  const blurhash =
-    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+  // const blurhash =
+  //   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
   const router = useRouter();
 
@@ -93,10 +93,6 @@ function Product({
       </View>
 
       <View className="flex flex-col gap-y-1 w-[100%] mt-[5px] pl-2 pr-2 pb-2">
-        <Text className="text-[13px] text-center p-[5px] font-[poppins-mid] uppercase inline-block w-fit border-dashed border-[1px] border-black mb-[4px]">
-          {category?.name}
-        </Text>
-
         <Text
           numberOfLines={2}
           className="text-[14px] font-[poppins-mid] leading-[22px] w-[100%]">
@@ -104,7 +100,7 @@ function Product({
         </Text>
 
         <View className="flex flex-row items-center">
-          <View className="flex flex-row items-center justify-center">
+          <View className="flex flex-row items-center justify-center h-fill">
             {starsArray.map((item, index) => {
               return (
                 <AntDesign

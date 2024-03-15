@@ -16,11 +16,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import HTML from "react-native-render-html";
 
-import ActionSheet, { useScrollHandlers } from "react-native-actions-sheet";
+import ActionSheet, {
+  SheetManager,
+  useScrollHandlers,
+} from "react-native-actions-sheet";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
 
-import FeedbackCard from "../../components/Feedback/FeedbackCard";
-import RelatedProductList from "../../components/RelatedProductList/RelatedProductList";
+import FeedbackCard from "../../components/FeedbackCard/FeedbackCard";
+import RelatedProductList from "../../components/RelatedProductSection/RelatedProductList";
 import SearchBar from "../../components/SearchBar/SearchBar";
 
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
@@ -37,20 +40,16 @@ export default function Page() {
 
   const [quantity, setQuantity] = useState(1);
 
-  const [currentUserReviewStar, setCurrentUserReviewStar] = useState(1);
-
   const [availableStocks] = useState(10);
 
   const reviewSheetModalRef = useRef(null);
-
-  const handlers = useScrollHandlers();
 
   const starsArray = useMemo(() => {
     return Array.from({ length: 5 });
   }, []);
 
   const handleReviewSheetOpen = useCallback(() => {
-    reviewSheetModalRef.current?.show();
+    SheetManager.show("add-feedback-sheet");
   }, []);
 
   const productDetails = {
@@ -99,8 +98,6 @@ export default function Page() {
   const [toogleSale, setToogleSale] = useState(productDetails.isPurchasable);
 
   const [carouselCurrentIndex, setCarouselCurrentIndex] = useState(0);
-
-  const handleSubmitReview = () => {};
 
   const handleTooglePurchaseType = () => {
     if (productDetails.isPurchasable) {
@@ -471,66 +468,6 @@ export default function Page() {
               <RelatedProductList />
             </View>
           </View>
-
-          {/* action sheet for feedback for user */}
-          <ActionSheet
-            closeOnPressBack={true}
-            gestureEnabled={true}
-            ref={reviewSheetModalRef}>
-            <NativeViewGestureHandler
-              simultaneousHandlers={handlers.simultaneousHandlers}>
-              <ScrollView {...handlers}>
-                <View className="pt-8 flex flex-col items-center gap-y-5 pb-10">
-                  <Text className="font-[poppins-bold] text-[21px]">
-                    What is your rate?
-                  </Text>
-                  <View className="flex flex-row items-center justify-center gap-x-3">
-                    {starsArray.map((item, index) => {
-                      return (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() => {
-                            setCurrentUserReviewStar(index + 1);
-                          }}>
-                          <AntDesign
-                            name={
-                              index + 1 <= Math.round(currentUserReviewStar)
-                                ? "star"
-                                : "staro"
-                            }
-                            size={35}
-                            color={
-                              index + 1 <= Math.round(currentUserReviewStar)
-                                ? "orange"
-                                : "black"
-                            }
-                          />
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
-                  <View className="pl-10 pr-10 pt-4">
-                    <Text className="font-[poppins-mid] text-[18px] text-center">
-                      Please share your opinion about the product
-                    </Text>
-                  </View>
-                  <View className={"w-[90%] border rounded-lg"}>
-                    <TextInput
-                      multiline={true}
-                      className={`h-[250px] shadow-lg text-black p-4 placeholder:text-[18px] text-[18px] font-[poppins-mid]`}
-                      placeholder="Your review"
-                      placeholderTextColor={"grey"}
-                    />
-                  </View>
-                  <TouchableOpacity
-                    onPress={handleSubmitReview}
-                    className="flex items-center justify-center w-[200px] h-[52px] p-[0px_20px] bg-[#d875ff] rounded-lg">
-                    <Text className="text-white font-bold">Add Review</Text>
-                  </TouchableOpacity>
-                </View>
-              </ScrollView>
-            </NativeViewGestureHandler>
-          </ActionSheet>
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -58,7 +58,7 @@ export default function Page() {
       ); // postable form data
 
       const response = await axios.post(
-        `http://192.168.118.210:8000/auth/sendOtp`,
+        `http://192.168.79.210:8000/auth/sendOtp`,
         extractedData
       );
 
@@ -67,7 +67,8 @@ export default function Page() {
         params: extractedData,
       });
     } catch (error) {
-      console.log(error?.response);
+      console.error("signup->index.js ==>", error);
+      console.error("signup->index.js ==>", error?.response);
     }
   };
 

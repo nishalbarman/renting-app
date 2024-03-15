@@ -9,13 +9,12 @@ import {
 } from "react-native";
 import { Link } from "expo-router";
 
-import { FontAwesome5 } from "@expo/vector-icons";
-import { Foundation } from "@expo/vector-icons";
+
 
 import { isValidIndianMobileNumber, isValidPassword } from "validator";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CategoryItem from "../../components/Category/CategoryItem";
-import ProductsList from "../../components/ProductsList/ProductsList";
+import CategoryItem from "../../components/CategoryCard/CategoryItem";
+import ProductsList from "../../components/ProductSection/ProductsList";
 
 export default function Tab() {
   const [formData, setFormData] = useState({
