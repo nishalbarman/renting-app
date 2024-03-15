@@ -18,6 +18,7 @@ import ActionSheet, {
 } from "react-native-actions-sheet";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
 import CartItem from "../../components/CartItem/CartItem";
+import { useGetAddressQuery } from "@store/rtk/apis/addressApi";
 
 export default function Cart() {
   const data = [
@@ -103,11 +104,16 @@ export default function Cart() {
     );
   };
 
-  // const {data:address, isLoading:isAddressLoading, isFetching:isAddressFetching, error:addressFetchError} =
+  const {
+    data: address,
+    isLoading: isAddressLoading,
+    isFetching: isAddressFetching,
+    error: addressFetchError,
+  } = useGetAddressQuery();
 
   const handleAdressSheet = () => {
-    console.log("Clicling");
-    SheetManager.show("address-list-sheet");
+    if (address && address.length > 0) SheetManager.show("address-list-sheet");
+    else SheetManager.show("add-address-sheet");
   };
 
   return (
@@ -136,7 +142,7 @@ export default function Cart() {
           "flex-row justify-between items-center mt-[16px] p-[13px] bg-white"
         }>
         <Text className="text-[18px] font-bold">
-          Total: £{calculateTotalPrice().toFixed(2)}
+          Total: ₹{calculateTotalPrice().toFixed(2)}
         </Text>
         <TouchableOpacity className="bg-dark-purple p-[12px_16px] rounded-[4px]">
           <Text className="text-white text-[16px] font-bold">Checkout</Text>

@@ -9,7 +9,8 @@ function CartItem({
   return (
     <View className="mb-[10px] flex-row bg-white p-[10px] rounded-lg shadow ml-2 mr-2">
       <Image
-        source={{ uri: previewUrl }}
+        // source={{ uri: previewUrl }}
+        source={{ uri: "https://picsum.photos/200/300?grayscale" }}
         className="w-[80px] h-[80px] mr-5"
         contentFit="contain"
         contentPosition={"center"}

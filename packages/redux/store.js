@@ -1,7 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { userAPI } from "./apis/userApi";
 import { authSlice } from "./slices/authSlice";
+import { addressSlice } from "./slices/addressSlice";
 import { authApi } from "./apis/authApi";
+import { addressApi } from "./apis/addressApi";
 
 import {
   persistStore,
@@ -21,6 +23,8 @@ const rootReducer = combineReducers({
   [userAPI.reducerPath]: userAPI.reducer,
   [authApi.reducerPath]: authApi.reducer,
   [authSlice.name]: authSlice.reducer,
+  [addressSlice.name]: addressSlice.reducer,
+  [addressApi.reducerPath]: addressApi.reducer,
   [wishlistApi.reducerPath]: wishlistApi.reducer,
 });
 
@@ -41,12 +45,13 @@ export const store = configureStore({
     })
       .concat(wishlistApi.middleware)
       .concat(userAPI.middleware)
-      .concat(authApi.middleware),
+      .concat(authApi.middleware)
+      .concat(addressApi.middleware),
 });
 
-// store.subscribe(() => {
-//   console.log("State after change:", store.getState().wishlistApi);
-// });
+store.subscribe(() => {
+  console.log("State after change:", store.getState().mapSelectedAddress);
+});
 
 export const persistor = persistStore(store);
 

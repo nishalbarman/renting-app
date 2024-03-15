@@ -24,17 +24,10 @@ export const addressApi = createApi({
     }),
 
     addAddress: builder.mutation({
-      query: ({ id, newAddress }) => ({
+      query: ({ newAddress }) => ({
         url: `address`,
         method: "POST",
         body: newAddress,
-        // {
-        //   address_1: address_1,
-        //   address_2: address_2,
-        //   pincode: pincode,
-        //   state: state,
-        //   city: city,
-        // },
       }),
       invalidatesTags: ["Address"],
       // transformErrorResponse: (response, meta, arg) => response.message,

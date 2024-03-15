@@ -5,11 +5,11 @@
     "./store": "./store.js",
     "./userApi": "./slices/userApi.js",
     "./auth": "./slices/authSlice.js",
+    "./address": "./slices/addressSlice.js",
     "./cartApi": "./apis/cartApi.js",
     "./wishlistApi": "./apis/wishlistApi.js",
     "./categoryApi": "./apis/categoryApi.js"
   },
-  "author": "Nishal",
   "license": "MIT",
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.22.3",

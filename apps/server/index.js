@@ -15,6 +15,7 @@ const extractToken = async (req, res, next) => {
     console.log("Request Method -->>", req.method);
 
     const publicRoute =
+      req.url === "/" ||
       req.url === "/auth/login" ||
       req.url === "/auth/signup" ||
       req.url === "/auth/sendOtp" ||
@@ -57,6 +58,8 @@ app.use("/products", require("./routes/products/products.routes"));
 app.use("/wishlist", require("./routes/wishlist/wishlist.routes"));
 app.use("/cart", require("./routes/cart/cart.routes"));
 app.use("/order", require("./routes/order/order.routes"));
+app.use("/address", require("./routes/address/address.routes"));
+
 app.use(
   "/pay/razorpay/create-cart-order",
   require("./routes/payment/razorpay/create-cart-order/razorpay.routes")

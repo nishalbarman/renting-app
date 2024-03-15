@@ -28,54 +28,117 @@ import {
   isValidIndianMobileNumber,
   isValidPassword,
 } from "validator";
+import { useSelector } from "react-redux";
 
 export default function AddAddress() {
   const handlers = useScrollHandlers();
 
+  const { address, coordinates } = useSelector(
+    (state) => state.mapSelectedAddress
+  );
+  console.log("Getting the address -->", address);
+  console.log("Getting the coordinates -->", coordinates);
+
   const [formData, setFormData] = useState({
-    name: { value: "Nishal Barman", isTouched: true, isError: null },
-    email: { value: "nishalbarman@gmail.com", isTouched: true, isError: null },
-    mobileNo: { value: "9101114906", isTouched: true, isError: null },
-    isAgreementChecked: { value: true, isTouched: true, isError: null },
-    password: { value: "@NishalBoss21", isTouched: true, isError: null },
+    name: { value: "", isTouched: true, isError: null },
+    streetName: {
+      value: "",
+      isTouched: true,
+      isError: null,
+    },
+    locality: {
+      value: "",
+      isTouched: true,
+      isError: null,
+    },
+    // city: { value: "", isTouched: true, isError: null },
+    country: { value: "", isTouched: true, isError: null },
+    postalCode: {
+      value: "",
+      isTouched: true,
+      isError: null,
+    },
+    longitude: {
+      value: "",
+      isTouched: true,
+      isError: null,
+    },
+    latitude: {
+      value: "",
+      isTouched: true,
+      isError: null,
+    },
   });
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
   const handleSignup = async () => {
-    try {
-      const extractedData = Object.keys(formData).reduce(
-        (newFormData, keyName) => {
-          return { ...newFormData, [keyName]: formData[keyName].value };
-        },
-        { name: "", email: "", mobileNo: "", password: "" }
-      ); // postable form data
-
-      const response = await axios.post(
-        `http://192.168.79.210:8000/auth/sendOtp`,
-        extractedData
-      );
-    } catch (error) {
-      console.error("signup->index.js ==>", error);
-      console.error("signup->index.js ==>", error?.response);
-    }
+    // try {
+    //   const extractedData = Object.keys(formData).reduce(
+    //     (newFormData, keyName) => {
+    //       return { ...newFormData, [keyName]: formData[keyName].value };
+    //     },
+    //     { name: "", email: "", mobileNo: "", password: "" }
+    //   ); // postable form data
+    //   const response = await axios.post(
+    //     `http://192.168.79.210:8000/auth/sendOtp`,
+    //     extractedData
+    //   );
+    // } catch (error) {
+    //   console.error("signup->index.js ==>", error);
+    //   console.error("signup->index.js ==>", error?.response);
+    // }
   };
 
   useEffect(() => {
     setIsSubmitDisabled(
-      !formData.mobileNo.isTouched ||
-        formData.mobileNo.isError ||
-        !formData.password.isTouched ||
-        formData.password.isError ||
-        !formData.name.isTouched ||
-        formData.name.isError ||
-        !formData.email.isTouched ||
-        formData.email.isError ||
-        !formData.isAgreementChecked.isTouched
+      !formData.streetName.isTouched ||
+        formData.streetName.isError ||
+        !formData.locality.isTouched ||
+        formData.locality.isError ||
+        !formData.country.isTouched ||
+        formData.country.isError ||
+        !formData.postalCode.isTouched ||
+        formData.postalCode.isError
     );
   }, [formData]);
+
+  useEffect(() => {
+    setFormData({
+      name: { value: address?.name || "", isTouched: true, isError: null },
+      streetName: {
+        value: address?.thoroughfare || "",
+        isTouched: true,
+        isError: null,
+      },
+      locality: {
+        value: address?.locality || "",
+        isTouched: true,
+        isError: null,
+      },
+      // city: { value: "", isTouched: true, isError: null },
+      country: {
+        value: address?.country || "",
+        isTouched: true,
+        isError: null,
+      },
+      postalCode: {
+        value: address?.postalCode || "",
+        isTouched: true,
+        isError: null,
+      },
+      longitude: {
+        value: coordinates?.longitude || "",
+        isTouched: true,
+        isError: null,
+      },
+      latitude: {
+        value: coordinates?.latitude || "",
+        isTouched: true,
+        isError: null,
+      },
+    });
+  }, [address, coordinates]);
 
   const handleChooseLocationOnMap = () => [
     SheetManager.show("location-select-map"),
@@ -99,19 +162,20 @@ export default function AddAddress() {
                 onPress={handleChooseLocationOnMap}
                 className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
                 <View className="flex flex-row">
-                  <Ionicons name="location-outline" size={24} color="gray" />
-                  <Text
-                    // multiline={true}
-                    numberOfLines={3}
-                    className="ml-1 h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px] text-gray"
-                    value={formData.mobileNo.value}>
-                    Choose your location
-                  </Text>
+                  {/* <Ionicons name="location-outline" size={24} color="gray" /> */}
+
+                  <TextInput
+                    className="ml-2 w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px] text-gray"
+                    editable={false}
+                    multiline={false}
+                    placeholder="Choose your location"
+                    value={`${formData.name.value} ${formData.streetName.value}`}
+                  />
                 </View>
                 <FontAwesome6
                   name="location-crosshairs"
                   size={24}
-                  color="gray"
+                  color="#c9c9c9"
                 />
               </TouchableOpacity>
 
@@ -122,34 +186,27 @@ export default function AddAddress() {
                   className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
                   editable={true}
                   multiline={false}
-                  inputMode="numeric"
-                  placeholder="Enter your mobile no"
+                  placeholder="Street Name"
                   onChangeText={(text) => {
                     setFormData((prev) => ({
                       ...prev,
-                      mobileNo: {
-                        ...prev["mobileNo"],
+                      streetName: {
+                        ...prev["streetName"],
                         value: text,
                         isTouched: true,
-                        isError: !isValidIndianMobileNumber(text),
+                        isError: false,
                       },
                     }));
                   }}
-                  value={formData.mobileNo.value}
+                  value={formData.streetName.value}
                 />
-                <Foundation name="telephone" size={29} color="#A9A8A8" />
+                {/* <Foundation name="telephone" size={29} color="#A9A8A8" /> */}
               </View>
 
-              {formData.mobileNo.isError ? (
+              {formData.streetName.isError && (
                 <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
-                  * Not a valid mobile number
+                  * Minimum 5 characters
                 </Text>
-              ) : (
-                formData.mobileNo.isTouched && (
-                  <>
-                    {/* <Text className="self-start text-[14px] font-[poppins]">✔️</Text> */}
-                  </>
-                )
               )}
 
               <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
@@ -157,34 +214,56 @@ export default function AddAddress() {
                   className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
                   editable={true}
                   multiline={false}
-                  inputMode="email"
-                  placeholder="Enter email"
+                  inputMode="text"
+                  placeholder="Locality"
                   onChangeText={(text) => {
                     setFormData((prev) => ({
                       ...prev,
-                      email: {
-                        ...prev["email"],
+                      locality: {
+                        ...prev["locality"],
                         value: text,
                         isTouched: true,
-                        isError: !isValidEmail(text),
+                        isError: false,
                       },
                     }));
                   }}
-                  value={formData.email.value}
+                  value={formData.locality.value}
                 />
-                <Fontisto name="email" size={26} color="#A9A8A8" />
+                {/* <Fontisto name="email" size={26} color="#A9A8A8" /> */}
               </View>
 
-              {formData.email.isError ? (
+              {formData.locality.isError && (
                 <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
-                  * Not a valid email address
+                  * Minimum 2 characters
                 </Text>
-              ) : (
-                formData.email.isTouched && (
-                  <>
-                    {/* <Text className="self-start text-[14px] font-[poppins]">✔️</Text> */}
-                  </>
-                )
+              )}
+
+              <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
+                <TextInput
+                  className="h-[100%] w-[100%] rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+                  editable={true}
+                  multiline={false}
+                  inputMode="numeric"
+                  placeholder="Postal Code"
+                  onChangeText={(text) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      postalCode: {
+                        ...prev["postalCode"],
+                        value: text,
+                        isTouched: true,
+                        isError: false,
+                      },
+                    }));
+                  }}
+                  value={formData.postalCode.value}
+                />
+              </View>
+
+              {formData.postalCode.isError && (
+                <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+                  * Invalid postal code
+                </Text>
               )}
 
               <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
@@ -193,50 +272,26 @@ export default function AddAddress() {
                   editable={true}
                   multiline={false}
                   inputMode="text"
-                  secureTextEntry={!isPasswordVisible}
-                  placeholder="Password"
+                  placeholder="Country"
                   onChangeText={(text) => {
                     setFormData((prev) => ({
                       ...prev,
-                      password: {
-                        ...prev["password"],
+                      country: {
+                        ...prev["country"],
                         value: text,
                         isTouched: true,
-                        isError: !isValidPassword(text),
+                        isError: false,
                       },
                     }));
                   }}
-                  value={formData.password.value}
+                  value={formData.country.value}
                 />
-                {/* <Feather name="lock" size={25} color="#A9A8A8" /> */}
-                {isPasswordVisible ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setIsPasswordVisible((prev) => !prev);
-                    }}>
-                    <FontAwesome5 name="eye" size={24} color="#A9A8A8" />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setIsPasswordVisible((prev) => !prev);
-                    }}>
-                    <FontAwesome5 name="eye-slash" size={24} color="#A9A8A8" />
-                  </TouchableOpacity>
-                )}
               </View>
 
-              {formData.password.isError ? (
+              {formData.country.isError && (
                 <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
-                  * Password should be of atleast 8 digits and should contain
-                  one uppercase letter, and one special character.
+                  * Minimum 2 digits
                 </Text>
-              ) : (
-                formData.password.isTouched && (
-                  <>
-                    {/* <Text className="self-start text-[14px] font-[poppins]">✔️</Text> */}
-                  </>
-                )
               )}
             </View>
 
@@ -246,7 +301,7 @@ export default function AddAddress() {
                 className={`flex justify-center items-center h-[55px] w-[90%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
                 onPress={handleSignup}>
                 <Text className="text-[20px] text-white font-[poppins-bold]">
-                  Create account
+                  Save
                 </Text>
               </TouchableOpacity>
             </View>
