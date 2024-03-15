@@ -45,7 +45,13 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      "./plugins/withDisableForcedDarkModeAndroid.js"
+      "./plugins/withDisableForcedDarkModeAndroid.js",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ]
     ]
   }
 }

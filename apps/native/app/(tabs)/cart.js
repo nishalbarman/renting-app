@@ -17,6 +17,7 @@ import ActionSheet, {
   useScrollHandlers,
 } from "react-native-actions-sheet";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
+import CartItem from "../../components/CartItem/CartItem";
 
 export default function Cart() {
   const data = [
@@ -102,95 +103,7 @@ export default function Cart() {
     );
   };
 
-  const renderCartItem = ({ item }) => (
-    <View className="mb-[10px] flex-row bg-white p-[10px] rounded-lg shadow ml-2 mr-2">
-      <Image
-        source={{ uri: item.previewUrl }}
-        className="w-[80px] h-[80px] mr-5"
-      />
-      <View className="flex-1">
-        <Text numberOfLines={2} className="text-[15px] font-[poppins-mid]">
-          {item.title}
-        </Text>
-
-        <View className="flex flex-row justify-between items-start gap-y-1 p-[0px_10px]">
-          {/* price */}
-          <View className="flex gap-y-2">
-            {item.buyOrRent === "buy" ? (
-              <Text className="text-[20px] font-[poppins-bold]">
-                ₹1799{" "}
-                <Text className="text-[15px] text-[#787878] font-[poppins] line-through">
-                  ₹2799
-                </Text>
-              </Text>
-            ) : (
-              <Text className="text-[18px] font-[poppins-bold]">
-                ₹179
-                <Text className="text-[13px] font-[poppins-bold]"> / Day</Text>
-              </Text>
-            )}
-          </View>
-
-          {/* quantity section */}
-          <View className="flex flex-col gap-y-2 items-end">
-            <View className="flex flex-row bg-[#F2F3F2] justify-center items-center p-[8px] rounded-[30px] self-end">
-              <TouchableOpacity
-                onPress={() => {}}
-                className="rounded-full w-[24px] h-[24px] flex flex items-center justify-center bg-white">
-                <AntDesign name="minus" size={15} color="black" />
-              </TouchableOpacity>
-              <Text className="font-[poppins-bold] text-[15px] mr-4 ml-4">
-                {item.quantity}
-              </Text>
-              <TouchableOpacity
-                onPress={() => {}}
-                className="rounded-full w-[22px] h-[22px] flex flex items-center justify-center bg-white">
-                <AntDesign name="plus" size={15} color="black" />
-              </TouchableOpacity>
-            </View>
-
-            {!item.buyOrRent === "rent" && (
-              <View className="flex flex-row bg-[#F2F3F2] justify-center items-center p-[8px] rounded-[30px] self-start">
-                <TouchableOpacity
-                  onPress={() => {
-                    setRentDays((prev) => (prev == 1 ? 1 : prev - 1));
-                  }}
-                  className="rounded-full w-[37px] h-[37px] flex flex items-center justify-center bg-white">
-                  <AntDesign name="minus" size={15} color="black" />
-                </TouchableOpacity>
-
-                <Text className="font-[poppins-xbold] text-[18px] mr-4 ml-4">
-                  {rentDays}
-                  {"  "}
-                  <Text className="font-[poppins-bold] text-[15px]">Day</Text>
-                </Text>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    setRentDays((prev) => (prev >= 50 ? 50 : prev + 1));
-                  }}
-                  className="rounded-full w-[37px] h-[37px] flex flex items-center justify-center bg-white">
-                  <AntDesign name="plus" size={10} color="black" />
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {/* <View>
-              {item.availableStocks === 0 || quantity > item.availableStocks ? (
-                <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
-                  Out of stock
-                </Text>
-              ) : (
-                <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
-                  ({item.availableStocks} items) In stock
-                </Text>
-              )}
-            </View> */}
-          </View>
-        </View>
-      </View>
-    </View>
-  );
+  // const {data:address, isLoading:isAddressLoading, isFetching:isAddressFetching, error:addressFetchError} =
 
   const handleAdressSheet = () => {
     console.log("Clicling");
@@ -215,8 +128,8 @@ export default function Cart() {
       </View>
       <FlatList
         data={data}
+        renderItem={({ item }) => <CartItem cart={item} />}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={renderCartItem}
       />
       <View
         className={
