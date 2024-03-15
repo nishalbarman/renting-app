@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
     // mobileNoVerifyToken: { type: String, default: "" },
     resetToken: { type: String, default: "" },
     role: { type: mongoose.Types.ObjectId, ref: "roles" }, // 0 means normal user, 1 means admin, 2 means seller
-    address: { type: mongoose.Types.ObjectId, ref: "addresses", default: null },
+    address: [{ type: mongoose.Types.ObjectId, ref: "addresses" }],
   },
   {
     timestamps: true,

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Address = require("../../models/address.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
+const User = require("../../models/user.model");
 
 router.get("/", async (req, res) => {
   try {
@@ -25,7 +26,9 @@ router.get("/", async (req, res) => {
 
     const address = await Address.find({
       user: userDetails._id,
-    }).select("-user");
+    })
+      .sort({ createdAt: "desc" })
+      .select("-user");
 
     return res.json({
       data: address,
@@ -58,12 +61,33 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const newAddress = new Cart({
+    console.log(req.body);
+
+    const oldAddressCount = await Address.countDocuments({
+      user: userDetails._id,
+    });
+
+    if (oldAddressCount >= 5) {
+      return res.status(400).json({
+        status: false,
+        message: "Address limit reached, you can only add upto 5 addresses",
+      });
+    }
+
+    const newAddress = new Address({
       user: userDetails._id,
       ...req.body,
     });
 
-    await newAddress.save();
+    await Promise.all([
+      newAddress.save(),
+      User.findOneAndUpdate(
+        { _id: userDetails._id },
+        {
+          $push: { address: newAddress._id },
+        }
+      ),
+    ]);
 
     return res.json({
       status: true,

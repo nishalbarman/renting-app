@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query";
 
-const SERVER_URL = process.env.SERVER_URL || "http://localhost:8000/";
+const SERVER_URL = process.env.SERVER_URL || "http://192.168.79.210:8000/";
 
 const categoryApi = createApi({
   reducerPath: "categoryApi",

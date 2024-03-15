@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const SERVER_URL = process.env.SERVER_URL || "http://192.168.118.210:8000/";
+const SERVER_URL = process.env.SERVER_URL || "http://192.168.79.210:8000/";
 
 export const addressApi = createApi({
   reducerPath: "addressApi",
@@ -24,10 +24,10 @@ export const addressApi = createApi({
     }),
 
     addAddress: builder.mutation({
-      query: ({ newAddress }) => ({
+      query: ({ address }) => ({
         url: `address`,
         method: "POST",
-        body: newAddress,
+        body: address,
       }),
       invalidatesTags: ["Address"],
       // transformErrorResponse: (response, meta, arg) => response.message,

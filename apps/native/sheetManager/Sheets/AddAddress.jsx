@@ -6,12 +6,12 @@ import {
   Foundation,
   Ionicons,
 } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   Text,
   TextInput,
+  TouchableHighlight,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -20,7 +20,6 @@ import ActionSheet, {
   useScrollHandlers,
 } from "react-native-actions-sheet";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { EvilIcons } from "@expo/vector-icons";
 
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
 import {
@@ -28,10 +27,14 @@ import {
   isValidIndianMobileNumber,
   isValidPassword,
 } from "validator";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useAddAddressMutation } from "@store/rtk/apis/addressApi";
+import { setAddressDataFromMap } from "@store/rtk/slices/addressSlice";
+import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
 
 export default function AddAddress() {
   const handlers = useScrollHandlers();
+  const dispatch = useDispatch();
 
   const { address, coordinates } = useSelector(
     (state) => state.mapSelectedAddress
@@ -71,24 +74,6 @@ export default function AddAddress() {
   });
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-
-  const handleSignup = async () => {
-    // try {
-    //   const extractedData = Object.keys(formData).reduce(
-    //     (newFormData, keyName) => {
-    //       return { ...newFormData, [keyName]: formData[keyName].value };
-    //     },
-    //     { name: "", email: "", mobileNo: "", password: "" }
-    //   ); // postable form data
-    //   const response = await axios.post(
-    //     `http://192.168.79.210:8000/auth/sendOtp`,
-    //     extractedData
-    //   );
-    // } catch (error) {
-    //   console.error("signup->index.js ==>", error);
-    //   console.error("signup->index.js ==>", error?.response);
-    // }
-  };
 
   useEffect(() => {
     setIsSubmitDisabled(
@@ -144,6 +129,28 @@ export default function AddAddress() {
     SheetManager.show("location-select-map"),
   ];
 
+  const test = useAddAddressMutation();
+  console.log("What are the values?", test);
+  const [addNewAddress, { isError, isLoading }] = useAddAddressMutation();
+
+  const handleAddNewAddress = async () => {
+    try {
+      const extractedFormData = Object.keys(formData).reduce(
+        (finalData, key) => ({ [key]: formData[key].value, ...finalData }),
+        {}
+      );
+
+      const response = await addNewAddress({
+        address: extractedFormData,
+      }).unwrap();
+      if (response.status == 200) {
+        dispatch(setAddressDataFromMap({ address: null, coordinates: null }));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <ActionSheet closeOnPressBack={true} gestureEnabled={true}>
       <NativeViewGestureHandler
@@ -160,18 +167,14 @@ export default function AddAddress() {
             <View className="w-[100%] flex flex-col gap-y-[13px] items-center mt-1">
               <TouchableOpacity
                 onPress={handleChooseLocationOnMap}
-                className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
-                <View className="flex flex-row">
-                  {/* <Ionicons name="location-outline" size={24} color="gray" /> */}
-
-                  <TextInput
-                    className="ml-2 w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px] text-gray"
-                    editable={false}
-                    multiline={false}
-                    placeholder="Choose your location"
-                    value={`${formData.name.value} ${formData.streetName.value}`}
-                  />
-                </View>
+                className="h-[60px] w-[100%] pl-4 pr-7 border-none outline-none bg-[#F1F0F0] flex flex-row justify-between items-center rounded-lg">
+                <TextInput
+                  className="mr-2 rounded-lg font-[poppins-mid] placeholder:text-[16px] placeholder:text-[#8a8a8a] text-#8a8a8a"
+                  editable={false}
+                  multiline={false}
+                  placeholder="Choose your location"
+                  value={`${formData.name.value} ${formData.streetName.value}`}
+                />
                 <FontAwesome6
                   name="location-crosshairs"
                   size={24}
@@ -296,14 +299,24 @@ export default function AddAddress() {
             </View>
 
             <View className="w-[100%] flex flex-col gap-y-6 items-center mt-[-1px]">
-              <TouchableOpacity
-                disabled={isSubmitDisabled}
-                className={`flex justify-center items-center h-[55px] w-[90%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
-                onPress={handleSignup}>
-                <Text className="text-[20px] text-white font-[poppins-bold]">
-                  Save
-                </Text>
-              </TouchableOpacity>
+              <TouchableHighlight
+                underlayColor={"[#6C63FF"}
+                onPress={handleAddNewAddress}
+                disabled={isLoading}
+                className={`flex justify-center items-center h-[55px] w-[90%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}>
+                <>
+                  {isLoading || (
+                    <Text className="text-[20px] text-white font-[poppins-bold]">
+                      Save
+                    </Text>
+                  )}
+                  {isLoading && (
+                    <AnimateSpin>
+                      <Feather name="loader" size={24} color="white" />
+                    </AnimateSpin>
+                  )}
+                </>
+              </TouchableHighlight>
             </View>
             <View className="min-h-[100px]"></View>
           </View>

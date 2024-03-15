@@ -11,7 +11,7 @@ import {
   TextInput,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { EvilIcons } from "@expo/vector-icons";
+import { EvilIcons, FontAwesome6 } from "@expo/vector-icons";
 import ActionSheet, {
   SheetManager,
   useScrollHandlers,
@@ -111,6 +111,8 @@ export default function Cart() {
     error: addressFetchError,
   } = useGetAddressQuery();
 
+  console.log(address);
+
   const handleAdressSheet = () => {
     if (address && address.length > 0) SheetManager.show("address-list-sheet");
     else SheetManager.show("add-address-sheet");
@@ -122,14 +124,20 @@ export default function Cart() {
         <Text className="font-[poppins-bold] text-[23px] mb-3">Cart</Text>
         <TouchableOpacity
           onPress={handleAdressSheet}
-          className="flex flex-row bg-[#F1F1F3] rounded-lg items-center justify-between p-3 h-[55px]">
-          <View className="flex flex-row gap-x-1 items-center justify-center h-[100%]">
-            <EvilIcons name="location" size={30} color="black" />
-            <Text className="font-[poppins-mid] text-[17px] align-middle">
-              Nalbari to kaithalkuchi road
-            </Text>
-          </View>
-          <AntDesign name="right" size={20} color="gray" />
+          className="flex flex-row bg-[#F1F1F3] rounded-lg items-center justify-start p-3 h-[55px]">
+          <FontAwesome6 name="location-crosshairs" size={24} color="#525252" />
+
+          <Text
+            numberOfLines={1}
+            className="ml-3 align-middle font-[mrt-bold] text-[17px] align-middle">
+            {address && address.length > 0
+              ? address[0].name +
+                " " +
+                address[0].streetName +
+                " " +
+                address[0].postalCode
+              : "Enter your address"}
+          </Text>
         </TouchableOpacity>
       </View>
       <FlatList
