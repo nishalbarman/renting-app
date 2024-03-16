@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -67,20 +67,24 @@ function Product({
             style={{
               backgroundColor: isRentable ? "red" : "#41a63f",
             }}
-            className="bg-[#41a63f] text-white rounded-[10px] p-[4px_10px] absolute top-2 left-2 z-[1] text-[10px] font-[poppins-xbold] uppercase">
+            className="bg-[#41a63f] text-white rounded-[10px] p-[4px_10px] absolute top-2 left-2 z-[1] text-[11px] font-extrabold uppercase">
             {isPurchasable ? "Buy" : "Rent"}
           </Text>
         )}
 
-        <TouchableOpacity
+        <TouchableHighlight
+          underlayColor={"rgba(0,0,0,0.1)"}
+          style={{
+            backgroundColor: "rgba(0,0,0,0.1)",
+          }}
           onPress={handleAddToWishlist}
-          className="absolute top-2 right-3 shadow bg-white p-3 rounded-full w-fit h-fit flex flex-col items-center justify-center z-[1]">
+          className="absolute top-2 right-3 h-10 w-10 rounded-full items-center justify-center z-[1]">
           {onCart ? (
-            <FontAwesome name="heart" size={20} color={"black"} />
+            <FontAwesome name="heart" size={19} color={"red"} />
           ) : (
-            <FontAwesome name="heart-o" size={20} color={"black"} />
+            <FontAwesome name="heart-o" size={19} color={"black"} />
           )}
-        </TouchableOpacity>
+        </TouchableHighlight>
 
         <Image
           style={{ height: 200 }}
@@ -115,7 +119,7 @@ function Product({
               );
             })}
           </View>
-          <Text className="text-[#A7A6A7] text-[13px] font-[poppins-mid] align-middle">
+          <Text className="ml-1 text-[#A7A6A7] text-[13px] align-middle">
             ({totalFeedbacks})
           </Text>
         </View>

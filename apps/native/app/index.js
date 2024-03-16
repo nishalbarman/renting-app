@@ -1,11 +1,13 @@
 import { useSelector } from "react-redux";
-import { Text, View } from "react-native";
+import { SafeAreaView, Text, View } from "react-native";
 
 import { Redirect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import ProductsListSkeleton from "../Skeletons/ProductListSkeleton";
+import AnimateSpin from "../components/AnimateSpin/AnimateSpin";
+import { EvilIcons } from "@expo/vector-icons";
 
 SplashScreen.preventAutoHideAsync(); // disable auto hide of splash screen
 
@@ -36,7 +38,15 @@ export default function Page() {
   }, [isFontLoaded]);
 
   if (!isFontLoaded) {
-    return <ProductsListSkeleton />;
+    return (
+      <SafeAreaView>
+        <View className="flex-1 items-center">
+          <AnimateSpin>
+            <EvilIcons name="spinner" size={50} color="black" />
+          </AnimateSpin>
+        </View>
+      </SafeAreaView>
+    );
   }
 
   if (!userToken) {

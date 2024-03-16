@@ -3,6 +3,7 @@ import React from "react";
 import { FlatList, Text, View } from "react-native";
 import Product from "./Product";
 import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
+import ProductsListSkeleton from "../../Skeletons/ProductListSkeleton";
 
 function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
   const data = [
@@ -212,7 +213,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
   ];
 
   const {
-    data: wishlistData,
+    data: productData,
     isLoading,
     isError,
     error,
@@ -222,37 +223,43 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
   console.log(error);
 
   return (
-    <View
-      style={{
-        backgroundColor: bgColor,
-      }}
-      className={`w-[100%] p-[20px_10px] h-fit rounded`}>
-      <View className="flex flex-row justify-between p-[0px_1px] items-center mb-[16px]">
-        <Text
+    <>
+      {isLoading ? (
+        <ProductsListSkeleton />
+      ) : (
+        <View
           style={{
-            color: titleColor,
+            backgroundColor: bgColor,
           }}
-          className="font-[poppins-xbold] text-[22px]">
-          {title}
-        </Text>
-        <Link
-          className="text-[15px] text-purple font-[poppins-bold] underline"
-          href={`/products?section=${viewAllPath}`}>
-          See All
-        </Link>
-      </View>
+          className={`w-[100%] p-[20px_10px] h-fit rounded`}>
+          <View className="flex flex-row justify-between p-[0px_1px] items-center mb-[16px]">
+            <Text
+              style={{
+                color: titleColor,
+              }}
+              className="font-[poppins-xbold] text-[22px]">
+              {title}
+            </Text>
+            <Link
+              className="text-[15px] text-purple font-[poppins-bold] underline"
+              href={`/products?section=${viewAllPath}`}>
+              See All
+            </Link>
+          </View>
 
-      <View>
-        <FlatList
-          data={data}
-          renderItem={({ item }) => (
-            <Product details={item} wishlistData={wishlistData || []} />
-          )}
-          numColumns={2}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      </View>
-    </View>
+          <View>
+            <FlatList
+              data={data}
+              renderItem={({ item }) => (
+                <Product details={item} wishlistData={wishlistData || []} />
+              )}
+              numColumns={2}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
+        </View>
+      )}
+    </>
   );
 }
 
