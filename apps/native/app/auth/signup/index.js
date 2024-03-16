@@ -58,7 +58,7 @@ export default function Page() {
       ); // postable form data
 
       const response = await axios.post(
-        `http://192.168.79.210:8000/auth/sendOtp`,
+        `http://127.0.0.1:8000/auth/sendOtp`,
         extractedData
       );
 

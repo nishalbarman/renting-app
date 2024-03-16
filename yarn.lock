@@ -9201,6 +9201,11 @@ react-native-screens@~3.29.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-simple-toast@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-simple-toast/-/react-native-simple-toast-3.3.0.tgz#dc98385b10009668616a84fc118cdbe26f616035"
+  integrity sha512-qFx2hI99yfY5YReLg3lCUQdIcWxjYjxBwSW766c+nVRlXQQg01POg59XQ8aM5aSNwa/S8u8HH3qInXlWXBIt5g==
+
 react-native-web@~0.19.6:
   version "0.19.10"
   resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.19.10.tgz#5f7205f8909c0889bc89c9fde7c6e287defa7c63"

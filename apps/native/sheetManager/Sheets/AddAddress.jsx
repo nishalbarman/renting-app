@@ -147,8 +147,9 @@ export default function AddAddress() {
       if (response.status == 200) {
         dispatch(setAddressDataFromMap({ address: null, coordinates: null }));
       }
+      Toast.success(response.message);
     } catch (error) {
-      Toast.success("Promised is rejected");
+      Toast.error(error?.data?.message || "Address not added");
       console.error(error);
     }
   };
