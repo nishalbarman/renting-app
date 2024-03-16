@@ -11,6 +11,7 @@ import { Image } from "expo-image";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
 
 import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
+import { SheetManager } from "react-native-actions-sheet";
 
 function OrderItem({
   order: {
@@ -32,7 +33,8 @@ function OrderItem({
     trackingLink,
   },
 }) {
-  console.log(color, size, quantity);
+  const [cancelLoading, setCancelLoading] = useState();
+  const [trackLoading, setTrackLoading] = useState();
 
   const rentTotalTimeRemaining = useMemo(() => {
     const returnDate = new Date("2024-03-15T13:41:55.646+00:00");
@@ -52,6 +54,27 @@ function OrderItem({
     console.log(totalTimeRemaining);
     return totalTimeRemaining;
   }, []);
+
+  const handleTrackOrder = () => {
+    setTrackLoading(true);
+    SheetManager.show("track-order", {
+      payload: {
+        orderId: "iamorderid",
+      },
+    });
+    setTrackLoading(false);
+  };
+
+  const handleCancelOrder = async () => {
+    setCancelLoading(true);
+
+    // TODO : Cancel request
+    await new Promise((res) => {
+      setTimeout(res, 1000);
+    });
+
+    setCancelLoading(false);
+  };
 
   return (
     <View className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px]">
@@ -158,18 +181,30 @@ function OrderItem({
       </Text>
 
       <View className="flex-row mt-3 justify-between">
-        <TouchableHighlight className="bg-white border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
-          {/* <AnimateSpin>
-            <EvilIcons name="spinner" size={24} color="black" />
-          </AnimateSpin> */}
-          <Text className="font-semibold text-lg">Cancel</Text>
+        <TouchableHighlight
+          underlayColor={"white"}
+          onPress={handleCancelOrder}
+          className="bg-white border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
+          {cancelLoading ? (
+            <AnimateSpin>
+              <EvilIcons name="spinner" size={24} color="black" />
+            </AnimateSpin>
+          ) : (
+            <Text className="font-semibold text-lg">Cancel</Text>
+          )}
         </TouchableHighlight>
         <View className="w-[4%]"></View>
-        <TouchableHighlight className="bg-[#514FB6] border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
-          {/* <AnimateSpin>
-            <EvilIcons name="spinner" size={24} color="white" />
-          </AnimateSpin> */}
-          <Text className="font-semibold text-lg text-white">Track</Text>
+        <TouchableHighlight
+          onPress={handleTrackOrder}
+          underlayColor={"#514FB6"}
+          className="bg-[#514FB6] border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
+          {trackLoading ? (
+            <AnimateSpin>
+              <EvilIcons name="spinner" size={24} color="white" />
+            </AnimateSpin>
+          ) : (
+            <Text className="font-semibold text-lg text-white">Track</Text>
+          )}
         </TouchableHighlight>
       </View>
     </View>

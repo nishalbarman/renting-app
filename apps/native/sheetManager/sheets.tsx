@@ -3,11 +3,13 @@ import FeedbackSheet from "./Sheets/AddFeedback";
 import AddressListSheet from "./Sheets/AddressList";
 import AddAddress from "./Sheets/AddAddress";
 import LocationMap from "./Sheets/LocationMap";
+import OrderTrack from "./Sheets/OrderTrack";
 
 registerSheet("add-feedback-sheet", FeedbackSheet);
 registerSheet("address-list-sheet", AddressListSheet);
 registerSheet("add-address-sheet", AddAddress);
 registerSheet("location-select-map", LocationMap);
+registerSheet("track-order", OrderTrack);
 
 // We extend some of the types here to give us great intellisense
 // across the app for all registered sheets.
@@ -15,12 +17,17 @@ declare module "react-native-actions-sheet" {
   interface Sheets {
     "add-feedback-sheet": SheetDefinition<{
       payload: {
-        productId: Number;
+        productId: String;
       };
     }>;
     "address-list-sheet": SheetDefinition;
     "add-address-sheet": SheetDefinition;
     "location-select-map": SheetDefinition;
+    "track-order": SheetDefinition<{
+      payload: {
+        orderId: String;
+      };
+    }>;
   }
 }
 

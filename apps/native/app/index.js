@@ -5,6 +5,7 @@ import { Redirect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import ProductsListSkeleton from "../Skeletons/ProductListSkeleton";
 
 SplashScreen.preventAutoHideAsync(); // disable auto hide of splash screen
 
@@ -35,7 +36,7 @@ export default function Page() {
   }, [isFontLoaded]);
 
   if (!isFontLoaded) {
-    return null;
+    return <ProductsListSkeleton />;
   }
 
   if (!userToken) {

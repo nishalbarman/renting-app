@@ -9,12 +9,11 @@ import {
 } from "react-native";
 import { Link } from "expo-router";
 
-
-
 import { isValidIndianMobileNumber, isValidPassword } from "validator";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CategoryItem from "../../components/CategoryCard/CategoryItem";
 import ProductsList from "../../components/ProductSection/ProductsList";
+import ProductsListSkeleton from "../../Skeletons/ProductListSkeleton";
 
 export default function Tab() {
   const [formData, setFormData] = useState({
@@ -71,6 +70,7 @@ export default function Tab() {
           />
         </View>
         <View className="flex-1 w-[100%]">
+          <ProductsListSkeleton />
           <ProductsList
             title="🔥 New Arrivals"
             viewAllPath="/new-arrivals"
