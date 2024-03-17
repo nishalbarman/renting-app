@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from "react";
+import React, { memo, useMemo, useState } from "react";
 import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAddWishlistMutation } from "@store/rtk/apis/wishlistApi";
+import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
 
 function Product({
   details: {
@@ -28,15 +29,22 @@ function Product({
     availableColors,
   },
   width,
-  wishlistData,
 }) {
-  // const blurhash =
-  //   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
-
   const router = useRouter();
+
+  const {
+    data: wishlistData,
+    isLoading: isWishlistDataLoading,
+    isError: isWishlistDataError,
+    error: wishlistDataError,
+  } = useGetWishlistQuery();
 
   const [addWishlist] = useAddWishlistMutation();
   const [onCart, setOnCart] = useState(false);
+
+  const loadingBlurHash = useMemo(() => {
+    return "LKO2?Z~W9Zj[%";
+  }, []);
 
   const starsArray = useMemo(() => {
     return Array.from({ length: 5 });
@@ -93,6 +101,7 @@ function Product({
           contentFit="contain"
           contentPosition={"center"}
           onError={(error) => console.error("Image load error:", error)}
+          loadingBlurHash={loadingBlurHash}
         />
       </View>
 
@@ -162,4 +171,4 @@ function Product({
   );
 }
 
-export default Product;
+export default memo(Product);

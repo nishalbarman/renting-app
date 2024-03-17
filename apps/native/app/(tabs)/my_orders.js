@@ -91,8 +91,9 @@ const OrderScreen = () => {
 
   return (
     <SafeAreaView className={`flex-1 bg-white`}>
-      <Text className={`text-lg font-bold mb-4`}>My Order</Text>
-      <ScrollView className={`flex-1 bg-white p-2`}>
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        className={`flex-1 bg-white p-2`}>
         <View className={`mb-4 p-2`}>
           {orders?.map((item, index) => (
             <OrderItem key={index} order={item} />

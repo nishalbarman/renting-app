@@ -117,7 +117,7 @@ export default function Page() {
       searchParams.otp = finalOtp;
 
       const response = await axios.post(
-        `http://127.0.0.1:8000/auth/signup`,
+        `http://192.168.79.210:8000/auth/signup`,
         searchParams
       );
 

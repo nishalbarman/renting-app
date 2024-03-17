@@ -26,13 +26,11 @@ router.get("/", async (req, res) => {
       .select("-user");
 
     return res.json({
-      status: true,
       data: wishlistDetails,
     });
   } catch (error) {
     console.log(error);
-    return res.json({
-      status: false,
+    return res.status(500).json({
       message: "Internal server error!",
     });
   }

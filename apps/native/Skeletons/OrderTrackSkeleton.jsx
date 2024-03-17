@@ -1,7 +1,7 @@
-import React from "react";
+import React, { memo } from "react";
 import { View, Text, Animated } from "react-native";
 
-export default function OrderTrackSkeleton() {
+function OrderTrackSkeleton() {
   const animationValue = new Animated.Value(0);
 
   Animated.loop(
@@ -92,3 +92,5 @@ export default function OrderTrackSkeleton() {
     </View>
   );
 }
+
+export default memo(OrderTrackSkeleton);

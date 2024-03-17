@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { memo, useEffect } from "react";
 import { View, Text, Animated, FlatList } from "react-native";
 import ProductSkeleton from "./ProductSkeleton";
 
@@ -56,4 +56,4 @@ const ProductsListSkeleton = ({ title, bgColor, titleColor, viewAllPath }) => {
   );
 };
 
-export default ProductsListSkeleton;
+export default memo(ProductsListSkeleton);

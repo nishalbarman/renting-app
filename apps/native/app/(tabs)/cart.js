@@ -120,8 +120,7 @@ export default function Cart() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <View className="rounded-lg bg-white p-[10px] pl-3 pr-3 pb-[30px]">
-        <Text className="font-[poppins-bold] text-[23px] mb-3">Cart</Text>
+      <View className="rounded-lg bg-white pl-3 pr-3 pb-[30px] pt-2">
         <TouchableOpacity
           onPress={handleAdressSheet}
           className="flex flex-row bg-[#F1F1F3] rounded-lg items-center justify-start p-3 h-[55px]">

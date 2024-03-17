@@ -1,18 +1,25 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
+import { Text, View } from "react-native";
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: "#6C63FF",
+        headerShown: true,
+        headerShadowVisible: false,
+        headerTitleAlign: "left",
+        headerTitleStyle: {
+          fontWeight: "bold",
+          fontSize: "20",
+        },
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          headerShown: false,
+          title: "Dashboard",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={23} name="home" color={color} />
           ),
@@ -34,12 +41,16 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <FontAwesome size={26} name="shopping-cart" color={color} />
           ),
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontSize: "20",
+          },
         }}
       />
       <Tabs.Screen
         name="my_orders"
         options={{
-          title: "Orders",
+          title: "My Orders",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={21} name="shopping-bag" color={color} />
           ),
@@ -48,7 +59,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="my_account"
         options={{
-          title: "Account",
+          title: "My Account",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={23} name="user" color={color} />
           ),

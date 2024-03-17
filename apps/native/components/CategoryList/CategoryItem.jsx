@@ -22,4 +22,4 @@ function CategoryItem({ categoryImage, categoryName }) {
   );
 }
 
-export default CategoryItem;
+export default React.memo(CategoryItem);

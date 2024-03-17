@@ -1,17 +1,25 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const SERVER_URL = process.env.SERVER_URL || "http://127.0.0.1:8000/";
+const SERVER_URL = "http://192.168.79.210:8000/";
+console.log(SERVER_URL);
 
-const categoryApi = createApi({
+export const categoryApi = createApi({
   reducerPath: "categoryApi",
-  baseQuery: fetchBaseQuery({ baseUrl: SERVER_URL }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: SERVER_URL,
+    prepareHeaders: (headers, { getState }) => {
+      headers.set("authorization", `Bearer ${getState().auth.jwtToken}`);
+      return headers;
+    },
+  }),
   endpoints: (builder) => ({
     getAllCategory: builder.query({
       query: () => ({
         url: "category",
         method: "GET",
-        Authorization: `Bearer ${getState().auth.jwtToken}`,
       }),
     }),
   }),
 });
+
+export const { useGetAllCategoryQuery } = categoryApi;

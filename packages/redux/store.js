@@ -18,6 +18,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { wishlistApi } from "./apis/wishlistApi";
+import { productsApi } from "./apis/productApi";
+import { categoryApi } from "./apis/categoryApi";
 
 const rootReducer = combineReducers({
   [userAPI.reducerPath]: userAPI.reducer,
@@ -25,7 +27,9 @@ const rootReducer = combineReducers({
   [authSlice.name]: authSlice.reducer,
   [addressSlice.name]: addressSlice.reducer,
   [addressApi.reducerPath]: addressApi.reducer,
+  [productsApi.reducerPath]: productsApi.reducer,
   [wishlistApi.reducerPath]: wishlistApi.reducer,
+  [categoryApi.reducerPath]: categoryApi.reducer,
 });
 
 const persistConfig = {
@@ -43,15 +47,17 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     })
+      .concat(productsApi.middleware)
       .concat(wishlistApi.middleware)
       .concat(userAPI.middleware)
       .concat(authApi.middleware)
-      .concat(addressApi.middleware),
+      .concat(addressApi.middleware)
+      .concat(categoryApi.middleware),
 });
 
-store.subscribe(() => {
-  console.log("State after change:", store.getState().mapSelectedAddress);
-});
+// store.subscribe(() => {
+//   console.log("State after change:", store.getState().mapSelectedAddress);
+// });
 
 export const persistor = persistStore(store);
 

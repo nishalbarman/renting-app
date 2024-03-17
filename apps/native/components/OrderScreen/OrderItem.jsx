@@ -164,9 +164,9 @@ function OrderItem({
         </View>
       </View>
       {orderType === "rent" && (
-        <View className="flex-row items-center justify-start mt-1 mb-1">
+        <View className="flex-row items-center justify-start mt-4 mb-1">
           <AntDesign name="infocirlce" size={22} color="#349fd9" />
-          <Text className="ml-2 text-[15px] text-[#349fd9] font-extrabold">
+          <Text className="text-[15px] text-[#349fd9] leading-[20px] text-wrap pl-2 pr-4">
             {rentTotalTimeRemaining < 0
               ? "Due date for returning has exceeded already, you will be charged with some penalty amount"
               : rentTotalTimeRemaining > 0
@@ -176,9 +176,9 @@ function OrderItem({
         </View>
       )}
 
-      <Text className="bg-[#ffe9d6] text-[#bf6415] border border-[#bf6415] rounded-md text-[10px] pt-[7px] pb-[7px] pl-[2px] pr-[2px] text-center align-middle mt-5 ml-2 mr-2 mb-1 uppercase font-extrabold">
+      {/* <Text className="bg-[#ffe9d6] text-[#bf6415] border border-[#bf6415] rounded-md text-[10px] pt-[7px] pb-[7px] pl-[2px] pr-[2px] text-center align-middle mt-5 ml-2 mr-2 mb-1 uppercase font-extrabold">
         {orderType === "rent" ? "Rented" : "Bought"}
-      </Text>
+      </Text> */}
 
       <View className="flex-row mt-3 justify-between">
         <TouchableHighlight

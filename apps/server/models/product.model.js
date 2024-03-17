@@ -21,6 +21,7 @@ const productSchema = new mongoose.Schema(
     availableStocks: { type: Number, required: true, default: 0 },
 
     isPurchasable: { type: Boolean, default: false },
+    isRentable: { type: Boolean, default: false },
 
     rentingPrice: { type: Number, required: true }, // if no varient is available then default renting price would be this
     discountedPrice: { type: Number, required: true }, // if no varient is available then default price would be this
@@ -106,4 +107,4 @@ ProductVarient.schema.path("discountedPrice").validate({
   message: "Discounted Price must be non zero number,",
 });
 
-module.exports = productSchema;
+module.exports = { Product, ProductVarient };

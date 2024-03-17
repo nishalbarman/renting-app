@@ -7,7 +7,7 @@ const TAG = "products/route.js:--";
 router.get("/", async (req, res) => {
   try {
     const categories = await Category.find({});
-    return res.status(200).json({ data: categories, status: true });
+    return res.status(200).json({ data: categories });
   } catch (error) {
     console.log(TAG, error);
     return res

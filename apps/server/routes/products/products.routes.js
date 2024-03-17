@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const cheerio = require("cheerio");
-const Product = require("../../models/product.model");
+const { Product } = require("../../models/product.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 const { isValidUrl } = require("validator");
 
@@ -16,17 +16,31 @@ router.get("/", async (req, res) => {
     const LIMIT = searchParams.limit || 50;
     const SKIP = (PAGE - 1) * LIMIT;
 
-    const products = await Product.find({})
+    // filter result by query params
+    const TYPE = searchParams?.productType;
+    const CATEGORY = searchParams?.category;
+
+    const filter = {}; // blank filter object
+
+    if (TYPE) {
+      filter.isPurchasable = TYPE === "buy";
+    }
+
+    if (CATEGORY) {
+      filter.category = CATEGORY;
+    }
+
+    const products = await Product.find(filter)
       .sort({ createdAt: "desc" })
       .skip(SKIP)
       .limit(LIMIT);
 
-    return res.status(200).json({ data: products, status: true });
+    console.log(products);
+
+    return res.status(200).json({ data: products });
   } catch (error) {
     console.error(TAG, error);
-    return res
-      .status(500)
-      .json({ message: "Some error occurred", status: false });
+    return res.status(500).json({ message: "Some error occurred" });
   }
 });
 

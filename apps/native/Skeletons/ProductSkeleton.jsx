@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { memo, useEffect } from "react";
 import { View, Text, Animated } from "react-native";
 
 const ProductSkeleton = ({ width }) => {
@@ -73,4 +73,4 @@ const ProductSkeleton = ({ width }) => {
   );
 };
 
-export default ProductSkeleton;
+export default memo(ProductSkeleton);
