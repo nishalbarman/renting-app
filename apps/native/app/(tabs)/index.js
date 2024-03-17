@@ -14,7 +14,7 @@ import Categories from "../../components/CategoryList/Categories";
 
 export default function Tab() {
   return (
-    <SafeAreaView className="bg-white">
+    <SafeAreaView className="bg-white flex-1">
       <ScrollView
         showsVerticalScrollIndicator={false}
         ounces={false} // Set this to false to disable overscroll effect

@@ -34,8 +34,8 @@ export const wishlistApi = createApi({
     }),
 
     deleteWishlist: builder.mutation({
-      query: (id) => ({
-        url: `wishlist/${id}`,
+      query: ({ _id }) => ({
+        url: `wishlist/${_id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Wishlist"],

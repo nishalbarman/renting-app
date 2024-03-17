@@ -114,13 +114,11 @@ router.delete("/:product_id", async (req, res) => {
     }
 
     return res.json({
-      status: true,
       message: "Wishlist item deleted",
     });
   } catch (error) {
     console.log(error);
-    return res.json({
-      status: false,
+    return res.status(500).json({
       message: "Internal server error!",
     });
   }

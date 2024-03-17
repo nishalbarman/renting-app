@@ -2,6 +2,7 @@ import { View, Text, FlatList, SafeAreaView } from "react-native";
 
 import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
 import Product from "../../components/ProductSection/Product";
+import WishlistCard from "../../components/Wishlist/WishlistCard";
 
 export default function Tab() {
   const {
@@ -20,7 +21,7 @@ export default function Tab() {
           data={wishlistData}
           renderItem={({ item }) => {
             console.log("Wishlit product", item?.product);
-            return <Product details={item?.product} />;
+            return <WishlistCard details={item?.product} />;
           }}
           numColumns={2}
           keyExtractor={(item, index) => index.toString()}
