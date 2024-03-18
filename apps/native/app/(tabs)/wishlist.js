@@ -1,7 +1,6 @@
-import { View, Text, FlatList, SafeAreaView } from "react-native";
+import { View, FlatList, SafeAreaView } from "react-native";
 
 import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
-import Product from "../../components/ProductSection/Product";
 import WishlistCard from "../../components/Wishlist/WishlistCard";
 
 export default function Tab() {

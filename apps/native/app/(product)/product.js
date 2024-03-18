@@ -1,5 +1,11 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Dimensions,
   FlatList,
@@ -12,9 +18,11 @@ import {
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { AntDesign } from "@expo/vector-icons";
 import HTML from "react-native-render-html";
+
+import { AntDesign } from "@expo/vector-icons";
 
 import ActionSheet, {
   SheetManager,
@@ -33,6 +41,44 @@ export default function Page() {
     return Dimensions.get("window");
   }, []);
 
+  const router = useRouter();
+
+  const { id: productId } = useLocalSearchParams();
+
+  const [isProductFetching, setIsProductFetching] = useState(true);
+  const [isProductFetchError, setIsProductFetchError] = useState(false);
+  const [error, setError] = useState(null);
+
+  const [productDetails, setProductDetails] = useState({});
+
+  // fetch the product details from aserver
+  const getProductDetails = async () => {
+    try {
+      const res = await axios.get(
+        `http://192.168.147.210:8000/products/view/${productId}`
+      );
+      const { data } = res;
+      setProductDetails(data?.product || {});
+    } catch (error) {
+      setError(error);
+      setIsProductFetchError(true);
+      if (error.res.status === 401) {
+        router.dismissAll();
+        router.replace(`/auth/login?redirectTo=/product?id=${productId}`);
+      } else if (error.res.status === 400) {
+        router.dismiss(1);
+      } else {
+      }
+      console.error(error);
+    } finally {
+      setIsProductFetching(false);
+    }
+  };
+
+  useEffect(() => {
+    getProductDetails();
+  }, []);
+
   const [selectedProductSize, setSelectedProductSize] = useState("S");
   const [selectedProductColor, setSelectedProductColor] = useState("red");
 
@@ -42,8 +88,6 @@ export default function Page() {
 
   const [availableStocks] = useState(10);
 
-  const reviewSheetModalRef = useRef(null);
-
   const starsArray = useMemo(() => {
     return Array.from({ length: 5 });
   }, []);
@@ -52,48 +96,48 @@ export default function Page() {
     SheetManager.show("add-feedback-sheet");
   }, []);
 
-  const productDetails = {
-    previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
-    title:
-      "ZEBRONICS ZIUM Mid-Tower gaming cabinet, M-ATX/M-Itx, Fins Foccussed Multicolor Rear Fan, Multi Color Led Strip, Acryflic Glass Side Panel, USB 3.0, USB 2.0",
-    category: { _id: "random_id_32423", name: "Biking" },
-    isPurchasable: true,
-    rentingPrice: 100,
-    discountedPrice: 11000,
-    originalPrice: 23131,
-    showPictures: [
-      "https://m.media-amazon.com/images/I/71l6+Wxdg6S._SL1500_.jpg",
-      "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
-      "https://m.media-amazon.com/images/I/5161uV9BXAL._SX679_.jpg",
-      "https://m.media-amazon.com/images/I/51bOhEXhdrL._SX679_.jpg",
-      "https://m.media-amazon.com/images/I/41QZ7+muJhL._SX679_.jpg",
-    ],
-    description: `<p style="line-height: 200%;"><span style="font-size: 18px; color: black;">Our product is the most attractive product that is available on the market. At a very low price rate you can either buy or rent out this procut.</span></p>
-    <p><span style="font-size: 20px; color: black;">Features:</span></p>
-    <ul>
-      <li><span style="font-size: 18px; color: black;">Better price in market</span></li>
-      <li><span style="font-size: 18px; color: black;">Good question&nbsp;</span></li>
-      <li><span style="font-size: 18px; color: black;">nice explanation</span></li>
-      <li><span style="font-size: 18px; color: black;">op means over powered</span></li>
-      <li><span style="font-size: 18px; color: black;">omg means oh my god!</span></li>
-    </ul>`,
-    stars: 3,
-    totalFeedbacks: 223,
-    shippingPrice: 5,
-    isSizeVaries: true,
-    isColorVaries: true,
-    availableVarients: [
-      {
-        color: "Red",
-        size: "S",
-        rentPrice: 10,
-        discountedPrice: 12,
-        originalPrice: 10,
-      },
-    ],
-    availableSizes: ["S", "M", "L", "XL", "XXL"],
-    availableColors: ["Red", "Blue", "Black"],
-  };
+  // const productDetails = {
+  //   previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+  //   title:
+  //     "ZEBRONICS ZIUM Mid-Tower gaming cabinet, M-ATX/M-Itx, Fins Foccussed Multicolor Rear Fan, Multi Color Led Strip, Acryflic Glass Side Panel, USB 3.0, USB 2.0",
+  //   category: { _id: "random_id_32423", name: "Biking" },
+  //   isPurchasable: true,
+  //   rentingPrice: 100,
+  //   discountedPrice: 11000,
+  //   originalPrice: 23131,
+  //   showPictures: [
+  //     "https://m.media-amazon.com/images/I/71l6+Wxdg6S._SL1500_.jpg",
+  //     "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
+  //     "https://m.media-amazon.com/images/I/5161uV9BXAL._SX679_.jpg",
+  //     "https://m.media-amazon.com/images/I/51bOhEXhdrL._SX679_.jpg",
+  //     "https://m.media-amazon.com/images/I/41QZ7+muJhL._SX679_.jpg",
+  //   ],
+  //   description: `<p style="line-height: 200%;"><span style="font-size: 18px; color: black;">Our product is the most attractive product that is available on the market. At a very low price rate you can either buy or rent out this procut.</span></p>
+  //   <p><span style="font-size: 20px; color: black;">Features:</span></p>
+  //   <ul>
+  //     <li><span style="font-size: 18px; color: black;">Better price in market</span></li>
+  //     <li><span style="font-size: 18px; color: black;">Good question&nbsp;</span></li>
+  //     <li><span style="font-size: 18px; color: black;">nice explanation</span></li>
+  //     <li><span style="font-size: 18px; color: black;">op means over powered</span></li>
+  //     <li><span style="font-size: 18px; color: black;">omg means oh my god!</span></li>
+  //   </ul>`,
+  //   stars: 3,
+  //   totalFeedbacks: 223,
+  //   shippingPrice: 5,
+  //   isSizeVaries: true,
+  //   isColorVaries: true,
+  //   availableVarients: [
+  //     {
+  //       color: "Red",
+  //       size: "S",
+  //       rentPrice: 10,
+  //       discountedPrice: 12,
+  //       originalPrice: 10,
+  //     },
+  //   ],
+  //   availableSizes: ["S", "M", "L", "XL", "XXL"],
+  //   availableColors: ["Red", "Blue", "Black"],
+  // };
 
   const [toogleSale, setToogleSale] = useState(productDetails.isPurchasable);
 

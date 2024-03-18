@@ -18,7 +18,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
     try {
       setIsProductDataLoading(true);
       const res = await axios.get(
-        `http://192.168.79.210:8000/products?productType=${viewAllPath}&limit=10`,
+        `http://192.168.147.210:8000/products?productType=${viewAllPath}&limit=10`,
         {
           headers: {
             authorization: `Bearer ${jwtToken}`,

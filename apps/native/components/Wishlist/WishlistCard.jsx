@@ -1,10 +1,9 @@
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useMemo } from "react";
 import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import {
   AntDesign,
   EvilIcons,
-  FontAwesome,
   MaterialIcons,
 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -49,7 +48,6 @@ function Product({
 
   const handleRemoveFromWishlist = async () => {
     try {
-      console.log("Clicking");
       const resPayload = await removeFromWishlist({ _id: _id }).unwrap();
       console.log("Remove from wishlist response -->", resPayload);
     } catch (error) {

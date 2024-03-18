@@ -40,7 +40,7 @@ export default function Page() {
       ); // postable form data
 
       const response = await axios.post(
-        `http://192.168.79.210:8000/auth/login`,
+        `http://192.168.147.210:8000/auth/login`,
         extractedData
       );
 

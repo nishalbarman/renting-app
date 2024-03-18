@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setUserAuthData } from "../slices/authSlice";
 
-const SERVER_URL = "http://192.168.79.210:8000/";
+const SERVER_URL = "http://192.168.147.210:8000/";
 
 export const authApi = createApi({
   reducerPath: "authApi",
