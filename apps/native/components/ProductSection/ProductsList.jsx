@@ -14,11 +14,14 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
   const [data, setData] = useState([]);
   const [isProductDataLoading, setIsProductDataLoading] = useState(true);
 
+  console.log("View all path-->", viewAllPath);
+
   const getProductData = async () => {
     try {
       setIsProductDataLoading(true);
       const res = await axios.get(
-        `http://192.168.147.210:8000/products?productType=${viewAllPath}&limit=10`,
+        `${process.env.EXPO_PUBLIC_API_URL}/products?productType=${viewAllPath}&limit=10`,
+        // `${process.env.EXPO_PUBLIC_API_URL}/products?productType=${productType}&limit=10`,
         {
           headers: {
             authorization: `Bearer ${jwtToken}`,
@@ -36,7 +39,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
 
   useEffect(() => {
     getProductData();
-  }, []);
+  }, [viewAllPath]);
 
   return (
     <>

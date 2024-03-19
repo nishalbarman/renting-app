@@ -117,7 +117,7 @@ export default function Page() {
       searchParams.otp = finalOtp;
 
       const response = await axios.post(
-        `http://192.168.147.210:8000/auth/signup`,
+        `${process.env.EXPO_PUBLIC_API_URL}/auth/signup`,
         searchParams
       );
 

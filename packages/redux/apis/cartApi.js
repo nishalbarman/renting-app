@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const SERVER_URL = "http://192.168.147.210:8000/";
+const SERVER_URL = `${process.env.EXPO_PUBLIC_API_URL}/`;
 
 export const cartApi = createApi({
   reducerPath: "cart",
@@ -14,7 +14,7 @@ export const cartApi = createApi({
   tagTypes: ["Cart"],
   endpoints: (builder) => ({
     getCart: builder.query({
-      query: () => "cart",
+      query: (productType) => `cart?productType=${productType}`,
       providesTags: ["Cart"],
       transformResponse: (res, meta, arg) => res.data,
       transformErrorResponse: (res, meta, arg) => res.message,

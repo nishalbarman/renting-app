@@ -6,6 +6,8 @@ import { useRouter } from "expo-router";
 import { useAddWishlistMutation } from "@store/rtk/apis/wishlistApi";
 import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
 
+import { useSelector } from "react-redux";
+
 function Product({
   details: {
     _id,
@@ -32,6 +34,8 @@ function Product({
 }) {
   const router = useRouter();
 
+  const { productType } = useSelector((state) => state.product_store);
+
   const {
     data: wishlistData,
     isLoading: isWishlistDataLoading,
@@ -53,7 +57,7 @@ function Product({
   const handleAddToWishlist = async () => {
     try {
       setOnCart((prev) => !prev);
-      const resPayload = await addWishlist({ id: _id }).unwrap();
+      const resPayload = await addWishlist({ id: _id, productType }).unwrap();
       console.log("Add to Wishlist response -->", resPayload);
     } catch (error) {
       console.error(error);

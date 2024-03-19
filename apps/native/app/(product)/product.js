@@ -18,7 +18,6 @@ import {
 } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HTML from "react-native-render-html";
 
@@ -55,7 +54,7 @@ export default function Page() {
   const getProductDetails = async () => {
     try {
       const res = await axios.get(
-        `http://192.168.147.210:8000/products/view/${productId}`
+        `${process.env.EXPO_PUBLIC_API_URL}/products/view/${productId}`
       );
       const { data } = res;
       setProductDetails(data?.product || {});

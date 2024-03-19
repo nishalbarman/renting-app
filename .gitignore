@@ -43,6 +43,7 @@ dist/
 web-build/
 android
 ios
+eas.json
 
 # Native
 *.orig.*

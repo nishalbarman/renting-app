@@ -19,14 +19,21 @@ router.get("/", async (req, res) => {
       return res.status(400).json({ message: "No token provided." });
     }
 
+    const productType = req.headers["producttype"];
+
+    console.log("Product Type -->", productType);
+
     const wishlistDetails = await Wishlist.find({
       user: userDetails._id,
+      productType,
     })
       .populate("product")
       .select("-user");
 
+    console.log("Wishlist data -->", wishlistDetails);
+
     return res.json({
-      data: wishlistDetails,
+      data: wishlistDetails || [],
     });
   } catch (error) {
     console.log(error);
@@ -51,6 +58,7 @@ router.post("/", async (req, res) => {
 
     console.log("RequestBody-->", req.body);
 
+    const productType = req.headers["producttype"];
     const { productId } = req.body;
 
     console.log("Wishlist Product ID-->", productId);
@@ -58,6 +66,7 @@ router.post("/", async (req, res) => {
     const wishlistItem = await Wishlist.findOne({
       product: productId,
       user: userDetails._id,
+      productType,
     });
 
     if (wishlistItem) {
@@ -70,6 +79,7 @@ router.post("/", async (req, res) => {
     const wishlist = new Wishlist({
       user: userDetails._id,
       product: productId,
+      productType,
     });
 
     await wishlist.save();

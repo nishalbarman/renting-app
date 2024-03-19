@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,8 @@ import ActionSheet, {
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
 import CartItem from "../../components/CartItem/CartItem";
 import { useGetAddressQuery } from "@store/rtk/apis/addressApi";
+
+import { useSelector } from "react-redux";
 
 export default function Cart() {
   const data = [
@@ -104,12 +106,19 @@ export default function Cart() {
     );
   };
 
+  const { productType } = useSelector((state) => state.product_store);
+
   const {
     data: address,
     isLoading: isAddressLoading,
     isFetching: isAddressFetching,
     error: addressFetchError,
-  } = useGetAddressQuery();
+    refetch,
+  } = useGetAddressQuery(productType);
+
+  useEffect(() => {
+    refetch();
+  }, [productType]);
 
   console.log(address);
 

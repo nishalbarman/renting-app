@@ -77,5 +77,5 @@ app.use("/*", (_, res) => {
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`App is running on http://localhost:${PORT}`);
+  console.log(`App is running on http://192.168.227.210:${PORT}`);
 });

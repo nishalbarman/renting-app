@@ -1,11 +1,4 @@
-import {
-  AntDesign,
-  Feather,
-  FontAwesome5,
-  Fontisto,
-  Foundation,
-  Ionicons,
-} from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
   ScrollView,
@@ -22,16 +15,12 @@ import ActionSheet, {
 import { FontAwesome6 } from "@expo/vector-icons";
 
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
-import {
-  isValidEmail,
-  isValidIndianMobileNumber,
-  isValidPassword,
-} from "validator";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useAddAddressMutation } from "@store/rtk/apis/addressApi";
 import { setAddressDataFromMap } from "@store/rtk/slices/addressSlice";
 import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
-import ToastManager, { Toast } from "expo-react-native-toastify";
+import { Toast } from "expo-react-native-toastify";
 
 export default function AddAddress() {
   const handlers = useScrollHandlers();
@@ -40,8 +29,6 @@ export default function AddAddress() {
   const { address, coordinates } = useSelector(
     (state) => state.mapSelectedAddress
   );
-  console.log("Getting the address -->", address);
-  console.log("Getting the coordinates -->", coordinates);
 
   const [formData, setFormData] = useState({
     name: { value: "", isTouched: true, isError: null },
@@ -126,15 +113,14 @@ export default function AddAddress() {
     });
   }, [address, coordinates]);
 
-  const handleChooseLocationOnMap = () => [
-    SheetManager.show("location-select-map"),
-  ];
+  const handleChooseLocationOnMap = () => {
+    SheetManager.show("location-select-map");
+  };
 
-  const test = useAddAddressMutation();
-  console.log("What are the values?", test);
   const [addNewAddress, { isError, isLoading }] = useAddAddressMutation();
 
   const handleAddNewAddress = async () => {
+    console.log("clicking handle add new address");
     try {
       const extractedFormData = Object.keys(formData).reduce(
         (finalData, key) => ({ [key]: formData[key].value, ...finalData }),

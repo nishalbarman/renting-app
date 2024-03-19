@@ -12,7 +12,7 @@ export default function TabLayout() {
         headerTitleAlign: "left",
         headerTitleStyle: {
           fontWeight: "bold",
-          fontSize: "20",
+          fontSize: 20,
         },
       }}>
       <Tabs.Screen
@@ -43,7 +43,7 @@ export default function TabLayout() {
           ),
           headerTitleStyle: {
             fontWeight: "bold",
-            fontSize: "20",
+            fontSize: 20,
           },
         }}
       />

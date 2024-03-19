@@ -3,6 +3,7 @@ const router = express.Router();
 const Address = require("../../models/address.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 const User = require("../../models/user.model");
+const mongoose = require("mongoose");
 
 router.get("/", async (req, res) => {
   try {
@@ -93,12 +94,20 @@ router.post("/", async (req, res) => {
       status: true,
       message: "Address added.",
     });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: "Internal server error!",
-    });
+  } catch (err) {
+    console.log(err);
+    if (err instanceof mongoose.Error) {
+      /* I added custom validator functions in mongoose models, so the code is to chcek whether the errors are from mongoose or not */
+      const errArray = [];
+      for (let key in err.errors) {
+        errArray.push(err.errors[key].properties.message);
+      }
+
+      return res
+        .status(400)
+        .json({ message: errArray.join(", ").replaceAll(" Path", "") });
+    }
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 

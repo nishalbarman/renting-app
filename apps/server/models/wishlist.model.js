@@ -4,6 +4,7 @@ const wishlistSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Types.ObjectId, ref: "users" },
     product: { type: mongoose.Types.ObjectId, ref: "products" },
+    productType: { type: String, enums: ["rent", "buy"] },
   },
   {
     timestamps: true,

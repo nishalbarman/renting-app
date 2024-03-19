@@ -49,7 +49,7 @@ export default function Page() {
     );
   }
 
-  if (!!userToken) {
+  if (!userToken) {
     return <Redirect href={"/auth/login"} />;
   }
 

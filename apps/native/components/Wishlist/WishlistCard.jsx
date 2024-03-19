@@ -1,11 +1,7 @@
 import React, { memo, useMemo } from "react";
 import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
-import {
-  AntDesign,
-  EvilIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { AntDesign, EvilIcons, MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useDeleteWishlistMutation } from "@store/rtk/apis/wishlistApi";
 import AnimateSpin from "../AnimateSpin/AnimateSpin";
@@ -182,4 +178,4 @@ function Product({
   );
 }
 
-export default memo(Product);
+export default Product;

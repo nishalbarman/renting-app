@@ -20,6 +20,7 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { wishlistApi } from "./apis/wishlistApi";
 import { productsApi } from "./apis/productApi";
 import { categoryApi } from "./apis/categoryApi";
+import { storeTypeSlice } from "./slices/storeTypeSlice";
 
 const rootReducer = combineReducers({
   [userAPI.reducerPath]: userAPI.reducer,
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   [productsApi.reducerPath]: productsApi.reducer,
   [wishlistApi.reducerPath]: wishlistApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
+  [storeTypeSlice.reducerPath]: storeTypeSlice.reducer,
 });
 
 const persistConfig = {

@@ -18,18 +18,41 @@ router.get("/", async (req, res) => {
       return res.redirect("/login?redirect=cart");
     }
 
+    const productFilterType = {};
+    if (!searchParams.productType) {
+      productFilterType.isRentable = true;
+    } else if (searchParams.productType === "buy") {
+      productFilterType.isPurchasable = true;
+    } else {
+      productFilterType.isRentable = true;
+    }
     const cartDetails = await Cart.find({
       user: userDetails._id,
     })
       .populate([
         {
           path: "product",
+          match: productFilterType,
           populate: { path: "availableSizes" },
         },
         "size",
         "color",
       ])
       .select("-user");
+
+    // Check if wishlistDetails has any items
+    if (cartDetails.length === 0) {
+      return res.json({
+        data: [],
+      }); // Return null if no wishlist details are found
+    }
+
+    // Check if product field is null or empty in the first item
+    if (!cartDetails[0].product) {
+      return res.json({
+        data: [],
+      }); // Return null if no wishlist details are found
+    }
 
     return res.json({
       status: true,

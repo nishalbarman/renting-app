@@ -58,7 +58,7 @@ export default function Page() {
       ); // postable form data
 
       const response = await axios.post(
-        `http://192.168.147.210:8000/auth/sendOtp`,
+        `${process.env.EXPO_PUBLIC_API_URL}/auth/sendOtp`,
         extractedData
       );
 

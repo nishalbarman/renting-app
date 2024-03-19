@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const SERVER_URL = "http://192.168.147.210:8000/";
+const SERVER_URL = `${process.env.EXPO_PUBLIC_API_URL}/`;
 
 export const wishlistApi = createApi({
   reducerPath: "wishlistApi",
@@ -8,6 +8,7 @@ export const wishlistApi = createApi({
     baseUrl: SERVER_URL,
     prepareHeaders: (headers, { getState }) => {
       headers.set("authorization", `Bearer ${getState().auth.jwtToken}`);
+      headers.set("producttype", `${getState().product_store.productType}`);
       return headers;
     },
   }),
@@ -18,9 +19,9 @@ export const wishlistApi = createApi({
         url: `wishlist`,
         method: "GET",
       }),
-      providesTags: ["Wishlist"],
       transformResponse: (response, meta, arg) => response.data,
       // transformErrorResponse: (response, meta, arg) => response.message,
+      providesTags: ["Wishlist"],
     }),
 
     addWishlist: builder.mutation({
