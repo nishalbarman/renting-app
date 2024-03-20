@@ -2,10 +2,11 @@ const mongoose = require("mongoose");
 
 const feedbackSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
+    title: { type: String, required: false },
     description: { type: String, required: true },
-    stars: { type: Number, default: 0 },
+    starsGiven: { type: Number, default: 1 },
     product: { type: mongoose.Types.ObjectId, ref: "Product" },
+    givenBy: { type: String, required: true },
     user: { type: mongoose.Types.ObjectId, ref: "User" },
   },
   {

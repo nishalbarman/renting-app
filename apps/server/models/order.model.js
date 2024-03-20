@@ -28,6 +28,8 @@ const orderSchema = new mongoose.Schema(
 
     // tracking link for the order track
     trackingLink: { type: String, default: null },
+
+    product: { type: mongoose.Types.ObjectId, ref: "products" },
   },
   {
     timestamps: true,

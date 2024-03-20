@@ -10,7 +10,7 @@ import {
 import { Image } from "expo-image";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
 
-import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
+import AnimateSpin from "../AnimateSpin/AnimateSpin";
 import { SheetManager } from "react-native-actions-sheet";
 
 function OrderItem({

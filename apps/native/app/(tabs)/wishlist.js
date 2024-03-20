@@ -9,18 +9,17 @@ import EmptyBag from "../../components/EmptyBag/EmptyBag";
 
 export default function Tab() {
   const { productType } = useSelector((state) => state.product_store);
-  console.log("Wishlist", productType);
+
   const {
     data: wishlistData,
     isLoading: isWishlistDataLoading,
     isError: isWishlistDataError,
     error: wishlistDataError,
     refetch,
-  } = useGetWishlistQuery();
+  } = useGetWishlistQuery(productType);
 
   useEffect(() => {
-    console.log("Doing refetching");
-    refetch("Wishlist");
+    refetch();
   }, [productType]);
 
   console.log("Wishlist data from wishlist tab ==>", wishlistData);
@@ -28,15 +27,19 @@ export default function Tab() {
   return (
     <SafeAreaView className="flex-1 bg-white p-3">
       <View>
-        <FlatList
-          data={wishlistData}
-          renderItem={({ item }) => {
-            console.log("Wishlit product", item.product);
-            return <WishlistCard details={item.product} />;
-          }}
-          numColumns={2}
-          keyExtractor={(item, index) => index.toString()}
-        />
+        {!!wishlistData && wishlistData.length > 0 ? (
+          <FlatList
+            data={wishlistData}
+            renderItem={({ item }) => {
+              console.log("Wishlit product", item?.product);
+              return <WishlistCard details={item?.product} />;
+            }}
+            numColumns={2}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        ) : (
+          <EmptyBag />
+        )}
       </View>
     </SafeAreaView>
   );

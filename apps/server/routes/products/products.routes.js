@@ -130,7 +130,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/view/:productId", async (req, res) => {
+router.get("/view/:productId", async (req, res) => {
   try {
     const token = req?.jwt?.token;
     if (!token) {
@@ -140,6 +140,9 @@ router.post("/view/:productId", async (req, res) => {
     }
 
     const userDetails = getTokenDetails(token);
+
+    console.log(TAG, userDetails);
+
     if (!userDetails) {
       return res
         .status(401)
@@ -147,6 +150,7 @@ router.post("/view/:productId", async (req, res) => {
     }
 
     const params = req.params;
+    console.log(TAG, params);
 
     // check whether we have the product id or not
     if (!params.productId) {
@@ -155,7 +159,8 @@ router.post("/view/:productId", async (req, res) => {
         .json({ redirect: "/products", message: "Product ID missing!" });
     }
 
-    const product = Product.findOne({ _id: params.productId });
+    const product = await Product.findOne({ _id: params.productId });
+    console.log(TAG, product);
     if (!product) {
       return res.status(404).json({ message: "No such product found." });
     }

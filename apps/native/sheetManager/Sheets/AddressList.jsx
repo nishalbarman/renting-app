@@ -1,5 +1,5 @@
 import { AntDesign } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import ActionSheet, {
   SheetManager,
@@ -30,7 +30,12 @@ export default function AddressList() {
     isLoading: isAddressLoading,
     isFetching: isAddressFetching,
     error: addressFetchError,
+    refetch,
   } = useGetAddressQuery();
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   return (
     <ActionSheet closeOnPressBack={true} gestureEnabled={true}>
@@ -42,7 +47,7 @@ export default function AddressList() {
               Your addresses
             </Text>
 
-            <View className="pt-2 px-1 justify-center mt-1">
+            <View className="pt-2 px-1 justify-center mt-1 w-[100%]">
               {address &&
                 address.length > 0 &&
                 address.map((item) => {
@@ -50,7 +55,7 @@ export default function AddressList() {
                     <>
                       <View
                         key={item._id}
-                        className="bg-light-blue-200 p-4 rounded-md shadow-sm mb-3 w-[full]">
+                        className="bg-light-blue-200 p-4 rounded-md shadow-sm mb-3 w-[100%]">
                         <Text className="text-black font-medium mb-2">
                           {name}
                         </Text>

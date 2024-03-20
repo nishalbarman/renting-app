@@ -7,14 +7,14 @@ import { useGetAllProductsQuery } from "@store/rtk/apis/productApi";
 import ProductsListSkeleton from "../../Skeletons/ProductListSkeleton";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
 
 function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
   const jwtToken = useSelector((state) => state.auth.jwtToken);
+  const { productType } = useSelector((state) => state.product_store);
 
   const [data, setData] = useState([]);
   const [isProductDataLoading, setIsProductDataLoading] = useState(true);
-
-  console.log("View all path-->", viewAllPath);
 
   const getProductData = async () => {
     try {
@@ -41,9 +41,29 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
     getProductData();
   }, [viewAllPath]);
 
+  const {
+    data: wishlistData,
+    isLoading: isWishlistDataLoading,
+    isError: isWishlistDataError,
+    error: wishlistDataError,
+    refetch,
+  } = useGetWishlistQuery();
+
+  useEffect(() => {
+    refetch();
+  }, [productType]);
+
+  const wishlistIdMap = useMemo(() => {
+    const wishlistObjectWithIDAsKey = {};
+    wishlistData?.forEach((item) => {
+      wishlistObjectWithIDAsKey[item.product._id] = item._id; // assigning product id as key and wishlist item id as value
+    });
+    return wishlistObjectWithIDAsKey;
+  }, [wishlistData]);
+
   return (
     <>
-      {isProductDataLoading ? (
+      {isProductDataLoading || isWishlistDataLoading ? (
         <ProductsListSkeleton />
       ) : (
         <View
@@ -69,7 +89,13 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
           <View>
             <FlatList
               data={data}
-              renderItem={({ item }) => <Product details={item} />}
+              renderItem={({ item }) => (
+                <Product
+                  details={item}
+                  wishlistData={wishlistData}
+                  wishlistIdMap={wishlistIdMap}
+                />
+              )}
               numColumns={2}
               keyExtractor={(item, index) => index.toString()}
             />

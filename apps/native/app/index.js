@@ -1,11 +1,10 @@
 import { useSelector } from "react-redux";
-import { SafeAreaView, Text, View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 
 import { Redirect } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import ProductsListSkeleton from "../Skeletons/ProductListSkeleton";
 import AnimateSpin from "../components/AnimateSpin/AnimateSpin";
 import { EvilIcons } from "@expo/vector-icons";
 

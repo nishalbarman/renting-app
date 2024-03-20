@@ -7,6 +7,7 @@ export const wishlistApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER_URL,
     prepareHeaders: (headers, { getState }) => {
+      console.log(getState().auth.jwtToken);
       headers.set("authorization", `Bearer ${getState().auth.jwtToken}`);
       headers.set("producttype", `${getState().product_store.productType}`);
       return headers;

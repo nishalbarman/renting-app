@@ -59,6 +59,7 @@ app.use("/wishlist", require("./routes/wishlist/wishlist.routes"));
 app.use("/cart", require("./routes/cart/cart.routes"));
 app.use("/order", require("./routes/order/order.routes"));
 app.use("/address", require("./routes/address/address.routes"));
+app.use("/feedbacks", require("./routes/feedbacks/feedbacks.routes"));
 
 app.use(
   "/pay/razorpay/create-cart-order",
@@ -71,9 +72,9 @@ app.use(
   require("./routes/get-image-color/getImageColor.routes")
 );
 
-app.use("/*", (_, res) => {
-  res.send({ message: "It's working nicely!" });
-});
+// app.use("/*", (_, res) => {
+//   res.send({ message: "It's working nicely!" });
+// });
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

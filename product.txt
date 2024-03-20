@@ -1,17 +1,10 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Dimensions,
   FlatList,
   ScrollView,
   Text,
-  TextInput,
   TouchableHighlight,
   TouchableOpacity,
   View,
@@ -23,26 +16,29 @@ import HTML from "react-native-render-html";
 
 import { AntDesign } from "@expo/vector-icons";
 
-import ActionSheet, {
-  SheetManager,
-  useScrollHandlers,
-} from "react-native-actions-sheet";
-import { NativeViewGestureHandler } from "react-native-gesture-handler";
+import { SheetManager } from "react-native-actions-sheet";
 
 import FeedbackCard from "../../components/FeedbackCard/FeedbackCard";
 import RelatedProductList from "../../components/RelatedProductSection/RelatedProductList";
 import SearchBar from "../../components/SearchBar/SearchBar";
 
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
+import axios from "axios";
+
+import { useSelector } from "react-redux";
 
 export default function Page() {
   const { width } = useMemo(() => {
     return Dimensions.get("window");
   }, []);
 
-  const router = useRouter();
+  const { productType } = useSelector((state) => state.product_store);
 
   const { id: productId } = useLocalSearchParams();
+
+  const { jwtToken } = useSelector((state) => state.auth);
+
+  const router = useRouter();
 
   const [isProductFetching, setIsProductFetching] = useState(true);
   const [isProductFetchError, setIsProductFetchError] = useState(false);
@@ -53,12 +49,19 @@ export default function Page() {
   // fetch the product details from aserver
   const getProductDetails = async () => {
     try {
+      setIsProductFetching(true);
       const res = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/products/view/${productId}`
+        `${process.env.EXPO_PUBLIC_API_URL}/products/view/${productId}`,
+        {
+          headers: {
+            authorization: `Bearer ${jwtToken}`,
+          },
+        }
       );
       const { data } = res;
       setProductDetails(data?.product || {});
     } catch (error) {
+      console.error(error);
       setError(error);
       setIsProductFetchError(true);
       if (error.res.status === 401) {
@@ -66,9 +69,12 @@ export default function Page() {
         router.replace(`/auth/login?redirectTo=/product?id=${productId}`);
       } else if (error.res.status === 400) {
         router.dismiss(1);
-      } else {
+      } else if (error.res.status === 403) {
+        console.error(
+          "Single Product Page Error-->",
+          error?.res?.data?.message
+        );
       }
-      console.error(error);
     } finally {
       setIsProductFetching(false);
     }
@@ -80,12 +86,9 @@ export default function Page() {
 
   const [selectedProductSize, setSelectedProductSize] = useState("S");
   const [selectedProductColor, setSelectedProductColor] = useState("red");
-
   const [rentDays, setRentDays] = useState(1);
-
   const [quantity, setQuantity] = useState(1);
-
-  const [availableStocks] = useState(10);
+  // const [availableStocks] = useState(10);
 
   const starsArray = useMemo(() => {
     return Array.from({ length: 5 });
@@ -94,49 +97,6 @@ export default function Page() {
   const handleReviewSheetOpen = useCallback(() => {
     SheetManager.show("add-feedback-sheet");
   }, []);
-
-  // const productDetails = {
-  //   previewUrl: "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
-  //   title:
-  //     "ZEBRONICS ZIUM Mid-Tower gaming cabinet, M-ATX/M-Itx, Fins Foccussed Multicolor Rear Fan, Multi Color Led Strip, Acryflic Glass Side Panel, USB 3.0, USB 2.0",
-  //   category: { _id: "random_id_32423", name: "Biking" },
-  //   isPurchasable: true,
-  //   rentingPrice: 100,
-  //   discountedPrice: 11000,
-  //   originalPrice: 23131,
-  //   showPictures: [
-  //     "https://m.media-amazon.com/images/I/71l6+Wxdg6S._SL1500_.jpg",
-  //     "https://m.media-amazon.com/images/I/51l2QmdE7PL._SX679_.jpg",
-  //     "https://m.media-amazon.com/images/I/5161uV9BXAL._SX679_.jpg",
-  //     "https://m.media-amazon.com/images/I/51bOhEXhdrL._SX679_.jpg",
-  //     "https://m.media-amazon.com/images/I/41QZ7+muJhL._SX679_.jpg",
-  //   ],
-  //   description: `<p style="line-height: 200%;"><span style="font-size: 18px; color: black;">Our product is the most attractive product that is available on the market. At a very low price rate you can either buy or rent out this procut.</span></p>
-  //   <p><span style="font-size: 20px; color: black;">Features:</span></p>
-  //   <ul>
-  //     <li><span style="font-size: 18px; color: black;">Better price in market</span></li>
-  //     <li><span style="font-size: 18px; color: black;">Good question&nbsp;</span></li>
-  //     <li><span style="font-size: 18px; color: black;">nice explanation</span></li>
-  //     <li><span style="font-size: 18px; color: black;">op means over powered</span></li>
-  //     <li><span style="font-size: 18px; color: black;">omg means oh my god!</span></li>
-  //   </ul>`,
-  //   stars: 3,
-  //   totalFeedbacks: 223,
-  //   shippingPrice: 5,
-  //   isSizeVaries: true,
-  //   isColorVaries: true,
-  //   availableVarients: [
-  //     {
-  //       color: "Red",
-  //       size: "S",
-  //       rentPrice: 10,
-  //       discountedPrice: 12,
-  //       originalPrice: 10,
-  //     },
-  //   ],
-  //   availableSizes: ["S", "M", "L", "XL", "XXL"],
-  //   availableColors: ["Red", "Blue", "Black"],
-  // };
 
   const [toogleSale, setToogleSale] = useState(productDetails.isPurchasable);
 
@@ -151,15 +111,8 @@ export default function Page() {
   return (
     <SafeAreaView className="bg-white">
       <ScrollView>
-        <SearchBar
-        // clicked={clicked}
-        // searchPhrase={searchPhrase}
-        // setSearchPhrase={setSearchPhrase}
-        // setClicked={setClicked}
-        />
-
         {/* carousel view */}
-        <View className="w-[100%] p-[5px] flex items-center">
+        <View className="w-[100%] px-5 flex items-center">
           <Carousel
             pagingEnabled={true}
             width={width}
@@ -183,7 +136,7 @@ export default function Page() {
             }}
           />
           <AnimatedDotsCarousel
-            length={productDetails.showPictures.length || 0}
+            length={productDetails?.showPictures?.length || 0}
             currentIndex={carouselCurrentIndex}
             maxIndicators={4}
             interpolateOpacityAndColor={true}
@@ -409,13 +362,14 @@ export default function Page() {
                 )}
 
                 <View>
-                  {availableStocks === 0 || quantity > availableStocks ? (
+                  {productDetails.availableStocks === 0 ||
+                  quantity > productDetails.availableStocks ? (
                     <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
                       Out of stock
                     </Text>
                   ) : (
                     <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
-                      ({availableStocks} items) In stock
+                      ({productDetails.availableStocks} items) In stock
                     </Text>
                   )}
                 </View>

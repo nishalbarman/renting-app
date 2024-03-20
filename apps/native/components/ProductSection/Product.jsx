@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
@@ -31,20 +31,19 @@ function Product({
     availableColors,
   },
   width,
+  wishlistIdMap,
 }) {
   const router = useRouter();
 
   const { productType } = useSelector((state) => state.product_store);
 
-  const {
-    data: wishlistData,
-    isLoading: isWishlistDataLoading,
-    isError: isWishlistDataError,
-    error: wishlistDataError,
-  } = useGetWishlistQuery();
-
   const [addWishlist] = useAddWishlistMutation();
+
   const [onCart, setOnCart] = useState(false);
+
+  useEffect(() => {
+    setOnCart(!!wishlistIdMap?.hasOwnProperty(_id));
+  }, [wishlistIdMap]);
 
   const loadingBlurHash = useMemo(() => {
     return "LKO2?Z~W9Zj[%";
@@ -65,7 +64,7 @@ function Product({
   };
 
   const handleProductClick = () => {
-    router.push(`/product?id=${_id}`);
+    router.push(`/prod?id=${_id}`);
   };
 
   return (
