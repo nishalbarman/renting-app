@@ -5,6 +5,9 @@ const cheerio = require("cheerio");
 const { Product } = require("../../models/product.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 const { isValidUrl } = require("validator");
+const Order = require("../../models/order.model");
+const Size = require("../../models/size.model");
+const Color = require("../../models/color.model");
 
 const TAG = "products/route.js:--";
 
@@ -109,7 +112,7 @@ router.get("/", async (req, res) => {
     const filter = {}; // blank filter object
 
     if (TYPE) {
-      filter.isPurchasable = TYPE === "buy";
+      filter.productType = TYPE;
     }
 
     if (CATEGORY) {
@@ -159,13 +162,21 @@ router.get("/view/:productId", async (req, res) => {
         .json({ redirect: "/products", message: "Product ID missing!" });
     }
 
-    const product = await Product.findOne({ _id: params.productId });
+    const product = await Product.findOne({ _id: params.productId }).populate([
+      "category",
+      { path: "productVariant", populate: ["size", "color"] },
+    ]);
+    const doesUserBoughtThisProduct = await Order.countDocuments({
+      product: params.productId,
+      user: userDetails._id,
+    });
+
     console.log(TAG, product);
     if (!product) {
       return res.status(404).json({ message: "No such product found." });
     }
 
-    return res.status(200).json({ product });
+    return res.status(200).json({ product, doesUserBoughtThisProduct });
   } catch (error) {
     console.error(TAG, error);
     return res.status(500).json({ message: error.message });

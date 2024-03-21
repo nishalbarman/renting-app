@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
     console.log("Wishlist data -->", wishlistDetails);
 
     return res.json({
-      data: wishlistDetails || [],
+      data: wishlistDetails,
     });
   } catch (error) {
     console.log(error);

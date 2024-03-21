@@ -64,7 +64,12 @@ function Product({
   };
 
   const handleProductClick = () => {
-    router.push(`/prod?id=${_id}`);
+    router.push({
+      pathname: "view",
+      params: {
+        id: _id,
+      },
+    });
   };
 
   return (
@@ -174,4 +179,4 @@ function Product({
   );
 }
 
-export default memo(Product);
+export default Product;

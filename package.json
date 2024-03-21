@@ -24,5 +24,9 @@
     "redux-persist": "^6.0.0",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3"
+  },
+  "resolutions": {
+    "wrap-ansi": "7.0.0",
+    "string-width": "4.1.0"
   }
 }

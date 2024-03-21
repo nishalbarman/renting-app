@@ -10,8 +10,11 @@ import {
 import { FontAwesome, Feather } from "@expo/vector-icons";
 
 import { SheetManager } from "react-native-actions-sheet";
+import { useSelector } from "react-redux";
 
 const AccountScreen = () => {
+  const { name } = useSelector((state) => state.auth);
+
   const handleAddressSheetOpen = useCallback(() => {
     SheetManager.show("address-list-sheet");
   }, []);
@@ -21,17 +24,17 @@ const AccountScreen = () => {
       <ScrollView className="bg-white">
         <View className="px-4">
           <View className="flex flex-row items-center justify-between bg-yellow-200 p-3 rounded-md mb-4">
-            <Text className="font-semibold">Hey! Soumya behara</Text>
-            <View
+            <Text className="font-semibold">Hey! {name}</Text>
+            {/* <View
               className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 bg-white"
               style={styles.customBadge}>
               <Text>813</Text>
-            </View>
+            </View> */}
           </View>
 
           {/* GRID LAYOUT FOUR ITEMS */}
           {/* <View className="flex flex-wrap flex-row justify-center">
-          <TouchableOpacity className="rounded-lg border border-[#c9c9c9] bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4 flex-grow">
+          <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4 flex-grow">
             <FontAwesome
               name="envelope"
               size={24}
@@ -40,15 +43,15 @@ const AccountScreen = () => {
             />
             <Text className="mt-2">Orders</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="rounded-lg border border-[#c9c9c9] bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
+          <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
             <FontAwesome name="heart" size={24} color="gray" className="mb-2" />
             <Text className="mt-2">Wishlist</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="rounded-lg border border-[#c9c9c9] bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
+          <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
             <FontAwesome name="tag" size={24} color="gray" className="mb-2" />
             <Text className="mt-2">Coupons</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="rounded-lg border border-[#c9c9c9] bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
+          <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
             <FontAwesome
               name="question-circle"
               size={24}
@@ -61,29 +64,33 @@ const AccountScreen = () => {
 
           <View className="mt-1">
             <Text className="font-semibold text-lg mb-2">Account Settings</Text>
-            {/* <TouchableOpacity className="rounded-lg border border-[#c9c9c9] bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
+            {/* <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
             <Text>Flipkart Plus</Text>
             <Feather name="chevron-right" size={24} color="currentColor" />
           </TouchableOpacity> */}
-            <TouchableOpacity className="rounded-lg border border-[#c9c9c9] bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
+            <TouchableOpacity
+              onPress={() => {
+                SheetManager.show("update-profile");
+              }}
+              className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
               <Text>Edit Profile</Text>
               <Feather name="chevron-right" size={24} color="currentColor" />
             </TouchableOpacity>
-            {/* <TouchableOpacity className="rounded-lg border border-[#c9c9c9] bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
+            {/* <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
             <Text>Saved Cards & Wallet</Text>
             <Feather name="chevron-right" size={24} color="currentColor" />
           </TouchableOpacity> */}
             <TouchableOpacity
               onPress={handleAddressSheetOpen}
-              className="rounded-lg border border-[#c9c9c9] bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
+              className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
               <Text>Saved Addresses</Text>
               <Feather name="chevron-right" size={24} color="currentColor" />
             </TouchableOpacity>
-            {/* <TouchableOpacity className="rounded-lg border border-[#c9c9c9] bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
+            {/* <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
             <Text>Select Language</Text>
             <Feather name="chevron-right" size={24} color="currentColor" />
           </TouchableOpacity> */}
-            {/* <TouchableOpacity className="rounded-lg border border-[#c9c9c9] bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4">
+            {/* <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4">
             <Text>Notification Settings</Text>
             <Feather name="chevron-right" size={24} color="currentColor" />
           </TouchableOpacity> */}

@@ -10,33 +10,37 @@ const productSchema = new mongoose.Schema(
   {
     previewUrl: { type: String, required: true },
     title: { type: String, required: true },
-
     category: { type: mongoose.Types.ObjectId, ref: "categories" },
-
     showPictures: { type: Array, required: true }, // images array
     description: { type: String, required: true },
+
     stars: { type: Number, default: 0 },
     totalFeedbacks: { type: Number, default: 0 },
+
+    // isPurchasable: { type: Boolean, default: false },
+    // isRentable: { type: Boolean, default: false },
+    productType: {
+      type: String,
+      enums: ["rent", "buy", "both"],
+      required: true,
+    },
+
     shippingPrice: { type: Number, required: true, default: 0 },
     availableStocks: { type: Number, required: true, default: 0 },
-
-    isPurchasable: { type: Boolean, default: false },
-    isRentable: { type: Boolean, default: false },
-
     rentingPrice: { type: Number, required: true }, // if no varient is available then default renting price would be this
     discountedPrice: { type: Number, required: true }, // if no varient is available then default price would be this
     originalPrice: { type: Number }, // if no varient is available then default price would be this
 
-    isVarientAvailable: { type: Boolean, default: false },
-    productVarient: [
-      // if there is a varient for this product then the price will be taken from varient object
-      { type: mongoose.Types.ObjectId, ref: "product_verients" },
-    ],
+    isVariantAvailable: { type: Boolean, default: false },
+    productVariant: {
+      type: [mongoose.Types.ObjectId],
+      ref: "product_variants",
+    },
 
     // isSizeVaries: { type: Boolean, default: false },
     // isColorVaries: { type: Boolean, default: false },
-    // availableSizes: [{ type: mongoose.Types.ObjectId, ref: "product_sizes" }],
-    // availableColors: [{ type: mongoose.Types.ObjectId, ref: "product_colors" }],
+    // defaultSize: { type: mongoose.Types.ObjectId, ref: "product_sizes" },
+    // defaultColor: { type: mongoose.Types.ObjectId, ref: "product_colors" },
   },
   {
     timestamps: true,
@@ -54,12 +58,13 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-const productVarientSchema = new mongoose.Schema(
+const productVariantSchema = new mongoose.Schema(
   {
     product: { type: mongoose.Types.ObjectId, ref: "products" },
-    size: { type: mongoose.Types.ObjectId, ref: "product_sizes" },
-    color: { type: mongoose.Types.ObjectId, ref: "product_colors" },
+    size: { type: String, required: true },
+    color: { type: String, required: true },
 
+    shippingPrice: { type: Number, required: true },
     rentingPrice: { type: Number, required: true },
     discountedPrice: { type: Number, required: true },
     originalPrice: { type: Number },
@@ -72,9 +77,9 @@ const productVarientSchema = new mongoose.Schema(
 const Product =
   mongoose.models.products || mongoose.model("products", productSchema);
 
-const ProductVarient =
+const ProductVariant =
   mongoose.models.product_varients ||
-  mongoose.model("product_varients", productVarientSchema);
+  mongoose.model("product_variants", productVariantSchema);
 
 // ----------------------------------------->
 /****************************************** */
@@ -102,9 +107,9 @@ Product.schema.path("showPictures").validate({
 //   message: "varient should have proper product id",
 // });
 
-ProductVarient.schema.path("discountedPrice").validate({
+ProductVariant.schema.path("discountedPrice").validate({
   validator: (value) => value && !isNaN(parseFloat(value)) && value > 0,
   message: "Discounted Price must be non zero number,",
 });
 
-module.exports = { Product, ProductVarient };
+module.exports = { Product, ProductVariant };

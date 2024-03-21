@@ -11,6 +11,7 @@ import { useGetAddressQuery } from "@store/rtk/apis/addressApi";
 import { useRouter } from "expo-router";
 
 import { useSelector } from "react-redux";
+import AddressCardSkeleton from "../../Skeletons/AddressCardSkeleton";
 
 export default function AddressList() {
   const handlers = useScrollHandlers();
@@ -48,34 +49,40 @@ export default function AddressList() {
             </Text>
 
             <View className="pt-2 px-1 justify-center mt-1 w-[100%]">
-              {address &&
-                address.length > 0 &&
-                address.map((item) => {
-                  return (
-                    <>
-                      <View
-                        key={item._id}
-                        className="bg-light-blue-200 p-4 rounded-md shadow-sm mb-3 w-[100%]">
-                        <Text className="text-black font-medium mb-2">
-                          {name}
-                        </Text>
-                        <Text className="text-gray-700 mb-2">
-                          {item.name}, {item.locality}, {item.streetName},{" "}
-                          {item.postalCode}, {item.country}
-                        </Text>
-                        <Text className="text-gray-700">{mobileNo}</Text>
-                      </View>
-                      {/* <View key={item._id}>
+              {isAddressLoading || isAddressFetching ? (
+                <AddressCardSkeleton />
+              ) : (
+                <>
+                  {address &&
+                    address.length > 0 &&
+                    address.map((item) => {
+                      return (
+                        <>
+                          <View
+                            key={item._id}
+                            className="bg-light-blue-200 p-4 rounded-md shadow-sm mb-3 w-[100%]">
+                            <Text className="text-black font-medium mb-2">
+                              {name}
+                            </Text>
+                            <Text className="text-gray-700 mb-2">
+                              {item.name}, {item.locality}, {item.streetName},{" "}
+                              {item.postalCode}, {item.country}
+                            </Text>
+                            <Text className="text-gray-700">{mobileNo}</Text>
+                          </View>
+                          {/* <View key={item._id}>
                       <Text>{Object.values(item).join(", ")}</Text>
                     </View> */}
-                    </>
-                  );
-                })}
+                        </>
+                      );
+                    })}
 
-              {(!address || address.length <= 0) && (
-                <Text className="font-[poppins-mid] text-[18px] text-center">
-                  No address found
-                </Text>
+                  {(!address || address.length <= 0) && (
+                    <Text className="font-[poppins-mid] text-[18px] text-center">
+                      No address found
+                    </Text>
+                  )}
+                </>
               )}
             </View>
             <TouchableOpacity

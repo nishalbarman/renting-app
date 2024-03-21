@@ -1,17 +1,17 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Dimensions,
   FlatList,
+  SafeAreaView,
   ScrollView,
   Text,
   TouchableHighlight,
   TouchableOpacity,
   View,
 } from "react-native";
-import Carousel from "react-native-reanimated-carousel";
+
 import { Image } from "expo-image";
-import { SafeAreaView } from "react-native-safe-area-context";
 import HTML from "react-native-render-html";
 
 import { AntDesign } from "@expo/vector-icons";
@@ -22,22 +22,24 @@ import FeedbackCard from "../../components/FeedbackCard/FeedbackCard";
 import RelatedProductList from "../../components/RelatedProductSection/RelatedProductList";
 import SearchBar from "../../components/SearchBar/SearchBar";
 
+import Carousel from "react-native-reanimated-carousel";
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
 import axios from "axios";
 
 import { useSelector } from "react-redux";
 import SingleProductSkeleton from "../../Skeletons/SingleProductSkeleton";
+import FeedbackCardSkeleton from "../../Skeletons/FeedbackCardSkeleton";
+import ProductPageSkeleton from "../../Skeletons/ProductPageSkeleton";
 
-function Page() {
+function product() {
   const { width } = useMemo(() => {
     return Dimensions.get("window");
   }, []);
 
   const { productType } = useSelector((state) => state.product_store);
+  const { jwtToken } = useSelector((state) => state.auth);
 
   const { id: productId } = useLocalSearchParams();
-
-  const { jwtToken } = useSelector((state) => state.auth);
 
   const router = useRouter();
 
@@ -46,7 +48,13 @@ function Page() {
   const [error, setError] = useState(null);
 
   const [productDetails, setProductDetails] = useState({});
+  const [doesUserBoughtThisProduct, setDoesUserBoughtThisProduct] =
+    useState(false);
   const [feedbacks, setFeedbacks] = useState([]);
+
+  const [feedbackFetchPage, setFeedbackFetchPage] = useState(1);
+  const [feedbackFetchLimit, setFeedbackFetchLimit] = useState(2);
+  const [feedbackTotalPages, setFeedbackTotalPages] = useState(0);
 
   // fetch the product details from aserver
   const getProductDetails = async () => {
@@ -61,6 +69,7 @@ function Page() {
       );
       const { data } = res;
       setProductDetails(data?.product || {});
+      setDoesUserBoughtThisProduct(data?.doesUserBoughtThisProduct || false);
     } catch (error) {
       console.error(error);
       setError(error);
@@ -79,10 +88,11 @@ function Page() {
     }
   };
 
-  const getFeedbacks = async () => {
+  // fetch the feedback details from server
+  const getFeedbackForProduct = async (page) => {
     try {
       const res = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/feedbacks`,
+        `${process.env.EXPO_PUBLIC_API_URL}/feedbacks/view/${productId}?page=${page}&limit=${feedbackFetchLimit}`,
         {
           headers: {
             authorization: `Bearer ${jwtToken}`,
@@ -90,7 +100,10 @@ function Page() {
         }
       );
       const { data } = res;
-      setFeedbacks(data?.feedback || []);
+      if (data?.feedbacks) {
+        setFeedbacks([...feedbacks, ...data?.feedbacks]);
+        setFeedbackTotalPages(data?.totalPages || 0);
+      }
     } catch (error) {
       console.error(error);
       setError(error);
@@ -109,26 +122,39 @@ function Page() {
     }
   };
 
+  const handleFeedbackLoadMore = () => {
+    setFeedbackFetchPage((prev) => {
+      getFeedbackForProduct(prev + 1);
+      return prev + 1;
+    });
+  };
+
   useEffect(() => {
     (async () => {
-      await Promise.all([getProductDetails(), getFeedbacks()]).then(() => {
-        setIsProductFetching(false);
-      });
-    })();
+      await Promise.all([
+        getProductDetails(),
+        getFeedbackForProduct(feedbackFetchPage),
+      ]);
+    })().then(() => {
+      setIsProductFetching(false);
+    });
   }, []);
+
+  console.log("Product Varient -->", productDetails?.productVariant);
 
   const [selectedProductSize, setSelectedProductSize] = useState("S");
   const [selectedProductColor, setSelectedProductColor] = useState("red");
   const [rentDays, setRentDays] = useState(1);
   const [quantity, setQuantity] = useState(1);
-  // const [availableStocks] = useState(10);
 
   const starsArray = useMemo(() => {
     return Array.from({ length: 5 });
   }, []);
 
   const handleReviewSheetOpen = useCallback(() => {
-    SheetManager.show("add-feedback-sheet");
+    SheetManager.show("add-feedback-sheet", {
+      payload: { productId },
+    });
   }, []);
 
   const [toogleSale, setToogleSale] = useState(productDetails.isPurchasable);
@@ -142,12 +168,21 @@ function Page() {
   };
 
   return (
-    <>
-      {true ? (
-        <SingleProductSkeleton />
-      ) : (
-        <SafeAreaView className="bg-white">
-          <ScrollView>
+    <SafeAreaView className="bg-white">
+      <Stack.Screen
+        options={{
+          title: productDetails.title || "",
+          headerShadowVisible: false,
+          headerTitleStyle: {
+            fontSize: 18,
+          },
+        }}
+      />
+      <ScrollView>
+        {isProductFetching ? (
+          <ProductPageSkeleton />
+        ) : (
+          <>
             {/* carousel view */}
             <View className="w-[100%] px-5 flex items-center">
               <Carousel
@@ -247,75 +282,86 @@ function Page() {
                 </Text>
               </View>
               {/* size and color section */}
-              {/* <View className="flex flex-col rounded-[10px] shadow bg-[#ededed] p-2 justify-center"> */}
-              <View className="bg-white rounded-[10px] p-4 pt-5 pb-5 rounded-[10px] shadow-sm bg-[#eadff2]">
-                {/* // size section */}
-                <View className="flex flex-col pb-4 gap-y-2">
-                  <Text className="text-[17px] font-[poppins]">
-                    Size:{" "}
-                    <Text className="uppercase font-[poppins-bold] text-[16px]">
-                      {selectedProductSize}
-                    </Text>
-                  </Text>
-                  <FlatList
-                    horizontal
-                    data={["S", "M", "L", "XL"]}
-                    showsHorizontalScrollIndicator={false}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          setSelectedProductSize(item);
-                        }}
-                        style={{
-                          backgroundColor:
-                            selectedProductSize === item ? "#9470B5" : "white",
-                        }}
-                        className="w-[40px] h-[40px] rounded-lg m-2 flex items-center justify-center shadow-sm text-white">
-                        <Text
-                          style={{
-                            color:
-                              selectedProductSize === item ? "white" : "black",
-                          }}
-                          className="text-[15px] font-[poppins-bold]">
-                          {item}
+
+              {!!productDetails?.isVariantAvailable &&
+                !!productDetails?.productVariant && (
+                  <View className="bg-white rounded-[10px] p-4 pt-5 pb-5 rounded-[10px] shadow-sm bg-[#eadff2]">
+                    {/* // size section */}
+                    <View className="flex flex-col pb-4 gap-y-2">
+                      <Text className="text-[17px] font-[poppins]">
+                        Size:{" "}
+                        <Text className="uppercase font-[poppins-bold] text-[16px]">
+                          {selectedProductSize?.title || "Not selected"}
                         </Text>
-                      </TouchableOpacity>
-                    )}
-                    keyExtractor={(item, index) => index.toString()}
-                  />
-                </View>
-
-                {/* // Colors section */}
-                <View className="flex flex-col pb-2 gap-y-2">
-                  <Text className="text-[17px] font-[poppins]">
-                    Color:{" "}
-                    <Text className="uppercase font-[poppins-bold] text-[16px]">
-                      {selectedProductColor}
-                    </Text>
-                  </Text>
-
-                  <FlatList
-                    horizontal
-                    data={["red", "blue", "green", "black"]}
-                    showsHorizontalScrollIndicator={false}
-                    renderItem={({ item }) => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          setSelectedProductColor(item);
+                      </Text>
+                      <FlatList
+                        horizontal
+                        data={productDetails?.productVariant || []}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item }) => {
+                          console.log("What does item have -->", item);
+                          return (
+                            <TouchableOpacity
+                              onPress={() => {
+                                setSelectedProductSize(item.size);
+                              }}
+                              style={{
+                                backgroundColor:
+                                  selectedProductSize.title ===
+                                  item?.size?.title
+                                    ? "#9470B5"
+                                    : "white",
+                              }}
+                              className="w-[40px] h-[40px] rounded-lg m-2 flex items-center justify-center shadow-sm text-white">
+                              <Text
+                                style={{
+                                  color:
+                                    selectedProductSize.title ===
+                                    item?.size?.title
+                                      ? "white"
+                                      : "black",
+                                }}
+                                className="text-[15px] font-[poppins-bold]">
+                                {item?.size?.title}
+                              </Text>
+                            </TouchableOpacity>
+                          );
                         }}
-                        style={{
-                          backgroundColor: item,
-                          // opacity: item === selectedProductColor ? 0.2 : 1,
-                        }}
-                        className={`w-[39px] h-[39px] rounded-lg m-2 flex items-center justify-center shadow-sm text-white ${selectedProductColor === item && "rounded-full"}`}>
-                        {/* <AntDesign name="pushpino" size={24} color={"black"} /> */}
-                      </TouchableOpacity>
-                    )}
-                    keyExtractor={(item, index) => index.toString()}
-                  />
-                </View>
-              </View>
-              {/* </View> */}
+                        keyExtractor={(item, index) => index.toString()}
+                      />
+                    </View>
+
+                    {/* // Colors section */}
+                    <View className="flex flex-col pb-2 gap-y-2">
+                      <Text className="text-[17px] font-[poppins]">
+                        Color:{" "}
+                        <Text className="uppercase font-[poppins-bold] text-[16px]">
+                          {selectedProductColor?.title || "Not Selected"}
+                        </Text>
+                      </Text>
+
+                      <FlatList
+                        horizontal
+                        data={productDetails?.productVariant || []}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity
+                            onPress={() => {
+                              setSelectedProductColor(item?.color);
+                            }}
+                            style={{
+                              backgroundColor: item?.color?.title,
+                              // opacity: item === selectedProductColor ? 0.2 : 1,
+                            }}
+                            className={`w-[39px] h-[39px] rounded-lg m-2 flex items-center justify-center shadow-sm text-white ${selectedProductColor === item?.color?.title && "rounded-full"}`}>
+                            {/* <AntDesign name="pushpino" size={24} color={"black"} /> */}
+                          </TouchableOpacity>
+                        )}
+                        keyExtractor={(item, index) => index.toString()}
+                      />
+                    </View>
+                  </View>
+                )}
 
               {/* price and quantity section */}
               <View>
@@ -460,35 +506,66 @@ function Page() {
                     </View>
                   </View>
 
-                  <TouchableOpacity
-                    onPress={handleReviewSheetOpen}
-                    className="rounded-full w-[40px] h-[40px] flex flex-row self-start items-center justify-center bg-dark-purple shadow">
-                    <AntDesign name="plus" size={24} color="white" />
-                  </TouchableOpacity>
+                  {doesUserBoughtThisProduct && (
+                    <TouchableOpacity
+                      onPress={handleReviewSheetOpen}
+                      className="rounded-full w-[40px] h-[40px] flex flex-row self-start items-center justify-center bg-dark-purple shadow">
+                      <AntDesign name="plus" size={24} color="white" />
+                    </TouchableOpacity>
+                  )}
                 </View>
 
                 {/* feedback cards */}
-                <View className={"flex flex-col items-center"}>
-                  <View className="flex flex-col pt-5">
-                    <FeedbackCard
-                      userIcon="https://harleydietitians.co.uk/wp-content/uploads/2018/11/no_profile_img.png"
-                      feedbackGivenBy="Nishal Barman"
-                      feedBackDate="24 June 2023"
-                      starsGiven={2}
-                      feedbackText="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eos placeat libero laborum mollitia. Accusantium numquam minima voluptas, cupiditate, et praesentium, a quae illum alias quidem molestiae molestias eius nesciunt repellat?"
-                    />
+                <View className={"flex flex-col items-center w-full"}>
+                  <View className="flex flex-col pt-5 w-full">
+                    {isProductFetching ? (
+                      <>
+                        <FeedbackCardSkeleton />
+                        <FeedbackCardSkeleton />
+                      </>
+                    ) : feedbacks.length > 0 ? (
+                      feedbacks.map((feedback) => (
+                        <FeedbackCard
+                          userIcon="https://harleydietitians.co.uk/wp-content/uploads/2018/11/no_profile_img.png"
+                          feedbackGivenBy={feedback.givenBy}
+                          feedBackDate={feedback.createdAt}
+                          starsGiven={feedback.starsGiven}
+                          feedbackText={feedback.description}
+                        />
+                      ))
+                    ) : (
+                      <Text className="text-lg">No reviews</Text>
+                    )}
+                    {/* <FeedbackCard
+                  userIcon="https://harleydietitians.co.uk/wp-content/uploads/2018/11/no_profile_img.png"
+                  feedbackGivenBy="Nishal Barman"
+                  feedBackDate="24 June 2023"
+                  starsGiven={2}
+                  feedbackText="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eos placeat libero laborum mollitia. Accusantium numquam minima voluptas, cupiditate, et praesentium, a quae illum alias quidem molestiae molestias eius nesciunt repellat?"
+                />
 
-                    <FeedbackCard
-                      userIcon="https://harleydietitians.co.uk/wp-content/uploads/2018/11/no_profile_img.png"
-                      feedbackGivenBy="Tanmay Barman"
-                      feedBackDate="25 June 2023"
-                      starsGiven={4}
-                      feedbackText="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eos placeat libero laborum mollitia. Accusantium numquam minima voluptas, cupiditate, et praesentium, a quae illum alias quidem molestiae molestias eius nesciunt repellat?"
-                    />
+                <FeedbackCard
+                  userIcon="https://harleydietitians.co.uk/wp-content/uploads/2018/11/no_profile_img.png"
+                  feedbackGivenBy="Tanmay Barman"
+                  feedBackDate="25 June 2023"
+                  starsGiven={4}
+                  feedbackText="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eos placeat libero laborum mollitia. Accusantium numquam minima voluptas, cupiditate, et praesentium, a quae illum alias quidem molestiae molestias eius nesciunt repellat?"
+                /> */}
                   </View>
-                  <TouchableOpacity className="flex items-center justify-center w-[200px] h-[48px] p-[0px_20px] bg-white rounded-lg border">
-                    <Text className="text-black font-bold">Load More</Text>
-                  </TouchableOpacity>
+                  {feedbackTotalPages === 0 ||
+                    feedbackTotalPages <= feedbackFetchPage || (
+                      <TouchableOpacity
+                        onPress={handleFeedbackLoadMore}
+                        disabled={
+                          feedbackTotalPages === 0 ||
+                          feedbackTotalPages <= feedbackFetchPage
+                        }
+                        className="flex items-center justify-center w-[200px] h-[48px] p-[0px_20px] bg-white rounded-lg bg-dark-purple">
+                        <Text className="text-white text-lg font-bold">
+                          Load More
+                        </Text>
+                      </TouchableOpacity>
+                    )}
                 </View>
               </View>
               {/* related products */}
@@ -502,11 +579,11 @@ function Page() {
             </View>
           </View> */}
             </View>
-          </ScrollView>
-        </SafeAreaView>
-      )}
-    </>
+          </>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
-export default memo(Page);
+export default product;

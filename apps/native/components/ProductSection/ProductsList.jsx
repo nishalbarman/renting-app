@@ -37,6 +37,8 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
     }
   };
 
+  console.log("Product Data -->", data);
+
   useEffect(() => {
     getProductData();
   }, [viewAllPath]);
