@@ -58,7 +58,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
   const wishlistIdMap = useMemo(() => {
     const wishlistObjectWithIDAsKey = {};
     wishlistData?.forEach((item) => {
-      wishlistObjectWithIDAsKey[item.product._id] = item._id; // assigning product id as key and wishlist item id as value
+      wishlistObjectWithIDAsKey[item?.product?._id] = item?._id; // assigning product id as key and wishlist item id as value
     });
     return wishlistObjectWithIDAsKey;
   }, [wishlistData]);

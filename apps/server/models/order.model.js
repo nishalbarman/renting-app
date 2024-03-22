@@ -12,11 +12,12 @@ const orderSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     shippingPrice: { type: Number, default: 0 },
 
-    color: { type: mongoose.Types.ObjectId, ref: "product_colors" },
-    size: { type: mongoose.Types.ObjectId, ref: "product_sizes" },
+    // variant related info
+    color: { type: String, required: false },
+    size: { type: String, required: false },
     quantity: { type: Number, default: null },
 
-    orderType: { type: String, required: true, enum: ["buy", "rent"] },
+    orderType: { type: String, required: true, enums: ["buy", "rent"] },
 
     // status related keys
     orderStatus: { type: String, default: "Pending" },

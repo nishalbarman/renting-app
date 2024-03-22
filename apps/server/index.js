@@ -11,8 +11,8 @@ const app = express();
 
 const extractToken = async (req, res, next) => {
   try {
-    console.log("Request found for router -->>", req.url);
-    console.log("Request Method -->>", req.method);
+    // console.log("Request found for router -->>", req.url);
+    // console.log("Request Method -->>", req.method);
 
     const publicRoute =
       req.url === "/" ||
@@ -22,7 +22,7 @@ const extractToken = async (req, res, next) => {
       req.url === "/pay/razorpay/hook" ||
       req.url === "/get-image-bg-color";
 
-    console.log("Is public router -->", publicRoute);
+    // console.log("Is public router -->", publicRoute);
 
     if (publicRoute) {
       return next();
@@ -35,7 +35,7 @@ const extractToken = async (req, res, next) => {
       return res.status(403).json({ message: "No token provided" });
     }
     req.jwt = { token: token };
-    console.log(req.jwt);
+    console.log(req?.jwt);
     return next();
   } catch (error) {
     return res.status(403).json({ message: "No token provided" });

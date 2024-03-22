@@ -14,8 +14,7 @@ function Product({
     previewUrl,
     title,
     category,
-    isRentable,
-    isPurchasable,
+    productType: typeOfProduct,
     rentingPrice,
     discountedPrice,
     originalPrice,
@@ -78,13 +77,13 @@ function Product({
       activeOpacity={0.6}
       className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-white rounded-md shadow-sm pb-[1%]`}>
       <View className="w-[100%] h-[200px] p-[3%] ">
-        {(isRentable && isPurchasable) || (
+        {typeOfProduct === "both" || (
           <Text
             style={{
-              backgroundColor: isRentable ? "red" : "#41a63f",
+              backgroundColor: typeOfProduct === "rent" ? "red" : "#41a63f",
             }}
             className="bg-[#41a63f] text-white rounded-[10px] p-[4px_10px] absolute top-2 left-2 z-[1] text-[11px] font-extrabold uppercase">
-            {isPurchasable ? "Buy" : "Rent"}
+            {typeOfProduct === "buy" ? "Buy" : "Rent"}
           </Text>
         )}
 
@@ -104,7 +103,7 @@ function Product({
 
         <Image
           style={{ height: 200 }}
-          className="w-[100%] h-[200px] bg-[transparent] rounded-lg flex-1"
+          className="w-[100%] h-[200px] bg-[transparent] rounded-lg flex-1 bg-white"
           source={{ uri: previewUrl }}
           contentFit="contain"
           contentPosition={"center"}
@@ -141,7 +140,7 @@ function Product({
           </Text>
         </View>
 
-        {isPurchasable && isRentable ? (
+        {typeOfProduct === "both" ? (
           <View className="flex flex-col gap-y-[0.8px]">
             {/* <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
               ₹{rentingPrice}{" "}
@@ -158,7 +157,7 @@ function Product({
               )}
             </Text> */}
           </View>
-        ) : isRentable ? (
+        ) : typeOfProduct === "rent" ? (
           <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
             ₹{rentingPrice}{" "}
             <Text className="text-[13px] align-middle">/ Day</Text>

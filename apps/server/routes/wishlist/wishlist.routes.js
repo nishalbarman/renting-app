@@ -23,10 +23,19 @@ router.get("/", async (req, res) => {
 
     console.log("Product Type -->", productType);
 
+    const searchQuery = req.query;
+
+    const PAGE = searchQuery.page || 1;
+    const LIMIT = searchQuery.limit || 20;
+    const SKIP = (PAGE - 1) * LIMIT;
+
     const wishlistDetails = await Wishlist.find({
       user: userDetails._id,
       productType,
     })
+      .sort({ createdAt: "desc" })
+      .skip(SKIP)
+      .limit(LIMIT)
       .populate("product")
       .select("-user");
 

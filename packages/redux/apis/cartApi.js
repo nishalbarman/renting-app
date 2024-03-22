@@ -21,15 +21,25 @@ export const cartApi = createApi({
     }),
 
     addOneToCart: builder.mutation({
-      query: (productId) => ({
+      query: ({
+        variant = undefined,
+        productId,
+        rentDays = undefined,
+        productType = "rent",
+        quantity = 1,
+      }) => ({
         url: `cart`,
         method: "POST",
         body: {
           productId: productId,
+          variant: variant,
+          quantity: quantity,
+          rentDays: rentDays,
+          productType: productType,
         },
       }),
       invalidatesTags: ["Cart"],
-      transformErrorResponse: (res, meta, arg) => res.message,
+      // transformErrorResponse: (res, meta, arg) => res.message,
     }),
 
     updateCart: builder.mutation({
@@ -53,7 +63,7 @@ export const cartApi = createApi({
         method: "DELETE",
       }),
       invalidatesTags: ["Cart"],
-      transformErrorResponse: (res, meta, arg) => res.message,
+      // transformErrorResponse: (res, meta, arg) => res.message,
     }),
   }),
 });

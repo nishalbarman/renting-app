@@ -64,6 +64,8 @@ const productVariantSchema = new mongoose.Schema(
     size: { type: String, required: true },
     color: { type: String, required: true },
 
+    availableStocks: { type: Number, required: true },
+
     shippingPrice: { type: Number, required: true },
     rentingPrice: { type: Number, required: true },
     discountedPrice: { type: Number, required: true },

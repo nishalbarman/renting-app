@@ -1,6 +1,7 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   SafeAreaView,
@@ -22,6 +23,8 @@ import FeedbackCard from "../../components/FeedbackCard/FeedbackCard";
 import RelatedProductList from "../../components/RelatedProductSection/RelatedProductList";
 import SearchBar from "../../components/SearchBar/SearchBar";
 
+import { Foundation } from "@expo/vector-icons";
+
 import Carousel from "react-native-reanimated-carousel";
 import AnimatedDotsCarousel from "react-native-animated-dots-carousel";
 import axios from "axios";
@@ -30,6 +33,8 @@ import { useSelector } from "react-redux";
 import SingleProductSkeleton from "../../Skeletons/SingleProductSkeleton";
 import FeedbackCardSkeleton from "../../Skeletons/FeedbackCardSkeleton";
 import ProductPageSkeleton from "../../Skeletons/ProductPageSkeleton";
+
+import { useAddOneToCartMutation } from "@store/rtk/apis/cartApi";
 
 function product() {
   const { width } = useMemo(() => {
@@ -55,6 +60,12 @@ function product() {
   const [feedbackFetchPage, setFeedbackFetchPage] = useState(1);
   const [feedbackFetchLimit, setFeedbackFetchLimit] = useState(2);
   const [feedbackTotalPages, setFeedbackTotalPages] = useState(0);
+
+  const starsArray = useMemo(() => {
+    return Array.from({ length: 5 });
+  }, []);
+
+  const [inCart, setInCart] = useState(false);
 
   // fetch the product details from aserver
   const getProductDetails = async () => {
@@ -140,16 +151,104 @@ function product() {
     });
   }, []);
 
-  console.log("Product Varient -->", productDetails?.productVariant);
+  const [availableSizes, setAvailableSizes] = useState([]);
+  const [availableColors, setAvailableColors] = useState([]);
 
-  const [selectedProductSize, setSelectedProductSize] = useState("S");
-  const [selectedProductColor, setSelectedProductColor] = useState("red");
+  useEffect(() => {
+    (async () => {
+      if (!productDetails) return;
+      if (!productDetails?.productVariant) {
+        console.log("Varient data", productDetails?.productVariant);
+        setButtonDisabled(false);
+        return;
+      }
+
+      setButtonDisabled(true);
+
+      setSelectedProductColor(productDetails.productVariant[0].color);
+      setSelectedProductSize(productDetails.productVariant[0].size);
+
+      const cacheObject = {};
+      const sizes = [];
+      const colors = [];
+      productDetails.productVariant.forEach((variant) => {
+        if (!cacheObject.hasOwnProperty(variant.size)) {
+          sizes.push(variant.size);
+          cacheObject[variant.size] = true;
+        }
+        if (!cacheObject.hasOwnProperty(variant.color)) {
+          colors.push(variant.color);
+          cacheObject[variant.color] = true;
+        }
+      });
+      setAvailableSizes(sizes);
+      setAvailableColors(colors);
+    })();
+  }, [productDetails]);
+
+  const [selectedProductSize, setSelectedProductSize] = useState("");
+  const [selectedProductColor, setSelectedProductColor] = useState("");
   const [rentDays, setRentDays] = useState(1);
   const [quantity, setQuantity] = useState(1);
+  const [filteredVariant, setFilteredVariant] = useState(undefined); // this will be selected size and color if any
 
-  const starsArray = useMemo(() => {
-    return Array.from({ length: 5 });
-  }, []);
+  useEffect(() => {
+    (async () => {
+      console.log("Filtered Variant", filteredVariant);
+      if (!filteredVariant) return;
+      try {
+        const response = await axios.post(
+          `${process.env.EXPO_PUBLIC_API_URL}/cart/incart/${productId}`,
+          {
+            productType: productType,
+            variant: filteredVariant._id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response.data);
+        setInCart(!!response?.data?.incart);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, [filteredVariant]);
+
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      if (!productDetails?.isVariantAvailable) return;
+      const filteredVariant = productDetails.productVariant.filter((item) => {
+        return (
+          item.size === selectedProductSize &&
+          item.color === selectedProductColor
+        );
+      });
+      if (filteredVariant && filteredVariant.length > 0) {
+        setFilteredVariant(filteredVariant[0]);
+      }
+    })();
+  }, [selectedProductSize, selectedProductColor]);
+
+  useEffect(() => {
+    if (!productDetails.isVariantAvailable) {
+      setButtonDisabled(false);
+    } else if (
+      productDetails.isVariantAvailable &&
+      !!filteredVariant &&
+      !!selectedProductColor &&
+      !!selectedProductSize
+    ) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [filteredVariant, selectedProductSize, selectedProductColor]);
 
   const handleReviewSheetOpen = useCallback(() => {
     SheetManager.show("add-feedback-sheet", {
@@ -157,15 +256,45 @@ function product() {
     });
   }, []);
 
-  const [toogleSale, setToogleSale] = useState(productDetails.isPurchasable);
-
   const [carouselCurrentIndex, setCarouselCurrentIndex] = useState(0);
 
-  const handleTooglePurchaseType = () => {
-    if (productDetails.isPurchasable) {
-      setToogleSale((prev) => !prev);
+  // const [toogleSale, setToogleSale] = useState(productDetails.isPurchasable);
+
+  // const handleTooglePurchaseType = () => {
+  //   if (productDetails.isPurchasable) {
+  //     setToogleSale((prev) => !prev);
+  //   }
+  // };
+
+  const [addToCart, { isLoading: isAddToCartLoading }] =
+    useAddOneToCartMutation();
+
+  const handleAddToCart = async () => {
+    try {
+      console.log("Item add to cart->", {
+        productId,
+        variant: filteredVariant._id,
+        quantity,
+        rentDays,
+        productType: productType,
+      });
+      const response = await addToCart({
+        productId,
+        variant: filteredVariant._id,
+        quantity,
+        rentDays,
+        productType: productType,
+      }).unwrap();
+      // if (response.status) {
+      console.log(response);
+      // }
+    } catch (error) {
+      console.error(error);
     }
   };
+
+  const handleProductRentClick = () => {};
+  const handleProductBuyClick = () => {};
 
   return (
     <SafeAreaView className="bg-white">
@@ -190,7 +319,11 @@ function product() {
                 width={width}
                 height={width}
                 autoPlay={false}
-                data={productDetails.showPictures}
+                data={
+                  filteredVariant?.showPictures ||
+                  productDetails?.showPictures ||
+                  []
+                }
                 scrollAnimationDuration={1000}
                 onSnapToItem={(index) => console.log("current index:", index)}
                 onProgressChange={(_, progress) => {
@@ -208,7 +341,11 @@ function product() {
                 }}
               />
               <AnimatedDotsCarousel
-                length={productDetails?.showPictures?.length || 0}
+                length={
+                  filteredVariant?.showPictures?.length ||
+                  productDetails?.showPictures?.length ||
+                  0
+                }
                 currentIndex={carouselCurrentIndex}
                 maxIndicators={4}
                 interpolateOpacityAndColor={true}
@@ -291,24 +428,25 @@ function product() {
                       <Text className="text-[17px] font-[poppins]">
                         Size:{" "}
                         <Text className="uppercase font-[poppins-bold] text-[16px]">
-                          {selectedProductSize?.title || "Not selected"}
+                          {!!selectedProductSize
+                            ? selectedProductSize
+                            : "Not selected"}
                         </Text>
                       </Text>
                       <FlatList
                         horizontal
-                        data={productDetails?.productVariant || []}
+                        data={availableSizes}
                         showsHorizontalScrollIndicator={false}
                         renderItem={({ item }) => {
                           console.log("What does item have -->", item);
                           return (
                             <TouchableOpacity
                               onPress={() => {
-                                setSelectedProductSize(item.size);
+                                setSelectedProductSize(item);
                               }}
                               style={{
                                 backgroundColor:
-                                  selectedProductSize.title ===
-                                  item?.size?.title
+                                  selectedProductSize === item
                                     ? "#9470B5"
                                     : "white",
                               }}
@@ -316,13 +454,12 @@ function product() {
                               <Text
                                 style={{
                                   color:
-                                    selectedProductSize.title ===
-                                    item?.size?.title
+                                    selectedProductSize === item
                                       ? "white"
                                       : "black",
                                 }}
                                 className="text-[15px] font-[poppins-bold]">
-                                {item?.size?.title}
+                                {item}
                               </Text>
                             </TouchableOpacity>
                           );
@@ -336,27 +473,42 @@ function product() {
                       <Text className="text-[17px] font-[poppins]">
                         Color:{" "}
                         <Text className="uppercase font-[poppins-bold] text-[16px]">
-                          {selectedProductColor?.title || "Not Selected"}
+                          {!!selectedProductColor
+                            ? selectedProductColor
+                            : "Not Selected"}
                         </Text>
                       </Text>
-
                       <FlatList
                         horizontal
-                        data={productDetails?.productVariant || []}
+                        data={availableColors}
                         showsHorizontalScrollIndicator={false}
-                        renderItem={({ item }) => (
-                          <TouchableOpacity
-                            onPress={() => {
-                              setSelectedProductColor(item?.color);
-                            }}
-                            style={{
-                              backgroundColor: item?.color?.title,
-                              // opacity: item === selectedProductColor ? 0.2 : 1,
-                            }}
-                            className={`w-[39px] h-[39px] rounded-lg m-2 flex items-center justify-center shadow-sm text-white ${selectedProductColor === item?.color?.title && "rounded-full"}`}>
-                            {/* <AntDesign name="pushpino" size={24} color={"black"} /> */}
-                          </TouchableOpacity>
-                        )}
+                        renderItem={({ item }) => {
+                          console.log("What does item have -->", item);
+                          return (
+                            <TouchableOpacity
+                              onPress={() => {
+                                setSelectedProductColor(item);
+                              }}
+                              style={{
+                                backgroundColor:
+                                  selectedProductColor === item
+                                    ? "#9470B5"
+                                    : "white",
+                              }}
+                              className="flex items-center justify-center w-fit px-3 h-[40px] rounded-lg m-2 shadow-sm">
+                              <Text
+                                style={{
+                                  color:
+                                    selectedProductColor === item
+                                      ? "white"
+                                      : "black",
+                                }}
+                                className="text-md font-bold">
+                                {item}
+                              </Text>
+                            </TouchableOpacity>
+                          );
+                        }}
                         keyExtractor={(item, index) => index.toString()}
                       />
                     </View>
@@ -370,7 +522,8 @@ function product() {
                   <View className="flex gap-y-2">
                     {productType === "rent" ? (
                       <Text className="text-[30px] font-[poppins-bold]">
-                        {productDetails.rentingPrice}
+                        {filteredVariant?.rentingPrice ||
+                          productDetails.rentingPrice}
                         <Text className="text-[15px] font-[poppins-bold]">
                           {" "}
                           / Day
@@ -378,9 +531,13 @@ function product() {
                       </Text>
                     ) : (
                       <Text className="text-[30px] font-[poppins-bold]">
-                        ₹{productDetails.discountedPrice}{" "}
+                        ₹
+                        {filteredVariant?.discountedPrice ||
+                          productDetails.discountedPrice}{" "}
                         <Text className="text-[15px] text-[#787878] font-[poppins] line-through">
-                          ₹{productDetails.originalPrice}
+                          ₹
+                          {filteredVariant?.originalPrice ||
+                            productDetails.originalPrice}
                         </Text>
                       </Text>
                     )}
@@ -435,37 +592,83 @@ function product() {
                       </View>
                     )}
 
-                    <View>
-                      {productDetails.availableStocks === 0 ||
-                      quantity > productDetails.availableStocks ? (
-                        <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
-                          Out of stock
-                        </Text>
-                      ) : (
-                        <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
-                          ({productDetails.availableStocks} items) In stock
-                        </Text>
-                      )}
-                    </View>
+                    {!!filteredVariant &&
+                    Object.keys(filteredVariant).length > 0 ? (
+                      <View>
+                        {filteredVariant?.availableStocks === 0 ||
+                        quantity > filteredVariant?.availableStocks ? (
+                          <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
+                            Out of stock
+                          </Text>
+                        ) : (
+                          <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
+                            ({filteredVariant.availableStocks} items) In stock
+                          </Text>
+                        )}
+                      </View>
+                    ) : (
+                      <View>
+                        {productDetails.availableStocks <= 0 ||
+                        quantity > productDetails.availableStocks ? (
+                          <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
+                            Out of stock
+                          </Text>
+                        ) : (
+                          <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
+                            ({productDetails.availableStocks} items) In stock
+                          </Text>
+                        )}
+                      </View>
+                    )}
                   </View>
                 </View>
 
                 {/* buy now or add to cart button */}
                 <View className="pt-7 flex flex-row gap-y-3 gap-x-5 justify-center items-center">
-                  <TouchableHighlight className="bg-dark-purple h-[55px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
-                    <Text className="text-white text-[16px] font-[poppins-bold]">
-                      Add To Cart
-                    </Text>
+                  <TouchableHighlight
+                    onPress={handleAddToCart}
+                    style={
+                      buttonDisabled
+                        ? { backgroundColor: "black", opacity: 0.4 }
+                        : {}
+                    }
+                    disabled={buttonDisabled || inCart}
+                    className="bg-dark-purple h-[55px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
+                    {isAddToCartLoading ? (
+                      <ActivityIndicator size={20} color={"white"} />
+                    ) : inCart ? (
+                      <Foundation name="checkbox" size={26} color="white" />
+                    ) : (
+                      <Text className="text-white text-[16px] font-[poppins-bold]">
+                        Add To Cart
+                      </Text>
+                    )}
                   </TouchableHighlight>
 
                   {productType === "rent" ? (
-                    <TouchableHighlight className="bg-[#f07354] h-[55px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
+                    <TouchableHighlight
+                      onPress={handleProductRentClick}
+                      style={
+                        buttonDisabled
+                          ? { backgroundColor: "black", opacity: 0.4 }
+                          : {}
+                      }
+                      disabled={buttonDisabled}
+                      className="bg-[#f07354] h-[55px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
                       <Text className="text-white text-[16px] font-[poppins-bold]">
                         Rent It
                       </Text>
                     </TouchableHighlight>
                   ) : (
-                    <TouchableHighlight className="bg-[#f07354] h-[55px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
+                    <TouchableHighlight
+                      onPress={handleProductBuyClick}
+                      style={
+                        buttonDisabled
+                          ? { backgroundColor: "black", opacity: 0.4 }
+                          : {}
+                      }
+                      disabled={buttonDisabled}
+                      className="bg-[#f07354] h-[55px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
                       <Text className="text-white text-[16px] font-[poppins-bold]">
                         By Now
                       </Text>

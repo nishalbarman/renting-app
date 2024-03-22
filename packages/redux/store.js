@@ -21,6 +21,7 @@ import { wishlistApi } from "./apis/wishlistApi";
 import { productsApi } from "./apis/productApi";
 import { categoryApi } from "./apis/categoryApi";
 import { storeTypeSlice } from "./slices/storeTypeSlice";
+import { cartApi } from "./apis/cartApi";
 
 const rootReducer = combineReducers({
   [userAPI.reducerPath]: userAPI.reducer,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   [addressSlice.name]: addressSlice.reducer,
   [addressApi.reducerPath]: addressApi.reducer,
   [productsApi.reducerPath]: productsApi.reducer,
+  [cartApi.reducerPath]: cartApi.reducer,
   [wishlistApi.reducerPath]: wishlistApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
   [storeTypeSlice.reducerPath]: storeTypeSlice.reducer,
@@ -50,6 +52,7 @@ export const store = configureStore({
       },
     })
       .concat(productsApi.middleware)
+      .concat(cartApi.middleware)
       .concat(wishlistApi.middleware)
       .concat(userAPI.middleware)
       .concat(authApi.middleware)

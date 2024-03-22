@@ -95,9 +95,17 @@ const OrderScreen = () => {
         showsHorizontalScrollIndicator={false}
         className={`flex-1 bg-white p-2`}>
         <View className={`mb-4 p-2`}>
-          {orders?.map((item, index) => (
-            <OrderItem key={index} order={item} />
-          ))}
+          {!orders || orders.length === 0 ? (
+            <View className="flex justify-center items-center">
+              <Text className="text-lg">Your order list is empty</Text>
+            </View>
+          ) : (
+            <>
+              {orders?.map((item, index) => (
+                <OrderItem key={index} order={item} />
+              ))}
+            </>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

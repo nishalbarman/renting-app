@@ -5,21 +5,17 @@ const cartSchema = new mongoose.Schema(
     user: { type: mongoose.Types.ObjectId, ref: "users" },
     product: { type: mongoose.Types.ObjectId, ref: "products" },
 
+    // isVariantAvailable: { type: Boolean, required: true, default: false },
+    variant: { type: mongoose.Types.ObjectId, ref: "product_variants" },
+
     quantity: { type: Number, default: 1 },
 
-    buyOrRent: { type: String, enum: ["buy", "rent"], required: true },
+    rentDays: { type: Number, default: 2 },
 
-    size: {
-      type: mongoose.Types.ObjectId,
-      ref: "product_sizes",
-      default: "65ccbb46bd028c8adafdd971",
-    },
+    productType: { type: String, enum: ["buy", "rent"], required: true },
 
-    color: {
-      type: mongoose.Types.ObjectId,
-      ref: "product_colors",
-      default: "65ccbb46bd028c8adafdd971",
-    },
+    // size: { type: String, required: false },
+    // color: { type: String, required: false },
   },
   {
     timestamps: true,

@@ -18,6 +18,8 @@ export default function Tab() {
     refetch,
   } = useGetWishlistQuery(productType);
 
+  console.log(wishlistData);
+
   useEffect(() => {
     refetch();
   }, [productType]);

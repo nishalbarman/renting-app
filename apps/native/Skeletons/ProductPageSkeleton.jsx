@@ -52,7 +52,7 @@ function ProductPageSkeleton() {
         </View>
 
         {/* Product description section */}
-        <View className="pt-4 pb-6 pl-1 pr-1">
+        <View className="pt-2 pl-1 pr-1">
           {/* Placeholder for product details title */}
           <View className="bg-gray-200 w-[30%] h-[20px] mb-3" />
           {/* Placeholder for product description */}
@@ -60,13 +60,13 @@ function ProductPageSkeleton() {
         </View>
 
         {/* Rating and reviews section */}
-        <View className="pt-4 pb-6 flex flex-col gap-y-2 pl-1 pr-1">
+        <View className="pb-6 flex flex-col gap-y-2 pl-1 pr-1">
           {/* Placeholder for feedbacks title */}
           <View className="bg-gray-200 w-[30%] h-[20px]" />
           {/* Placeholder for stars and feedbacks count */}
           <View className="bg-gray-200 w-[70%] h-[20px]" />
           {/* Placeholder for feedback cards */}
-          <View className="flex flex-col pt-5">
+          <View className="flex flex-col pt-6">
             {/* Placeholder for feedback card */}
             <FeedbackCardSkeleton />
             <FeedbackCardSkeleton />

@@ -7,6 +7,7 @@ export const authSlice = createSlice({
     email: null,
     mobileNo: null,
     jwtToken: null,
+    defaultSelectedAddress: null,
   },
   reducers: {
     setUserAuthData: (state, { payload }) => {
@@ -15,7 +16,11 @@ export const authSlice = createSlice({
       state.mobileNo = payload.mobileNo;
       state.jwtToken = payload.jwtToken;
     },
+    updateDefaultSelectedAddress: (state, { payload }) => {
+      state.defaultSelectedAddress = payload;
+    },
   },
 });
 
-export const { setUserAuthData } = authSlice.actions;
+export const { setUserAuthData, updateDefaultSelectedAddress } =
+  authSlice.actions;

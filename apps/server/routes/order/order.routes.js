@@ -24,13 +24,19 @@ router.get("/", async (req, res) => {
       });
     }
 
+    const searchQuery = req.query;
+
+    const PAGE = searchQuery.page || 1;
+    const LIMIT = searchQuery.limit || 20;
+    const SKIP = (PAGE - 1) * LIMIT;
+
     const orderDetails = await Order.find({
       user: userDetails._id,
     })
       .sort({ createdAt: "desc" })
+      .skip(SKIP)
+      .limit(LIMIT)
       .populate("user");
-
-      
 
     return res.json({
       status: true,

@@ -1,17 +1,28 @@
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import ActionSheet, {
   SheetManager,
   useScrollHandlers,
 } from "react-native-actions-sheet";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
-import { useGetAddressQuery } from "@store/rtk/apis/addressApi";
+import {
+  useDeleteAddressMutation,
+  useGetAddressQuery,
+} from "@store/rtk/apis/addressApi";
 
 import { useRouter } from "expo-router";
 
 import { useSelector } from "react-redux";
 import AddressCardSkeleton from "../../Skeletons/AddressCardSkeleton";
+
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function AddressList() {
   const handlers = useScrollHandlers();
@@ -33,6 +44,20 @@ export default function AddressList() {
     error: addressFetchError,
     refetch,
   } = useGetAddressQuery();
+
+  const [deleteOneAddress, { isLoading: isAddressDeleteLoading }] =
+    useDeleteAddressMutation();
+
+  const handleDeleteAddress = async (id) => {
+    console.log(id);
+    try {
+      const response = await deleteOneAddress(id).unwrap();
+
+      console.log("Address Deleted");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     refetch();
@@ -61,18 +86,41 @@ export default function AddressList() {
                           <View
                             key={item._id}
                             className="bg-light-blue-200 p-4 rounded-md shadow-sm mb-3 w-[100%]">
-                            <Text className="text-black font-medium mb-2">
-                              {name}
-                            </Text>
-                            <Text className="text-gray-700 mb-2">
-                              {item.name}, {item.locality}, {item.streetName},{" "}
-                              {item.postalCode}, {item.country}
-                            </Text>
-                            <Text className="text-gray-700">{mobileNo}</Text>
+                            <View>
+                              <Text className="text-black font-medium mb-2">
+                                {name}
+                              </Text>
+                              <Text className="text-gray-700 mb-2">
+                                {item.name}, {item.locality}, {item.streetName},{" "}
+                                {item.postalCode}, {item.country}
+                              </Text>
+                              <Text className="text-gray-700">{mobileNo}</Text>
+                            </View>
+                            <View className="w-full flex items-end">
+                              {isAddressDeleteLoading ? (
+                                <>
+                                  <ActivityIndicator
+                                    size={15}
+                                    color={"dark-purple"}
+                                  />
+                                </>
+                              ) : (
+                                <>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      handleDeleteAddress(item._id);
+                                    }}
+                                    className="flex items-center justify-center flex-0 p-1 rounded-full bg-dark-purple w-10 h-10 mt-4">
+                                    <MaterialIcons
+                                      name="delete"
+                                      size={24}
+                                      color="white"
+                                    />
+                                  </TouchableOpacity>
+                                </>
+                              )}
+                            </View>
                           </View>
-                          {/* <View key={item._id}>
-                      <Text>{Object.values(item).join(", ")}</Text>
-                    </View> */}
                         </>
                       );
                     })}
@@ -85,11 +133,13 @@ export default function AddressList() {
                 </>
               )}
             </View>
-            <TouchableOpacity
-              onPress={handleAddAddressClick}
-              className="mt-6 flex items-center justify-center self-center w-[200px] h-[45px] p-[0px_20px] bg-[#d875ff] rounded-lg">
-              <Text className="text-white font-bold">Add Another</Text>
-            </TouchableOpacity>
+            {(!address || address.length < 5) && (
+              <TouchableOpacity
+                onPress={handleAddAddressClick}
+                className="mt-6 flex items-center justify-center self-center w-[200px] h-[45px] p-[0px_20px] bg-dark-purple rounded-lg">
+                <Text className="text-white font-bold">Add One</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </ScrollView>
       </NativeViewGestureHandler>

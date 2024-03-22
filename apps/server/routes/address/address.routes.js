@@ -44,7 +44,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const token = req.jwt.token || null;
+    const token = req?.jwt?.token || null;
 
     if (!token) {
       return res.status(400).json({
@@ -79,19 +79,18 @@ router.post("/", async (req, res) => {
       user: userDetails._id,
       ...req.body,
     });
+    await newAddress.save();
 
-    await Promise.all([
-      newAddress.save(),
-      User.findOneAndUpdate(
-        { _id: userDetails._id },
-        {
-          $push: { address: newAddress._id },
-        }
-      ),
-    ]);
+    // await Promise.all([
+    //   User.findOneAndUpdate(
+    //     { _id: userDetails._id },
+    //     {
+    //       $push: { address: newAddress._id },
+    //     }
+    //   ),
+    // ]);
 
     return res.json({
-      status: true,
       message: "Address added.",
     });
   } catch (err) {
@@ -177,7 +176,7 @@ router.patch("/:address_item_id", async (req, res) => {
 
 router.delete("/:address_item_id", async (req, res) => {
   try {
-    const token = req.jwt.token || null;
+    const token = req?.jwt?.token || null;
 
     if (!token) {
       return res.status(400).json({
@@ -195,7 +194,7 @@ router.delete("/:address_item_id", async (req, res) => {
 
     const { address_item_id } = req.params;
 
-    const addressDetails = await Cart.findOneAndDelete({
+    const addressDetails = await Address.findOneAndDelete({
       _id: address_item_id,
       user: userDetails._id,
     });
@@ -214,7 +213,7 @@ router.delete("/:address_item_id", async (req, res) => {
     console.log(error);
     return res.status(500).json({
       status: false,
-      message: "Internal server error!",
+      message: error.message,
     });
   }
 });

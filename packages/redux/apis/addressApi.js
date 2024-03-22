@@ -34,7 +34,7 @@ export const addressApi = createApi({
     }),
 
     deleteAddress: builder.mutation({
-      query: ({ id }) => ({
+      query: (id) => ({
         url: `address/${id}`,
         method: "DELETE",
       }),

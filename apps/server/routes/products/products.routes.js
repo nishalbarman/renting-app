@@ -164,7 +164,7 @@ router.get("/view/:productId", async (req, res) => {
 
     const product = await Product.findOne({ _id: params.productId }).populate([
       "category",
-      { path: "productVariant", populate: ["size", "color"] },
+      { path: "productVariant" },
     ]);
     const doesUserBoughtThisProduct = await Order.countDocuments({
       product: params.productId,

@@ -12,8 +12,6 @@ function Product({
     previewUrl,
     title,
     category,
-    isRentable,
-    isPurchasable,
     rentingPrice,
     discountedPrice,
     originalPrice,
@@ -21,6 +19,7 @@ function Product({
     description,
     stars,
     totalFeedbacks,
+    productType,
     shippingPrice,
     isSizeVaries,
     isColorVaries,
@@ -52,7 +51,7 @@ function Product({
   };
 
   const handleProductClick = () => {
-    router.push(`/product?id=${_id}`);
+    router.push(`/view?id=${_id}`);
   };
 
   return (
@@ -61,13 +60,13 @@ function Product({
       activeOpacity={0.6}
       className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-white rounded-md shadow-sm pb-[1%]`}>
       <View className="w-[100%] h-[200px] p-[3%] ">
-        {(isRentable && isPurchasable) || (
+        {productType === "both" || (
           <Text
             style={{
-              backgroundColor: isRentable ? "red" : "#41a63f",
+              backgroundColor: productType === "rent" ? "red" : "#41a63f",
             }}
             className="bg-[#41a63f] text-white rounded-[10px] p-[4px_10px] absolute top-2 left-2 z-[1] text-[11px] font-extrabold uppercase">
-            {isPurchasable ? "Buy" : "Rent"}
+            {productType === "buy" ? "Buy" : "Rent"}
           </Text>
         )}
 
@@ -140,7 +139,7 @@ function Product({
           </Text>
         </View>
 
-        {isPurchasable && isRentable ? (
+        {productType === "both" ? (
           <View className="flex flex-col gap-y-[0.8px]">
             {/* <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
               ₹{rentingPrice}{" "}
@@ -157,7 +156,7 @@ function Product({
               )}
             </Text> */}
           </View>
-        ) : isRentable ? (
+        ) : productType === "rent" ? (
           <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
             ₹{rentingPrice}{" "}
             <Text className="text-[13px] align-middle">/ Day</Text>

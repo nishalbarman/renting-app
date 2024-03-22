@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const addressSlice = createSlice({
   name: "mapSelectedAddress",
   initialState: {
+    defaultSelectedAddress: null,
     coordinates: null,
     address: null,
   },

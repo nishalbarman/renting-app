@@ -45,7 +45,7 @@ export const wishlistApi = createApi({
     }),
 
     updateWishlist: builder.mutation({
-      query: (id, item) => ({
+      query: ({ id, item }) => ({
         url: `wishlist/${id}`,
         method: "PATCH",
         body: item,
