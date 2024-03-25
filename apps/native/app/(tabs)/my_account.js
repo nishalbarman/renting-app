@@ -20,11 +20,11 @@ const AccountScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView className={`flex-1 bg-white`}>
+    <SafeAreaView className={`flex-1`}>
       <ScrollView className="bg-white">
-        <View className="px-4">
-          <View className="flex flex-row items-center justify-between bg-yellow-200 p-3 rounded-md mb-4">
-            <Text className="font-semibold">Hey! {name}</Text>
+        <View className="px-4 py-2">
+          <View className="flex h-14 flex-row items-center justify-between bg-yellow-200 p-3 rounded-md mb-4">
+            <Text className="font-semibold">Hello! {name}</Text>
             {/* <View
               className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 bg-white"
               style={styles.customBadge}>
@@ -72,28 +72,17 @@ const AccountScreen = () => {
               onPress={() => {
                 SheetManager.show("update-profile");
               }}
-              className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
-              <Text>Edit Profile</Text>
+              className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center p-4 mb-2">
+              <Text className="text-md">Edit Profile</Text>
               <Feather name="chevron-right" size={24} color="currentColor" />
             </TouchableOpacity>
-            {/* <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
-            <Text>Saved Cards & Wallet</Text>
-            <Feather name="chevron-right" size={24} color="currentColor" />
-          </TouchableOpacity> */}
+
             <TouchableOpacity
               onPress={handleAddressSheetOpen}
-              className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
-              <Text>Saved Addresses</Text>
+              className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center p-4 mb-2">
+              <Text className="text-md">Saved Addresses</Text>
               <Feather name="chevron-right" size={24} color="currentColor" />
             </TouchableOpacity>
-            {/* <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
-            <Text>Select Language</Text>
-            <Feather name="chevron-right" size={24} color="currentColor" />
-          </TouchableOpacity> */}
-            {/* <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4">
-            <Text>Notification Settings</Text>
-            <Feather name="chevron-right" size={24} color="currentColor" />
-          </TouchableOpacity> */}
           </View>
         </View>
       </ScrollView>

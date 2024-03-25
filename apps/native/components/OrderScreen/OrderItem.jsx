@@ -77,7 +77,7 @@ function OrderItem({
   };
 
   return (
-    <View className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px]">
+    <View className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px] border border-gray-300">
       <View className={`flex-row p-1 gap-x-5`}>
         <Image
           source={{

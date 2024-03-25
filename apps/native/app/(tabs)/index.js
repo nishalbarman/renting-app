@@ -43,7 +43,7 @@ export default function Tab() {
         <View className="flex flex-row gap-x-3 justify-center px-8 mt-5">
           <TouchableOpacity
             onPress={handleProductTypeRent}
-            className={`${productType === "rent" ? "bg-[#4587de]" : "bg-white"} flex flex-row rounded-lg items-center justify-center h-[41px] w-[50%] shadow-sm`}>
+            className={`${productType === "rent" ? "bg-[#4587de]" : "bg-white"} flex flex-row rounded-lg items-center justify-center h-[41px] w-[50%]  border border-gray-300`}>
             <Text
               className={`${productType === "rent" ? "text-white" : "text-black"} text-[17px] font-extrabold`}>
               Rent
@@ -52,7 +52,7 @@ export default function Tab() {
 
           <TouchableOpacity
             onPress={handleProductTypePurchase}
-            className={`${productType === "buy" ? "bg-[#3bc489]" : "bg-white"} flex flex-row rounded-lg items-center justify-center h-[41px] w-[50%] shadow-sm`}>
+            className={`${productType === "buy" ? "bg-[#3bc489]" : "bg-white"} flex flex-row rounded-lg items-center justify-center h-[41px] w-[50%]  border border-gray-300`}>
             <Text
               className={`${productType === "buy" ? "text-white" : "text-black"} text-[17px] font-extrabold`}>
               Purchase
@@ -69,12 +69,6 @@ export default function Tab() {
             bgColor="#fff9f2"
             titleColor="black"
           />
-          {/* <ProductsList
-            title="😍 Buy Products"
-            viewAllPath="buy"
-            bgColor="#f5fffd"
-            titleColor="black"
-          /> */}
         </View>
       </ScrollView>
     </SafeAreaView>

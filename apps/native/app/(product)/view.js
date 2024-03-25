@@ -271,13 +271,6 @@ function product() {
 
   const handleAddToCart = async () => {
     try {
-      console.log("Item add to cart->", {
-        productId,
-        variant: filteredVariant._id,
-        quantity,
-        rentDays,
-        productType: productType,
-      });
       const response = await addToCart({
         productId,
         variant: filteredVariant._id,
@@ -286,6 +279,7 @@ function product() {
         productType: productType,
       }).unwrap();
       // if (response.status) {
+      setInCart(true);
       console.log(response);
       // }
     } catch (error) {
@@ -300,7 +294,7 @@ function product() {
     <SafeAreaView className="bg-white">
       <Stack.Screen
         options={{
-          title: productDetails.title || "",
+          title: "",
           headerShadowVisible: false,
           headerTitleStyle: {
             fontSize: 18,
@@ -313,8 +307,9 @@ function product() {
         ) : (
           <>
             {/* carousel view */}
-            <View className="w-[100%] px-5 flex items-center">
+            <View className="w-[100%] px-5 flex items-center rounded-md">
               <Carousel
+                className="mb-3"
                 pagingEnabled={true}
                 width={width}
                 height={width}
@@ -385,12 +380,12 @@ function product() {
             </View>
 
             {/* product body */}
-            <View className="flex flex-1 p-[12px] flex-col gap-y-5">
+            <View className="flex flex-1 p-[12px] flex-col">
               <Text className="font-[poppins-mid] leading-[103%] text-grey text-[16px]">
                 {productDetails.title}
               </Text>
               {/* rating and start */}
-              <View className="flex flex-row gap-x-2 items-center">
+              <View className="flex flex-row gap-x-2 h-10 items-center mb-3 mt-1">
                 <View className="flex flex-row items-center justify-center">
                   {starsArray.map((item, index) => {
                     return (
@@ -418,14 +413,14 @@ function product() {
                   ({productDetails.totalFeedbacks})
                 </Text>
               </View>
-              {/* size and color section */}
 
+              {/* size and color section */}
               {!!productDetails?.isVariantAvailable &&
                 !!productDetails?.productVariant && (
-                  <View className="bg-white rounded-[10px] p-4 pt-5 pb-5 rounded-[10px] shadow-sm bg-[#eadff2]">
+                  <View className="bg-white rounded-[10px] px-4 py-5 rounded-[10px] shadow-sm border border-gray-300 mb-2">
                     {/* // size section */}
-                    <View className="flex flex-col pb-4 gap-y-2">
-                      <Text className="text-[17px] font-[poppins]">
+                    <View className="flex flex-col pb-4">
+                      <Text className="text-[17px] font-[poppins] mb-3">
                         Size:{" "}
                         <Text className="uppercase font-[poppins-bold] text-[16px]">
                           {!!selectedProductSize
@@ -450,7 +445,7 @@ function product() {
                                     ? "#9470B5"
                                     : "white",
                               }}
-                              className="w-[40px] h-[40px] rounded-lg m-2 flex items-center justify-center shadow-sm text-white">
+                              className="w-[50px] h-[45px] rounded-lg mx-2 flex items-center justify-center shadow-sm border  text-white">
                               <Text
                                 style={{
                                   color:
@@ -469,8 +464,8 @@ function product() {
                     </View>
 
                     {/* // Colors section */}
-                    <View className="flex flex-col pb-2 gap-y-2">
-                      <Text className="text-[17px] font-[poppins]">
+                    <View className="flex flex-col pb-2 mt-2">
+                      <Text className="text-[17px] font-[poppins] mb-3">
                         Color:{" "}
                         <Text className="uppercase font-[poppins-bold] text-[16px]">
                           {!!selectedProductColor
@@ -483,7 +478,6 @@ function product() {
                         data={availableColors}
                         showsHorizontalScrollIndicator={false}
                         renderItem={({ item }) => {
-                          console.log("What does item have -->", item);
                           return (
                             <TouchableOpacity
                               onPress={() => {
@@ -495,7 +489,7 @@ function product() {
                                     ? "#9470B5"
                                     : "white",
                               }}
-                              className="flex items-center justify-center w-fit px-3 h-[40px] rounded-lg m-2 shadow-sm">
+                              className="flex items-center justify-center w-fit px-3 h-[45px] rounded-lg mx-2 shadow-sm border">
                               <Text
                                 style={{
                                   color:
@@ -542,6 +536,7 @@ function product() {
                       </Text>
                     )}
                   </View>
+
                   {/* quantity section */}
                   <View className="flex flex-col gap-y-2">
                     <View className="flex flex-row bg-[#F2F3F2] justify-center items-center p-[8px] rounded-[30px] self-start">
@@ -602,7 +597,8 @@ function product() {
                           </Text>
                         ) : (
                           <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
-                            ({filteredVariant.availableStocks} items) In stock
+                            {/* ({filteredVariant.availableStocks} items)  */}
+                            In stock
                           </Text>
                         )}
                       </View>
@@ -615,7 +611,8 @@ function product() {
                           </Text>
                         ) : (
                           <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
-                            ({productDetails.availableStocks} items) In stock
+                            {/* ({productDetails.availableStocks} items) */}
+                            In stock
                           </Text>
                         )}
                       </View>
@@ -633,7 +630,7 @@ function product() {
                         : {}
                     }
                     disabled={buttonDisabled || inCart}
-                    className="bg-dark-purple h-[55px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
+                    className="bg-dark-purple h-[50px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
                     {isAddToCartLoading ? (
                       <ActivityIndicator size={20} color={"white"} />
                     ) : inCart ? (
@@ -654,7 +651,7 @@ function product() {
                           : {}
                       }
                       disabled={buttonDisabled}
-                      className="bg-[#f07354] h-[55px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
+                      className="bg-[#f07354] h-[50px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
                       <Text className="text-white text-[16px] font-[poppins-bold]">
                         Rent It
                       </Text>

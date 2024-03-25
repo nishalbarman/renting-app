@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 
 function index() {
   return (
-    <View className="flex items-center justify-center mt-10">
+    <View className="flex items-center justify-center h-[100%]">
       {/* <Image
         source={require("../../assets/illustrations/lost.svg")}
         width={200}

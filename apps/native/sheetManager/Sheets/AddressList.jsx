@@ -73,7 +73,7 @@ export default function AddressList() {
               Your addresses
             </Text>
 
-            <View className="pt-2 px-1 justify-center mt-1 w-[100%]">
+            <View className="pt-2 px-3 justify-center mt-1 w-[100%]">
               {isAddressLoading || isAddressFetching ? (
                 <AddressCardSkeleton />
               ) : (
@@ -85,7 +85,7 @@ export default function AddressList() {
                         <>
                           <View
                             key={item._id}
-                            className="bg-light-blue-200 p-4 rounded-md shadow-sm mb-3 w-[100%]">
+                            className="bg-light-blue-200 p-4 rounded-md mb-3 w-[100%] border border-gray-300">
                             <View>
                               <Text className="text-black font-medium mb-2">
                                 {name}

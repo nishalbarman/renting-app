@@ -11,6 +11,7 @@ import { Image } from "expo-image";
 import { EvilIcons } from "@expo/vector-icons";
 import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
 import OrderItem from "../../components/OrderScreen/OrderItem";
+import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
 
 const OrderScreen = () => {
   const [orderStatus, setOrderStatus] = useState("On Progress");
@@ -94,19 +95,25 @@ const OrderScreen = () => {
       <ScrollView
         showsHorizontalScrollIndicator={false}
         className={`flex-1 bg-white p-2`}>
-        <View className={`mb-4 p-2`}>
-          {!orders || orders.length === 0 ? (
-            <View className="flex justify-center items-center">
-              <Text className="text-lg">Your order list is empty</Text>
-            </View>
-          ) : (
-            <>
-              {orders?.map((item, index) => (
-                <OrderItem key={index} order={item} />
-              ))}
-            </>
-          )}
-        </View>
+        {false ? (
+          <>
+            <AddressCardSkeletop />
+          </>
+        ) : (
+          <View className={`mb-4 p-2`}>
+            {!orders || orders.length === 0 ? (
+              <View className="flex justify-center items-center">
+                <Text className="text-lg">Your order list is empty</Text>
+              </View>
+            ) : (
+              <>
+                {orders?.map((item, index) => (
+                  <OrderItem key={index} order={item} />
+                ))}
+              </>
+            )}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

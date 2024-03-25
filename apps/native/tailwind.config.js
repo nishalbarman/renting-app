@@ -12,7 +12,7 @@ module.exports = {
         purple: "#514FB6",
         // "dark-purple": "#9470B5",
         "dark-purple": "#514FB6",
-        "light-purple": "#edbdf2",
+        "light-purple": "#514FB6",
         "light-grey": "#F0F3F4",
         grey: "#696969",
         "super-light-green": "#f0faf3",
