@@ -32,13 +32,14 @@ const extractToken = async (req, res, next) => {
     const token = authorization.split(" ")[1];
 
     if (!token) {
-      return res.status(403).json({ message: "No token provided" });
+      return res.status(401).json({ message: "No token provided" });
     }
     req.jwt = { token: token };
     console.log(req?.jwt);
     return next();
   } catch (error) {
-    return res.status(403).json({ message: "No token provided" });
+    console.log(error);
+    return res.status(401).json({ message: "No token provided" });
   }
 };
 
@@ -63,7 +64,7 @@ app.use("/feedbacks", require("./routes/feedbacks/feedbacks.routes"));
 
 app.use(
   "/pay/razorpay/create-cart-order",
-  require("./routes/payment/razorpay/create-cart-order/razorpay.routes")
+  require("./routes/payment/razorpay/create-cart-order/pay-cart.routes")
 );
 app.use("/pay/razorpay/hook", require("./hooks/hook.routes"));
 

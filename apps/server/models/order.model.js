@@ -2,8 +2,10 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
-    txnid: { type: String, required: true },
+    paymentTxnId: { type: String, required: true },
     user: { type: mongoose.Types.ObjectId, ref: "users" },
+
+    product: { type: mongoose.Types.ObjectId, ref: "products" },
 
     previewUrl: { type: String },
     title: { type: String, required: true },
@@ -17,20 +19,48 @@ const orderSchema = new mongoose.Schema(
     size: { type: String, required: false },
     quantity: { type: Number, default: null },
 
+    address: { type: Object, default: null, required: false },
+
     orderType: { type: String, required: true, enums: ["buy", "rent"] },
 
-    // status related keys
-    orderStatus: { type: String, default: "Pending" },
-    paymentStatus: { type: Boolean, default: false },
+    // status related
+    orderStatus: {
+      type: String,
+      default: "Pending",
+      enums: [
+        "Pending",
+        "Accepted",
+        "Cancelled",
+        "Dispatched",
+        "On your way",
+        "Delivered",
+      ],
+    },
 
-    // renting related keys
-    rentDays: { type: Number, default: null },
+    paymentStatus: {
+      type: String,
+      default: "Pending",
+      enums: ["Success", "Failed", "Pending"],
+    },
+
+    // renting related
+    rentDays: { type: Number, required: false, default: undefined },
+
+    //
     rentReturnDueDate: { type: Date, default: null },
 
-    // tracking link for the order track
-    trackingLink: { type: String, default: null },
+    shipmentType: {
+      type: String,
+      required: false,
+      enums: ["self_pickup", "through_partner"],
+      default: "self_pickup",
+    },
 
-    product: { type: mongoose.Types.ObjectId, ref: "products" },
+    pickupDate: { type: Date, requied: false, default: null },
+    pickupCenter: { type: Object, required: false, default: null },
+
+    // tracking link for the order track
+    trackingLink: { type: String, default: "" },
   },
   {
     timestamps: true,

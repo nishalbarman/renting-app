@@ -72,10 +72,10 @@ export default function Page() {
           alignItems: "center",
         }}>
         <View className="w-[100%] flex flex-col items-center gap-y-3">
-          <Image
+          {/* <Image
             className="w-[200px] h-[200px]"
             source={require("../../../assets/illustrations/shopp_man.gif")}
-          />
+          /> */}
           <Text className="text-[30px] font-[poppins-mid]">Welcome back</Text>
           <Text className="text-[18px] font-[poppins-light]">
             sign in to access your account

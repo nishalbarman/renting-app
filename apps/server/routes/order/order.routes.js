@@ -6,7 +6,7 @@ const getTokenDetails = require("../../helpter/getTokenDetails");
 // GET endpoint
 router.get("/", async (req, res) => {
   try {
-    const token = req.jwt.token || null;
+    const token = req?.jwt?.token;
 
     if (!token) {
       return res.status(400).json({
@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
       });
     }
 
-    const userDetails = getTokenDetails(userToken.value);
+    const userDetails = getTokenDetails(token);
 
     if (!userDetails) {
       return res.status(400).json({
@@ -36,7 +36,7 @@ router.get("/", async (req, res) => {
       .sort({ createdAt: "desc" })
       .skip(SKIP)
       .limit(LIMIT)
-      .populate("user");
+      .populate("paymentTxnId");
 
     return res.json({
       status: true,

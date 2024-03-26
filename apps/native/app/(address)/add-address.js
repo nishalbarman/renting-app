@@ -169,27 +169,27 @@ export default function AddAddress() {
             Choose your location to get started adding your address
           </Text>
 
-          <View className="w-[100%] flex flex-col gap-y-[13px] items-center mt-1">
+          <View className="w-full flex flex-col gap-y-[13px] items-center mt-1">
             <TouchableOpacity
               onPress={handleChooseLocationOnMap}
-              className="h-[60px] w-[100%] pl-4 pr-7 border-none outline-none bg-[#F1F0F0] flex flex-row justify-between items-center rounded-lg">
+              className="flex items-center justify-center h-[60px] w-full px-7 border outline-none bg-white border-gray-300 flex flex-row rounded-lg">
               <TextInput
-                className="mr-2 rounded-lg font-[poppins-mid] placeholder:text-[16px] placeholder:text-[#8a8a8a] text-#8a8a8a"
+                className="mr-2 rounded-lg font-[poppins-mid] placeholder:text-[16px] placeholder:text-black text-#8a8a8a w-full"
                 editable={false}
                 multiline={false}
                 placeholder="Choose your location"
-                value={`${formData.name.value || "Select to add address"} ${formData.streetName.value}`}
+                value={`${formData.name.value || "Select from map"} ${formData.streetName.value}`}
               />
               <FontAwesome6
                 name="location-crosshairs"
                 size={24}
-                color="#c9c9c9"
+                color="black"
               />
             </TouchableOpacity>
 
             <View className="bg-[#D1D3D7] w-[100%] h-[1px] mb-2"></View>
 
-            <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
+            <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-white border border-gray-300 flex flex-row justify-around items-center rounded-lg">
               <TextInput
                 className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
                 editable={true}
@@ -217,7 +217,7 @@ export default function AddAddress() {
               </Text>
             )}
 
-            <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
+            <View className="h-[60px] w-[100%] p-[0px_6%] border outline-none bg-white border-gray-300 flex flex-row justify-around items-center rounded-lg">
               <TextInput
                 className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
                 editable={true}
@@ -246,7 +246,7 @@ export default function AddAddress() {
               </Text>
             )}
 
-            <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
+            <View className="h-[60px] w-[100%] p-[0px_6%] border outline-none bg-white border-gray-300 flex flex-row justify-around items-center rounded-lg">
               <TextInput
                 className="h-[100%] w-[100%] rounded-lg font-[poppins-mid] placeholder:text-[16px]"
                 editable={true}
@@ -274,7 +274,7 @@ export default function AddAddress() {
               </Text>
             )}
 
-            <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
+            <View className="h-[60px] w-[100%] p-[0px_6%] border outline-none bg-white border-gray-300 flex flex-row justify-around items-center rounded-lg">
               <TextInput
                 className="h-[100%] w-[100%] rounded-lg font-[poppins-mid] placeholder:text-[16px]"
                 editable={true}

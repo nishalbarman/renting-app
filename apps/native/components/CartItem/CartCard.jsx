@@ -27,6 +27,8 @@ function CartCard({
     discountedPrice,
     originalPrice,
     rentingPrice,
+    shippingPrice,
+    freeDelivery,
   },
 }) {
   const rentTotalTimeRemaining = useMemo(() => {
@@ -134,20 +136,29 @@ function CartCard({
 
       <View className="flex flex-row justify-between items-start gap-y-1 p-[0px_10px]">
         {/* price */}
-        <View className="flex gap-y-2">
+        <View className="flex gap-y-2 basis-1/2">
           {productType === "buy" ? (
-            <Text className="text-[20px] font-[poppins-bold]">
-              ₹{variant?.discountedPrice || discountedPrice}{" "}
-              <Text className="text-[15px] text-[#787878] font-[poppins] line-through">
-                ₹{variant?.originalPrice || originalPrice}
+            <>
+              <Text className="text-[20px] font-[poppins-bold]">
+                ₹{variant?.discountedPrice || discountedPrice}{" "}
+                <Text className="text-[15px] text-[#787878] font-[poppins] line-through">
+                  ₹{variant?.originalPrice || originalPrice}
+                </Text>
               </Text>
-            </Text>
+            </>
           ) : (
-            <Text className="text-[18px] font-[poppins-bold]">
-              ₹{variant?.rentingPrice || rentingPrice}
-              <Text className="text-[13px] font-[poppins-bold]"> / Day</Text>
-            </Text>
+            <>
+              <Text className="text-[18px] font-[poppins-bold]">
+                ₹{variant?.rentingPrice || rentingPrice}
+                <Text className="text-[13px] font-[poppins-bold]"> / Day</Text>
+              </Text>
+            </>
           )}
+
+          <Text className="text-[13px] leading-2">
+            Shipping price: ₹{variant?.shippingPrice || shippingPrice}
+            {!freeDelivery && "\n\nFREE shipping above 500"}
+          </Text>
         </View>
 
         {/* quantity section */}
@@ -238,7 +249,7 @@ function CartCard({
         <TouchableHighlight
           onPress={handleMoveWishlist}
           underlayColor={"#514FB6"}
-          className="bg-[#514FB6] border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
+          className="bg-[#514FB6] pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
           {isWishlistAddLoading ? (
             <AnimateSpin>
               <EvilIcons name="spinner" size={24} color="white" />
@@ -253,7 +264,7 @@ function CartCard({
         <TouchableHighlight
           underlayColor={"white"}
           onPress={handleRemoveFromCart}
-          className="bg-white border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
+          className="bg-white border border-gray-400 pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
           {cartRemoveLoading ? (
             <AnimateSpin>
               <EvilIcons name="spinner" size={24} color="black" />

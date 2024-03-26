@@ -166,6 +166,7 @@ router.get("/view/:productId", async (req, res) => {
       "category",
       { path: "productVariant" },
     ]);
+    
     const doesUserBoughtThisProduct = await Order.countDocuments({
       product: params.productId,
       user: userDetails._id,

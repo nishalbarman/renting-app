@@ -97,11 +97,11 @@ export default function Page() {
           alignItems: "center",
         }}>
         <View className="w-[100%] flex flex-col items-center gap-y-3">
-          <Image
+          {/* <Image
             // className="w-[150px] h-[150px]"
             className="w-[90px] h-[90px]"
             source={require("../../../assets/illustrations/shopp_man.gif")}
-          />
+          /> */}
           <Text className="text-[30px] font-[poppins-mid]">Get Started</Text>
           <Text className="text-[18px] font-[poppins-light]">
             by creating a free account.

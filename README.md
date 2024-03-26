@@ -19,6 +19,8 @@ This monorepo contains three distinct repositories, each dedicated to a specific
 
 This modular structure allows for clear separation of concerns, making it easier to independently develop and maintain the admin panel, native application, and server components.
 
+<b>Status Codes Used : 400 (Bad request), 401 (Unauthorized) and 403 (Forbidden)</b>
+
 Feel free to explore each repository for more details on their respective implementations.
 
 ## Installing the dependencies for project

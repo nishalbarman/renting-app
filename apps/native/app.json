@@ -38,6 +38,13 @@
         "networkSecurityConfig": "./network_security_config.xml"
       }
     },
+
+    "extra": {
+      "eas": {
+        "projectId": "8550e956-fda9-4373-bea2-4b847e0d02bb"
+      }
+    },
+
     "web": {
       "favicon": "./assets/appIcons/favicon.png",
       "bundler": "metro"
