@@ -29,9 +29,9 @@ router.get("/", async (req, res) => {
     }
 
     const searchParams = req.query;
-    const dbSearchQuery = {};
+    let dbSearchQuery = {};
     if (searchParams?.productId) {
-      dbSearchQuery = { product: productId };
+      dbSearchQuery = { product: searchParams.productId };
     }
 
     const PAGE = searchParams.page || 1;

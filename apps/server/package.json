@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"yarn start:validator\" \"yarn start:firebase-utils\" \"yarn start\"",
-    "start": "nodemon index.js",
+    "dev": "concurrently \"yarn start:validator\" \"yarn start:firebase-utils\" \"yarn dev_start\"",
+    "start": "node index.js",
+    "dev_start": "nodemon index.js",
     "start:validator": "yarn workspace validator dev",
     "start:firebase-utils": "yarn workspace firebase-utils dev",
     "build": "concurrently \"yarn build:firebase-utils\" \"yarn build:validator\" \"yarn build:tsup-build\"",
