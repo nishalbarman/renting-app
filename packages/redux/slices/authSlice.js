@@ -1,14 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  name: null,
+  email: null,
+  mobileNo: null,
+  jwtToken: null,
+  defaultSelectedAddress: null,
+};
+
 export const authSlice = createSlice({
   name: "auth",
-  initialState: {
-    name: null,
-    email: null,
-    mobileNo: null,
-    jwtToken: null,
-    defaultSelectedAddress: null,
-  },
+  initialState,
   reducers: {
     setUserAuthData: (state, { payload }) => {
       state.name = payload.name;
@@ -19,8 +21,14 @@ export const authSlice = createSlice({
     updateDefaultSelectedAddress: (state, { payload }) => {
       state.defaultSelectedAddress = payload;
     },
+    clearLoginSession: () => {
+      return initialState;
+    },
   },
 });
 
-export const { setUserAuthData, updateDefaultSelectedAddress } =
-  authSlice.actions;
+export const {
+  setUserAuthData,
+  updateDefaultSelectedAddress,
+  clearLoginSession,
+} = authSlice.actions;
