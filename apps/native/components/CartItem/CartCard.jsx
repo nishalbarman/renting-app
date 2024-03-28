@@ -13,8 +13,14 @@ import { AntDesign, EvilIcons } from "@expo/vector-icons";
 
 import AnimateSpin from "../AnimateSpin/AnimateSpin";
 import { SheetManager } from "react-native-actions-sheet";
-import { useDeleteCartMutation } from "@store/rtk/apis/cartApi";
+import {
+  useDeleteCartMutation,
+  useUpdateQuantityCartMutation,
+  useUpdateRentDaysCartMutation,
+} from "@store/rtk/apis/cartApi";
 import { useAddWishlistMutation } from "@store/rtk/apis/wishlistApi";
+import { useRouter } from "expo-router";
+import { useSelector } from "react-redux";
 
 function CartCard({
   cart: {
@@ -31,27 +37,18 @@ function CartCard({
     freeDelivery,
   },
 }) {
-  const rentTotalTimeRemaining = useMemo(() => {
-    const returnDate = new Date("2024-03-15T13:41:55.646+00:00");
-    const today = new Date();
-
-    console.log(returnDate.getTime(), today.getTime());
-    // Calculating the time difference
-    // of two dates
-    let Difference_In_Time = returnDate.getTime() - today.getTime();
-    console.log(Difference_In_Time);
-    // // Calculating the no. of days between
-    // // two dates
-    let totalTimeRemaining = Math.round(
-      Difference_In_Time / (1000 * 3600 * 24)
-    );
-
-    console.log(totalTimeRemaining);
-    return totalTimeRemaining;
-  }, []);
-
   const [removeFromCart, { isLoading: cartRemoveLoading }] =
     useDeleteCartMutation();
+
+  const [
+    updateRentDaysCart,
+    { isLoading: isRentDaysLoading, error: rentDaysError },
+  ] = useUpdateRentDaysCartMutation();
+
+  const [
+    updateQuantityCart,
+    { isLoading: isQuantityLoading, error: quantityError },
+  ] = useUpdateQuantityCartMutation();
 
   const handleRemoveFromCart = async () => {
     try {
@@ -78,16 +75,51 @@ function CartCard({
     }
   };
 
-  const [changedRentDays, setRentDays] = useState(0);
-  const [changedQuantity, setQuantity] = useState(0);
+  const [changedRentDays, setRentDays] = useState(-1);
+  const [changedQuantity, setQuantity] = useState(-1);
 
   useEffect(() => {
     setRentDays(rentDays);
     setQuantity(quantity);
   }, [rentDays, quantity]);
 
+  useEffect(() => {
+    (async () => {
+      console.log(quantity, changedQuantity);
+      if (changedQuantity === -1 || changedRentDays === -1) return;
+      if (changedQuantity !== quantity) {
+        updateQuantityCart({
+          id: _id,
+          productType: productType,
+          quantity: changedQuantity,
+        });
+      }
+
+      if (changedRentDays !== rentDays) {
+        updateRentDaysCart({
+          id: _id,
+          productType: productType,
+          rentDays: changedRentDays,
+        });
+      }
+    })();
+  }, [changedQuantity, changedRentDays]);
+
+  const router = useRouter();
+
+  const goToProductPage = () => {
+    router.push({
+      pathname: "view",
+      params: {
+        id: product._id,
+      },
+    });
+  };
+
   return (
-    <View className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px] w-full border border-gray-300">
+    <View
+      // onTouchEnd={goToProductPage}
+      className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px] w-full border border-gray-300">
       <View className={`flex-row p-1 gap-x-5`}>
         <Image
           source={{
@@ -140,23 +172,23 @@ function CartCard({
           {productType === "buy" ? (
             <>
               <Text className="text-[20px] font-[poppins-bold]">
-                ₹{variant?.discountedPrice || discountedPrice}{" "}
+                ₹{variant?.discountedPrice ||  product?.discountedPrice}{" "}
                 <Text className="text-[15px] text-[#787878] font-[poppins] line-through">
-                  ₹{variant?.originalPrice || originalPrice}
+                  ₹{variant?.originalPrice ||  product?.originalPrice}
                 </Text>
               </Text>
             </>
           ) : (
             <>
               <Text className="text-[18px] font-[poppins-bold]">
-                ₹{variant?.rentingPrice || rentingPrice}
+                ₹{variant?.rentingPrice || product?.rentingPrice}
                 <Text className="text-[13px] font-[poppins-bold]"> / Day</Text>
               </Text>
             </>
           )}
 
           <Text className="text-[13px] leading-2">
-            Shipping price: ₹{variant?.shippingPrice || shippingPrice}
+            Shipping price: ₹{variant?.shippingPrice || product?.shippingPrice}
             {!freeDelivery && "\n\nFREE shipping above 500"}
           </Text>
         </View>
@@ -212,38 +244,22 @@ function CartCard({
           )}
 
           <View>
-            {variant.availableStocks === 0 ||
-            product.availableStocks === 0 ||
-            quantity > (variant.availableStocks || product.availableStocks) ? (
+            {variant?.availableStocks === 0 ||
+            product?.availableStocks === 0 ||
+            quantity >
+              (variant?.availableStocks || product?.availableStocks) ? (
               <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
                 Out of stock
               </Text>
             ) : (
               <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
-                ({variant.availableStocks || product.availableStocks} items) In
-                stock
+                ({variant?.availableStocks || product?.availableStocks} items)
+                In stock
               </Text>
             )}
           </View>
         </View>
       </View>
-
-      {/* {orderType === "rent" && (
-        <View className="flex-row items-center justify-start mt-4 mb-1">
-          <AntDesign name="infocirlce" size={22} color="#349fd9" />
-          <Text className="text-[15px] text-[#349fd9] leading-[20px] text-wrap pl-2 pr-4">
-            {rentTotalTimeRemaining < 0
-              ? "Due date for returning has exceeded already, you will be charged with some penalty amount"
-              : rentTotalTimeRemaining > 0
-                ? rentReturnDueDate + "Days remaining to return"
-                : "Today is the due date to return the ordered item."}
-          </Text>
-        </View>
-      )} */}
-
-      {/* <Text className="bg-[#ffe9d6] text-[#bf6415] border border-[#bf6415] rounded-md text-[10px] pt-[7px] pb-[7px] pl-[2px] pr-[2px] text-center align-middle mt-5 ml-2 mr-2 mb-1 uppercase font-extrabold">
-        {orderType === "rent" ? "Rented" : "Bought"}
-      </Text> */}
 
       <View className="flex-row mt-3 justify-between">
         <TouchableHighlight
