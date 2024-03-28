@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   ScrollView,
   Text,
@@ -30,8 +31,11 @@ export default function Page() {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const [isPending, setIsPending] = useState(false);
+
   const handleLogin = async () => {
     try {
+      setIsPending(true);
       const extractedData = Object.keys(formData).reduce(
         (newFormData, keyName) => {
           return { ...newFormData, [keyName]: formData[keyName].value };
@@ -49,6 +53,8 @@ export default function Page() {
       router.replace("/(tabs)");
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -64,7 +70,7 @@ export default function Page() {
   return (
     <SafeAreaView className="bg-white">
       <ScrollView
-        className="p-[15px] h-[100%] pt-[5%] bg-white"
+        className="p-[15px] h-[100%] pt-10 bg-white"
         contentContainerStyle={{
           display: "flex",
           flexDirection: "column",
@@ -177,12 +183,16 @@ export default function Page() {
         </View>
         <View className="w-[100%] flex flex-col gap-y-7 items-center mt-[-1px]">
           <TouchableOpacity
-            disabled={isSubmitDisabled}
+            disabled={isSubmitDisabled || isPending}
             className={`flex justify-center items-center h-[55px] w-[90%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg disabled:bg-[rgba(40,40,41,0.8)]`}
             onPress={handleLogin}>
-            <Text className="text-[20px] text-white font-[poppins-bold]">
-              Login
-            </Text>
+            {isPending ? (
+              <ActivityIndicator size={30} color={"white"} />
+            ) : (
+              <Text className="text-[20px] text-white font-[poppins-bold]">
+                Login
+              </Text>
+            )}
           </TouchableOpacity>
           <Text className="text-center font-[poppins-mid] text-[16px]">
             New here?{" "}

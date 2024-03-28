@@ -8,6 +8,7 @@ import React, {
   useState,
 } from "react";
 import {
+  ActivityIndicator,
   ScrollView,
   Text,
   TextInput,
@@ -110,9 +111,13 @@ export default function Page() {
     [otpFieldIndex]
   );
 
-  const handleOTPSubmit = async () => {
+  const [isPending, setIsPending] = useState(false);
+
+  const handleOTPSubmit = useCallback(async () => {
     try {
       if (!isFinalOTPValid) return;
+
+      setIsPending(true);
 
       searchParams.otp = finalOtp;
 
@@ -128,7 +133,9 @@ export default function Page() {
       try {
         dispatch(setUserAuthData({ ...data.user }));
       } catch (error) {
-        console.log("Dispatch Error -->", error);
+        console.error("Dispatch Error -->", error);
+      } finally {
+        setIsPending(false);
       }
 
       router.dismissAll();
@@ -145,7 +152,7 @@ export default function Page() {
         message: error?.response?.data?.message,
       });
     }
-  };
+  });
 
   useEffect(() => {
     let resendTimer;
@@ -306,9 +313,13 @@ export default function Page() {
             disabled={formSubmitError.isError || !isFinalOTPValid}
             className={`flex justify-center items-center h-[55px] w-[90%] ${!isFinalOTPValid ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
             onPress={handleOTPSubmit}>
-            <Text className="text-[20px] text-white font-[poppins-bold]">
-              Verify
-            </Text>
+            {isPending ? (
+              <ActivityIndicator size={30} color={"white"} />
+            ) : (
+              <Text className="text-[20px] text-white font-[poppins-bold]">
+                Verify
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
         <View className="flex flex-col gap-y-2">

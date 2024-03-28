@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   ScrollView,
   Text,
@@ -48,8 +49,11 @@ export default function Page() {
 
   const router = useRouter();
 
+  const [isPending, setIsPending] = useState(false);
+
   const handleSignup = async () => {
     try {
+      setIsPending(true);
       const extractedData = Object.keys(formData).reduce(
         (newFormData, keyName) => {
           return { ...newFormData, [keyName]: formData[keyName].value };
@@ -69,6 +73,8 @@ export default function Page() {
     } catch (error) {
       console.error("signup->index.js ==>", error);
       console.error("signup->index.js ==>", error?.response);
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -306,12 +312,16 @@ export default function Page() {
 
         <View className="w-[100%] flex flex-col gap-y-6 items-center mt-[-1px]">
           <TouchableOpacity
-            disabled={isSubmitDisabled}
+            disabled={isSubmitDisabled || isPending}
             className={`flex justify-center items-center h-[55px] w-[90%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
             onPress={handleSignup}>
-            <Text className="text-[20px] text-white font-[poppins-bold]">
-              Create account
-            </Text>
+            {isPending ? (
+              <ActivityIndicator size={30} color={"white"} />
+            ) : (
+              <Text className="text-[20px] text-white font-[poppins-bold]">
+                Create account
+              </Text>
+            )}
           </TouchableOpacity>
           <Text className="text-center font-[poppins-mid] text-[16px]">
             Already have an account?{" "}
