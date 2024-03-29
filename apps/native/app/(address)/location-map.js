@@ -137,9 +137,9 @@ function LocationMap() {
             ref={mapViewRef}
             style={{ width: width }}
             className="h-full"
-            showsUserLocation={userLocationEnabled}
-            followsUserLocation={userLocationEnabled}
-            showsMyLocationButton={userLocationEnabled}
+            showsUserLocation={true}
+            followsUserLocation={true}
+            showsMyLocationButton={true}
             loadingEnabled={true}
             onPress={(location) => {
               handleOnRegionChange(location.nativeEvent.coordinate);
