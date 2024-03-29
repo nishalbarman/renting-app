@@ -5,7 +5,7 @@ function AddressCardSkeletop() {
   return (
     <>
       <View className="pt-2 px-1 justify-center mt-1 w-[100%]">
-        {[1, 2].map((index) => (
+        {[1, 2, 3].map((index) => (
           <View
             key={index}
             className="bg-light-blue-200 p-4 rounded-md border border-gray-300 mb-3 w-[100%] animate-pulse">
