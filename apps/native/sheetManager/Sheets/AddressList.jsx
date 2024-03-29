@@ -45,6 +45,8 @@ export default function AddressList() {
     refetch,
   } = useGetAddressQuery();
 
+  console.log(address);
+
   const [deleteOneAddress, { isLoading: isAddressDeleteLoading }] =
     useDeleteAddressMutation();
 
@@ -56,12 +58,10 @@ export default function AddressList() {
       console.log("Address Deleted");
     } catch (error) {
       console.error(error);
+    } finally {
+      refetch();
     }
   };
-
-  useEffect(() => {
-    refetch();
-  }, []);
 
   return (
     <ActionSheet closeOnPressBack={true} gestureEnabled={true}>
@@ -74,7 +74,7 @@ export default function AddressList() {
             </Text>
 
             <View className="pt-2 px-3 justify-center mt-1 w-[100%]">
-              {isAddressLoading || isAddressFetching ? (
+              {isAddressLoading ? (
                 <AddressCardSkeleton />
               ) : (
                 <>
