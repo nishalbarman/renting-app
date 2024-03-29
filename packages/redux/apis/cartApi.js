@@ -57,6 +57,34 @@ export const cartApi = createApi({
       transformErrorResponse: (res, meta, arg) => res.message,
     }),
 
+    updateRentDaysCart: builder.mutation({
+      query: ({ id, productType, rentDays }) => {
+        return {
+          url: `cart/${productType}?cart=${id}`,
+          method: "PATCH",
+          body: {
+            rentDays: rentDays,
+          },
+        };
+      },
+      invalidatesTags: ["Cart"],
+      transformErrorResponse: (res, meta, arg) => res.message,
+    }),
+
+    updateQuantityCart: builder.mutation({
+      query: ({ id, productType, quantity }) => {
+        return {
+          url: `cart/${productType}?cart=${id}`,
+          method: "PATCH",
+          body: {
+            quantity: quantity,
+          },
+        };
+      },
+      invalidatesTags: ["Cart"],
+      transformErrorResponse: (res, meta, arg) => res.message,
+    }),
+
     deleteCart: builder.mutation({
       query: (id) => ({
         url: `cart/${id}`,
@@ -73,4 +101,6 @@ export const {
   useAddOneToCartMutation,
   useDeleteCartMutation,
   useUpdateCartMutation,
+  useUpdateRentDaysCartMutation,
+  useUpdateQuantityCartMutation,
 } = cartApi;
