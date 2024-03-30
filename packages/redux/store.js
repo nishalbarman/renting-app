@@ -22,6 +22,9 @@ import { productsApi } from "./apis/productApi";
 import { categoryApi } from "./apis/categoryApi";
 import { storeTypeSlice } from "./slices/storeTypeSlice";
 import { cartApi } from "./apis/cartApi";
+import { centerAddressSlice } from "./slices/centerAddressSlice";
+import { centerAddressApi } from "./apis/centerAddresApi";
+import { orderSlice } from "./slices/orderSlice";
 
 const rootReducer = combineReducers({
   [userAPI.reducerPath]: userAPI.reducer,
@@ -33,7 +36,13 @@ const rootReducer = combineReducers({
   [cartApi.reducerPath]: cartApi.reducer,
   [wishlistApi.reducerPath]: wishlistApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
-  [storeTypeSlice.reducerPath]: storeTypeSlice.reducer,
+  [storeTypeSlice.name]: storeTypeSlice.reducer,
+
+  [orderSlice.name]: orderSlice.reducer,
+
+  // center related
+  [centerAddressApi.reducerPath]: centerAddressApi.reducer,
+  [centerAddressSlice.name]: centerAddressSlice.reducer,
 });
 
 const persistConfig = {
@@ -57,7 +66,8 @@ export const store = configureStore({
       .concat(userAPI.middleware)
       .concat(authApi.middleware)
       .concat(addressApi.middleware)
-      .concat(categoryApi.middleware),
+      .concat(categoryApi.middleware)
+      .concat(centerAddressApi.middleware),
 });
 
 // store.subscribe(() => {
