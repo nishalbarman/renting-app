@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "native",
+    "name": "RentKaro",
     "scheme": "native",
-    "slug": "native",
+    "slug": "renting_app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/appIcons/icon.png",
@@ -33,10 +33,10 @@
       },
       "userInterfaceStyle": "light",
       "permissions": ["INTERNET"],
-      "package": "com.onlinerent.test",
+      "package": "com.nishalbarman.renting_app",
       "config": {
         "networkSecurityConfig": "./network_security_config.xml"
-      }
+      },
     },
 
     "extra": {
