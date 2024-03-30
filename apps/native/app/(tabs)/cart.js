@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useTransition, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { Image } from "expo-image";
 import { EvilIcons } from "@expo/vector-icons";
@@ -19,10 +21,20 @@ import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
 
 import RazorpayCheckout from "react-native-razorpay";
 import axios from "axios";
+import { useRouter } from "expo-router";
+import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";
 
 const CartPage = () => {
+  const router = useRouter();
+
+  const [isGlobalButtonDisabled, setIsGlobalButtonDisabled] = useState(false);
+
   const { jwtToken } = useSelector((state) => state.auth);
   const { productType } = useSelector((state) => state.product_store);
+
+  const [amountDetails, setAmountDetails] = useState();
+
+  // console.log("Amount Details -->", amountDetails);
 
   const {
     data: cartItems,
@@ -32,128 +44,315 @@ const CartPage = () => {
     refetch,
   } = useGetCartQuery(productType);
 
-  console.log("Cart Items -->>", cartItems);
-
-  const calculateTotalPrice = () => {
-    return (
-      cartItems?.reduce(
-        (total, item) =>
-          total +
-          (item?.variant?.discountedPrice || item?.discountedPrice) *
-            item?.quantity,
-        0
-      ) || 0
-    );
-  };
-
   useEffect(() => {
-    console.log("refetching", productType);
     refetch();
   }, [productType]);
 
-  // before that need to check if default address is available or not
-  // need to show stocks
-  // on the server need to check stocks for all items if one item does not have stock we should not add that.
-  const handlePurchaseClick = async () => {
+  useEffect(() => {
+    (async () => {
+      if (isCartLoading) {
+        return;
+      }
+
+      console.log("Cart items -->", cartItems);
+
+      let shippingPrice = 0;
+
+      const paymentObject = cartItems?.reduce(
+        (pay, cartItem) => {
+          let totalOriginalPrice = 0; // price for one cart item
+          let discountedTotalPrice = 0; // price for one cart item
+
+          // if type is buy and product have variants (diffent color different size etc etc)
+          if (productType === "buy" && !!cartItem?.variant) {
+            const OriginalPrice = cartItem.variant.originalPrice;
+            const Price = cartItem.variant.discountedPrice;
+            const Quantity = cartItem.quantity;
+            totalOriginalPrice = OriginalPrice * Quantity;
+            discountedTotalPrice = Price * Quantity;
+
+            shippingPrice += cartItem.variant.shippingPrice;
+          }
+          // else if type is buy and product does not have variants (diffent color different size etc etc)
+          else if (productType === "buy" && !cartItem?.variant) {
+            const OriginalPrice = cartItem.product.originalPrice;
+            const Price = cartItem.product.discountedPrice;
+            const Quantity = cartItem.quantity;
+            totalOriginalPrice = OriginalPrice * Quantity;
+            discountedTotalPrice = Price * Quantity;
+
+            shippingPrice += cartItem.variant.shippingPrice;
+          }
+          // else if type is rent and product does not have variants (diffent color different size etc etc)
+          else if (productType === "rent" && !!cartItem?.variant) {
+            const Price = cartItem.variant.rentingPrice;
+            const Quantity = cartItem.quantity;
+            const RentDays = cartItem.rentDays;
+            discountedTotalPrice = Price * Quantity * RentDays;
+
+            shippingPrice += cartItem.variant.shippingPrice;
+          }
+          // else if type is rent and product does not have variants (diffent color different size etc etc)
+          else if (productType === "rent" && !cartItem?.variant) {
+            const Price = cartItem.product.rentingPrice;
+            const Quantity = cartItem.quantity;
+            const RentDays = cartItem.rentDays;
+            discountedTotalPrice = Price * Quantity * RentDays;
+            shippingPrice += cartItem.product.shippingPrice;
+          }
+
+          return {
+            originalTotalAmount: pay.originalTotalAmount + totalOriginalPrice,
+            discountedTotalAmount:
+              pay.discountedTotalAmount + discountedTotalPrice,
+          };
+        },
+        { originalTotalAmount: 0, discountedTotalAmount: 0 }
+      );
+
+      console.log("Cart Payment Object -> ", paymentObject);
+
+      const discountedTotalAmount = paymentObject.discountedTotalAmount;
+
+      const freeDeliveryAboveMinimumPurchase = true;
+      const freeDeliveryMinimumAmount = 500;
+
+      if (
+        !(
+          freeDeliveryAboveMinimumPurchase &&
+          paymentObject.discountedTotalAmount >= freeDeliveryMinimumAmount
+        )
+      ) {
+        paymentObject.discountedTotalAmount += shippingPrice;
+      }
+
+      setAmountDetails({
+        finalAmount: paymentObject.discountedTotalAmount,
+        discountedAmount: discountedTotalAmount,
+        shippingAmount: shippingPrice,
+        originalAmount: paymentObject.originalPrice,
+      });
+    })();
+  }, [cartItems]);
+
+  const handleChangeCenter = async () => {
+    if (productType === "buy") router.push("/select-addess");
+    else router.push("/select-center-location");
+  };
+
+  const [isCenterSelected, setIsCenterSelected] = useState(false);
+
+  const selectedCenterAddress = useSelector(
+    (state) => state.selectedCenterDetails
+  );
+
+  useEffect(() => {
+    setIsCenterSelected(
+      !!selectedCenterAddress?.name &&
+        !!selectedCenterAddress?.streetName &&
+        !!selectedCenterAddress?.locality &&
+        !!selectedCenterAddress?.postalCode &&
+        !!selectedCenterAddress?.country
+    );
+  }, [selectedCenterAddress]);
+
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+
+  const [orderPlaceStatus, setOrderPlaceStatus] = useState("pending");
+  const [orderPlaceModalVisible, setOrderPlaceModalVisible] = useState(false);
+
+  const [isPending, startTransition] = useTransition();
+
+  const handleContinueClick = async () => {
+    // product type is buy then goto select delivery address screen
+    if (productType === "buy") return router.push("/select-addess");
+
+    // TODO: Place Order FOR the center
+    setIsPlacingOrder(true);
+    setIsGlobalButtonDisabled(true);
+
+    // proccessing modal related
+    setOrderPlaceStatus("pending");
+    setOrderPlaceModalVisible(true);
     try {
-      const response = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/pay/razorpay/create-cart-order/${productType}`,
+      const response = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/orders/renting/rent?centerId=${selectedCenterAddress._id}`,
+        {},
         {
           headers: {
-            Authorization: `Bearer ${jwtToken}`,
+            authorization: `Bearer ${jwtToken}`,
           },
         }
       );
 
-      const razorpayOrder = response.data.payment;
+      console.log("What the response-->", response);
 
-      console.log("Got the response for order creation -->", razorpayOrder);
-
-      const options = {
-        description:
-          "Online purchase for " +
-          razorpayOrder.productinfo +
-          " on renting officical",
-        image: "https://i.imgur.com/3g7nmJC.jpg",
-        currency: "INR",
-        key: process.env.RAZORPAY_KEY,
-        amount: razorpayOrder.amount,
-        name: razorpayOrder.name,
-        order_id: razorpayOrder.razorpayOrderId, //Replace this with an order_id created using Orders API.
-        prefill: {
-          email: razorpayOrder.email,
-          contact: razorpayOrder.mobileNo,
-          name: razorpayOrder.name,
-        },
-        theme: { color: "#53a20e" },
-      };
-
-      console.log("Razorpaycheckout", RazorpayCheckout);
-
-      RazorpayCheckout.open(options)
-        .then((data) => {
-          // handle success
-          console.log(`Success: ${data.razorpay_payment_id}`);
-        })
-        .catch((error) => {
-          console.error(error);
-          // handle failure
-          console.log(`Error: ${error.code} | ${error.description}`);
+      if (response.status == 200) {
+        // router.replace("/(tabs)/my_orders");
+        setOrderPlaceStatus("success");
+        startTransition(() => {
+          refetch();
         });
+      }
     } catch (error) {
-      console.error("Cart Error Razor Pay Payment", error);
+      console.error(error);
+      setOrderPlaceStatus("failed");
+    } finally {
+      setIsGlobalButtonDisabled(false);
+      setIsPlacingOrder(false);
     }
   };
 
-  return (
-    <SafeAreaView className={`flex-1 bg-white`}>
-      {/* <ScrollView
-        showsHorizontalScrollIndicator={false}
-        className={`flex-1 bg-white p-2`}> */}
-      <View className="mx-3">
-        {isCartFetching || isCartLoading ? (
-          <>
-            <AddressCardSkeletop />
-          </>
-        ) : (
-          <>
-            {!cartItems || cartItems.length === 0 ? (
-              <View className="flex justify-center items-center h-[100%]">
-                <Text className="text-lg">Your cart is empty</Text>
-              </View>
-            ) : (
-              <FlatList
-                data={cartItems}
-                renderItem={({ item }) => {
-                  return <CartCard cart={item} />;
-                }}
-                numColumns={1}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            )}
+  const [refreshing, setRefreshing] = useState(false);
 
-            {cartItems?.length > 0 && (
-              <View
-                className={
-                  "flex-row justify-between items-center mt-[16px] p-[13px] bg-white w-full"
-                }>
-                <Text className="text-[18px] font-bold">
-                  Total: ₹{calculateTotalPrice().toFixed(2)}
-                </Text>
-                <TouchableOpacity
-                  onPress={handlePurchaseClick}
-                  className="bg-dark-purple p-[12px_16px] rounded-[4px]">
-                  <Text className="text-white text-[16px] font-bold">
-                    Checkout
-                  </Text>
-                </TouchableOpacity>
-              </View>
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, []);
+
+  return (
+    <>
+      <SafeAreaView className={`flex-1 bg-white`}>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          className={`flex-1 bg-white p-2`}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
+          <View className="mx-3 pb-2">
+            {isCartFetching || isCartLoading ? (
+              <>
+                <AddressCardSkeletop />
+              </>
+            ) : (
+              <>
+                {cartItems?.length > 0 && (
+                  <>
+                    {productType === "rent" && (
+                      <View className="border border-gray-300 rounded-md p-3">
+                        <Text className="text-lg font-bold">
+                          Selected Center
+                        </Text>
+                        <View>
+                          {isCenterSelected ? (
+                            <>
+                              <Text className="text-lg font-semibold">
+                                {selectedCenterAddress?.centerName ||
+                                  "Center Name"}
+                              </Text>
+                              <Text className="text-[16px] font-[poppins]">{`${selectedCenterAddress?.name}, ${selectedCenterAddress?.streetName}, ${selectedCenterAddress?.locality}, ${selectedCenterAddress?.postalCode}, ${selectedCenterAddress?.country}`}</Text>
+                            </>
+                          ) : (
+                            <Text className="text-[16px] font-[poppins]">
+                              No Center Selected
+                            </Text>
+                          )}
+                        </View>
+                        <View className="mt-3">
+                          <TouchableOpacity
+                            onPress={handleChangeCenter}
+                            disabled={isGlobalButtonDisabled}
+                            className="flex items-center justify-center h-10 w-full bg-dark-purple rounded-md">
+                            <Text className="text-white font-bold">
+                              {isCenterSelected
+                                ? "Change Center"
+                                : "Select Center"}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    )}
+                    <View className="flex-col mt-1 p-[13px] bg-white w-full border border-gray-300 rounded-md mb-3 gap-y-1 mt-1">
+                      {amountDetails?.originalAmount && (
+                        <View className="flex-row justify-between w-full">
+                          <Text className="text-[18px]">Original Price: </Text>
+                          <Text className="text-[18px]">
+                            ₹{amountDetails.originalAmount}
+                          </Text>
+                        </View>
+                      )}
+                      {amountDetails?.discountedAmount && (
+                        <View className="flex-row justify-between w-full">
+                          <Text className="text-[18px]">Subtotal:</Text>
+                          <Text className="text-[18px]">
+                            ₹{amountDetails.discountedAmount}
+                          </Text>
+                        </View>
+                      )}
+                      {amountDetails?.shippingAmount && (
+                        <View className="flex-row justify-between w-full">
+                          <Text className="text-[18px]">Shpping Price:</Text>
+                          <Text className="text-[18px]">
+                            ₹{amountDetails.shippingAmount}
+                          </Text>
+                        </View>
+                      )}
+                      {amountDetails?.finalAmount && (
+                        <View className="flex-row justify-between w-full">
+                          <Text className="text-[18px] font-bold">
+                            Total Price
+                          </Text>
+                          <Text className="text-[18px] font-bold">
+                            ₹{amountDetails.finalAmount}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                    <View
+                      className={
+                        "flex-row justify-center items-center mt-1 p-[13px] bg-white w-full border border-gray-300 rounded-md mb-3"
+                      }>
+                      <TouchableOpacity
+                        onPress={handleContinueClick}
+                        disabled={productType === "rent" && !isCenterSelected}
+                        style={{
+                          backgroundColor:
+                            productType === "rent" && !isCenterSelected
+                              ? "#b5b4d6"
+                              : "#514FB6",
+                        }}
+                        className="bg-dark-purple p-[12px_16px] h-15 rounded-[4px] w-full items-center justify-center">
+                        {isPlacingOrder ? (
+                          <ActivityIndicator size={23} color="white" />
+                        ) : (
+                          <Text className="text-white text-[16px] font-bold">
+                            Place {productType === "rent" ? "Rent" : "Buy"}{" "}
+                            Order
+                          </Text>
+                        )}
+                      </TouchableOpacity>
+                    </View>
+                  </>
+                )}
+
+                {!cartItems || cartItems.length === 0 ? (
+                  <View className="flex justify-center items-center min-h-screen -mt-20">
+                    <Text className="text-lg">Your cart is empty</Text>
+                  </View>
+                ) : (
+                  <FlatList
+                    data={cartItems}
+                    renderItem={({ item }) => {
+                      return <CartCard cart={item} />;
+                    }}
+                    numColumns={1}
+                    keyExtractor={(item, index) => index.toString()}
+                  />
+                )}
+              </>
             )}
-          </>
-        )}
-      </View>
-      {/* </ScrollView> */}
-    </SafeAreaView>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+      {orderPlaceModalVisible && (
+        <PlaceOrderModal
+          modalVisible={orderPlaceModalVisible}
+          setModalVisible={setOrderPlaceModalVisible}
+          orderPlaceStatus={orderPlaceStatus}
+        />
+      )}
+    </>
   );
 };
 
