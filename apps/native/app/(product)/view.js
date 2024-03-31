@@ -46,28 +46,70 @@ function product() {
 
   const { id: productId } = useLocalSearchParams();
 
+  console.log("Product ID : ", productId);
+
   const router = useRouter();
 
+  // inital product details needs to be loaded from server
   const [isProductFetching, setIsProductFetching] = useState(true);
   const [isProductFetchError, setIsProductFetchError] = useState(false);
   const [error, setError] = useState(null);
-
   const [productDetails, setProductDetails] = useState({});
+
+  // product availability related state
+  const [inStock, setInStock] = useState(false);
+  const [inCart, setInCart] = useState(false);
+
+  // FEEDBACK: section realted states
   const [doesUserBoughtThisProduct, setDoesUserBoughtThisProduct] =
     useState(false);
   const [feedbacks, setFeedbacks] = useState([]);
 
+  // FEEDBACK: pagination state
   const [feedbackFetchPage, setFeedbackFetchPage] = useState(1);
   const [feedbackFetchLimit, setFeedbackFetchLimit] = useState(2);
   const [feedbackTotalPages, setFeedbackTotalPages] = useState(0);
+
+  // available sizes and colors, will be filled from useEffect()
+  const [availableSizes, setAvailableSizes] = useState([]);
+  const [availableColors, setAvailableColors] = useState([]);
+
+  // selected product size and color by user
+  const [selectedProductSize, setSelectedProductSize] = useState("");
+  const [selectedProductColor, setSelectedProductColor] = useState("");
+
+  // rent days and quantity
+  const [rentDays, setRentDays] = useState(1);
+  const [quantity, setQuantity] = useState(1);
+
+  // filteredVariant is the variant which is getting filtered when user is selecting size and color, if no variant is available then it will be a falsy value.
+  const [filteredVariant, setFilteredVariant] = useState(undefined); // filteredVariant will only be used to show the price for the item
+
+  // button disables state
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+
+  // carousel index
+  const [carouselCurrentIndex, setCarouselCurrentIndex] = useState(0);
 
   const starsArray = useMemo(() => {
     return Array.from({ length: 5 });
   }, []);
 
-  const [inCart, setInCart] = useState(false);
+  const handleError = (err) => {
+    console.error(err);
+    setError(err);
+    setIsProductFetchError(true);
+    if (err.res.status === 401) {
+      router.dismissAll();
+      router.replace(`/auth/login?redirectTo=/product?id=${productId}`);
+    } else if (err.res.status === 400) {
+      router.dismiss(1);
+    } else if (err.res.status === 403) {
+      console.error("Single Product Page Error-->", err?.res?.data?.message);
+    }
+  };
 
-  // fetch the product details from aserver
+  // PRODUCTS: fetch
   const getProductDetails = async () => {
     try {
       const res = await axios.get(
@@ -82,54 +124,28 @@ function product() {
       setProductDetails(data?.product || {});
       setDoesUserBoughtThisProduct(data?.doesUserBoughtThisProduct || false);
     } catch (error) {
-      console.error(error);
-      setError(error);
-      setIsProductFetchError(true);
-      if (error.res.status === 401) {
-        router.dismissAll();
-        router.replace(`/auth/login?redirectTo=/product?id=${productId}`);
-      } else if (error.res.status === 400) {
-        router.dismiss(1);
-      } else if (error.res.status === 403) {
-        console.error(
-          "Single Product Page Error-->",
-          error?.res?.data?.message
-        );
-      }
+      handleError(error);
     }
   };
 
-  // fetch the feedback details from server
-  const getFeedbackForProduct = async (page) => {
+  //  FEEDBACK:  fetch data
+  const getFeedbackForProduct = async () => {
     try {
       const res = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/feedbacks/view/${productId}?page=${page}&limit=${feedbackFetchLimit}`,
+        `${process.env.EXPO_PUBLIC_API_URL}/feedbacks/view/${productId}?page=${feedbackFetchPage}&limit=${feedbackFetchLimit}`,
         {
           headers: {
             authorization: `Bearer ${jwtToken}`,
           },
         }
       );
-      const { data } = res;
-      if (data?.feedbacks) {
-        setFeedbacks([...feedbacks, ...data?.feedbacks]);
-        setFeedbackTotalPages(data?.totalPages || 0);
+
+      if (res.data?.data?.feedbacks && res.data?.data.totalPages) {
+        setFeedbacks([...feedbacks, ...res.data?.data?.feedbacks]);
+        setFeedbackTotalPages(res.data?.data.totalPages || 0);
       }
     } catch (error) {
-      console.error(error);
-      setError(error);
-      setIsProductFetchError(true);
-      if (error.res.status === 401) {
-        router.dismissAll();
-        router.replace(`/auth/login?redirectTo=/product?id=${productId}`);
-      } else if (error.res.status === 400) {
-        router.dismiss(1);
-      } else if (error.res.status === 403) {
-        console.error(
-          "Single Product Page Error-->",
-          error?.res?.data?.message
-        );
-      }
+      handleError(error);
     }
   };
 
@@ -140,115 +156,150 @@ function product() {
     });
   };
 
+  // get product list and feedback list
   useEffect(() => {
     (async () => {
-      await Promise.all([
-        getProductDetails(),
-        getFeedbackForProduct(feedbackFetchPage),
-      ]);
+      await Promise.all([getProductDetails(), getFeedbackForProduct()]);
     })().then(() => {
       setIsProductFetching(false);
     });
   }, []);
 
-  const [availableSizes, setAvailableSizes] = useState([]);
-  const [availableColors, setAvailableColors] = useState([]);
-
   useEffect(() => {
-    (async () => {
+    const extractProductVariantSizeAndColorList = () => {
+      // product details not loaded yet so return
       if (!productDetails) return;
+
+      // product details doesnot contain any variant
       if (!productDetails?.productVariant) {
-        console.log("Varient data", productDetails?.productVariant);
         setButtonDisabled(false);
+        checkVariantInCart([{}]); // we have no variant so adding blank object, so that when function tries to access matchedVariant._id its gets undefined. (to eliminate the variant)
+        setInStock(productDetails?.availableStocks > 0);
         return;
       }
 
-      setButtonDisabled(true);
+      const filterOutDuplicateKey = {}; // making this object to filter out the duplicate values for size and color
 
-      setSelectedProductColor(productDetails.productVariant[0].color);
-      setSelectedProductSize(productDetails.productVariant[0].size);
+      const sizes = []; // size list
+      const colors = []; // color list
 
-      const cacheObject = {};
-      const sizes = [];
-      const colors = [];
+      // extract and filter out available values for size and color from variant object
       productDetails.productVariant.forEach((variant) => {
-        if (!cacheObject.hasOwnProperty(variant.size)) {
+        if (!filterOutDuplicateKey.hasOwnProperty(variant.size)) {
           sizes.push(variant.size);
-          cacheObject[variant.size] = true;
+          filterOutDuplicateKey[variant.size] = true;
         }
-        if (!cacheObject.hasOwnProperty(variant.color)) {
+        if (!filterOutDuplicateKey.hasOwnProperty(variant.color)) {
           colors.push(variant.color);
-          cacheObject[variant.color] = true;
+          filterOutDuplicateKey[variant.color] = true;
         }
       });
+
+      // add extracted size and color to state variable
       setAvailableSizes(sizes);
       setAvailableColors(colors);
-    })();
+
+      // set base product color and size
+      setSelectedProductColor(productDetails.productVariant[0].color);
+      setSelectedProductSize(productDetails.productVariant[0].size);
+    };
+
+    extractProductVariantSizeAndColorList();
   }, [productDetails]);
 
-  const [selectedProductSize, setSelectedProductSize] = useState("");
-  const [selectedProductColor, setSelectedProductColor] = useState("");
-  const [rentDays, setRentDays] = useState(1);
-  const [quantity, setQuantity] = useState(1);
-  const [filteredVariant, setFilteredVariant] = useState(undefined); // this will be selected size and color if any
+  // this function will be called only if there are variants (NO VARIANTS = NO CALL)
+  const checkVariantInCart = async (matchedVariant) => {
+    if (!matchedVariant) return;
 
-  useEffect(() => {
-    (async () => {
-      console.log("Filtered Variant", filteredVariant);
-      if (!filteredVariant) return;
-      try {
-        const response = await axios.post(
-          `${process.env.EXPO_PUBLIC_API_URL}/cart/incart/${productId}`,
-          {
-            productType: productType,
-            variant: filteredVariant._id,
+    // chcek in cart or not
+    try {
+      const response = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/cart/incart/${productId}`,
+        {
+          productType: productType,
+          variant: matchedVariant[0]?._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log(response.data);
-        setInCart(!!response?.data?.incart);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, [filteredVariant]);
+        }
+      );
+      console.log("Variant In Cart --> ", response);
+      setInCart(!!response?.data?.incart);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  const [buttonDisabled, setButtonDisabled] = useState(true);
+  // this function will be only called if there are variants (NO VARIANTS = NO CALL)
+  const checkVariantInStock = async (matchedVariant) => {
+    if (!matchedVariant) return;
+    try {
+      const response = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/products/variant/instock/${productId}`,
+        {
+          productType: productType,
+          variant: matchedVariant[0]?._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
+      console.log("Variant In Stock --> ", response);
+
+      setInStock(!!response?.data?.inStock);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // when user selects different color and size
   useEffect(() => {
-    (async () => {
-      if (!productDetails?.isVariantAvailable) return;
-      const filteredVariant = productDetails.productVariant.filter((item) => {
-        return (
+    // set filtered variant variable by filtering productVariatns with selected SIZE and COLOR
+    const filterVariantWithSizeAndColor = () => {
+      if (
+        !productDetails ||
+        !productDetails?.productVariant ||
+        !productDetails?.productVariant?.length > 0
+      ) {
+        return;
+      }
+
+      // filter out variant with selected size and color
+      const matchedVariant = productDetails.productVariant.filter(
+        (item) =>
           item.size === selectedProductSize &&
           item.color === selectedProductColor
-        );
-      });
-      if (filteredVariant && filteredVariant.length > 0) {
-        setFilteredVariant(filteredVariant[0]);
+      );
+
+      // then verify the variant with these functions
+      checkVariantInCart(matchedVariant);
+      checkVariantInStock(matchedVariant);
+
+      console.log(
+        "What is matched Variant with selected Size and Color -->",
+        matchedVariant
+      );
+
+      // matchedVariant will be an array - if match found length will be greater than 0 otherwise it will be 0
+      if (matchedVariant.length !== 0) {
+        // matched variant can be empty array or it may have 1 item.
+        // if variant match found with selected size and color than it will contain one element (VARIANTS COLLECTION SHOULD NOT HAVE DUPLICATE VARIANTS FOR ONE PRODUCT OTHERWISE IT WILL CONTAIN MORE THAN ONE ELEMENT)
+        setFilteredVariant(matchedVariant[0]);
       }
-    })();
+    };
+
+    filterVariantWithSizeAndColor();
   }, [selectedProductSize, selectedProductColor]);
 
-  useEffect(() => {
-    if (!productDetails.isVariantAvailable) {
-      setButtonDisabled(false);
-    } else if (
-      productDetails.isVariantAvailable &&
-      !!filteredVariant &&
-      !!selectedProductColor &&
-      !!selectedProductSize
-    ) {
-      setButtonDisabled(false);
-    } else {
-      setButtonDisabled(true);
-    }
-  }, [filteredVariant, selectedProductSize, selectedProductColor]);
+  // NO VARIENT: if there is no varient for product then check stock and inCart
+  useEffect(() => {}, [productDetails]);
 
   const handleReviewSheetOpen = useCallback(() => {
     SheetManager.show("add-feedback-sheet", {
@@ -256,28 +307,23 @@ function product() {
     });
   }, []);
 
-  const [carouselCurrentIndex, setCarouselCurrentIndex] = useState(0);
-
-  // const [toogleSale, setToogleSale] = useState(productDetails.isPurchasable);
-
-  // const handleTooglePurchaseType = () => {
-  //   if (productDetails.isPurchasable) {
-  //     setToogleSale((prev) => !prev);
-  //   }
-  // };
-
   const [addToCart, { isLoading: isAddToCartLoading }] =
     useAddOneToCartMutation();
 
   const handleAddToCart = async () => {
     try {
-      const response = await addToCart({
+      const cartObject = {
         productId,
-        variant: filteredVariant._id,
         quantity,
         rentDays,
         productType: productType,
-      }).unwrap();
+      };
+
+      if (productDetails?.productVariant) {
+        cartObject.variant = filteredVariant._id;
+      }
+
+      const response = await addToCart(cartObject).unwrap();
       // if (response.status) {
       setInCart(true);
       console.log(response);
@@ -289,6 +335,8 @@ function product() {
 
   const handleProductRentClick = () => {};
   const handleProductBuyClick = () => {};
+
+  const freeDelivery = false;
 
   return (
     <SafeAreaView className="bg-white">
@@ -433,7 +481,6 @@ function product() {
                         data={availableSizes}
                         showsHorizontalScrollIndicator={false}
                         renderItem={({ item }) => {
-                          console.log("What does item have -->", item);
                           return (
                             <TouchableOpacity
                               onPress={() => {
@@ -535,6 +582,12 @@ function product() {
                         </Text>
                       </Text>
                     )}
+                    <Text className="text-[15px] leading-2">
+                      Shipping: ₹
+                      {productDetails?.variant?.shippingPrice ||
+                        productDetails?.shippingPrice}
+                      {!freeDelivery && "\n\nFREE shipping above 500"}
+                    </Text>
                   </View>
 
                   {/* quantity section */}
@@ -587,36 +640,18 @@ function product() {
                       </View>
                     )}
 
-                    {!!filteredVariant &&
-                    Object.keys(filteredVariant).length > 0 ? (
-                      <View>
-                        {filteredVariant?.availableStocks === 0 ||
-                        quantity > filteredVariant?.availableStocks ? (
-                          <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
-                            Out of stock
-                          </Text>
-                        ) : (
-                          <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
-                            {/* ({filteredVariant.availableStocks} items)  */}
-                            In stock
-                          </Text>
-                        )}
-                      </View>
-                    ) : (
-                      <View>
-                        {productDetails.availableStocks <= 0 ||
-                        quantity > productDetails.availableStocks ? (
-                          <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
-                            Out of stock
-                          </Text>
-                        ) : (
-                          <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
-                            {/* ({productDetails.availableStocks} items) */}
-                            In stock
-                          </Text>
-                        )}
-                      </View>
-                    )}
+                    <View>
+                      {!inStock ? (
+                        <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
+                          Not in stock
+                        </Text>
+                      ) : (
+                        <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
+                          {/* ({productDetails.availableStocks} items) */}
+                          In stock
+                        </Text>
+                      )}
+                    </View>
                   </View>
                 </View>
 
@@ -625,16 +660,16 @@ function product() {
                   <TouchableHighlight
                     onPress={handleAddToCart}
                     style={
-                      buttonDisabled
+                      !inStock || inCart
                         ? { backgroundColor: "black", opacity: 0.4 }
                         : {}
                     }
-                    disabled={buttonDisabled || inCart}
+                    disabled={!inStock || inCart}
                     className="bg-dark-purple h-[50px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
                     {isAddToCartLoading ? (
                       <ActivityIndicator size={20} color={"white"} />
                     ) : inCart ? (
-                      <Foundation name="checkbox" size={26} color="white" />
+                      <AntDesign name="check" size={24} color="white" />
                     ) : (
                       <Text className="text-white text-[16px] font-[poppins-bold]">
                         Add To Cart
@@ -642,15 +677,15 @@ function product() {
                     )}
                   </TouchableHighlight>
 
-                  {productType === "rent" ? (
+                  {/* {productType === "rent" ? (
                     <TouchableHighlight
                       onPress={handleProductRentClick}
                       style={
-                        buttonDisabled
+                        !inStock
                           ? { backgroundColor: "black", opacity: 0.4 }
                           : {}
                       }
-                      disabled={buttonDisabled}
+                      disabled={!inStock}
                       className="bg-[#f07354] h-[50px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
                       <Text className="text-white text-[16px] font-[poppins-bold]">
                         Rent It
@@ -660,17 +695,17 @@ function product() {
                     <TouchableHighlight
                       onPress={handleProductBuyClick}
                       style={
-                        buttonDisabled
+                        !inStock
                           ? { backgroundColor: "black", opacity: 0.4 }
                           : {}
                       }
-                      disabled={buttonDisabled}
-                      className="bg-[#f07354] h-[55px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
+                      disabled={!inStock}
+                      className="bg-[#f07354] h-[50px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
                       <Text className="text-white text-[16px] font-[poppins-bold]">
                         By Now
                       </Text>
                     </TouchableHighlight>
-                  )}
+                  )} */}
                 </View>
               </View>
               {/* product description */}

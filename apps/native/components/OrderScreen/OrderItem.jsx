@@ -12,9 +12,13 @@ import { AntDesign, EvilIcons } from "@expo/vector-icons";
 
 import AnimateSpin from "../AnimateSpin/AnimateSpin";
 import { SheetManager } from "react-native-actions-sheet";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { orderRefetch } from "@store/rtk/slices/orderSlice";
 
 function OrderItem({
   order: {
+    _id,
     txnid,
     user,
     previewUrl,
@@ -32,12 +36,16 @@ function OrderItem({
     quantity,
     trackingLink,
   },
+  productType,
+  jwtToken,
 }) {
+  const dispatch = useDispatch();
+
   const [cancelLoading, setCancelLoading] = useState();
   const [trackLoading, setTrackLoading] = useState();
 
   const rentTotalTimeRemaining = useMemo(() => {
-    const returnDate = new Date("2024-03-15T13:41:55.646+00:00");
+    const returnDate = new Date("2024-04-30T13:41:55.646+00:00");
     const today = new Date();
 
     console.log(returnDate.getTime(), today.getTime());
@@ -53,7 +61,7 @@ function OrderItem({
 
     console.log(totalTimeRemaining);
     return totalTimeRemaining;
-  }, []);
+  }, [rentReturnDueDate]);
 
   const handleTrackOrder = () => {
     setTrackLoading(true);
@@ -66,18 +74,44 @@ function OrderItem({
   };
 
   const handleCancelOrder = async () => {
-    setCancelLoading(true);
-
-    // TODO : Cancel request
-    await new Promise((res) => {
-      setTimeout(res, 1000);
-    });
-
-    setCancelLoading(false);
+    try {
+      setCancelLoading(true);
+      const response = await axios.patch(
+        `${process.env.EXPO_PUBLIC_API_URL}/orders/cancel`,
+        { orderId: _id },
+        {
+          headers: {
+            authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      console.log("Order cancelation log --> ", response.data);
+      dispatch(orderRefetch());
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setCancelLoading(false);
+    }
   };
 
   return (
     <View className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px] border border-gray-300">
+      {(orderStatus === "On Hold" || orderStatus === "Pending") && (
+        <View className="bg-orange-100 px-3 py-2 mt-[-5px] rounded-md mb-3">
+          <Text className="text-[#e86813]">
+            We are proccessing your order. You will recieve a confirmation call
+            from us.
+          </Text>
+        </View>
+      )}
+
+      {orderType === "rent" && orderStatus === "PickUp Ready" && (
+        <View className="bg-orange-100 px-3 py-2 mt-[-5px] rounded-md mb-3">
+          <Text className="text-[#e86813]">
+            Your product is ready and waiting for you!
+          </Text>
+        </View>
+      )}
       <View className={`flex-row p-1 gap-x-5`}>
         <Image
           source={{
@@ -95,10 +129,17 @@ function OrderItem({
             {title}
           </Text>
           <View className="mt-2">
-            {!!color?.title && (
+            {!!color && (
               <View className={`flex-row`}>
                 <Text className={`text-[#5e5e5e]`}>Color:</Text>
-                <Text className={`ml-1`}>{color?.title}</Text>
+                <Text className={`ml-1`}>{color}</Text>
+              </View>
+            )}
+
+            {!!size && (
+              <View className={`flex-row mt-1`}>
+                <Text className={`text-[#5e5e5e]`}>Size:</Text>
+                <Text className={`ml-1`}>{size}</Text>
               </View>
             )}
 
@@ -111,13 +152,6 @@ function OrderItem({
               <View className={`flex-row mt-1`}>
                 <Text className={`text-[#5e5e5e]`}>Days:</Text>
                 <Text className={`ml-1`}>{rentDays}</Text>
-              </View>
-            )}
-
-            {!!size?.title && (
-              <View className={`flex-row mt-1`}>
-                <Text className={`text-[#5e5e5e]`}>Size:</Text>
-                <Text className={`ml-1`}>{size?.title}</Text>
               </View>
             )}
           </View>
@@ -144,6 +178,34 @@ function OrderItem({
                 Delivered
               </Text>
             </View>
+          ) : orderStatus === "On Hold" ? (
+            <View
+              className={`flex-row justify-center p-2 border border-[#ebb434] rounded-md bg-[#fff6c7]`}>
+              <Text className={`text-[#7a5c14] text-[10px] font-bold`}>
+                On Hold
+              </Text>
+            </View>
+          ) : orderStatus === "Cancelled" ? (
+            <View
+              className={`flex-row justify-center p-2 border border-[#db3125] rounded-md bg-[#f7eae9]`}>
+              <Text className={`text-[#a11b12] text-[10px] font-bold`}>
+                Cancelled
+              </Text>
+            </View>
+          ) : orderStatus === "On The Way" ? (
+            <View
+              className={`flex-row justify-center p-2 border border-[#2e7e85] rounded-md bg-[#b1ebf0]`}>
+              <Text className={`text-[#2e7e85] text-[10px] font-bold`}>
+                On The Way
+              </Text>
+            </View>
+          ) : orderStatus === "PickUp Ready" ? (
+            <View
+              className={`flex-row justify-center p-2 border border-[#754db0] rounded-md bg-[#f0e6ff]`}>
+              <Text className={`text-[#754db0]  text-[10px] font-bold`}>
+                PickUp Ready
+              </Text>
+            </View>
           ) : (
             <View
               className={`flex-row justify-center p-2 border border-[#db3125] rounded-md bg-[#f7eae9]`}>
@@ -163,12 +225,13 @@ function OrderItem({
           </View>
         </View>
       </View>
-      {orderType === "rent" && (
+      {orderType === "rent" && !!rentReturnDueDate && (
         <View className="flex-row items-center justify-start mt-4 mb-1">
           <AntDesign name="infocirlce" size={22} color="#349fd9" />
+
           <Text className="text-[15px] text-[#349fd9] leading-[20px] text-wrap pl-2 pr-4">
             {rentTotalTimeRemaining < 0
-              ? "Due date for returning has exceeded already, you will be charged with some penalty amount"
+              ? "Return date already exceeded, kindly return the item as soon as possible."
               : rentTotalTimeRemaining > 0
                 ? rentReturnDueDate + "Days remaining to return"
                 : "Today is the due date to return the ordered item."}
@@ -180,32 +243,46 @@ function OrderItem({
         {orderType === "rent" ? "Rented" : "Bought"}
       </Text> */}
 
-      <View className="flex-row mt-3 justify-between">
-        <TouchableHighlight
-          underlayColor={"white"}
-          onPress={handleCancelOrder}
-          className="bg-white border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
-          {cancelLoading ? (
-            <AnimateSpin>
-              <EvilIcons name="spinner" size={24} color="black" />
-            </AnimateSpin>
-          ) : (
-            <Text className="font-semibold text-lg">Cancel</Text>
-          )}
-        </TouchableHighlight>
-        <View className="w-[4%]"></View>
-        <TouchableHighlight
-          onPress={handleTrackOrder}
-          underlayColor={"#514FB6"}
-          className="bg-[#514FB6] border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
-          {trackLoading ? (
-            <AnimateSpin>
-              <EvilIcons name="spinner" size={24} color="white" />
-            </AnimateSpin>
-          ) : (
-            <Text className="font-semibold text-lg text-white">Track</Text>
-          )}
-        </TouchableHighlight>
+      <View className="flex-row mt-3 justify-between flex-1">
+        {(orderStatus === "On Hold" || orderStatus === "Pending") && (
+          <TouchableHighlight
+            underlayColor={"white"}
+            onPress={handleCancelOrder}
+            style={{
+              flexBasis: "auto",
+              flexShrink: 0,
+              flexGrow: 1,
+            }}
+            className="bg-white border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg">
+            {cancelLoading ? (
+              <AnimateSpin>
+                <EvilIcons name="spinner" size={24} color="black" />
+              </AnimateSpin>
+            ) : (
+              <Text className="font-semibold text-lg">Cancel</Text>
+            )}
+          </TouchableHighlight>
+        )}
+        {orderType === "buy" && <View className="w-[4%]"></View>}
+        {orderType === "buy" && (
+          <TouchableHighlight
+            onPress={handleTrackOrder}
+            underlayColor={"#514FB6"}
+            style={{
+              flexBasis: "auto",
+              flexShrink: 0,
+              flexGrow: 1,
+            }}
+            className="bg-[#514FB6] border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg">
+            {trackLoading ? (
+              <AnimateSpin>
+                <EvilIcons name="spinner" size={24} color="white" />
+              </AnimateSpin>
+            ) : (
+              <Text className="font-semibold text-lg text-white">Track</Text>
+            )}
+          </TouchableHighlight>
+        )}
       </View>
     </View>
   );

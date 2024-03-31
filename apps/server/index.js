@@ -29,6 +29,7 @@ const extractToken = async (req, res, next) => {
     }
 
     const authorization = req.headers["authorization"];
+    console.log(authorization);
     const token = authorization.split(" ")[1];
 
     if (!token) {
@@ -51,16 +52,17 @@ app.use(
 app.use(express.json());
 app.use(extractToken);
 
-app.use("/auth/login", require("./routes/users/login/login.routes"));
-app.use("/auth/signup", require("./routes/users/signup/signup.routes"));
+app.use("/user", require("./routes/users/user.routes"));
+app.use("/auth/login", require("./routes/users/login.routes"));
+app.use("/auth/signup", require("./routes/users/signup.routes"));
 app.use("/auth/sendOtp", require("./routes/otpSend/mobile.routes"));
 app.use("/category", require("./routes/categories/category.routes"));
 app.use("/products", require("./routes/products/products.routes"));
 app.use("/wishlist", require("./routes/wishlist/wishlist.routes"));
 app.use("/cart", require("./routes/cart/cart.routes"));
-app.use("/order", require("./routes/order/order.routes"));
 app.use("/address", require("./routes/address/address.routes"));
 app.use("/feedbacks", require("./routes/feedbacks/feedbacks.routes"));
+app.use("/orders", require("./routes/order/order.routes"));
 
 app.use(
   "/pay/razorpay/create-cart-order",

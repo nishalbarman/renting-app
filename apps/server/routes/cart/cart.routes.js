@@ -151,7 +151,80 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch("/:cart_item_id", async (req, res) => {
+// router.patch("/:cart_item_id", async (req, res) => {
+//   try {
+//     const token = req?.jwt?.token;
+
+//     // handle invalid token
+//     if (!token) {
+//       return res.status(400).json({
+//         message: "Token validation failed",
+//       });
+//     }
+
+//     const userDetails = getTokenDetails(token);
+//     if (!userDetails) {
+//       return res.status(400).json({ message: "Authorization failed" });
+//     }
+
+//     const { cart_item_id } = req.params;
+//     const { quantity, size, color } = req.body;
+
+//     const cartProduct = await Cart.findOne({
+//       product: cart_item_id,
+//       user: userDetails._id,
+//     }).populate({
+//       path: "product",
+//       populate: { path: "availableSizes" },
+//     });
+
+//     if (!cartProduct) {
+//       return res.status(400).json({
+//         status: false,
+//         message: "No cart item",
+//       });
+//     }
+
+//     const responseText = [];
+
+//     if (quantity && cartProduct.product.availableStocks > quantity) {
+//       cartProduct.quantity = quantity;
+//       responseText.push("Quantity Updated");
+//     }
+
+//     if (
+//       size &&
+//       !!cartProduct.product.availableSizes.find(
+//         (value) => value._id.toString() == size
+//       )
+//     ) {
+//       cartProduct.size = size;
+//       responseText.push("Size Updated");
+//     }
+
+//     if (
+//       color &&
+//       !!cartProduct.product.availableColors.find(
+//         (value) => value._id.toString() == color
+//       )
+//     ) {
+//       cartProduct.color = color;
+//       responseText.push("Color Updated");
+//     }
+
+//     await cartProduct.save();
+
+//     return res.json({
+//       status: true,
+//       message: responseText.join(", "),
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.redirect("/auth/login");
+//   }
+// });
+
+router.patch("/:productType", async (req, res) => {
   try {
     const token = req?.jwt?.token;
 
@@ -167,60 +240,88 @@ router.patch("/:cart_item_id", async (req, res) => {
       return res.status(400).json({ message: "Authorization failed" });
     }
 
-    const { cart_item_id } = req.params;
-    const { quantity, size, color } = req.body;
+    const productType = req.params?.productType;
+
+    console.log(productType);
+
+    if (!productType) {
+      return res.status(400).json({ message: "Product Type is Missing" });
+    }
+
+    const cart_item_id = req.query?.cart;
+
+    if (!cart_item_id) {
+      return res.status(400).send({ message: "Cart Item Id Missing" });
+    }
+
+    const rentDays = req.body?.rentDays;
+    const quantity = req.body?.quantity;
+    const size = req.body?.size;
+    const color = req.body?.color;
 
     const cartProduct = await Cart.findOne({
-      product: cart_item_id,
+      _id: cart_item_id,
       user: userDetails._id,
-    }).populate({
-      path: "product",
-      populate: { path: "availableSizes" },
+      productType,
     });
 
     if (!cartProduct) {
       return res.status(400).json({
-        status: false,
-        message: "No cart item",
+        message: "No items in cart",
       });
     }
 
-    const responseText = [];
+    if (productType === "rent" && !!rentDays) {
+      cartProduct.rentDays = rentDays;
+    }
 
-    if (quantity && cartProduct.product.availableStocks > quantity) {
+    if (!!quantity) {
       cartProduct.quantity = quantity;
-      responseText.push("Quantity Updated");
     }
 
-    if (
-      size &&
-      !!cartProduct.product.availableSizes.find(
-        (value) => value._id.toString() == size
-      )
-    ) {
+    if (!!size) {
       cartProduct.size = size;
-      responseText.push("Size Updated");
     }
 
-    if (
-      color &&
-      !!cartProduct.product.availableColors.find(
-        (value) => value._id.toString() == color
-      )
-    ) {
+    if (!!color) {
       cartProduct.color = color;
-      responseText.push("Color Updated");
     }
 
-    await cartProduct.save();
+    // const responseText = [];
+
+    // if (quantity && cartProduct.product.availableStocks > quantity) {
+    //   cartProduct.quantity = quantity;
+    //   responseText.push("Quantity Updated");
+    // }
+
+    // if (
+    //   size &&
+    //   !!cartProduct.product.availableSizes.find(
+    //     (value) => value._id.toString() == size
+    //   )
+    // ) {
+    //   cartProduct.size = size;
+    //   responseText.push("Size Updated");
+    // }
+
+    // if (
+    //   color &&
+    //   !!cartProduct.product.availableColors.find(
+    //     (value) => value._id.toString() == color
+    //   )
+    // ) {
+    //   cartProduct.color = color;
+    //   responseText.push("Color Updated");
+    // }
+
+    await cartProduct.save({ validateBeforeSave: false });
 
     return res.json({
-      status: true,
-      message: responseText.join(", "),
+      message: "Cart Updated",
     });
   } catch (error) {
     console.log(error);
-    return res.redirect("/auth/login");
+    return res.status(500).json({ message: error.message });
   }
 });
 
@@ -285,8 +386,6 @@ router.post("/incart/:productId", async (req, res) => {
 
     const searchParams = req.params;
     const body = req.body;
-
-    console.log("cart in cart body -->", body);
 
     const filterObject = {
       product: searchParams.productId,

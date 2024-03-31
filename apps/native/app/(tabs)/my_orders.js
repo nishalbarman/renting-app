@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,109 +6,90 @@ import {
   Button,
   TouchableHighlight,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import { Image } from "expo-image";
 import { EvilIcons } from "@expo/vector-icons";
 import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
 import OrderItem from "../../components/OrderScreen/OrderItem";
 import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const OrderScreen = () => {
-  const [orderStatus, setOrderStatus] = useState("On Progress");
+  const { productType } = useSelector((state) => state.product_store);
+  const { jwtToken } = useSelector((state) => state.auth);
 
-  const handleStatusChange = (status) => {
-    setOrderStatus(status);
+  const [isOrderFetching, setOrderFetching] = useState(true);
+  const [paginationPage, setPaginationPage] = useState(1);
+  const [orders, setOrders] = useState([]);
+  const [totalPage, setTotalPage] = useState(0);
+
+  const getOrders = async () => {
+    try {
+      setOrderFetching(true);
+      const response = await axios.get(
+        `${process.env.EXPO_PUBLIC_API_URL}/orders/${productType}?page=${paginationPage}&limit=20`,
+        {
+          headers: {
+            authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+
+      console.log(response);
+      setOrders(response.data?.data || []);
+      setTotalPage(response.data?.totalPage || 0);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setOrderFetching(false);
+    }
   };
 
-  const orders = [
-    {
-      txnid: "dfj3adf3wafdj3",
-      user: "nishalbarman",
-      quantity: 12,
-      previewUrl:
-        "https://img.flawlessfiles.com/_r/300x400/100/9c/bc/9cbcf87f54194742e7686119089478f8/9cbcf87f54194742e7686119089478f8.jpg",
-      title: "Naruto",
-      price: 342.23,
-      shippingPrice: 0,
-      orderType: "rent",
-      rentReturnDueDate: "2024-03-18T13:41:55.646+00:00",
-      rentDays: 13,
-      orderStatus: "On Progress",
-      paymentType: "Online",
-      paymentStatus: "Done",
-      trackingLink: null,
-    },
-    {
-      txnid: "dfj3adf3wafdj3",
-      user: "nishalbarman",
-      previewUrl:
-        "https://img.flawlessfiles.com/_r/300x400/100/9c/bc/9cbcf87f54194742e7686119089478f8/9cbcf87f54194742e7686119089478f8.jpg",
-      title: "Solo Leveling",
-      price: 342.23,
-      shippingPrice: 0,
-      orderType: "buy",
-      rentDays: null,
-      orderStatus: "Accepted",
-      paymentType: "Online",
-      paymentStatus: "Done",
-      trackingLink: null,
-      quantity: 12,
-    },
-    {
-      txnid: "dfj3adf3wafdj3",
-      user: "nishalbarman",
-      previewUrl:
-        "https://img.flawlessfiles.com/_r/300x400/100/9c/bc/9cbcf87f54194742e7686119089478f8/9cbcf87f54194742e7686119089478f8.jpg",
-      title: "Battle through the heavens (S5)",
-      price: 342.23,
-      shippingPrice: 0,
-      orderType: "buy",
-      rentDays: null,
-      orderStatus: "Delivered",
-      paymentType: "Online",
-      paymentStatus: "Done",
-      trackingLink: null,
-      quantity: 12,
-    },
-    {
-      txnid: "dfj3adf3wafdj3",
-      user: "nishalbarman",
-      previewUrl:
-        "https://img.flawlessfiles.com/_r/300x400/100/9c/bc/9cbcf87f54194742e7686119089478f8/9cbcf87f54194742e7686119089478f8.jpg",
-      title: "Jujutsu Kaisen",
-      price: 342.23,
-      shippingPrice: 0,
-      orderType: "buy",
-      rentDays: null,
-      orderStatus: "Rejected",
-      paymentType: "Online",
-      paymentStatus: "Done",
-      color: { title: "Red", _id: "colorid" },
-      size: { title: "S", _id: "sizeid" },
-      quantity: 12,
-      trackingLink: null,
-    },
-  ];
+  const orderRefetch = useSelector((state) => state.order.orderRefetch);
+
+  console.log("Order Refetch --> ", orderRefetch);
+
+  useEffect(() => {
+    getOrders();
+  }, [paginationPage, orderRefetch]);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await getOrders();
+    setRefreshing(false);
+  }, []);
 
   return (
     <SafeAreaView className={`flex-1 bg-white`}>
       <ScrollView
         showsHorizontalScrollIndicator={false}
-        className={`flex-1 bg-white p-2`}>
-        {false ? (
+        className={`flex-1 bg-white p-2`}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
+        {isOrderFetching ? (
           <>
             <AddressCardSkeletop />
           </>
         ) : (
           <View className={`mb-4 p-2`}>
             {!orders || orders.length === 0 ? (
-              <View className="flex justify-center items-center">
+              <View className="flex justify-center items-center min-h-screen -mt-20">
                 <Text className="text-lg">Your order list is empty</Text>
               </View>
             ) : (
               <>
                 {orders?.map((item, index) => (
-                  <OrderItem key={index} order={item} />
+                  <OrderItem
+                    key={index}
+                    order={item}
+                    productType={productType}
+                    jwtToken={jwtToken}
+                  />
                 ))}
               </>
             )}

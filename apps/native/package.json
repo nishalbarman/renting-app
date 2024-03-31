@@ -30,7 +30,6 @@
     "react-native": "0.73.6",
     "react-native-actions-sheet": "^0.9.3",
     "react-native-animated-dots-carousel": "^1.0.2",
-    "react-native-appearance": "^0.3.4",
     "react-native-bouncy-checkbox": "^3.0.7",
     "react-native-gesture-handler": "2.14.0",
     "react-native-maps": "1.10.0",

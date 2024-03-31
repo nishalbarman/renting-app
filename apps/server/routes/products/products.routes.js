@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const cheerio = require("cheerio");
-const { Product } = require("../../models/product.model");
+const { Product, ProductVariant } = require("../../models/product.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 const { isValidUrl } = require("validator");
 const Order = require("../../models/order.model");
@@ -166,7 +166,7 @@ router.get("/view/:productId", async (req, res) => {
       "category",
       { path: "productVariant" },
     ]);
-    
+
     const doesUserBoughtThisProduct = await Order.countDocuments({
       product: params.productId,
       user: userDetails._id,
@@ -229,6 +229,68 @@ router.post("/", async (req, res) => {
   } catch (error) {
     console.error(TAG, error);
     return res.status(500).json({ message: error.message });
+  }
+});
+
+router.post("/variant/instock/:productId", async (req, res) => {
+  try {
+    const token = req?.jwt?.token;
+
+    if (!token) {
+      return res.status(400).json({ message: "No token provided." });
+    }
+
+    const userDetails = getTokenDetails(token);
+
+    if (!userDetails) {
+      return res.status(400).json({ message: "Authorization failed" });
+    }
+
+    const searchParams = req.params;
+    const body = req.body;
+
+    console.log("+----------------+");
+    console.log(body);
+    console.log("+----------------+");
+
+    let inStock = false;
+
+    if (body?.variant) {
+      const Variant = await ProductVariant.findOne({
+        _id: body.variant,
+      });
+      console.log(Variant);
+      inStock = !!Variant && Variant?.availableStocks > 0;
+      console.log("In stock --> ", inStock);
+      return res.json({
+        inStock,
+      });
+    } else {
+      return res.json({
+        inStock: false,
+      });
+    }
+
+    // const filterObject = {
+    //   _id: searchParams.productId,
+    //   productType: body.productType,
+    // };
+
+    // const productItem = await Product.findOne(filterObject);
+
+    // console.log(productItem.productVariant);
+
+    // inStock = !!productItem && productItem?.availableStocks > 0;
+
+    // return res.json({
+    //   inStock,
+    // });
+  } catch (error) {
+    console.error(error);
+    return res.json({
+      status: false,
+      message: "Internal server error!",
+    });
   }
 });
 

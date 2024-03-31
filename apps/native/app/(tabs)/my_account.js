@@ -66,22 +66,22 @@ const AccountScreen = () => {
             <Text className="font-semibold text-lg mb-2">Account Settings</Text>
             {/* <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
             <Text>Flipkart Plus</Text>
-            <Feather name="chevron-right" size={24} color="currentColor" />
+            <Feather name="chevron-right" size={24} color="#787878" />
           </TouchableOpacity> */}
             <TouchableOpacity
               onPress={() => {
                 SheetManager.show("update-profile");
               }}
-              className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center p-4 mb-2">
+              className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center px-4 h-14 mb-2">
               <Text className="text-md">Edit Profile</Text>
-              <Feather name="chevron-right" size={24} color="currentColor" />
+              <Feather name="chevron-right" size={24} color="#787878" />
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={handleAddressSheetOpen}
-              className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center p-4 mb-2">
+              className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center px-4 h-14 mb-2">
               <Text className="text-md">Saved Addresses</Text>
-              <Feather name="chevron-right" size={24} color="currentColor" />
+              <Feather name="chevron-right" size={24} color="#787878" />
             </TouchableOpacity>
           </View>
         </View>

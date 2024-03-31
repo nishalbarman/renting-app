@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
-    paymentTxnId: { type: String, required: true },
+    paymentTxnId: { type: String, required: false },
     user: { type: mongoose.Types.ObjectId, ref: "users" },
 
     product: { type: mongoose.Types.ObjectId, ref: "products" },
@@ -26,13 +26,15 @@ const orderSchema = new mongoose.Schema(
     // status related
     orderStatus: {
       type: String,
-      default: "Pending",
+      default: "On Hold",
       enums: [
-        "Pending",
+        "On Hold",
+        "On Progress",
         "Accepted",
+        "Rejected",
         "Cancelled",
-        "Dispatched",
-        "On your way",
+        "On The Way",
+        "PickUp Ready",
         "Delivered",
       ],
     },
@@ -43,12 +45,6 @@ const orderSchema = new mongoose.Schema(
       enums: ["Success", "Failed", "Pending"],
     },
 
-    // renting related
-    rentDays: { type: Number, required: false, default: undefined },
-
-    //
-    rentReturnDueDate: { type: Date, default: null },
-
     shipmentType: {
       type: String,
       required: false,
@@ -56,8 +52,14 @@ const orderSchema = new mongoose.Schema(
       default: "self_pickup",
     },
 
+    // renting related
+    rentDays: { type: Number, required: false, default: undefined },
+
     pickupDate: { type: Date, requied: false, default: null },
     pickupCenter: { type: Object, required: false, default: null },
+
+    rentPickedUpDate: { type: Date, requied: false, default: null },
+    rentReturnDueDate: { type: Date, default: null },
 
     // tracking link for the order track
     trackingLink: { type: String, default: "" },
