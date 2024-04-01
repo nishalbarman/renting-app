@@ -1,11 +1,11 @@
 {
-  "name": "validator",
+  "name": "custom-validator-renting",
   "version": "1.0.0",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "license": "MIT",
   "scripts": {
     "build": "tsup ./src/index.js",
-    "dev": "yarn workspace validator run build --watch"
+    "dev": "yarn workspace  custom-validator-renting run build --watch"
   }
 }

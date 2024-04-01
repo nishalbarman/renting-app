@@ -13,7 +13,10 @@ import { Link, useRouter } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Foundation } from "@expo/vector-icons";
 
-import { isValidIndianMobileNumber, isValidPassword } from "validator";
+import {
+  isValidIndianMobileNumber,
+  isValidPassword,
+} from "custom-validator-renting";
 import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 import { useDispatch } from "react-redux";

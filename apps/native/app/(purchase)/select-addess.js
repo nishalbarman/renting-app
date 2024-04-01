@@ -56,7 +56,7 @@ export default function AddressList() {
           " on renting officical",
         image: "https://i.imgur.com/3g7nmJC.jpg",
         currency: "INR",
-        key: process.env.RAZORPAY_KEY,
+        key: process.env.EXPO_RAZORPAY_KEY,
         amount: razorpayOrder.amount,
         name: razorpayOrder.name,
         order_id: razorpayOrder.razorpayOrderId, //Replace this with an order_id created using Orders API.

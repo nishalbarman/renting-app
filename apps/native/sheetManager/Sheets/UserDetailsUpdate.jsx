@@ -28,7 +28,7 @@ import {
   hasOneSpaceBetweenNames,
   isValidEmail,
   isValidPassword,
-} from "validator";
+} from "custom-validator-renting";
 import ReLogin from "../../modal/Cart/ReLogin-Modal";
 
 export default function Widget() {

@@ -21,7 +21,7 @@ import {
   isValidIndianMobileNumber,
   isValidEmail,
   isValidPassword,
-} from "validator";
+} from "custom-validator-renting";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import axios from "axios";
