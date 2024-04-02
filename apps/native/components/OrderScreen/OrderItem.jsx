@@ -264,25 +264,27 @@ function OrderItem({
           </TouchableHighlight>
         )}
         {orderType === "buy" && <View className="w-[4%]"></View>}
-        {orderType === "buy" && (
-          <TouchableHighlight
-            onPress={handleTrackOrder}
-            underlayColor={"#514FB6"}
-            style={{
-              flexBasis: "auto",
-              flexShrink: 0,
-              flexGrow: 1,
-            }}
-            className="bg-[#514FB6] border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg">
-            {trackLoading ? (
-              <AnimateSpin>
-                <EvilIcons name="spinner" size={24} color="white" />
-              </AnimateSpin>
-            ) : (
-              <Text className="font-semibold text-lg text-white">Track</Text>
-            )}
-          </TouchableHighlight>
-        )}
+        {orderType === "buy" &&
+          orderStatus === "On The Way" &&
+          !!trackingLink && (
+            <TouchableHighlight
+              onPress={handleTrackOrder}
+              underlayColor={"#514FB6"}
+              style={{
+                flexBasis: "auto",
+                flexShrink: 0,
+                flexGrow: 1,
+              }}
+              className="bg-[#514FB6] border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg">
+              {trackLoading ? (
+                <AnimateSpin>
+                  <EvilIcons name="spinner" size={24} color="white" />
+                </AnimateSpin>
+              ) : (
+                <Text className="font-semibold text-lg text-white">Track</Text>
+              )}
+            </TouchableHighlight>
+          )}
       </View>
     </View>
   );

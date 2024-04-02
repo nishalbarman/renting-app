@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Pressable,
   SafeAreaView,
   ScrollView,
   Text,
@@ -23,13 +24,17 @@ import { useStripe } from "@stripe/stripe-react-native";
 export default function AddressList() {
   const router = useRouter();
 
-  const { name, mobileNo, jwtToken } = useSelector((state) => state.auth);
+  const { name, mobileNo, email, jwtToken } = useSelector(
+    (state) => state.auth
+  );
   const { productType } = useSelector((state) => state.product_store);
 
   const [selectedAddress, setSelectedAddress] = useState(null);
 
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  const [loading, setLoading] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+
+  const [isSheetReady, setIsSheetReady] = useState(false);
 
   const {
     data: address,
@@ -46,8 +51,9 @@ export default function AddressList() {
   }, []);
 
   const fetchPaymentSheetParams = async () => {
-    const response = await axios.get(
+    const response = await axios.post(
       `${process.env.EXPO_PUBLIC_API_URL}/stripe/cart/${productType}`,
+      { address: selectedAddress },
       {
         headers: {
           authorization: `Bearer ${jwtToken}`,
@@ -56,6 +62,8 @@ export default function AddressList() {
     );
     const { paymentIntent, ephemeralKey, customer, publishableKey } =
       response.data;
+
+    console.log(response.data);
 
     return {
       paymentIntent,
@@ -70,35 +78,66 @@ export default function AddressList() {
       await fetchPaymentSheetParams();
 
     const { error } = await initPaymentSheet({
-      merchantDisplayName: "Renting App - Nishal",
+      merchantDisplayName: "RentKaro",
       customerId: customer,
       customerEphemeralKeySecret: ephemeralKey,
       paymentIntentClientSecret: paymentIntent,
       // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
       //methods that complete payment after a delay, like SEPA Debit and Sofort.
       allowsDelayedPaymentMethods: false,
+      googlePay: {
+        merchantCountryCode: "IN",
+        testEnv: true, // use test environment
+      },
       defaultBillingDetails: {
         name: name,
+        email: email,
+        mobile: mobileNo,
       },
+      returnURL: "native://stripe-redirect",
     });
-    if (!error) {
-      setLoading(true);
+
+    console.log("Error ->", error);
+
+    if (error) {
+      console.error("Error ->", error);
+      Alert.alert(`Transaction Failed`, error.message);
     }
   };
 
   const openPaymentSheet = async () => {
-    const { error } = await presentPaymentSheet();
+    try {
+      setPaymentLoading(true);
+      await initializePaymentSheet();
+      console.log("Going to present paymentSheet!");
+      const { error } = await presentPaymentSheet();
+      console.log("Presented");
 
-    if (error) {
-      Alert.alert(`Error code: ${error.code}`, error.message);
-    } else {
-      Alert.alert("Success", "Your order is confirmed!");
+      if (error) {
+        console.error("Error ->", error);
+        Alert.alert(`Transaction Failed`, error.message);
+      } else {
+        Alert.alert("Success", "Congo! Your order is placed", [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "Continue",
+            onPress: () => {
+              router.dismissAll();
+              router.replace("/(tabs)/my_orders");
+            },
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setPaymentLoading(false);
     }
   };
-
-  useEffect(() => {
-    initializePaymentSheet();
-  }, []);
 
   // const handlePaymentOpen = async () => {
   //   try {
@@ -155,11 +194,19 @@ export default function AddressList() {
         }}
       />
       <View className="px-4 py-1 pb-3">
-        <TouchableOpacity
+        <Pressable
+          disabled={paymentLoading}
+          style={{
+            backgroundColor: !paymentLoading ? "#514FB6" : "gray",
+          }}
           onPress={openPaymentSheet}
           className="rounded-md h-12 w-full bg-dark-purple flex items-center justify-center">
-          <Text className="text-white text-lg">Continue</Text>
-        </TouchableOpacity>
+          {paymentLoading ? (
+            <ActivityIndicator size={25} color={"white"} />
+          ) : (
+            <Text className="text-white text-lg">Continue</Text>
+          )}
+        </Pressable>
       </View>
       <ScrollView className="bg-white">
         <View className="pt-6 px-4 flex flex-col items-center w-[100%] min-h-screen">

@@ -9,31 +9,77 @@ import "../sheetManager/sheets";
 
 import "../global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { StripeProvider } from "@stripe/stripe-react-native";
+import { StripeProvider, useStripe } from "@stripe/stripe-react-native";
+
+import * as Linking from "expo-linking";
+import Constants from "expo-constants";
+import { useCallback, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Use imperatively
 
 export default function RootLayout() {
+  useEffect(() => {
+    const version = AsyncStorage.getItem("version");
+    console.log(version);
+  });
+
+  const { handleURLCallback } = useStripe();
+
+  const handleDeepLink = useCallback(
+    async (url) => {
+      if (url) {
+        const stripeHandled = await handleURLCallback(url);
+        if (stripeHandled) {
+          // This was a Stripe URL - you can return or add extra handling here as you see fit
+        } else {
+          // This was NOT a Stripe URL – handle as you normally would
+        }
+      }
+    },
+    [handleURLCallback]
+  );
+
+  useEffect(() => {
+    const getUrlAsync = async () => {
+      const initialUrl = await Linking.getInitialURL();
+      handleDeepLink(initialUrl);
+    };
+
+    getUrlAsync();
+
+    const deepLinkListener = Linking.addEventListener(
+      'url',
+      (event) => {
+        handleDeepLink(event.url);
+      }
+    );
+
+    return () => deepLinkListener.remove();
+  }, [handleDeepLink]);
+
   return (
     <Provider store={store}>
-      {/* <PersistGate loading={null} persistor={persistor}> */}
-      <StripeProvider
-        publishableKey={process.env.EXPO_STRIPE_PUBLISHABLE_KEY}
-        urlScheme="native" // required for 3D Secure and bank redirects
-        merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}" // required for Apple Pay
-      >
-        <SheetProvider>
-          <SafeAreaProvider>
-            <ToastManager />
-            <Stack
-              screenOptions={{
-                headerShown: false,
-              }}
-            />
-          </SafeAreaProvider>
-        </SheetProvider>
-      </StripeProvider>
-      {/* </PersistGate> */}
+      <PersistGate loading={null} persistor={persistor}>
+        <StripeProvider
+          publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+          urlScheme={
+            Constants.appOwnership === "expo"
+              ? Linking.createURL("/--/")
+              : Linking.createURL("")
+          }>
+          <SheetProvider>
+            <SafeAreaProvider>
+              <ToastManager />
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                }}
+              />
+            </SafeAreaProvider>
+          </SheetProvider>
+        </StripeProvider>
+      </PersistGate>
     </Provider>
   );
 }
