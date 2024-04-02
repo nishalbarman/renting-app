@@ -1,6 +1,9 @@
 const express = require("express");
 const { Otp } = require("../../models/models");
-const { generateRandomCode, isValidEmail } = require("validator");
+const {
+  generateRandomCode,
+  isValidEmail,
+} = require("custom-validator-renting");
 const { sendMail } = require("../../helper/sendEmail");
 
 const router = express.Router();

@@ -12,7 +12,7 @@ const {
   isValidEmail,
   isValidIndianMobileNumber,
   hasOneSpaceBetweenNames,
-} = require("validator");
+} = require("custom-validator-renting");
 
 const validatePass = new passValidator();
 validatePass.is().min(8).has().uppercase().has().lowercase();

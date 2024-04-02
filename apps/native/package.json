@@ -1,7 +1,7 @@
 {
   "name": "native",
   "version": "1.0.0",
-  "main": "expo-router/entry",
+  "main": "./entry.js",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
@@ -12,7 +12,9 @@
     "@expo/config-plugins": "^7.8.4",
     "@expo/vector-icons": "14",
     "@store/rtk": "*",
+    "@stripe/stripe-react-native": "^0.37.3",
     "axios": "^1.6.7",
+    "custom-validator-renting": "*",
     "expo": "^50.0.15",
     "expo-constants": "~15.4.5",
     "expo-image": "^1.10.6",
@@ -23,6 +25,7 @@
     "expo-secure-store": "^12.8.1",
     "expo-splash-screen": "~0.26.4",
     "expo-status-bar": "~1.11.1",
+    "expo-system-ui": "^2.9.4",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -31,20 +34,18 @@
     "react-native-actions-sheet": "^0.9.3",
     "react-native-animated-dots-carousel": "^1.0.2",
     "react-native-bouncy-checkbox": "^3.0.7",
+    "react-native-customui": "^2.2.4",
     "react-native-gesture-handler": "2.14.0",
     "react-native-maps": "1.10.0",
-    "react-native-razorpay": "^2.3.0",
     "react-native-reanimated": "3.6.2",
     "react-native-reanimated-carousel": "^3.5.1",
     "react-native-render-html": "^6.3.4",
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
-    "react-native-web": "~0.19.6",
-    "custom-validator-renting": "*"
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "expo-system-ui": "^2.9.3",
     "tailwindcss": "3.3.2"
   },
   "resolutions": {

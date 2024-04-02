@@ -15,7 +15,8 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { wishlistApi } from "./apis/wishlistApi";
 import { productsApi } from "./apis/productApi";
@@ -45,15 +46,16 @@ const rootReducer = combineReducers({
   [centerAddressSlice.name]: centerAddressSlice.reducer,
 });
 
-const persistConfig = {
-  key: "root",
-  storage: AsyncStorage,
-};
+// const persistConfig = {
+//   key: "root",
+//   storage: AsyncStorage,
+// };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+// const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  // reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -74,6 +76,6 @@ export const store = configureStore({
 //   console.log("State after change:", store.getState().mapSelectedAddress);
 // });
 
-export const persistor = persistStore(store);
+// export const persistor = persistStore(store);
 
 setupListeners(store.dispatch);

@@ -66,9 +66,13 @@ app.use("/orders", require("./routes/order/order.routes"));
 
 app.use(
   "/pay/razorpay/create-cart-order",
-  require("./routes/payment/razorpay/create-cart-order/pay-cart.routes")
+  require("./routes/payment/razorpay/pay-cart.routes")
 );
 app.use("/pay/razorpay/hook", require("./hooks/hook.routes"));
+
+// stripe payment gateway
+app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));
+app.use("/stripe/hook", require("./hooks/hook.routes"));
 
 app.use(
   "/get-image-bg-color",

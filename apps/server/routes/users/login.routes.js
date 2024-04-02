@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const User = require("../../models/user.model");
 const Role = require("../../models/role.model");
-const { isValidIndianMobileNumber } = require("validator");
+const { isValidIndianMobileNumber } = require("custom-validator-renting");
 
 const router = express.Router();
 const secret = process.env.JWT_SECRET;

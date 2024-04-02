@@ -19,7 +19,6 @@ import { useSelector } from "react-redux";
 import CartCard from "../../components/CartItem/CartCard";
 import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
 
-import RazorpayCheckout from "react-native-razorpay";
 import axios from "axios";
 import { useRouter } from "expo-router";
 import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";

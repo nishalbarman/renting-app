@@ -9,13 +9,19 @@ import "../sheetManager/sheets";
 
 import "../global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 // Use imperatively
 
 export default function RootLayout() {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      {/* <PersistGate loading={null} persistor={persistor}> */}
+      <StripeProvider
+        publishableKey={process.env.EXPO_STRIPE_PUBLISHABLE_KEY}
+        urlScheme="native" // required for 3D Secure and bank redirects
+        merchantIdentifier="merchant.com.{{YOUR_APP_NAME}}" // required for Apple Pay
+      >
         <SheetProvider>
           <SafeAreaProvider>
             <ToastManager />
@@ -26,7 +32,8 @@ export default function RootLayout() {
             />
           </SafeAreaProvider>
         </SheetProvider>
-      </PersistGate>
+      </StripeProvider>
+      {/* </PersistGate> */}
     </Provider>
   );
 }

@@ -2,6 +2,7 @@ import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   SafeAreaView,
   ScrollView,
   Text,
@@ -15,13 +16,20 @@ import { Stack, useRouter } from "expo-router";
 
 import { useSelector } from "react-redux";
 import AddressCardSkeleton from "../../Skeletons/AddressCardSkeleton";
+import axios from "axios";
+import Razorpay from "react-native-customui";
+import { useStripe } from "@stripe/stripe-react-native";
 
 export default function AddressList() {
-  const { name, mobileNo } = useSelector((state) => state.auth);
+  const router = useRouter();
+
+  const { name, mobileNo, jwtToken } = useSelector((state) => state.auth);
+  const { productType } = useSelector((state) => state.product_store);
 
   const [selectedAddress, setSelectedAddress] = useState(null);
 
-  const router = useRouter();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const [loading, setLoading] = useState(false);
 
   const {
     data: address,
@@ -37,51 +45,105 @@ export default function AddressList() {
     }
   }, []);
 
-  const handlePaymentOpen = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/pay/razorpay/create-cart-order/${productType}?address=${selectedAddress}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
-      const razorpayOrder = response.data.payment;
-      console.log("Got the response for order creation -->", razorpayOrder);
-      const options = {
-        description:
-          "Online purchase for " +
-          razorpayOrder.productinfo +
-          " on renting officical",
-        image: "https://i.imgur.com/3g7nmJC.jpg",
-        currency: "INR",
-        key: process.env.EXPO_RAZORPAY_KEY,
-        amount: razorpayOrder.amount,
-        name: razorpayOrder.name,
-        order_id: razorpayOrder.razorpayOrderId, //Replace this with an order_id created using Orders API.
-        prefill: {
-          email: razorpayOrder.email,
-          contact: razorpayOrder.mobileNo,
-          name: razorpayOrder.name,
+  const fetchPaymentSheetParams = async () => {
+    const response = await axios.get(
+      `${process.env.EXPO_PUBLIC_API_URL}/stripe/cart/${productType}`,
+      {
+        headers: {
+          authorization: `Bearer ${jwtToken}`,
         },
-        theme: { color: "#53a20e" },
-      };
-      console.log("Razorpaycheckout", RazorpayCheckout);
-      RazorpayCheckout.open(options)
-        .then((data) => {
-          // handle success
-          console.log(`Success: ${data.razorpay_payment_id}`);
-        })
-        .catch((error) => {
-          console.error(error);
-          // handle failure
-          console.log(`Error: ${error.code} | ${error.description}`);
-        });
-    } catch (error) {
-      console.error("Cart Error Razor Pay Payment", error);
+      }
+    );
+    const { paymentIntent, ephemeralKey, customer, publishableKey } =
+      response.data;
+
+    return {
+      paymentIntent,
+      ephemeralKey,
+      customer,
+      publishableKey,
+    };
+  };
+
+  const initializePaymentSheet = async () => {
+    const { paymentIntent, ephemeralKey, customer, publishableKey } =
+      await fetchPaymentSheetParams();
+
+    const { error } = await initPaymentSheet({
+      merchantDisplayName: "Renting App - Nishal",
+      customerId: customer,
+      customerEphemeralKeySecret: ephemeralKey,
+      paymentIntentClientSecret: paymentIntent,
+      // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+      //methods that complete payment after a delay, like SEPA Debit and Sofort.
+      allowsDelayedPaymentMethods: false,
+      defaultBillingDetails: {
+        name: name,
+      },
+    });
+    if (!error) {
+      setLoading(true);
     }
   };
+
+  const openPaymentSheet = async () => {
+    const { error } = await presentPaymentSheet();
+
+    if (error) {
+      Alert.alert(`Error code: ${error.code}`, error.message);
+    } else {
+      Alert.alert("Success", "Your order is confirmed!");
+    }
+  };
+
+  useEffect(() => {
+    initializePaymentSheet();
+  }, []);
+
+  // const handlePaymentOpen = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${process.env.EXPO_PUBLIC_API_URL}/pay/razorpay/create-cart-order/${productType}?address=${selectedAddress}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${jwtToken}`,
+  //         },
+  //       }
+  //     );
+  //     const razorpayOrder = response.data.payment;
+  //     console.log("Got the response for order creation -->", razorpayOrder);
+  //     const options = {
+  //       description:
+  //         "Online purchase for " +
+  //         razorpayOrder.productinfo +
+  //         " on renting officical",
+  //       image: "https://i.imgur.com/3g7nmJC.jpg",
+  //       currency: "INR",
+  //       key: process.env.EXPO_RAZORPAY_KEY,
+  //       amount: razorpayOrder.amount,
+  //       name: razorpayOrder.name,
+  //       order_id: razorpayOrder.razorpayOrderId, //Replace this with an order_id created using Orders API.
+  //       prefill: {
+  //         email: razorpayOrder.email,
+  //         contact: razorpayOrder.mobileNo,
+  //         name: razorpayOrder.name,
+  //       },
+  //       theme: { color: "#53a20e" },
+  //     };
+
+  //     Razorpay.open(options)
+  //       .then((data) => {
+  //         // handle success
+  //         alert(`Success: ${data.razorpay_payment_id}`);
+  //       })
+  //       .catch((error) => {
+  //         // handle failure
+  //         alert(`Error: ${error.code} | ${error.description}`);
+  //       });
+  //   } catch (error) {
+  //     console.error("Cart Error Razor Pay Payment", error);
+  //   }
+  // };
 
   return (
     <SafeAreaView className="bg-white">
@@ -94,7 +156,7 @@ export default function AddressList() {
       />
       <View className="px-4 py-1 pb-3">
         <TouchableOpacity
-          onPress={handlePaymentOpen}
+          onPress={openPaymentSheet}
           className="rounded-md h-12 w-full bg-dark-purple flex items-center justify-center">
           <Text className="text-white text-lg">Continue</Text>
         </TouchableOpacity>

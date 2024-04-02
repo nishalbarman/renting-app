@@ -6,7 +6,10 @@ const passValidator = require("password-validator");
 
 const User = require("../../models/user.model");
 
-const { isValidEmail, hasOneSpaceBetweenNames } = require("validator");
+const {
+  isValidEmail,
+  hasOneSpaceBetweenNames,
+} = require("custom-validator-renting");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 
 const validatePass = new passValidator();

@@ -3,12 +3,12 @@ const router = express.Router();
 const RazorPay = require("razorpay");
 const { v4: uuidv4 } = require("uuid");
 
-const Cart = require("../../../../models/cart.model");
-const Coupon = require("../../../../models/coupon.model");
-const Order = require("../../../../models/order.model");
-const RazorPayOrder = require("../../../../models/razorpay.model");
+const Cart = require("../../../models/cart.model");
+const Coupon = require("../../../models/coupon.model");
+const Order = require("../../../models/order.model");
+const RazorPayOrder = require("../../../models/razorpay.model");
 
-const getTokenDetails = require("../../../../helpter/getTokenDetails");
+const getTokenDetails = require("../../../helpter/getTokenDetails");
 
 const RAZORPAY_KEY = process.env.RAZORPAY_KEY;
 const RAZORPAY_SECRET = process.env.RAZORPAY_SECRET;
