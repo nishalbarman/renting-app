@@ -23,6 +23,8 @@ const userSchema = new mongoose.Schema(
 
     // center related field
     center: { type: mongoose.Types.ObjectId, ref: "center_details" },
+
+    stripeCustomer: { type: Object, required: false },
   },
   {
     timestamps: true,

@@ -16,10 +16,12 @@ const extractToken = async (req, res, next) => {
 
     const publicRoute =
       req.url === "/" ||
+      req.url === "/helloworld" ||
       req.url === "/auth/login" ||
       req.url === "/auth/signup" ||
       req.url === "/auth/sendOtp" ||
       req.url === "/pay/razorpay/hook" ||
+      req.url === "/stripe/hook" ||
       req.url === "/get-image-bg-color";
 
     // console.log("Is public router -->", publicRoute);
@@ -72,7 +74,7 @@ app.use("/pay/razorpay/hook", require("./hooks/hook.routes"));
 
 // stripe payment gateway
 app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));
-app.use("/stripe/hook", require("./hooks/hook.routes"));
+app.use("/stripe/hook", require("./hooks/stripe-hook.routes"));
 
 app.use(
   "/get-image-bg-color",

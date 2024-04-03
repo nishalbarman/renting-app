@@ -6,8 +6,7 @@
     "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web",
-    "postinstall": "yarn run build"
+    "web": "expo start --web"
   },
   "dependencies": {
     "@expo/config-plugins": "^7.8.4",
@@ -39,6 +38,7 @@
     "react-native-customui": "^2.2.4",
     "react-native-gesture-handler": "2.14.0",
     "react-native-maps": "1.10.0",
+    "react-native-razorpay": "^2.3.0",
     "react-native-reanimated": "3.6.2",
     "react-native-reanimated-carousel": "^3.5.1",
     "react-native-render-html": "^6.3.4",

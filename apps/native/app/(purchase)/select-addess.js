@@ -125,7 +125,10 @@ export default function AddressList() {
           },
           {
             text: "Continue",
-            onPress: () => {
+            onPress: async () => {
+              // await axios.post(
+              //   `${process.env.EXPO_PUBLIC_API_URL}/stripe/hook`
+              // );
               router.dismissAll();
               router.replace("/(tabs)/my_orders");
             },

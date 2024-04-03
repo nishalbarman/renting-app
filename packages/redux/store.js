@@ -1,6 +1,5 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { userAPI } from "./apis/userApi";
-import { authSlice } from "./slices/authSlice";
 import { addressSlice } from "./slices/addressSlice";
 import { authApi } from "./apis/authApi";
 import { addressApi } from "./apis/addressApi";
@@ -27,6 +26,8 @@ import { cartApi } from "./apis/cartApi";
 import { centerAddressSlice } from "./slices/centerAddressSlice";
 import { centerAddressApi } from "./apis/centerAddresApi";
 import { orderSlice } from "./slices/orderSlice";
+import { productListSlice } from "./slices/productListSlice";
+import { authSlice } from "./slices/authSlice";
 
 const rootReducer = combineReducers({
   [userAPI.reducerPath]: userAPI.reducer,
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   [addressSlice.name]: addressSlice.reducer,
   [addressApi.reducerPath]: addressApi.reducer,
   [productsApi.reducerPath]: productsApi.reducer,
+  [productListSlice.name]: productListSlice.reducer,
   [cartApi.reducerPath]: cartApi.reducer,
   [wishlistApi.reducerPath]: wishlistApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,

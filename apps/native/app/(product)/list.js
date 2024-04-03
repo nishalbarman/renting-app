@@ -11,10 +11,16 @@ import ProductsListSkeleton from "../../Skeletons/ProductListSkeleton";
 
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import ListFilter from "../../components/ProductList/ListFilter";
+import { SheetManager } from "react-native-actions-sheet";
 
 function ProductsList() {
   const jwtToken = useSelector((state) => state.auth.jwtToken);
   const { productType } = useSelector((state) => state.product_store);
+
+  const { sort, filter, category, price } = useSelector(
+    (state) => state.product_list
+  );
 
   const [data, setData] = useState([]);
   const [isProductDataLoading, setIsProductDataLoading] = useState(true);
@@ -67,6 +73,10 @@ function ProductsList() {
     return wishlistObjectWithIDAsKey;
   }, [wishlistData]);
 
+  useEffect(() => {
+    SheetManager.show("product-sort-sheet");
+  }, []);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <Stack.Screen
@@ -87,19 +97,66 @@ function ProductsList() {
             contentContainerStyle={{
               alignItems: "center",
             }}
-            className="flex-row py-3 h-fit w-full"
-            horizontal={true}>
-            <View className="flex-row gap-x-[3px] h-[40px] ml-1 flex items-center justify-center w-fit px-3 py-2 rounded-2xl border border-gray-300 bg-white">
-              <Text className=" text-black">Sort By</Text>
-              <AntDesign name="down" size={15} color="black" />
-            </View>
-            <View className="flex-row gap-x-2 h-[40px] ml-1 flex items-center justify-center w-fit px-3 py-2 rounded-2xl border border-gray-300 bg-white">
-              <FontAwesome name="sliders" size={15} color="black" />
-              <Text className=" text-black">Filter</Text>
-            </View>
-            <View className="h-[40px] ml-1 flex items-center justify-center w-fit px-3 py-2 rounded-2xl border border-gray-300 bg-white">
-              <Text className=" text-black">Category</Text>
-            </View>
+            className="flex-row py-3 h-fit w-full">
+            <FlatList
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              bounces={true}
+              data={[
+                {
+                  icon: () => <AntDesign name="down" size={15} color="black" />,
+                  title: "Sort By",
+                  iconPostion: "right",
+                  style: {
+                    borderColor: "red",
+                    backgroundColor: "red",
+                  },
+                },
+                {
+                  icon: () => (
+                    <FontAwesome name="sliders" size={15} color="black" />
+                  ),
+                  title: "Filter",
+                  iconPostion: "left",
+                },
+                {
+                  icon: () => (
+                    <FontAwesome name="sliders" size={15} color="black" />
+                  ),
+                  title: "Category",
+                  iconPostion: "left",
+                },
+                {
+                  icon: () => (
+                    <FontAwesome name="sliders" size={15} color="black" />
+                  ),
+                  title: "Price",
+                  iconPostion: "left",
+                },
+                {
+                  icon: () => (
+                    <FontAwesome name="sliders" size={15} color="black" />
+                  ),
+                  title: "Price",
+                  iconPostion: "left",
+                },
+                {
+                  icon: () => (
+                    <FontAwesome name="sliders" size={15} color="black" />
+                  ),
+                  title: "Price",
+                  iconPostion: "left",
+                },
+              ]}
+              renderItem={({ item }) => (
+                <ListFilter
+                  style={item?.style}
+                  icon={item.icon}
+                  iconPostion={item.iconPostion}
+                  title={item.title}
+                />
+              )}
+            />
           </View>
 
           <FlatList

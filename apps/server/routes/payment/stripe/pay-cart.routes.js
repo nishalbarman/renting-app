@@ -145,21 +145,6 @@ router.post("/:productType", async (req, res) => {
 
     const productNames = paymentObject.productinfo.join(", ");
 
-    // // create one razor pay order with the amount
-    // const razorpayOrder = await razorpayInstance.orders.create({
-    //   amount: paymentObject.amount,
-    //   currency: "INR",
-    //   receipt: paymentTxnId,
-    //   partial_payment: false,
-    //   notes: {
-    //     customerName: userDetails.name,
-    //     customerEmail: userDetails.email,
-    //     productIDs: cartItemsForUser.map((item) => item._id).join(", "),
-    //     productNames: productNames,
-    //     transactionId: paymentTxnId,
-    //   },
-    // });
-
     let txnAndOrderIdInsertedCartItems;
 
     if (productType === "buy") {
@@ -258,7 +243,7 @@ router.post("/:productType", async (req, res) => {
 
     const ephemeralKey = await stripe.ephemeralKeys.create(
       { customer: user.stripeCustomer.id },
-      { apiVersion: "2022-11-15" }
+      { apiVersion: "2024-04-10" }
     );
 
     const paymentIntent = await stripe.paymentIntents.create({
@@ -270,12 +255,17 @@ router.post("/:productType", async (req, res) => {
       automatic_payment_methods: {
         enabled: true,
       },
+      description: productNames,
+      metadata: {
+        paymentTxnId,
+      },
     });
 
     const orders = await Order.insertMany(txnAndOrderIdInsertedCartItems);
 
     // const razorpayOrderIdList = orders.map((item) => ({
     //   razorPayOrderId: razorpayOrder.id,
+    //   paymentTxnId,
     //   order: item._id,
     //   user: userDetails._id,
     // }));
