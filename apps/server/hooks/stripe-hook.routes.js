@@ -26,14 +26,17 @@ router.post(
 
       // Handle the event
       switch (event.type) {
+        case "payment_intent.payment_failed":
+          const paymentIntentPaymentFailed = event.data.object;
+          console.log(paymentIntentPaymentFailed);
+          // Then define and call a function to handle the event payment_intent.payment_failed
+          break;
         case "payment_intent.succeeded":
           const paymentIntentSucceeded = event.data.object;
           console.log(paymentIntentSucceeded);
+          // Then define and call a function to handle the event payment_intent.succeeded
           break;
-        case "payment_intent.payment_failed":
-          const paymentIntentFailed = event.data.object;
-          console.log(paymentIntentFailed);
-          break;
+        // ... handle other event types
         default:
           console.log(`Unhandled event type ${event.type}`);
       }
