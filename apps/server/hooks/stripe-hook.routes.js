@@ -1,11 +1,13 @@
 const { Router } = require("express");
 const OrderModel = require("../models/order.model");
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
+  maxNetworkRetries: 2, // Retry a request twice before giving up
+});
 const express = require("express");
 const router = Router();
 
-const endpointSecret = "whsec_ycxMZCRx2pO8W07ugKHnW0LvHuRszFTB";
+const endpointSecret = "whsec_O3JO59y2d6GU3T73AkIkDf3OJ5zc3aj6";
 
 router.post(
   "/",
