@@ -108,8 +108,13 @@ router.get("/", async (req, res) => {
     // filter result by query params
     const TYPE = searchParams?.productType;
     const CATEGORY = searchParams?.category;
+    const QUERY = searchParams?.query;
 
     const filter = {}; // blank filter object
+
+    if (QUERY) {
+      filter["$text"] = { $search: QUERY };
+    }
 
     if (TYPE) {
       filter.productType = TYPE;
@@ -119,17 +124,21 @@ router.get("/", async (req, res) => {
       filter.category = CATEGORY;
     }
 
+    const totalProductsCount = await Product.countDocuments(
+      filter,
+      !!QUERY ? { score: { $meta: "textScore" } } : undefined
+    );
     const products = await Product.find(filter)
-      .sort({ createdAt: "desc" })
+      .sort(!!QUERY ? { score: { $meta: "textScore" } } : { createdAt: "desc" })
       .skip(SKIP)
       .limit(LIMIT);
 
-    console.log(products);
+    const toalPages = Math.ceil(totalProductsCount / LIMIT);
 
-    return res.status(200).json({ data: products });
+    return res.status(200).json({ toalPages, data: products });
   } catch (error) {
     console.error(TAG, error);
-    return res.status(500).json({ message: "Some error occurred" });
+    return res.status(500).json({ message: error.message });
   }
 });
 
@@ -232,6 +241,7 @@ router.post("/", async (req, res) => {
   }
 });
 
+// product instock check
 router.post("/variant/instock/:productId", async (req, res) => {
   try {
     const token = req?.jwt?.token;

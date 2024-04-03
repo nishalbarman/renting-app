@@ -19,7 +19,7 @@ const stripe = require("stripe")(STRIPE_SECRET_KEY);
 // This example sets up an endpoint using the Express framework.
 // Watch this video to get started: https://youtu.be/rPR2aJ6XnAc.
 
-router.get("/:productType", async (req, res) => {
+router.post("/:productType", async (req, res) => {
   try {
     const token = req?.jwt?.token;
 
@@ -34,9 +34,10 @@ router.get("/:productType", async (req, res) => {
     }
 
     const productType = req.params?.productType;
+    const address = req.body?.address;
 
-    if (!productType) {
-      return res.status(400).json({ message: "product type not found" });
+    if (!productType || !address) {
+      return res.status(400).json({ message: "Parameters missing" });
     }
 
     const appliedCouponID = req.query.coupon || null;
@@ -138,7 +139,7 @@ router.get("/:productType", async (req, res) => {
       paymentObject.amount += shippingPrice;
     }
 
-    // paymentObject.amount *= 100; // razor pay takes amount as paisa (1 rupee = 100 paisa)
+    paymentObject.amount *= 100; // razor pay takes amount as paisa (1 rupee = 100 paisa)
 
     const paymentTxnId = uuidv4();
 

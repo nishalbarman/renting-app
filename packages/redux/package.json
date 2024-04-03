@@ -12,6 +12,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@reduxjs/toolkit": "^2.2.1"
+    "@reduxjs/toolkit": "^2.2.1",
+    "react-native": "0.73.6",
+    "redux-persist-filesystem-storage": "^4.2.0"
   }
 }

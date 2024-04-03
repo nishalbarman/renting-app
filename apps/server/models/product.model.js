@@ -58,6 +58,13 @@ const productSchema = new mongoose.Schema(
   }
 );
 
+productSchema.index({
+  title: "text",
+  description: "text",
+  shippingPrice: "text",
+  rentingPrice: "text",
+});
+
 const productVariantSchema = new mongoose.Schema(
   {
     product: { type: mongoose.Types.ObjectId, ref: "products" },
@@ -78,6 +85,8 @@ const productVariantSchema = new mongoose.Schema(
 
 const Product =
   mongoose.models.products || mongoose.model("products", productSchema);
+
+Product.createSearchIndex;
 
 const ProductVariant =
   mongoose.models.product_varients ||

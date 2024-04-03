@@ -79,11 +79,15 @@ app.use(
   require("./routes/get-image-color/getImageColor.routes")
 );
 
+app.get("/helloworld", (_, res) => {
+  res.send("Hello World!");
+});
+
 // app.use("/*", (_, res) => {
 //   res.send({ message: "It's working nicely!" });
 // });
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`App is running on http://192.168.227.210:${PORT}`);
+  console.log(`App is running on http://localhost:${PORT}`);
 });

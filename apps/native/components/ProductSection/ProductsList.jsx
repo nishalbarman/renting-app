@@ -83,7 +83,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
             </Text>
             <Link
               className="text-[15px] text-purple font-[poppins-bold] underline"
-              href={`/products?section=${viewAllPath}`}>
+              href={`/list`}>
               See All
             </Link>
           </View>

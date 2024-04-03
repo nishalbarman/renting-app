@@ -1,0 +1,37 @@
+{
+  "cli": {
+    "version": ">= 7.8.2"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://localhost:8000",
+        "EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY": "",
+        "EXPO_PUBLIC_RAZORPAY_KEY": ""
+      }
+    },
+    "preview": {
+      "android": {
+        "buildType": "apk"
+      },
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://example.com",
+        "EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY": "",
+        "EXPO_PUBLIC_RAZORPAY_KEY": ""
+      }
+    },
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://example.com",
+        "EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY": "",
+        "EXPO_PUBLIC_RAZORPAY_KEY": ""
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
