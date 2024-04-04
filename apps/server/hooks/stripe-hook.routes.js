@@ -22,7 +22,7 @@ router.post(
       try {
         event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
       } catch (err) {
-        console.error(err)
+        console.error(err);
         return res.status(400).send(`Webhook Error: ${err.message}`);
       }
 
@@ -32,10 +32,12 @@ router.post(
           const paymentIntentPaymentFailed = event.data.object;
           console.log(paymentIntentPaymentFailed);
 
-          await OrderModel.updateMany({ paymentTxnId: paymentIntentSucceeded.metadata.paymentTxnId },
-          {
-            $set: { paymentStatus: "Failed", orderStatus: "Rejected" },
-          });
+          await OrderModel.updateMany(
+            { paymentTxnId: paymentIntentPaymentFailed.metadata.paymentTxnId },
+            {
+              $set: { paymentStatus: "Failed", orderStatus: "Rejected" },
+            }
+          );
 
           // Then define and call a function to handle the event payment_intent.payment_failed
           break;
@@ -43,9 +45,14 @@ router.post(
           const paymentIntentSucceeded = event.data.object;
           console.log(paymentIntentSucceeded);
 
-          await OrderModel.updateMany({ paymentTxnId: paymentIntentSucceeded.metadata.paymentTxnId },
-          {
-            $set: { paymentStatus: "Success", orderStatus: "On Progress" },
+          await OrderModel.updateMany(
+            { paymentTxnId: paymentIntentSucceeded.metadata.paymentTxnId },
+            {
+              $set: { paymentStatus: "Success", orderStatus: "On Progress" },
+            }
+          );
+          await Cart.deleteMany({
+            _id: { $in: paymentIntentSucceeded.metadata.cartProductIds },
           });
           // Then define and call a function to handle the event payment_intent.succeeded
           break;
@@ -53,8 +60,6 @@ router.post(
         default:
           console.log(`Unhandled event type ${event.type}`);
       }
-
-      
 
       // Return a 200 response to acknowledge receipt of the event
       return res.send();

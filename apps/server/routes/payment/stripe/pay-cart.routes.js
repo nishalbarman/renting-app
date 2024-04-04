@@ -64,8 +64,12 @@ router.post("/:productType", async (req, res) => {
 
     // TODO: Still NEED to handle out of stock products
 
+    const cartIds = [];
+
     const paymentObject = cartItemsForUser.reduce(
       (pay, cartItem) => {
+        cartIds.push(cartItem._id);
+
         let totalPrice; // price for one cart item
         const Title = cartItem.product.title;
 
@@ -258,6 +262,7 @@ router.post("/:productType", async (req, res) => {
       description: productNames,
       metadata: {
         paymentTxnId,
+        cartProductIds: cartIds,
       },
     });
 
