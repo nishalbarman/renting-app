@@ -52,6 +52,7 @@ app.use(
   })
 );
 
+// this route need raw json data so thats why placing it before experss.json()
 app.use("/stripe/hook", require("./hooks/stripe-hook.routes"));
 
 app.use(express.json());
