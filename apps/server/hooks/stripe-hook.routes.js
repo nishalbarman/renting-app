@@ -2,7 +2,7 @@ const { Router } = require("express");
 const OrderModel = require("../models/order.model");
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
-  maxNetworkRetries: 2, // Retry a request twice before giving up
+  maxNetworkRetries: 3, // Retry a request twice before giving up
 });
 const express = require("express");
 const router = Router();
@@ -22,8 +22,8 @@ router.post(
       try {
         event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
       } catch (err) {
-        res.status(400).send(`Webhook Error: ${err.message}`);
-        return;
+        console.error(err)
+        return res.status(400).send(`Webhook Error: ${err.message}`);
       }
 
       // Handle the event
@@ -31,11 +31,22 @@ router.post(
         case "payment_intent.payment_failed":
           const paymentIntentPaymentFailed = event.data.object;
           console.log(paymentIntentPaymentFailed);
+
+          await OrderModel.updateMany({ paymentTxnId: paymentIntentSucceeded.metadata.paymentTxnId },
+          {
+            $set: { paymentStatus: "Failed", orderStatus: "Rejected" },
+          });
+
           // Then define and call a function to handle the event payment_intent.payment_failed
           break;
         case "payment_intent.succeeded":
           const paymentIntentSucceeded = event.data.object;
           console.log(paymentIntentSucceeded);
+
+          await OrderModel.updateMany({ paymentTxnId: paymentIntentSucceeded.metadata.paymentTxnId },
+          {
+            $set: { paymentStatus: "Success", orderStatus: "On Progress" },
+          });
           // Then define and call a function to handle the event payment_intent.succeeded
           break;
         // ... handle other event types
@@ -43,12 +54,7 @@ router.post(
           console.log(`Unhandled event type ${event.type}`);
       }
 
-      //   await OrderModel.updateMany(
-      //     { txnid: transactionId },
-      //     {
-      //       $set: { paymentStatus: true, orderStatus: "Placed" },
-      //     }
-      //   );
+      
 
       // Return a 200 response to acknowledge receipt of the event
       return res.send();
