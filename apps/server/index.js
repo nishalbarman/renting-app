@@ -51,6 +51,9 @@ app.use(
     origin: "*",
   })
 );
+
+app.use("/stripe/hook", require("./hooks/stripe-hook.routes"));
+
 app.use(express.json());
 app.use(extractToken);
 
@@ -74,7 +77,6 @@ app.use("/pay/razorpay/hook", require("./hooks/hook.routes"));
 
 // stripe payment gateway
 app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));
-app.use("/stripe/hook", require("./hooks/stripe-hook.routes"));
 
 app.use(
   "/get-image-bg-color",
