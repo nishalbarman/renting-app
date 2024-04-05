@@ -48,7 +48,7 @@ const orderSchema = new mongoose.Schema(
     shipmentType: {
       type: String,
       required: false,
-      enums: ["self_pickup", "through_partner"],
+      enums: ["self_pickup", "delivery_partner"],
       default: "self_pickup",
     },
 

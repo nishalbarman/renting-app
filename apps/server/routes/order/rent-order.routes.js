@@ -254,6 +254,7 @@ router.post("/:productType", async (req, res) => {
             // address: item.user.defaultSelectedAddress,
             pickupCenter: centerId,
             shipmentType: "self_pickup",
+            paymentMode: "COP",
             // user details
             user: userDetails._id,
             paymentStatus: null,

@@ -166,6 +166,7 @@ router.post("/:productType", async (req, res) => {
             price: item.variant.discountedPrice,
             shippingPrice: item.variant.shippingPrice,
             orderType: "buy",
+            orderStatus: "Pending",
             color: item.variant.color,
             size: item.variant.size,
             address: item.user.defaultSelectedAddress,
