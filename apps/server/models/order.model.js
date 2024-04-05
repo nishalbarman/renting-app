@@ -29,6 +29,7 @@ const orderSchema = new mongoose.Schema(
       default: "On Hold",
       enums: [
         "On Hold",
+        "Pending",
         "On Progress",
         "Accepted",
         "Rejected",

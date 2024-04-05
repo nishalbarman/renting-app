@@ -459,10 +459,10 @@ router.patch("/cancel", async (req, res) => {
     if (!orderId) {
       return res.status(400).json({ message: "Order ID is missing!" });
     }
-
+    // order can only be cancelled when the order state is among these three states
     const orderFilter = {
       _id: orderId,
-      orderStatus: { $in: ["On Hold", "On Progress"] },
+      orderStatus: { $in: ["On Hold", "On Progress", "Accepted"] },
     };
 
     if (userDetails.role === 0) {

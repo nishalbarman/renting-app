@@ -166,10 +166,14 @@ router.post("/:productType", async (req, res) => {
             price: item.variant.discountedPrice,
             shippingPrice: item.variant.shippingPrice,
             orderType: "buy",
-            orderStatus: "Pending",
             color: item.variant.color,
             size: item.variant.size,
             address: item.user.defaultSelectedAddress,
+
+            orderStatus: "Pending",
+            shipmentType: "delivery_partner",
+            paymentMode: "PREPAID",
+            
             // user details
             user: userDetails._id,
           };
@@ -189,6 +193,11 @@ router.post("/:productType", async (req, res) => {
           shippingPrice: item.product.shippingPrice,
           orderType: "buy",
           address: "address",
+
+          orderStatus: "Pending",
+          shipmentType: "delivery_partner",
+          paymentMode: "PREPAID",
+
           // user details
           user: userDetails._id,
         };

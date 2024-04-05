@@ -51,6 +51,7 @@ router.post(
               $set: { paymentStatus: "Success", orderStatus: "On Progress" },
             }
           );
+          console.log("Cart ID'S --->", paymentIntentSucceeded.metadata.cartProductIds.split(","),)
           await Cart.deleteMany({
             _id: {
               $in: paymentIntentSucceeded.metadata.cartProductIds.split(","),
