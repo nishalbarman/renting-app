@@ -262,7 +262,7 @@ router.post("/:productType", async (req, res) => {
       description: productNames,
       metadata: {
         paymentTxnId,
-        cartProductIds: cartIds,
+        cartProductIds: cartIds.join(","),
       },
     });
 

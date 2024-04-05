@@ -52,7 +52,9 @@ router.post(
             }
           );
           await Cart.deleteMany({
-            _id: { $in: paymentIntentSucceeded.metadata.cartProductIds },
+            _id: {
+              $in: paymentIntentSucceeded.metadata.cartProductIds.split(","),
+            },
           });
           // Then define and call a function to handle the event payment_intent.succeeded
           break;
