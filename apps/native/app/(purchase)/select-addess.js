@@ -20,6 +20,7 @@ import AddressCardSkeleton from "../../Skeletons/AddressCardSkeleton";
 import axios from "axios";
 import Razorpay from "react-native-customui";
 import { useStripe } from "@stripe/stripe-react-native";
+import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";
 
 export default function AddressList() {
   const router = useRouter();
@@ -33,6 +34,10 @@ export default function AddressList() {
 
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [paymentLoading, setPaymentLoading] = useState(false);
+
+  const [orderStatus, setOrderStatus] = useState("pending");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [orderError, setOrderError] = useState("");
 
   const [isSheetReady, setIsSheetReady] = useState(false);
 
@@ -115,25 +120,30 @@ export default function AddressList() {
 
       if (error) {
         console.error("Error ->", error);
-        Alert.alert(`Transaction Failed`, error.message);
+        // Alert.alert(`Transaction Failed`, error.message);
+        setOrderStatus("failed");
+        setIsModalVisible(true);
+        setOrderError(error);
       } else {
-        Alert.alert("Success", "Congo! Your order is placed", [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel",
-          },
-          {
-            text: "Continue",
-            onPress: async () => {
-              // await axios.post(
-              //   `${process.env.EXPO_PUBLIC_API_URL}/stripe/hook`
-              // );
-              router.dismissAll();
-              router.replace("/(tabs)/my_orders");
-            },
-          },
-        ]);
+        // Alert.alert("Success", "Congo! Your order is placed", [
+        //   {
+        //     text: "Cancel",
+        //     onPress: () => console.log("Cancel Pressed"),
+        //     style: "cancel",
+        //   },
+        //   {
+        //     text: "Continue",
+        //     onPress: async () => {
+        //       // await axios.post(
+        //       //   `${process.env.EXPO_PUBLIC_API_URL}/stripe/hook`
+        //       // );
+        //       router.dismissAll();
+        //       router.replace("/(tabs)/my_orders");
+        //     },
+        //   },
+        // ]);
+        setOrderStatus("success");
+        setIsModalVisible(true);
       }
     } catch (error) {
       console.error(error);
@@ -196,12 +206,12 @@ export default function AddressList() {
           headerShadowVisible: false,
         }}
       />
-      <View className="px-4 py-1 pb-3">
+      <View className="px-4 pt-3 ">
         <Pressable
           disabled={paymentLoading}
-          style={{
-            backgroundColor: !paymentLoading ? "#514FB6" : "gray",
-          }}
+          // style={{
+          //   backgroundColor: !paymentLoading ? "#514FB6" : "gray",
+          // }}
           onPress={openPaymentSheet}
           className="rounded-md h-12 w-full bg-dark-purple flex items-center justify-center">
           {paymentLoading ? (
@@ -237,9 +247,8 @@ export default function AddressList() {
                               <View
                                 style={{
                                   position: "absolute",
-                                  top: -35,
-                                  left: "50%",
-                                  transform: "translate(-15px)",
+                                  bottom: -10,
+                                  right: -8,
                                   backgroundColor: "white",
                                 }}
                                 className="border border-[2px] border-dark-purple  rounded-md p-1">
@@ -261,30 +270,6 @@ export default function AddressList() {
                           </Text>
                           <Text className="text-gray-700">{mobileNo}</Text>
                         </View>
-                        {/* <View className="w-full flex items-end">
-                            {isAddressDeleteLoading ? (
-                              <>
-                                <ActivityIndicator
-                                  size={15}
-                                  color={"dark-purple"}
-                                />
-                              </>
-                            ) : (
-                              <>
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    handleDeleteAddress(item._id);
-                                  }}
-                                  className="flex items-center justify-center flex-0 p-1 rounded-full bg-dark-purple w-10 h-10 mt-4">
-                                  <MaterialIcons
-                                    name="delete"
-                                    size={24}
-                                    color="white"
-                                  />
-                                </TouchableOpacity>
-                              </>
-                            )}
-                          </View> */}
                       </TouchableOpacity>
                     </>
                   );
@@ -308,6 +293,15 @@ export default function AddressList() {
           )}
         </View>
       </ScrollView>
+      {paymentLoading ||
+        (isModalVisible && (
+          <PlaceOrderModal
+            modalVisible={isModalVisible}
+            setModalVisible={setIsModalVisible}
+            orderPlaceStatus={orderStatus}
+            errorMsg={orderError?.message}
+          />
+        ))}
     </SafeAreaView>
   );
 }

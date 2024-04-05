@@ -13,7 +13,12 @@ import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
 import { orderRefetch } from "@store/rtk/slices/orderSlice";
 
-function PlaceOrderModal({ modalVisible, setModalVisible, orderPlaceStatus }) {
+function PlaceOrderModal({
+  modalVisible,
+  setModalVisible,
+  orderPlaceStatus,
+  errorMsg,
+}) {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -97,7 +102,9 @@ function PlaceOrderModal({ modalVisible, setModalVisible, orderPlaceStatus }) {
               Order Failed
             </Text>
             <Text className="mt-2 text-sm text-center">
-              Something went wrong, please try again later.
+              {!!errorMsg
+                ? errorMsg
+                : "Something went wrong, please try again later."}
             </Text>
             <Pressable
               className="w-full mx-2 bg-dark-purple rounded-md h-10 items-center justify-center mt-4"

@@ -96,11 +96,28 @@ function OrderItem({
 
   return (
     <View className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px] border border-gray-300">
-      {(orderStatus === "On Hold" || orderStatus === "Pending") && (
-        <View className="bg-orange-100 px-3 py-2 mt-[-5px] rounded-md mb-3">
+      {(orderStatus === "On Hold" || orderStatus === "On Progress") && (
+        <View className="bg-orange-100 px-3 py-2 mt-[-5px] rounded-md mb-3 border border-orange-200">
           <Text className="text-[#e86813]">
             We are proccessing your order. You will recieve a confirmation call
             from us.
+          </Text>
+        </View>
+      )}
+
+      {orderStatus === "Accepted" && (
+        <View className="border border-[#79E7A8] bg-[#f5fff6] px-3 py-2 mt-[-5px] rounded-md mb-3">
+          <Text className="text-[#36664c]">
+            Your order is accepted, and moved for further proccessing.
+          </Text>
+        </View>
+      )}
+
+      {orderStatus === "Pending" && (
+        <View className="bg-[#a1c6e3] border border-blue-400 px-3 py-2 mt-[-5px] rounded-md mb-3">
+          <Text className="text-[#1d3345]">
+            Your order is in pending state, and will be procced automatically
+            once confirmed.
           </Text>
         </View>
       )}
@@ -206,6 +223,13 @@ function OrderItem({
                 PickUp Ready
               </Text>
             </View>
+          ) : orderStatus === "Pending" ? (
+            <View
+              className={`flex-row justify-center p-2 border border-[#2c5778] rounded-md bg-[#a1c8e6]`}>
+              <Text className={`text-[#2c5778]  text-[10px] font-bold`}>
+                Pending
+              </Text>
+            </View>
           ) : (
             <View
               className={`flex-row justify-center p-2 border border-[#db3125] rounded-md bg-[#f7eae9]`}>
@@ -244,7 +268,9 @@ function OrderItem({
       </Text> */}
 
       <View className="flex-row mt-3 justify-between flex-1">
-        {(orderStatus === "On Hold" || orderStatus === "Pending") && (
+        {(orderStatus === "On Hold" ||
+          orderStatus === "On Progress" ||
+          orderStatus === "Accepted") && (
           <TouchableHighlight
             underlayColor={"white"}
             onPress={handleCancelOrder}
