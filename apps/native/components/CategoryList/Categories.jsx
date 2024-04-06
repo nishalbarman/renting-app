@@ -1,26 +1,74 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import CategorySkeleton from "../../Skeletons/CategorySkeleton";
 import CategoryItem from "./CategoryItem";
-import { View } from "react-native";
-import { Toast } from "expo-react-native-toastify";
+import { FlatList, View } from "react-native";
 
-import { useGetAllCategoryQuery } from "@store/rtk/apis/categoryApi";
+// import { useGetAllCategoryQuery } from "@store/rtk/apis/categoryApi";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 function Categories() {
-  const {
-    data: categoryList,
-    isError,
-    isLoading,
-    error,
-  } = useGetAllCategoryQuery();
+  const { jwtToken } = useSelector((state) => state.auth);
+
+  const [paginationPage, setPaginationPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [totalPages, setTotalPages] = useState(0);
+  const [categoryList, setCategoryList] = useState([]);
+
+  const getCategories = async () => {
+    try {
+      setIsLoading(true);
+
+      const response = await axios.get(
+        `${process.env.EXPO_PUBLIC_API_URL}/categories?page=${paginationPage}`
+      );
+      setCategoryList(response.data.data);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // const {
+  //   data: categoryList,
+  //   isError,
+  //   isLoading,
+  //   error,
+  // } = useGetAllCategoryQuery();
 
   useEffect(() => {
-    if (isError) {
-      (() => {
-        Toast.success(error?.message);
-      })();
-    }
-  }, [isError]);
+    getCategories();
+  }, []);
+
+  useEffect(() => {
+    (() => {
+      // if we have less categories then totalPage will be 1
+      if (totalPages > 1) {
+        setCategoryList([
+          ...categoryList,
+          {
+            _id: "cate_id_unique",
+            categoryName: "See More",
+            categoryImage:
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTP160L0gKtNyA1orI9wOOSQpk6Djh-KIl_Z2rhoY2RCA&s",
+          },
+        ]);
+      }
+    })();
+  }, [categoryList]);
+
+  // useEffect(() => {
+  //   if (isError) {
+  //     (() => {
+  //       Toast.success(error?.message);
+  //     })();
+  //   }
+  // }, [isError]);
 
   return (
     <View className="flex flex-row gap-x-2 w-[100%] pl-2 pr-2">
@@ -32,13 +80,22 @@ function Categories() {
         </>
       ) : (
         <>
-          {categoryList?.data?.map(({ _id, categoryName, imageUrl }) => (
-            <CategoryItem
-              key={_id}
-              categoryImage={imageUrl}
-              categoryName={categoryName}
-            />
-          ))}
+          <FlatList
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            data={categoryList}
+            renderItem={({ item }) => (
+              <CategoryItem
+                key={item?._id}
+                categoryImage={item?.imageUrl}
+                categoryName={item?.categoryName}
+              />
+            )}
+          />
+
+          {/* {categoryList?.data?.map(({ _id, categoryName, imageUrl }) => (
+            
+          ))} */}
         </>
       )}
     </View>
