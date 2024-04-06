@@ -68,6 +68,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+/* ADD TO CART */
 router.post("/", async (req, res) => {
   try {
     const token = req?.jwt?.token;
@@ -83,6 +84,19 @@ router.post("/", async (req, res) => {
     }
 
     const productInfo = req.body;
+
+    // maybe these all mongo operations can be done using one aggregate pipeline
+    const cartCount = await Cart.countDocuments({
+      product: productInfo.productId,
+      user: userDetails._id,
+      productType: productInfo.productType,
+    });
+
+    if (cartCount >= 45) {
+      return res.status(400).json({
+        message: "Only maximum 50 Cart items allowed!",
+      });
+    }
 
     const product = await Product.findById(productInfo.productId);
     if (product?.isVariantAvailable && !productInfo?.variant) {
@@ -104,14 +118,14 @@ router.post("/", async (req, res) => {
 
     const cartItem = await Cart.findOneAndUpdate(filterObject, {
       $inc: {
-        quantity: productInfo.quantity || 1,
+        quantity: productInfo?.quantity || 1,
       },
     });
 
     if (!!cartItem) {
       return res.json({
         status: true,
-        message: "Item added to Cart",
+        message: "Added to Cart",
       });
     }
 
@@ -124,23 +138,13 @@ router.post("/", async (req, res) => {
     });
 
     if (productInfo?.variant) {
-      // cart.isVariantAvailable = true;
       cart.variant = productInfo.variant;
     }
-
-    // if (productInfo?.size) {
-    //   cart.size = productInfo.size;
-    // }
-
-    // if (productInfo?.color) {
-    //   cart.color = productInfo.color;
-    // }
 
     await cart.save();
 
     return res.json({
-      status: true,
-      message: "Item added to Cart",
+      message: "Added to Cart",
     });
   } catch (error) {
     console.log(error);
@@ -150,79 +154,6 @@ router.post("/", async (req, res) => {
     });
   }
 });
-
-// router.patch("/:cart_item_id", async (req, res) => {
-//   try {
-//     const token = req?.jwt?.token;
-
-//     // handle invalid token
-//     if (!token) {
-//       return res.status(400).json({
-//         message: "Token validation failed",
-//       });
-//     }
-
-//     const userDetails = getTokenDetails(token);
-//     if (!userDetails) {
-//       return res.status(400).json({ message: "Authorization failed" });
-//     }
-
-//     const { cart_item_id } = req.params;
-//     const { quantity, size, color } = req.body;
-
-//     const cartProduct = await Cart.findOne({
-//       product: cart_item_id,
-//       user: userDetails._id,
-//     }).populate({
-//       path: "product",
-//       populate: { path: "availableSizes" },
-//     });
-
-//     if (!cartProduct) {
-//       return res.status(400).json({
-//         status: false,
-//         message: "No cart item",
-//       });
-//     }
-
-//     const responseText = [];
-
-//     if (quantity && cartProduct.product.availableStocks > quantity) {
-//       cartProduct.quantity = quantity;
-//       responseText.push("Quantity Updated");
-//     }
-
-//     if (
-//       size &&
-//       !!cartProduct.product.availableSizes.find(
-//         (value) => value._id.toString() == size
-//       )
-//     ) {
-//       cartProduct.size = size;
-//       responseText.push("Size Updated");
-//     }
-
-//     if (
-//       color &&
-//       !!cartProduct.product.availableColors.find(
-//         (value) => value._id.toString() == color
-//       )
-//     ) {
-//       cartProduct.color = color;
-//       responseText.push("Color Updated");
-//     }
-
-//     await cartProduct.save();
-
-//     return res.json({
-//       status: true,
-//       message: responseText.join(", "),
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     return res.redirect("/auth/login");
-//   }
-// });
 
 router.patch("/:productType", async (req, res) => {
   try {
@@ -242,7 +173,7 @@ router.patch("/:productType", async (req, res) => {
 
     const productType = req.params?.productType;
 
-    console.log(productType);
+    // console.log(productType);
 
     if (!productType) {
       return res.status(400).json({ message: "Product Type is Missing" });
@@ -286,33 +217,6 @@ router.patch("/:productType", async (req, res) => {
     if (!!color) {
       cartProduct.color = color;
     }
-
-    // const responseText = [];
-
-    // if (quantity && cartProduct.product.availableStocks > quantity) {
-    //   cartProduct.quantity = quantity;
-    //   responseText.push("Quantity Updated");
-    // }
-
-    // if (
-    //   size &&
-    //   !!cartProduct.product.availableSizes.find(
-    //     (value) => value._id.toString() == size
-    //   )
-    // ) {
-    //   cartProduct.size = size;
-    //   responseText.push("Size Updated");
-    // }
-
-    // if (
-    //   color &&
-    //   !!cartProduct.product.availableColors.find(
-    //     (value) => value._id.toString() == color
-    //   )
-    // ) {
-    //   cartProduct.color = color;
-    //   responseText.push("Color Updated");
-    // }
 
     await cartProduct.save({ validateBeforeSave: false });
 

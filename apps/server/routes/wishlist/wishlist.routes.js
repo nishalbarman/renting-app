@@ -3,6 +3,7 @@ const router = express.Router();
 const Wishlist = require("../../models/wishlist.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 
+/* GET ALL WISHLIST -- User Route */
 router.get("/", async (req, res) => {
   try {
     const token = req?.jwt?.token;
@@ -52,6 +53,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+/* ADD TO WISHLIST -- User Route */
 router.post("/", async (req, res) => {
   try {
     const token = req?.jwt?.token;
@@ -65,12 +67,24 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ message: "No token provided." });
     }
 
-    console.log("RequestBody-->", req.body);
+    // console.log("RequestBody-->", req.body);
 
     const productType = req.headers["producttype"];
     const { productId } = req.body;
 
-    console.log("Wishlist Product ID-->", productId);
+    // console.log("Wishlist Product ID-->", productId);
+
+    const wishlistCount = await Wishlist.countDocuments({
+      product: productId,
+      user: userDetails._id,
+      productType,
+    });
+
+    if (wishlistCount >= 45) {
+      return res.status(400).json({
+        message: "Only maximum 50 wishlist items allowed!",
+      });
+    }
 
     const wishlistItem = await Wishlist.findOne({
       product: productId,
