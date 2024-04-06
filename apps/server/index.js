@@ -1,11 +1,21 @@
 const dotEnv = require("dotenv");
 const express = require("express");
 const cors = require("cors");
+const { rateLimit } = require("express-rate-limit");
 
 dotEnv.config();
 const dbConnect = require("./config/dbConfig");
 
 dbConnect(); // connect to databse
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  // store: ... , // Redis, Memcached, etc. See below.
+  message: { message: "opps, getting to frequent request.. go slow" },
+});
 
 const app = express();
 
@@ -55,6 +65,7 @@ app.use(
 // this route need raw json data so thats why placing it before experss.json()
 app.use("/stripe/hook", require("./hooks/stripe-hook.routes"));
 
+app.use(limiter);
 app.use(express.json());
 app.use(extractToken);
 
