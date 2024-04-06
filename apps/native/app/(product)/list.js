@@ -107,10 +107,13 @@ function ProductsList() {
                   icon: () => <AntDesign name="down" size={15} color="black" />,
                   title: "Sort By",
                   iconPostion: "right",
-                  style: {
-                    borderColor: "red",
-                    backgroundColor: "red",
-                  },
+                  style: !sort
+                    ? {
+                        borderWidth: 4,
+                        borderColor: "green",
+                        backgroundColor: "lightgreen",
+                      }
+                    : undefined,
                 },
                 {
                   icon: () => (
@@ -118,6 +121,13 @@ function ProductsList() {
                   ),
                   title: "Filter",
                   iconPostion: "left",
+                  style: !sort
+                    ? {
+                        borderWidth: 4,
+                        borderColor: "green",
+                        backgroundColor: "lightgreen",
+                      }
+                    : undefined,
                 },
                 {
                   icon: () => (
@@ -125,6 +135,13 @@ function ProductsList() {
                   ),
                   title: "Category",
                   iconPostion: "left",
+                  style: !sort
+                    ? {
+                        borderWidth: 4,
+                        borderColor: "green",
+                        backgroundColor: "lightgreen",
+                      }
+                    : undefined,
                 },
                 {
                   icon: () => (
@@ -132,6 +149,13 @@ function ProductsList() {
                   ),
                   title: "Price",
                   iconPostion: "left",
+                  style: !sort
+                    ? {
+                        borderWidth: 4,
+                        borderColor: "green",
+                        backgroundColor: "lightgreen",
+                      }
+                    : undefined,
                 },
                 {
                   icon: () => (
@@ -139,6 +163,13 @@ function ProductsList() {
                   ),
                   title: "Price",
                   iconPostion: "left",
+                  style: !sort
+                    ? {
+                        borderWidth: 4,
+                        borderColor: "green",
+                        backgroundColor: "lightgreen",
+                      }
+                    : undefined,
                 },
                 {
                   icon: () => (
@@ -146,6 +177,13 @@ function ProductsList() {
                   ),
                   title: "Price",
                   iconPostion: "left",
+                  style: !sort
+                    ? {
+                        borderWidth: 4,
+                        borderColor: "green",
+                        backgroundColor: "lightgreen",
+                      }
+                    : undefined,
                 },
               ]}
               renderItem={({ item }) => (

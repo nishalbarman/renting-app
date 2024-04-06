@@ -73,7 +73,7 @@ app.use("/user", require("./routes/users/user.routes"));
 app.use("/auth/login", require("./routes/users/login.routes"));
 app.use("/auth/signup", require("./routes/users/signup.routes"));
 app.use("/auth/sendOtp", require("./routes/otpSend/mobile.routes"));
-app.use("/category", require("./routes/categories/category.routes"));
+app.use("/categories", require("./routes/categories/category.routes"));
 app.use("/products", require("./routes/products/products.routes"));
 app.use("/wishlist", require("./routes/wishlist/wishlist.routes"));
 app.use("/cart", require("./routes/cart/cart.routes"));
