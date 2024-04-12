@@ -8,6 +8,7 @@ const express = require("express");
 const User = require("../models/user.model");
 const { sendMail } = require("../helpter/sendEmail");
 const Cart = require("../models/cart.model");
+const { default: mongoose } = require("mongoose");
 const router = Router();
 
 const endpointSecret = "whsec_O3JO59y2d6GU3T73AkIkDf3OJ5zc3aj6";
