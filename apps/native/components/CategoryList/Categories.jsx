@@ -23,8 +23,15 @@ function Categories() {
       setIsLoading(true);
 
       const response = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/categories?page=${paginationPage}`
+        `${process.env.EXPO_PUBLIC_API_URL}/categories?page=${paginationPage}`,
+        {
+          headers: {
+            authorization: `Bearer ${jwtToken}`,
+          },
+        }
       );
+
+      console.log(response.data);
       setCategoryList(response.data.data);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -60,7 +67,7 @@ function Categories() {
         ]);
       }
     })();
-  }, [categoryList]);
+  }, [totalPages]);
 
   // useEffect(() => {
   //   if (isError) {
