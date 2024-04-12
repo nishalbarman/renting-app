@@ -5,25 +5,23 @@ export const centerAddressSlice = createSlice({
   initialState: {
     _id: null,
     centerName: null,
-    name: null,
-    streetName: null,
-    locality: null,
-    postalCode: null,
-    longitude: null,
-    longitude: null,
-    country: null,
+    address: {
+      name: null,
+      streetName: null,
+      locality: null,
+      postalCode: null,
+      longitude: null,
+      longitude: null,
+      country: null,
+    },
+    user: {},
   },
   reducers: {
     setCenterAddress: (state, { payload }) => {
       state._id = payload._id;
       state.centerName = payload.centerName;
-      state.name = payload.name;
-      state.streetName = payload.streetName;
-      state.locality = payload.locality;
-      state.postalCode = payload.postalCode;
-      state.longitude = payload.longitude;
-      state.latitude = payload.latitude;
-      state.country = payload.country;
+      state.address = payload.address;
+      state.user = payload.user;
     },
   },
 });
