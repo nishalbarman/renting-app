@@ -51,13 +51,11 @@ router.post(
             { $set: { paymentStatus: "Success", orderStatus: "On Progress" } }
           );
 
-          
-
-          const idsToDeleteAsObjectId = paymentIntentSucceeded.metadata.cartProductIds.split(",").map(id => mongoose.Types.ObjectId(id));
-          console.log(
-            "Cart ID'S --->",
-            idsToDeleteAsObjectId
-          );
+          const idsToDeleteAsObjectId =
+            paymentIntentSucceeded.metadata.cartProductIds
+              .split(",")
+              .map((id) => new mongoose.Types.ObjectId(id));
+          console.log("Cart ID'S --->", idsToDeleteAsObjectId);
 
           await Cart.deleteMany({
             _id: {
