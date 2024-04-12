@@ -9,8 +9,8 @@ const dbConnect = require("./config/dbConfig");
 dbConnect(); // connect to databse
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  windowMs: 1 * 60 * 1000, // 1 minutes
+  limit: 3600, // Limit each IP to 3600 requests per `window` (here, per 1 minutes).
   standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
   // store: ... , // Redis, Memcached, etc. See below.
@@ -80,6 +80,9 @@ app.use("/cart", require("./routes/cart/cart.routes"));
 app.use("/address", require("./routes/address/address.routes"));
 app.use("/feedbacks", require("./routes/feedbacks/feedbacks.routes"));
 app.use("/orders", require("./routes/order/order.routes"));
+
+// center related routes
+app.use("/center", require("./routes/centers/center.routes"));
 
 app.use(
   "/pay/razorpay/create-cart-order",
