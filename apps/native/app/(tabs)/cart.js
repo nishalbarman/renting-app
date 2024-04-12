@@ -135,8 +135,9 @@ const CartPage = () => {
   }, [cartItems]);
 
   const handleChangeCenter = async () => {
-    if (productType === "buy") router.push("/select-addess");
-    else router.push("/select-center-location");
+    // if (productType === "buy") router.push("/select-address");
+    // else router.push("/select-center-location");
+    router.push("/select-address");
   };
 
   const [isCenterSelected, setIsCenterSelected] = useState(false);
@@ -145,13 +146,16 @@ const CartPage = () => {
     (state) => state.selectedCenterDetails
   );
 
+  console.log("Cart Address", selectedCenterAddress);
+
   useEffect(() => {
     setIsCenterSelected(
-      !!selectedCenterAddress?.name &&
-        !!selectedCenterAddress?.streetName &&
-        !!selectedCenterAddress?.locality &&
-        !!selectedCenterAddress?.postalCode &&
-        !!selectedCenterAddress?.country
+      !!selectedCenterAddress?.centerName &&
+        !!selectedCenterAddress?.address?.name &&
+        !!selectedCenterAddress?.address?.streetName &&
+        !!selectedCenterAddress?.address?.locality &&
+        !!selectedCenterAddress?.address?.postalCode &&
+        !!selectedCenterAddress?.address?.country
     );
   }, [selectedCenterAddress]);
 
@@ -164,7 +168,7 @@ const CartPage = () => {
 
   const handleContinueClick = async () => {
     // product type is buy then goto select delivery address screen
-    if (productType === "buy") return router.push("/select-addess");
+    if (productType === "buy") return router.push("/select-address");
 
     // TODO: Place Order FOR the center
     setIsPlacingOrder(true);
@@ -236,11 +240,13 @@ const CartPage = () => {
                         <View>
                           {isCenterSelected ? (
                             <>
-                              <Text className="text-lg font-semibold">
-                                {selectedCenterAddress?.centerName ||
-                                  "Center Name"}
+                              <Text className="text-[17px] mt-1 font-bold">
+                                {selectedCenterAddress?.centerName}
                               </Text>
-                              <Text className="text-[16px] font-[poppins]">{`${selectedCenterAddress?.name}, ${selectedCenterAddress?.streetName}, ${selectedCenterAddress?.locality}, ${selectedCenterAddress?.postalCode}, ${selectedCenterAddress?.country}`}</Text>
+                              <Text className="text-[17px] mb-1 font-bold">
+                                +91-{selectedCenterAddress?.user?.mobileNo}
+                              </Text>
+                              <Text className="text-[16px] font-[poppins]">{`${selectedCenterAddress?.address?.name}, ${selectedCenterAddress?.address?.streetName}, ${selectedCenterAddress?.address?.locality}, ${selectedCenterAddress?.address?.postalCode}, ${selectedCenterAddress?.address?.country}`}</Text>
                             </>
                           ) : (
                             <Text className="text-[16px] font-[poppins]">

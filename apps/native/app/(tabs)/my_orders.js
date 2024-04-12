@@ -53,7 +53,7 @@ const OrderScreen = () => {
 
   useEffect(() => {
     getOrders();
-  }, [paginationPage, orderRefetch]);
+  }, [paginationPage, orderRefetch, productType]);
 
   const [refreshing, setRefreshing] = useState(false);
 
