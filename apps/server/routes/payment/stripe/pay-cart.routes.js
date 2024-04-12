@@ -156,6 +156,8 @@ router.post("/:productType", async (req, res) => {
         if (!!item.variant) {
           return {
             ...item,
+            product: item._id,
+
             // order related
             orderId: uuidv4(),
             paymentTxnId: paymentTxnId,
@@ -173,7 +175,7 @@ router.post("/:productType", async (req, res) => {
             orderStatus: "Pending",
             shipmentType: "delivery_partner",
             paymentMode: "PREPAID",
-            
+
             // user details
             user: userDetails._id,
           };
@@ -182,6 +184,8 @@ router.post("/:productType", async (req, res) => {
         // if no variant available
         return {
           ...item,
+          product: item._id,
+
           // order related
           orderId: uuidv4(),
           paymentTxnId: paymentTxnId,
@@ -207,6 +211,8 @@ router.post("/:productType", async (req, res) => {
         if (!!item.variant) {
           return {
             ...item,
+            product: item._id,
+
             // order related
             orderId: uuidv4(),
             paymentTxnId: paymentTxnId,
@@ -228,6 +234,8 @@ router.post("/:productType", async (req, res) => {
         // if no variant available
         return {
           ...item,
+          product: item._id,
+
           // order related
           orderId: uuidv4(),
           paymentTxnId: paymentTxnId,
