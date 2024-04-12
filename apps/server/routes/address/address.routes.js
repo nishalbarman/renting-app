@@ -80,17 +80,12 @@ router.post("/", async (req, res) => {
     const newAddress = new Address({
       user: userDetails._id,
       ...req.body,
+      location: {
+        type: "Point",
+        coordinates: [+req.body.longitude, +req.body.latitude],
+      },
     });
     await newAddress.save();
-
-    // await Promise.all([
-    //   User.findOneAndUpdate(
-    //     { _id: userDetails._id },
-    //     {
-    //       $push: { address: newAddress._id },
-    //     }
-    //   ),
-    // ]);
 
     return res.json({
       message: "Address added.",
