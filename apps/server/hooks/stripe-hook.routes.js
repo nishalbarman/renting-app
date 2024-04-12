@@ -63,6 +63,9 @@ router.post(
             },
           });
 
+          console.log("Center ID", paymentIntentSucceeded.metadata.center);
+          console.log("Type of Center ID", typeof paymentIntentSucceeded.metadata.center);
+
           const centerDetails = await User.findOne({
             center: paymentIntentSucceeded.metadata.center,
           });
