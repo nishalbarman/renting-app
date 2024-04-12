@@ -79,7 +79,7 @@ router.get("/view/:productId", async (req, res) => {
     const LIMIT = searchParams.limit || 20;
     const SKIP = (PAGE - 1) * LIMIT;
 
-    const feedbackCount = await Feedback.countDocuments();
+    const feedbackCount = await Feedback.countDocuments({ product: productId });
     const totalPages = Math.ceil(feedbackCount / LIMIT);
     const feedbacks = await Feedback.find({ product: productId })
       .sort({ createdAt: "desc" })
