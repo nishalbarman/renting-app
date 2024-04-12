@@ -11,6 +11,8 @@ const User = require("../../../models/user.model");
 const Cart = require("../../../models/cart.model");
 const Coupon = require("../../../models/coupon.model");
 const Order = require("../../../models/order.model");
+const Address = require("../../../models/address.model");
+const Center = require("../../../models/center.model");
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY;
@@ -149,6 +151,65 @@ router.post("/:productType", async (req, res) => {
 
     const productNames = paymentObject.productinfo.join(", ");
 
+    const addressDocument = await Address.findById(address);
+
+    const centerAddresses = await Center.aggregate([
+      {
+        $geoNear: {
+          near: {
+            type: "Point",
+            coordinates: addressDocument.location.coordinates,
+          },
+          distanceField: "distance",
+          spherical: true,
+          maxDistance: 50000, // Max distance in meters here(50KM)
+          query: {}, // Additional query conditions can be added here if needed
+          key: "location", // Specify the field containing the coordinates
+        },
+      },
+      {
+        $lookup: {
+          from: "addresses", // Assuming 'users' is the collection name for the referenced model
+          localField: "address",
+          foreignField: "_id",
+          as: "populatedAddress",
+        },
+      },
+      {
+        $addFields: {
+          address: { $arrayElemAt: ["$populatedAddress", 0] },
+        },
+      },
+      {
+        $lookup: {
+          from: "users", // Assuming 'users' is the collection name for the referenced model
+          localField: "user",
+          foreignField: "_id",
+          as: "populatedUser",
+        },
+      },
+      {
+        $addFields: {
+          user: { $arrayElemAt: ["$populatedUser", 0] },
+        },
+      },
+      {
+        $project: {
+          populatedAddress: 0, // Remove the temporary populatedAddress field
+          populatedUser: 0, // Remove the temporary populatedUser field
+          location: 0,
+        },
+      },
+      { $sort: { distance: 1 } }, // Sort by distance in ascending order
+      { $limit: 1 }, // Limit to the closest center
+    ]);
+
+    if (!centerAddresses) {
+      return res
+        .status(400)
+        .json({ message: "Service not available in your location" });
+    }
+
     let txnAndOrderIdInsertedCartItems;
 
     if (productType === "buy") {
@@ -171,6 +232,8 @@ router.post("/:productType", async (req, res) => {
             color: item.variant.color,
             size: item.variant.size,
             address: item.user.defaultSelectedAddress,
+
+            center: centerAddresses[0]._id,
 
             orderStatus: "Pending",
             shipmentType: "delivery_partner",
@@ -197,6 +260,8 @@ router.post("/:productType", async (req, res) => {
           shippingPrice: item.product.shippingPrice,
           orderType: "buy",
           address: "address",
+
+          center: centerAddresses[0]._id,
 
           orderStatus: "Pending",
           shipmentType: "delivery_partner",
@@ -226,6 +291,9 @@ router.post("/:productType", async (req, res) => {
             color: item.variant.color,
             size: item.variant.size,
             address: item.user.defaultSelectedAddress,
+
+            center: centerAddresses[0]._id,
+
             // user details
             user: userDetails._id,
           };
@@ -247,6 +315,9 @@ router.post("/:productType", async (req, res) => {
           shippingPrice: item.shippingPrice,
           orderType: "rent",
           address: item.user.defaultSelectedAddress,
+
+          center: centerAddresses[0]._id,
+
           // user details
           user: userDetails._id,
         };
@@ -280,6 +351,8 @@ router.post("/:productType", async (req, res) => {
       description: productNames,
       metadata: {
         paymentTxnId,
+        userId: userDetails._id,
+        centerId: centerAddresses[0]._id,
         cartProductIds: cartIds.join(","),
       },
     });

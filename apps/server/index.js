@@ -5,6 +5,7 @@ const { rateLimit } = require("express-rate-limit");
 
 dotEnv.config();
 const dbConnect = require("./config/dbConfig");
+const sendEmail = require("./helpter/sendEmail");
 
 dbConnect(); // connect to databse
 
@@ -16,6 +17,25 @@ const limiter = rateLimit({
   // store: ... , // Redis, Memcached, etc. See below.
   message: { message: "opps, getting to frequent request.. go slow" },
 });
+
+// sendEmail({
+//   from: '"RentKaro" <nishalexperiments@gmail.com>', // sender address
+//   to: "nishalbarman@gmail.com", // list of receivers
+//   bcc: "nishalbarmann@gmail.com",
+//   subject: "RentKaro: New Order Recieved", // Subject line
+//   html: `<html>
+//           <body>
+//             <div style="width: 100%; padding: 5px 0px; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid rgb(0,0,0,0.3)">
+//               <h2>Rent Karo</h2>
+//             </div>
+//             <div style="padding: 40px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+//               <center>
+//                 <span style="font-size: 18px;">Hey, You got a new order. Fullfill the order as soon as possible.
+//               </center>
+//             </div>
+//           </body>
+//         </html>`, // html body
+// });
 
 const app = express();
 

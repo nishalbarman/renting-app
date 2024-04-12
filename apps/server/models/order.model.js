@@ -57,7 +57,7 @@ const orderSchema = new mongoose.Schema(
     rentDays: { type: Number, required: false, default: undefined },
 
     pickupDate: { type: Date, requied: false, default: null },
-    pickupCenter: { type: Object, required: false, default: null },
+    center: { type: Object, required: false, default: null },
 
     rentPickedUpDate: { type: Date, requied: false, default: null },
     rentReturnDueDate: { type: Date, default: null },

@@ -101,90 +101,7 @@ router.post("/:productType", async (req, res) => {
       return res.status(400).json({ message: "No items on cart" });
     }
 
-    // let shippingPrice = 0;
-
-    // TODO: Still NEED to handle out of stock products
-
-    // const paymentObject = cartItemsForUser.reduce(
-    //   (pay, cartItem) => {
-    //     let totalPrice; // price for one cart item
-    //     const Title = cartItem.product.title;
-
-    //     // if type is buy and product have variants (diffent color different size etc etc)
-    //     if (productType === "buy" && !!cartItem.variant) {
-    //       const Price = cartItem.variant.discountedPrice;
-    //       const Quantity = cartItem.quantity;
-    //       totalPrice = Price * Quantity;
-
-    //       // shippingPrice += cartItem.variant.shippingPrice;
-    //     }
-    //     // else if type is buy and product does not have variants (diffent color different size etc etc)
-    //     else if (productType === "buy" && !cartItem.variant) {
-    //       const Price = cartItem.product.discountedPrice;
-    //       const Quantity = cartItem.quantity;
-    //       totalPrice = Price * Quantity;
-
-    //       // // shippingPrice += cartItem.variant.shippingPrice;
-    //     }
-    //     // else if type is rent and product does not have variants (diffent color different size etc etc)
-    //     else if (productType === "rent" && !!cartItem.variant) {
-    //       const Price = cartItem.variant.rentingPrice;
-    //       const Quantity = cartItem.quantity;
-    //       const RentDays = cartItem.rentDays;
-    //       totalPrice = Price * Quantity * RentDays;
-
-    //       // // shippingPrice += cartItem.variant.shippingPrice;
-    //     }
-    //     // else if type is rent and product does not have variants (diffent color different size etc etc)
-    //     else if (productType === "rent" && !cartItem.variant) {
-    //       const Price = cartItem.product.rentingPrice;
-    //       const Quantity = cartItem.quantity;
-    //       const RentDays = cartItem.rentDays;
-    //       totalPrice = Price * Quantity * RentDays;
-
-    //       // // shippingPrice += cartItem.variant.shippingPrice;
-    //     }
-
-    //     return {
-    //       amount: pay.amount + totalPrice,
-    //       productinfo: [...pay.productinfo, Title],
-    //     };
-    //   },
-    //   { amount: 0, productinfo: [] }
-    // );
-
-    // if (!!appliedCouponID) {
-    //   const appliedCoupon = await Coupon.findOne({ _id: appliedCouponID });
-
-    //   if (!!appliedCoupon) {
-    //     const discountedPrice = appliedCoupon?.isPercentage
-    //       ? (paymentObject.amount / 100) * parseInt(appliedCoupon.off) || 0
-    //       : paymentObject.amount >
-    //           (appliedCoupon.minimumPayAmount || paymentObject.amount + 100)
-    //         ? appliedCoupon.off
-    //         : 0;
-
-    //     paymentObject.amount -= discountedPrice;
-    //   }
-    // }
-
-    // const freeDeliveryAboveMinimumPurchase = true;
-    // const freeDeliveryMinimumAmount = 500;
-
-    // if (
-    //   !(
-    //     freeDeliveryAboveMinimumPurchase &&
-    //     paymentObject.amount >= freeDeliveryMinimumAmount
-    //   )
-    // ) {
-    //   paymentObject.amount += shippingPrice;
-    // }
-
-    // paymentObject.amount *= 100; // razor pay takes amount as paisa (1 rupee = 100 paisa)
-
     const paymentTxnId = uuidv4();
-
-    // const productNames = paymentObject.productinfo.join(", ");
 
     let txnAndOrderIdInsertedCartItems;
 
@@ -206,6 +123,9 @@ router.post("/:productType", async (req, res) => {
             color: item.variant.color,
             size: item.variant.size,
             address: item.user.defaultSelectedAddress,
+
+            center: centerId,
+
             // user details
             user: userDetails._id,
           };
@@ -225,6 +145,9 @@ router.post("/:productType", async (req, res) => {
           shippingPrice: item.shippingPrice,
           orderType: "buy",
           address: item.user.defaultSelectedAddress,
+
+          center: centerId,
+
           // user details
           user: userDetails._id,
         };
@@ -255,6 +178,9 @@ router.post("/:productType", async (req, res) => {
             pickupCenter: centerId,
             shipmentType: "self_pickup",
             paymentMode: "COP",
+
+            center: centerId,
+
             // user details
             user: userDetails._id,
             paymentStatus: null,
@@ -282,6 +208,10 @@ router.post("/:productType", async (req, res) => {
           // address: item.user.defaultSelectedAddress,
           pickupCenter: centerId,
           shipmentType: "self_pickup",
+          paymentMode: "COP",
+
+          center: centerId,
+
           // user details
           user: userDetails._id,
           paymentStatus: null,

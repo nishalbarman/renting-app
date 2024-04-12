@@ -1,7 +1,20 @@
-import nodemailer from "nodemailer";
+const nodemailer = require("nodemailer");
 
+// const transporter = nodemailer.createTransport({
+//   host: "crafter.sharestory.fun",
+//   port: 587,
+//   // secure: true,
+//   tls: {
+//     rejectUnauthorized: false,
+//     minVersion: "TLSv1.2",
+//   },
+//   auth: {
+//     user: "verify@crafter.sharestory.fun",
+//     pass: "#%(uvL_](%3i",
+//   },
+// });
 const transporter = nodemailer.createTransport({
-  host: "crafter.sharestory.fun",
+  host: process.env.SENDER_EMAIL_HOST,
   port: 587,
   // secure: true,
   tls: {
@@ -9,11 +22,13 @@ const transporter = nodemailer.createTransport({
     minVersion: "TLSv1.2",
   },
   auth: {
-    user: "verify@crafter.sharestory.fun",
-    pass: "#%(uvL_](%3i",
+    user: process.env.SENDER_EMAIL_ADDRESS,
+    pass: process.env.SENDER_EMAIL_PASSWORD,
   },
 });
 
-export async function sendMail(messageObject) {
-  await transporter.sendMail(messageObject);
-}
+module.exports = {
+  sendMail: async function sendMail(messageObject) {
+    await transporter.sendMail(messageObject);
+  },
+};

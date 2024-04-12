@@ -127,8 +127,6 @@ router.get("/addresses/:userAddressID", async (req, res) => {
       { $limit: 50 }, // Limit to the closest center
     ]);
 
-    console.log(centerAddresses);
-
     if (!centerAddresses) {
       return res.status(400).json({ message: "No Center Found!" });
     }
