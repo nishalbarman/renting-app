@@ -1,8 +1,8 @@
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, SafeAreaView } from "react-native";
+import { ActivityIndicator, SafeAreaView, Text, View } from "react-native";
 
-import { Stack, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -10,12 +10,14 @@ import { useStripe } from "@stripe/stripe-react-native";
 import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";
 
 export default function AddressList() {
+  const searchParams = useLocalSearchParams();
+
   const { name, mobileNo, email, jwtToken } = useSelector(
     (state) => state.auth
   );
   const { productType } = useSelector((state) => state.product_store);
 
-  const [selectedAddress, setSelectedAddress] = useState(null);
+  selectedAddress = searchParams?.address;
 
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [paymentLoading, setPaymentLoading] = useState(true);
@@ -23,8 +25,6 @@ export default function AddressList() {
   const [orderStatus, setOrderStatus] = useState("pending");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [orderError, setOrderError] = useState("");
-
-  const [isSheetReady, setIsSheetReady] = useState(false);
 
   const fetchPaymentSheetParams = async () => {
     const response = await axios.post(
@@ -81,6 +81,7 @@ export default function AddressList() {
 
   const openPaymentSheet = async () => {
     try {
+      setOrderStatus("pending");
       setPaymentLoading(true);
       await initializePaymentSheet();
       const { error } = await presentPaymentSheet();
@@ -97,29 +98,32 @@ export default function AddressList() {
       }
     } catch (error) {
       console.error(error);
-    } finally {
-      setPaymentLoading(false);
     }
+    // finally {
+    //   setPaymentLoading(false);
+    // }
   };
 
   useEffect(() => {
     openPaymentSheet();
   }, []);
 
-  //   const handlePaymentOpen = async () => {
-  //     openPaymentSheet();
-  //   };
-
   return (
-    <SafeAreaView className="bg-white">
-      <Stack.Screen
-        options={{
-          title: "CheckOut",
-          headerShown: false,
-          headerShadowVisible: false,
-        }}
-      />
-
+    <>
+      <SafeAreaView className="bg-white">
+        <Stack.Screen
+          options={{
+            headerShown: false,
+            headerShadowVisible: false,
+          }}
+        />
+        <View className="min-h-screen flex-1 items-center justify-center">
+          <ActivityIndicator size={35} />
+          <Text className="mt-4">
+            Please do not close or do not press back button..
+          </Text>
+        </View>
+      </SafeAreaView>
       {paymentLoading && (
         <PlaceOrderModal
           modalVisible={isModalVisible}
@@ -128,6 +132,6 @@ export default function AddressList() {
           errorMsg={orderError?.message}
         />
       )}
-    </SafeAreaView>
+    </>
   );
 }
