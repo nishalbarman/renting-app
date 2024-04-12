@@ -11,11 +11,24 @@ const addressSchema = new mongoose.Schema(
     city: { type: String },
     longitude: { type: String, required: true },
     latitude: { type: String, required: true },
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"], // GeoJSON type
+        required: true,
+      },
+      coordinates: {
+        type: [Number], // Array of [longitude, latitude]
+        required: true,
+      },
+    },
   },
   {
     timestamps: true,
   }
 );
+
+addressSchema.index({ location: "2dsphere" });
 
 const Address =
   mongoose.models.address || mongoose.model("address", addressSchema);
