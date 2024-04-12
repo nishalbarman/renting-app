@@ -55,9 +55,9 @@ function PlaceOrderModal({
     <Modal animationType="slide" transparent={true} visible={modalVisible}>
       <View
         style={{
-          backgroundColor: "rgba(0,0,0,0.2)",
+          backgroundColor: "rgba(0,0,0,0.6)",
         }}
-        className="flex-1 items-center justify-center mt-[22px]">
+        className="flex-1 items-center justify-center mt-[22px] min-h-screen">
         {orderPlaceStatus === "pending" ? (
           <View
             style={styles.modalView}
@@ -109,6 +109,7 @@ function PlaceOrderModal({
             <Pressable
               className="w-full mx-2 bg-dark-purple rounded-md h-10 items-center justify-center mt-4"
               onPress={() => {
+                router.dismiss();
                 setModalVisible(false);
               }}>
               <Text style={styles.textStyle}>Close</Text>

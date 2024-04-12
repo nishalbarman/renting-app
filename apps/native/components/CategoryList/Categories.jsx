@@ -41,13 +41,6 @@ function Categories() {
     }
   };
 
-  // const {
-  //   data: categoryList,
-  //   isError,
-  //   isLoading,
-  //   error,
-  // } = useGetAllCategoryQuery();
-
   useEffect(() => {
     getCategories();
   }, []);
@@ -55,14 +48,14 @@ function Categories() {
   useEffect(() => {
     (() => {
       // if we have less categories then totalPage will be 1
-      if (totalPages > 1) {
+      if (totalPages > -1) {
         setCategoryList([
           ...categoryList,
           {
             _id: "cate_id_unique",
             categoryName: "See More",
             categoryImage:
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTP160L0gKtNyA1orI9wOOSQpk6Djh-KIl_Z2rhoY2RCA&s",
+              "https://cdn-icons-png.flaticon.com/512/3137/3137672.png",
           },
         ]);
       }
