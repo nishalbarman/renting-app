@@ -61,7 +61,7 @@ function product() {
   const [inCart, setInCart] = useState(false);
 
   // FEEDBACK: section realted states
-  const [doesUserBoughtThisProduct, setDoesUserBoughtThisProduct] =
+  const [hasUserBoughtThisProduct, setHasUserBoughtThisProduct] =
     useState(false);
   const [feedbacks, setFeedbacks] = useState([]);
 
@@ -122,7 +122,7 @@ function product() {
       );
       const { data } = res;
       setProductDetails(data?.product || {});
-      setDoesUserBoughtThisProduct(data?.doesUserBoughtThisProduct || false);
+      setHasUserBoughtThisProduct(data?.hasUserBoughtThisProduct || false);
     } catch (error) {
       handleError(error);
     }
@@ -741,7 +741,7 @@ function product() {
                     </View>
                   </View>
 
-                  {doesUserBoughtThisProduct && (
+                  {hasUserBoughtThisProduct && (
                     <TouchableOpacity
                       onPress={handleReviewSheetOpen}
                       className="rounded-full w-[40px] h-[40px] flex flex-row self-start items-center justify-center bg-dark-purple shadow">
@@ -771,21 +771,6 @@ function product() {
                     ) : (
                       <Text className="text-lg">No reviews</Text>
                     )}
-                    {/* <FeedbackCard
-                  userIcon="https://harleydietitians.co.uk/wp-content/uploads/2018/11/no_profile_img.png"
-                  feedbackGivenBy="Nishal Barman"
-                  feedBackDate="24 June 2023"
-                  starsGiven={2}
-                  feedbackText="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eos placeat libero laborum mollitia. Accusantium numquam minima voluptas, cupiditate, et praesentium, a quae illum alias quidem molestiae molestias eius nesciunt repellat?"
-                />
-
-                <FeedbackCard
-                  userIcon="https://harleydietitians.co.uk/wp-content/uploads/2018/11/no_profile_img.png"
-                  feedbackGivenBy="Tanmay Barman"
-                  feedBackDate="25 June 2023"
-                  starsGiven={4}
-                  feedbackText="Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eos placeat libero laborum mollitia. Accusantium numquam minima voluptas, cupiditate, et praesentium, a quae illum alias quidem molestiae molestias eius nesciunt repellat?"
-                /> */}
                   </View>
                   {feedbackTotalPages === 0 ||
                     feedbackTotalPages <= feedbackFetchPage || (
