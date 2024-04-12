@@ -73,8 +73,6 @@ router.get("/:productType", async (req, res) => {
       });
     }
 
-    console.log("Order is going to be get!");
-
     const searchQuery = req.query;
 
     const productType = req.params?.productType;

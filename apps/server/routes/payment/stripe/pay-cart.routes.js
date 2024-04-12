@@ -339,6 +339,8 @@ router.post("/:productType", async (req, res) => {
       { apiVersion: "2024-04-10" }
     );
 
+    console.log(centerAddresses[0]._id);
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: paymentObject.amount,
       currency: "inr",
@@ -351,8 +353,8 @@ router.post("/:productType", async (req, res) => {
       description: productNames,
       metadata: {
         paymentTxnId,
-        userId: userDetails._id,
-        centerId: centerAddresses[0]._id,
+        user: userDetails._id.toString(),
+        center: centerAddresses[0]._id.toString(),
         cartProductIds: cartIds.join(","),
       },
     });
