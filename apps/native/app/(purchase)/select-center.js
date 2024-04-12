@@ -19,14 +19,19 @@ import { useDispatch, useSelector } from "react-redux";
 import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
 import { EvilIcons } from "@expo/vector-icons";
 
-import { Stack, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { useGetCenterAddressQuery } from "@store/rtk/apis/centerAddresApi";
 import { setCenterAddress } from "@store/rtk/slices/centerAddressSlice";
+import { useGetAddressQuery } from "@store/rtk/apis/addressApi";
+import axios from "axios";
 
 function LocationMap() {
+  const searchParams = useLocalSearchParams();
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const { jwtToken } = useSelector((state) => state.auth);
 
   const [isLocationNotEnabledModalOpen, setIsLocationNotEnabledModalOpen] =
     useState(false);
@@ -59,12 +64,40 @@ function LocationMap() {
 
   const handleTryPermissionAgain = () => askLocationPermission();
 
-  const {
-    data: centerAddresses,
-    isLoading: isCenterLoadingAddress,
-    isFethcing: isCenterFetchingAddress,
-    error,
-  } = useGetCenterAddressQuery();
+  const [userCloseCenterList, setUserCloseCenterList] = useState([]);
+  const [closestCenter, setClosestCenter] = useState(null);
+
+  useEffect(() => {
+    mapViewRef.current?.animateToRegion(closestCenter?.address, 100);
+  }, [closestCenter]);
+
+  const getCenterLocations = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.EXPO_PUBLIC_API_URL}/center/addresses/${searchParams?.address}`,
+        {
+          headers: {
+            authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      setUserCloseCenterList(response.data.availableCenters);
+      setClosestCenter(response.data.availableCenters[0]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getCenterLocations();
+  }, []);
+
+  // const {
+  //   data: centerAddresses,
+  //   isLoading: isCenterLoadingAddress,
+  //   isFethcing: isCenterFetchingAddress,
+  //   error,
+  // } = useGetAddressQuery();
 
   // const selectedCenterDetails = useSelector(
   //   (state) => state.selectedCenterDetails
@@ -134,9 +167,9 @@ function LocationMap() {
               latitude: selectedCenterAddress?.latitude || 0,
               longitude: selectedCenterAddress?.longitude || 0,
             }}>
-            {!!centerAddresses &&
-              centerAddresses.length > 0 &&
-              centerAddresses.map((center) => (
+            {!!userCloseCenterList &&
+              userCloseCenterList.length > 0 &&
+              userCloseCenterList.map((center) => (
                 <>
                   <Marker
                     onPress={() => {
@@ -144,10 +177,10 @@ function LocationMap() {
                     }}
                     stopPropagation={true}
                     title={center?.centerName}
-                    description={center?.centerName || "Nishal Goal Center"}
+                    description={`Center distance from your location: ${(center?.distance / 1000).toFixed(2)} Km`}
                     coordinate={{
-                      latitude: +center?.latitude,
-                      longitude: +center?.longitude,
+                      latitude: +center?.address?.latitude || 0,
+                      longitude: +center?.address?.longitude || 0,
                     }}>
                     <Image
                       source={{
@@ -171,11 +204,22 @@ function LocationMap() {
               }}
               className="w-fit bg-white h-fit p-4 flex flex-col justify-center items-center rounded-md border border-gray-300 shadow-sm"
               style={{ position: "absolute", bottom: 50 }}>
-              <Text className="text-[12px] font-[poppins]">
-                {!!selectedCenterAddress
-                  ? `${selectedCenterAddress?.name}, ${selectedCenterAddress?.streetName} ${selectedCenterAddress?.locality}, ${selectedCenterAddress?.postalCode}, ${selectedCenterAddress?.country}`
-                  : "No Center Selected"}
-              </Text>
+              {!!selectedCenterAddress ? (
+                <>
+                  <Text className="text-[14px] font-[poppins-bold]">
+                    {selectedCenterAddress.centerName}
+                  </Text>
+                  <Text className="text-[12px] font-[poppins]">
+                    {selectedCenterAddress?.address?.name},{" "}
+                    {selectedCenterAddress?.address?.streetName}{" "}
+                    {selectedCenterAddress?.address?.locality},{" "}
+                    {selectedCenterAddress?.address?.postalCode},{" "}
+                    {selectedCenterAddress?.address?.country}
+                  </Text>
+                </>
+              ) : (
+                <Text>No Center Selected</Text>
+              )}
 
               <TouchableOpacity
                 onStartShouldSetResponder={(event) => true}
