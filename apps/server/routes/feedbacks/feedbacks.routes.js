@@ -53,7 +53,7 @@ router.get("/", async (req, res) => {
 });
 
 // get the feedbacks for one individual product
-router.get("/view/:productId", async (req, res) => {
+router.post("/list/:productId", async (req, res) => {
   try {
     const token = req?.jwt?.token;
     if (!token) {
@@ -64,8 +64,6 @@ router.get("/view/:productId", async (req, res) => {
 
     const userDetails = getTokenDetails(token);
 
-    console.log(TAG, userDetails);
-
     if (!userDetails) {
       return res
         .status(401)
@@ -73,20 +71,32 @@ router.get("/view/:productId", async (req, res) => {
     }
 
     const { productId } = req.params;
+    const productType = req.body?.productType;
     const searchParams = req.query;
+
+    if (!productId || !productType) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
 
     const PAGE = searchParams.page || 1;
     const LIMIT = searchParams.limit || 20;
     const SKIP = (PAGE - 1) * LIMIT;
 
-    const feedbackCount = await Feedback.countDocuments({ product: productId });
+    const feedbackCount = await Feedback.countDocuments({
+      product: productId,
+      productType: productType,
+    });
     const totalPages = Math.ceil(feedbackCount / LIMIT);
-    const feedbacks = await Feedback.find({ product: productId })
+
+    const feedbacks = await Feedback.find({
+      product: productId,
+      productType: productType,
+    })
       .sort({ createdAt: "desc" })
       .skip(SKIP)
       .limit(LIMIT);
 
-    console.log(feedbacks);
+    console.log("Feedbacks for one product ID -->", feedbacks);
 
     return res.status(200).json({ feedbacks, totalPages });
   } catch (error) {
@@ -95,7 +105,7 @@ router.get("/view/:productId", async (req, res) => {
   }
 });
 
-// return one feedback result for the given feedback id
+// FEEDBACK: get one feedback with feedback id
 router.get("/:feedbackId", async (req, res) => {
   try {
     const token = req?.jwt?.token;
@@ -136,10 +146,9 @@ router.get("/:feedbackId", async (req, res) => {
   }
 });
 
-// product create route, admin can create products
+// FEEDBACK CREATE ROUTE
 router.post("/", async (req, res) => {
   try {
-    console.log("am getting the request");
     const token = req?.jwt?.token;
     if (!token) {
       return res
@@ -155,8 +164,13 @@ router.post("/", async (req, res) => {
     }
 
     const reqBody = req.body;
+    const productType = req.body?.productType;
 
     const error = [];
+
+    if (!productType) {
+      error.push("Product Type is missing");
+    }
 
     if (!reqBody.product) {
       error.push("product id is missing");
@@ -174,23 +188,49 @@ router.post("/", async (req, res) => {
       error.push("review start is not properly set");
     }
 
+    // ENABLE THESE LINES ONE PUSHED TO FINAL PRODUCTION
     // check if user really purchased the product
-    // const userOrder = await Order.findOne({ product: reqBody.product });
-    // if (!userOrder) {
-    //   return res.status(400).json({ message: "Not allowed!" });
-    // }
+    const userOrder = await Order.findOne({
+      user: userDetails._id,
+      product: reqBody.product,
+      orderType: productType,
+      orderStatus: "Delivered",
+    });
+
+    if (!userOrder) {
+      return res.status(400).json({
+        message:
+          "You did not purchased this order yet! So not possible to add review.",
+      });
+    }
 
     // check if this user have already gave review or not
     const alreadyGivenFeedback = await Feedback.countDocuments({
       user: userDetails._id,
       product: reqBody.product,
+      productType: productType,
     });
 
-    console.log(alreadyGivenFeedback);
+    console.log("Is Feedback Already Given ->", alreadyGivenFeedback);
 
     if (alreadyGivenFeedback !== 0) {
+      const feedbackUpdate = await Feedback.updateOne(
+        {
+          user: userDetails._id,
+          product: reqBody.product,
+          productType: productType,
+        },
+        {
+          $set: {
+            ...reqBody,
+            givenBy: userDetails.name,
+            user: userDetails._id,
+            productType: productType,
+          },
+        }
+      );
       return res.status(200).json({
-        message: `Feedback was already given by user`,
+        message: `Feedback added`,
       });
     }
 
@@ -199,6 +239,7 @@ router.post("/", async (req, res) => {
       ...reqBody,
       givenBy: userDetails.name,
       user: userDetails._id,
+      productType: productType,
     });
     await feedback.save();
 
@@ -224,6 +265,44 @@ router.post("/", async (req, res) => {
     return res.status(200).json({
       message: `Feedback added`,
     });
+  } catch (error) {
+    console.error(TAG, error);
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+// FETCH FEEDBACK FOR ONE PRODUCT GIVEN BY ONE USER
+router.post("/view/:productId", async (req, res) => {
+  try {
+    const token = req?.jwt?.token;
+    if (!token) {
+      return res
+        .status(401)
+        .json({ redirect: "/auth/login", message: "Authorization failed!" });
+    }
+
+    const userDetails = getTokenDetails(token);
+
+    if (!userDetails) {
+      return res
+        .status(401)
+        .json({ redirect: "/auth/login", message: "Authorization failed!" });
+    }
+
+    const productId = req.params?.productId;
+    const productType = req.body?.productType;
+
+    if (!productId || !productType) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const feedback = await Feedback.findOne({
+      product: productId,
+      productType: productType,
+      user: userDetails._id,
+    });
+
+    return res.status(200).json({ feedback: feedback });
   } catch (error) {
     console.error(TAG, error);
     return res.status(500).json({ message: error.message });

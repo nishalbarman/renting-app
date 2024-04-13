@@ -139,8 +139,11 @@ function product() {
   //  FEEDBACK:  fetch data
   const getFeedbackForProduct = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/feedbacks/view/${productId}?page=${feedbackFetchPage}&limit=${feedbackFetchLimit}`,
+      const res = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/feedbacks/list/${productId}?page=${feedbackFetchPage}&limit=${feedbackFetchLimit}`,
+        {
+          productType: productType,
+        },
         {
           headers: {
             authorization: `Bearer ${jwtToken}`,
@@ -148,9 +151,9 @@ function product() {
         }
       );
 
-      if (res.data?.data?.feedbacks && res.data?.data.totalPages) {
-        setFeedbacks([...feedbacks, ...res.data?.data?.feedbacks]);
-        setFeedbackTotalPages(res.data?.data.totalPages || 0);
+      if (res.data?.feedbacks && res.data?.totalPages) {
+        setFeedbacks([...feedbacks, ...res.data?.feedbacks]);
+        setFeedbackTotalPages(res.data?.totalPages || 0);
       }
     } catch (error) {
       handleError(error);
@@ -179,7 +182,11 @@ function product() {
       if (!productDetails) return;
 
       // product details doesnot contain any variant
-      if (!productDetails?.productVariant) {
+      console.log("Product variant -->", productDetails?.productVariant);
+      if (
+        !productDetails?.productVariant ||
+        productDetails.productVariant <= 0
+      ) {
         setButtonDisabled(false);
         checkVariantInCart([{}]); // we have no variant so adding blank object, so that when function tries to access matchedVariant._id its gets undefined. (to eliminate the variant)
         setInStock(productDetails?.availableStocks > 0);
@@ -327,7 +334,10 @@ function product() {
         productType: productType,
       };
 
-      if (productDetails?.productVariant) {
+      if (
+        productDetails?.productVariant &&
+        productDetails.productVariant.length > 0
+      ) {
         cartObject.variant = filteredVariant._id;
       }
 

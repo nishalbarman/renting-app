@@ -153,7 +153,7 @@ router.post("/view/:productId", async (req, res) => {
 
     const userDetails = getTokenDetails(token);
 
-    console.log(TAG, userDetails);
+    // console.log(TAG, userDetails);
 
     if (!userDetails) {
       return res
@@ -189,21 +189,20 @@ router.post("/view/:productId", async (req, res) => {
       orderStatus: "Delivered",
     });
 
-    const doesUserBoughtThisProduct = await Order.countDocuments({
+    const hasUserBoughtThisProduct = await Order.countDocuments({
       product: params.productId,
       user: userDetails._id,
       orderType: productType,
       orderStatus: "Delivered",
     });
 
-    console.log("bought", doesUserBoughtThisProduct);
     if (!product) {
       return res.status(404).json({ message: "No such product found." });
     }
 
     return res.status(200).json({
       product,
-      doesUserBoughtThisProduct: !!doesUserBoughtThisProduct,
+      hasUserBoughtThisProduct: !!hasUserBoughtThisProduct,
     });
   } catch (error) {
     console.error(TAG, error);
@@ -277,9 +276,9 @@ router.post("/variant/instock/:productId", async (req, res) => {
     const searchParams = req.params;
     const body = req.body;
 
-    console.log("+----------------+");
-    console.log(body);
-    console.log("+----------------+");
+    // console.log("+----------------+");
+    // console.log(body);
+    // console.log("+----------------+");
 
     let inStock = false;
 
@@ -287,9 +286,9 @@ router.post("/variant/instock/:productId", async (req, res) => {
       const Variant = await ProductVariant.findOne({
         _id: body.variant,
       });
-      console.log(Variant);
+      // console.log(Variant);
       inStock = !!Variant && Variant?.availableStocks > 0;
-      console.log("In stock --> ", inStock);
+      // console.log("In stock --> ", inStock);
       return res.json({
         inStock,
       });
@@ -306,7 +305,7 @@ router.post("/variant/instock/:productId", async (req, res) => {
 
     // const productItem = await Product.findOne(filterObject);
 
-    // console.log(productItem.productVariant);
+    // // console.log(productItem.productVariant);
 
     // inStock = !!productItem && productItem?.availableStocks > 0;
 

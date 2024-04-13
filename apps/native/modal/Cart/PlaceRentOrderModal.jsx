@@ -85,7 +85,7 @@ function PlaceOrderModal({
             <Text className="mt-5 text-lg font-bold text-center">
               Order Placed
             </Text>
-            <Text className="mt-2 text-sm text-center underline">
+            <Text className="mt-2 text-sm text-center">
               Redirecting To My Order Section in {redirectRemaining} sections
             </Text>
             <Pressable

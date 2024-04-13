@@ -108,7 +108,8 @@ function OrderItem({
       {orderStatus === "Accepted" && (
         <View className="border border-[#79E7A8] bg-[#f5fff6] px-3 py-2 mt-[-5px] rounded-md mb-3">
           <Text className="text-[#36664c]">
-            Your order is accepted, and moved for further proccessing.
+            Your order has been accepted and is now being moved for further
+            processing.
           </Text>
         </View>
       )}

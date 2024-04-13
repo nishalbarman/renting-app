@@ -89,7 +89,7 @@ router.post("/:productType", async (req, res) => {
           const Quantity = cartItem.quantity;
           totalPrice = Price * Quantity;
 
-          shippingPrice += cartItem.variant.shippingPrice;
+          shippingPrice += cartItem.product.shippingPrice;
         }
         // else if type is rent and product does not have variants (diffent color different size etc etc)
         else if (productType === "rent" && !!cartItem.variant) {

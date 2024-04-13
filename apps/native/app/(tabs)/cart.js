@@ -33,8 +33,6 @@ const CartPage = () => {
 
   const [amountDetails, setAmountDetails] = useState();
 
-  // console.log("Amount Details -->", amountDetails);
-
   const {
     data: cartItems,
     isLoading: isCartLoading,
@@ -48,8 +46,8 @@ const CartPage = () => {
   }, [productType]);
 
   useEffect(() => {
-    (async () => {
-      if (isCartLoading) {
+    (() => {
+      if (isCartLoading || isCartFetching) {
         return;
       }
 
@@ -80,7 +78,7 @@ const CartPage = () => {
             totalOriginalPrice = OriginalPrice * Quantity;
             discountedTotalPrice = Price * Quantity;
 
-            shippingPrice += cartItem.variant.shippingPrice;
+            shippingPrice += cartItem.product.shippingPrice;
           }
           // else if type is rent and product does not have variants (diffent color different size etc etc)
           else if (productType === "rent" && !!cartItem?.variant) {
@@ -135,8 +133,6 @@ const CartPage = () => {
   }, [cartItems]);
 
   const handleChangeCenter = async () => {
-    // if (productType === "buy") router.push("/select-address");
-    // else router.push("/select-center-location");
     router.push("/select-address");
   };
 
@@ -260,13 +256,15 @@ const CartPage = () => {
                         <View>
                           {isCenterSelected ? (
                             <>
-                              <Text className="text-[17px] mt-1 font-bold">
+                              <Text className="text-[17px] mt-1">
                                 {selectedCenterAddress?.centerName}
                               </Text>
-                              <Text className="text-[17px] mb-1 font-bold">
+
+                              <Text className="text-[16px] font-[poppins] my-1">{`${selectedCenterAddress?.address?.name}, ${selectedCenterAddress?.address?.streetName}, ${selectedCenterAddress?.address?.locality}, ${selectedCenterAddress?.address?.postalCode}, ${selectedCenterAddress?.address?.country}`}</Text>
+
+                              <Text className="text-[17px] mb-1 font-semibold">
                                 +91-{selectedCenterAddress?.user?.mobileNo}
                               </Text>
-                              <Text className="text-[16px] font-[poppins]">{`${selectedCenterAddress?.address?.name}, ${selectedCenterAddress?.address?.streetName}, ${selectedCenterAddress?.address?.locality}, ${selectedCenterAddress?.address?.postalCode}, ${selectedCenterAddress?.address?.country}`}</Text>
                             </>
                           ) : (
                             <Text className="text-[16px] font-[poppins]">

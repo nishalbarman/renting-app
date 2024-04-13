@@ -8,6 +8,7 @@ const feedbackSchema = new mongoose.Schema(
     product: { type: mongoose.Types.ObjectId, ref: "Product" },
     givenBy: { type: String, required: true },
     user: { type: mongoose.Types.ObjectId, ref: "User" },
+    productType: { type: String, required: true },
   },
   {
     timestamps: true,

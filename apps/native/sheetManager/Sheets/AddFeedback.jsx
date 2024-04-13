@@ -1,7 +1,8 @@
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
+  ActivityIndicator,
   ScrollView,
   Text,
   TextInput,
@@ -19,25 +20,58 @@ export default function AddFeedback({ payload }) {
   }, []);
 
   const { jwtToken } = useSelector((state) => state.auth);
+  const { productType } = useSelector((state) => state.product_store);
+
+  const [isReviewSubmitting, setIsReviewSubmitting] = useState(false);
 
   const [currentUserReviewStar, setCurrentUserReviewStar] = useState(1);
-
   const [reviewDescription, setReviewDescription] = useState("");
 
-  console.log(payload);
+  const [alreadyGivenFeedback, setAlreadyGivenFeedback] = useState({});
+
+  console.log(alreadyGivenFeedback);
+
+  useEffect(() => {
+    setCurrentUserReviewStar(alreadyGivenFeedback?.starsGiven || 1);
+    setReviewDescription(alreadyGivenFeedback?.description || "");
+  }, [alreadyGivenFeedback]);
+
+  const getFeedbackGivenByUser = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/feedbacks/view/${payload.productId}`,
+        {
+          productType: productType,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+
+      if (res.data?.feedback) {
+        setAlreadyGivenFeedback(res.data?.feedback);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getFeedbackGivenByUser();
+  }, []);
 
   const handleSubmitReview = async () => {
     try {
-      console.log({
-        starsGiven: currentUserReviewStar,
-        description: reviewDescription,
-      });
+      setIsReviewSubmitting(true);
       const response = await axios.post(
         `${process.env.EXPO_PUBLIC_API_URL}/feedbacks`,
         {
           starsGiven: currentUserReviewStar,
           description: reviewDescription,
           product: payload.productId,
+          productType: productType,
         },
         {
           headers: {
@@ -50,6 +84,8 @@ export default function AddFeedback({ payload }) {
       }
     } catch (error) {
       console.error("Add Feedback Sheet ->", error);
+    } finally {
+      setIsReviewSubmitting(false);
     }
   };
 
@@ -94,6 +130,7 @@ export default function AddFeedback({ payload }) {
             </View>
             <View className={"w-[90%] border rounded-lg"}>
               <TextInput
+                value={reviewDescription}
                 onChangeText={(text) => {
                   setReviewDescription(text);
                 }}
@@ -104,9 +141,16 @@ export default function AddFeedback({ payload }) {
               />
             </View>
             <TouchableOpacity
+              disabled={isReviewSubmitting}
               onPress={handleSubmitReview}
               className="flex items-center justify-center w-[200px] h-[52px] p-[0px_20px] bg-[#d875ff] rounded-lg">
-              <Text className="text-white font-bold">Add Review</Text>
+              {isReviewSubmitting ? (
+                <ActivityIndicator size={25} color={"white"} />
+              ) : Object.keys(alreadyGivenFeedback).length > 0 ? (
+                <Text className="text-white font-bold">Update Review</Text>
+              ) : (
+                <Text className="text-white font-bold">Add Review</Text>
+              )}
             </TouchableOpacity>
           </View>
         </ScrollView>
