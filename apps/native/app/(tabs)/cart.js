@@ -214,6 +214,26 @@ const CartPage = () => {
     setRefreshing(false);
   }, []);
 
+  const { ordreRefetch } = useSelector((state) => state.order);
+
+  useEffect(() => {
+    console.log("Hook is getting called~");
+    let timer;
+    (() => {
+      console.log("cart status", isCartLoading, isCartFetching);
+      if (isCartLoading) return;
+      if (!cartItems || cartItems.length <= 0) return clearInterval(timer);
+      timer = setInterval(() => {
+        if (isCartFetching) return;
+        refetch();
+      }, 10000);
+    })();
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [ordreRefetch]);
+
   return (
     <>
       <SafeAreaView className={`flex-1 bg-white`}>
@@ -224,7 +244,7 @@ const CartPage = () => {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
           <View className="pb-2">
-            {isCartLoading ? (
+            {isCartLoading || isCartFetching ? (
               <>
                 <AddressCardSkeletop />
               </>

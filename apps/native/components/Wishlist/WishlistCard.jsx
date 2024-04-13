@@ -6,29 +6,7 @@ import { useRouter } from "expo-router";
 import { useDeleteWishlistMutation } from "@store/rtk/apis/wishlistApi";
 import AnimateSpin from "../AnimateSpin/AnimateSpin";
 
-function Product({
-  details: {
-    _id,
-    previewUrl,
-    title,
-    category,
-    rentingPrice,
-    discountedPrice,
-    originalPrice,
-    showPictures,
-    description,
-    stars,
-    totalFeedbacks,
-    productType,
-    shippingPrice,
-    isSizeVaries,
-    isColorVaries,
-    availableVarients,
-    availableSizes,
-    availableColors,
-  },
-  width,
-}) {
+function Product({ details, width }) {
   const router = useRouter();
 
   const [removeFromWishlist, { isLoading }] = useDeleteWishlistMutation();
@@ -43,15 +21,17 @@ function Product({
 
   const handleRemoveFromWishlist = async () => {
     try {
-      const resPayload = await removeFromWishlist({ _id: _id }).unwrap();
-      console.log("Remove from wishlist response -->", resPayload);
+      const resPayload = await removeFromWishlist({
+        _id: details._id,
+      }).unwrap();
+      // console.log("Remove from wishlist response -->", resPayload);
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleProductClick = () => {
-    router.push(`/view?id=${_id}`);
+    router.push(`/view?id=${details._id}`);
   };
 
   return (
@@ -60,13 +40,14 @@ function Product({
       activeOpacity={0.6}
       className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-white rounded-md shadow-sm pb-[1%]`}>
       <View className="w-[100%] h-[200px] p-[3%] ">
-        {productType === "both" || (
+        {details.productType === "both" || (
           <Text
             style={{
-              backgroundColor: productType === "rent" ? "red" : "#41a63f",
+              backgroundColor:
+                details.productType === "rent" ? "red" : "#41a63f",
             }}
             className="bg-[#41a63f] text-white rounded-[10px] p-[4px_10px] absolute top-2 left-2 z-[1] text-[11px] font-extrabold uppercase">
-            {productType === "buy" ? "Buy" : "Rent"}
+            {details.productType === "buy" ? "Buy" : "Rent"}
           </Text>
         )}
 
@@ -103,7 +84,7 @@ function Product({
         <Image
           style={{ height: 200 }}
           className="w-[100%] h-[200px] bg-[transparent] rounded-lg flex-1"
-          source={{ uri: previewUrl }}
+          source={{ uri: details.previewUrl }}
           contentFit="contain"
           contentPosition={"center"}
           onError={(error) => console.error("Image load error:", error)}
@@ -115,7 +96,7 @@ function Product({
         <Text
           numberOfLines={2}
           className="text-[14px] font-[poppins-mid] leading-[22px] w-[100%]">
-          {title}
+          {details.title}
         </Text>
 
         <View className="flex flex-row items-center">
@@ -127,19 +108,23 @@ function Product({
                   onPress={() => {
                     setCurrentUserReview(index + 1);
                   }}
-                  name={index + 1 <= Math.round(stars) ? "star" : "staro"}
+                  name={
+                    index + 1 <= Math.round(details.stars) ? "star" : "staro"
+                  }
                   size={18}
-                  color={index + 1 <= Math.round(stars) ? "orange" : "black"}
+                  color={
+                    index + 1 <= Math.round(details.stars) ? "orange" : "black"
+                  }
                 />
               );
             })}
           </View>
           <Text className="ml-1 text-[#A7A6A7] text-[13px] align-middle">
-            ({totalFeedbacks})
+            ({details.totalFeedbacks})
           </Text>
         </View>
 
-        {productType === "both" ? (
+        {details.productType === "both" ? (
           <View className="flex flex-col gap-y-[0.8px]">
             {/* <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
               ₹{rentingPrice}{" "}
@@ -156,18 +141,18 @@ function Product({
               )}
             </Text> */}
           </View>
-        ) : productType === "rent" ? (
+        ) : details.productType === "rent" ? (
           <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
-            ₹{rentingPrice}{" "}
+            ₹{details.rentingPrice}{" "}
             <Text className="text-[13px] align-middle">/ Day</Text>
           </Text>
         ) : (
           <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
-            ₹{discountedPrice}
+            ₹{details.discountedPrice}
             {"  "}
-            {originalPrice && (
+            {details.originalPrice && (
               <Text className="text-[13px] text-[#727273] line-through line-offset-[2px]">
-                ₹{originalPrice}
+                ₹{details.originalPrice}
               </Text>
             )}
           </Text>

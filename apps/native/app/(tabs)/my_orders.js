@@ -25,7 +25,7 @@ const OrderScreen = () => {
   const [orders, setOrders] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
 
-  const getOrders = async () => {
+  const getOrders = async (type = undefined) => {
     try {
       setOrderFetching(true);
       const response = await axios.get(
@@ -38,7 +38,9 @@ const OrderScreen = () => {
       );
 
       console.log(response);
-      setOrders(response.data?.data || []);
+      if (!!response.data?.data && !type) {
+        setOrders([...orders, ...response.data?.data]);
+      } else setOrders(response.data?.data);
       setTotalPage(response.data?.totalPage || 0);
     } catch (error) {
       console.error(error);
@@ -49,17 +51,19 @@ const OrderScreen = () => {
 
   const orderRefetch = useSelector((state) => state.order.orderRefetch);
 
-  console.log("Order Refetch --> ", orderRefetch);
-
   useEffect(() => {
     getOrders();
-  }, [paginationPage, orderRefetch, productType]);
+  }, [paginationPage, productType]);
+
+  useEffect(() => {
+    getOrders("cancel");
+  }, [orderRefetch]);
 
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    await getOrders();
+    await getOrders("cancel");
     setRefreshing(false);
   }, []);
 

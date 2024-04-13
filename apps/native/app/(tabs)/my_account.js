@@ -10,7 +10,9 @@ import {
 import { FontAwesome, Feather } from "@expo/vector-icons";
 
 import { SheetManager } from "react-native-actions-sheet";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { clearLoginSession } from "@store/rtk/slices/authSlice";
+import { useRouter } from "expo-router";
 
 const AccountScreen = () => {
   const { name } = useSelector((state) => state.auth);
@@ -18,6 +20,15 @@ const AccountScreen = () => {
   const handleAddressSheetOpen = useCallback(() => {
     SheetManager.show("address-list-sheet");
   }, []);
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    dispatch(clearLoginSession());
+    router.dismissAll();
+    router.replace("/auth/login");
+  };
 
   return (
     <SafeAreaView className={`flex-1`}>
@@ -33,41 +44,43 @@ const AccountScreen = () => {
           </View>
 
           {/* GRID LAYOUT FOUR ITEMS */}
-          {/* <View className="flex flex-wrap flex-row justify-center">
-          <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4 flex-grow">
-            <FontAwesome
-              name="envelope"
-              size={24}
-              color="gray"
-              className="mb-2"
-            />
-            <Text className="mt-2">Orders</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
-            <FontAwesome name="heart" size={24} color="gray" className="mb-2" />
-            <Text className="mt-2">Wishlist</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
-            <FontAwesome name="tag" size={24} color="gray" className="mb-2" />
-            <Text className="mt-2">Coupons</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
-            <FontAwesome
-              name="question-circle"
-              size={24}
-              color="gray"
-              className="mb-2"
-            />
-            <Text className="mt-2">Help Center</Text>
-          </TouchableOpacity>
-        </View> */}
+          {/* <View className="flex flex-wrap flex-row justify-center mb-4">
+            <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4 flex-grow">
+              <FontAwesome
+                name="envelope"
+                size={24}
+                color="gray"
+                className="mb-2"
+              />
+              <Text className="mt-2">Orders</Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
+              <FontAwesome
+                name="heart"
+                size={24}
+                color="gray"
+                className="mb-2"
+              />
+              <Text className="mt-2">Wishlist</Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
+              <FontAwesome name="tag" size={24} color="gray" className="mb-2" />
+              <Text className="mt-2">Coupons</Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
+              <FontAwesome
+                name="question-circle"
+                size={24}
+                color="gray"
+                className="mb-2"
+              />
+              <Text className="mt-2">Help Center</Text>
+            </TouchableOpacity>
+          </View> */}
 
           <View className="mt-1">
             <Text className="font-semibold text-lg mb-2">Account Settings</Text>
-            {/* <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex justify-between flex-row items-center p-4 mb-2">
-            <Text>Flipkart Plus</Text>
-            <Feather name="chevron-right" size={24} color="#787878" />
-          </TouchableOpacity> */}
+
             <TouchableOpacity
               onPress={() => {
                 SheetManager.show("update-profile");
@@ -81,6 +94,20 @@ const AccountScreen = () => {
               onPress={handleAddressSheetOpen}
               className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center px-4 h-14 mb-2">
               <Text className="text-md">Saved Addresses</Text>
+              <Feather name="chevron-right" size={24} color="#787878" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={handleAddressSheetOpen}
+              className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center px-4 h-14 mb-2">
+              <Text className="text-md">Become a Center</Text>
+              <Feather name="chevron-right" size={24} color="#787878" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={handleLogout}
+              className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center px-4 h-14 mb-2">
+              <Text className="text-md">Logout</Text>
               <Feather name="chevron-right" size={24} color="#787878" />
             </TouchableOpacity>
           </View>

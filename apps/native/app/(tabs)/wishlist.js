@@ -14,22 +14,21 @@ export default function Tab() {
   const {
     data: wishlistData,
     isLoading: isWishlistDataLoading,
+    isFetching: isWishlistDataFetching,
     isError: isWishlistDataError,
     error: wishlistDataError,
     refetch,
   } = useGetWishlistQuery(productType);
 
-  console.log(wishlistData);
+  console.log("Wishlist items -->", wishlistData);
 
   useEffect(() => {
     refetch();
   }, [productType]);
 
-  console.log("Wishlist data from wishlist tab ==>", wishlistData);
-
   return (
     <SafeAreaView className="flex-1 bg-white p-3">
-      {isWishlistDataLoading ? (
+      {isWishlistDataLoading || isWishlistDataFetching ? (
         <ProductListSkeleton />
       ) : (
         <View>
@@ -37,8 +36,11 @@ export default function Tab() {
             <FlatList
               data={wishlistData}
               renderItem={({ item }) => {
-                console.log("Wishlit product", item?.product);
-                return <WishlistCard details={item?.product} />;
+                return item?.product ? (
+                  <WishlistCard details={item?.product} />
+                ) : (
+                  <></>
+                );
               }}
               numColumns={2}
               keyExtractor={(item, index) => index.toString()}

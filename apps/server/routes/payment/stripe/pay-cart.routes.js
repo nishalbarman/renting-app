@@ -217,7 +217,7 @@ router.post("/:productType", async (req, res) => {
         if (!!item.variant) {
           return {
             ...item,
-            product: item._id,
+            product: item.product._id,
 
             // order related
             orderId: uuidv4(),
@@ -228,6 +228,7 @@ router.post("/:productType", async (req, res) => {
             previewUrl: item.product.previewUrl,
             price: item.variant.discountedPrice,
             shippingPrice: item.variant.shippingPrice,
+            quantity: item.quantity,
             orderType: "buy",
             color: item.variant.color,
             size: item.variant.size,
@@ -247,7 +248,7 @@ router.post("/:productType", async (req, res) => {
         // if no variant available
         return {
           ...item,
-          product: item._id,
+          product: item.product._id,
 
           // order related
           orderId: uuidv4(),
@@ -258,6 +259,7 @@ router.post("/:productType", async (req, res) => {
           previewUrl: item.product.previewUrl,
           price: item.product.discountedPrice,
           shippingPrice: item.product.shippingPrice,
+          quantity: item.quantity,
           orderType: "buy",
           address: "address",
 
@@ -266,57 +268,6 @@ router.post("/:productType", async (req, res) => {
           orderStatus: "Pending",
           shipmentType: "delivery_partner",
           paymentMode: "PREPAID",
-
-          // user details
-          user: userDetails._id,
-        };
-      });
-    } else {
-      txnAndOrderIdInsertedCartItems = cartItemsForUser.map((item) => {
-        if (!!item.variant) {
-          return {
-            ...item,
-            product: item._id,
-
-            // order related
-            orderId: uuidv4(),
-            paymentTxnId: paymentTxnId,
-
-            // product details
-            title: item.product.title,
-            previewUrl: item.product.previewUrl,
-            price: item.variant.discountedPrice,
-            shippingPrice: item.variant.shippingPrice,
-            orderType: "rent",
-            color: item.variant.color,
-            size: item.variant.size,
-            address: item.user.defaultSelectedAddress,
-
-            center: centerAddresses[0]._id,
-
-            // user details
-            user: userDetails._id,
-          };
-        }
-
-        // if no variant available
-        return {
-          ...item,
-          product: item._id,
-
-          // order related
-          orderId: uuidv4(),
-          paymentTxnId: paymentTxnId,
-
-          // product details
-          title: item.product.title,
-          previewUrl: item.product.previewUrl,
-          price: item.rentingPrice,
-          shippingPrice: item.shippingPrice,
-          orderType: "rent",
-          address: item.user.defaultSelectedAddress,
-
-          center: centerAddresses[0]._id,
 
           // user details
           user: userDetails._id,

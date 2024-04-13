@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState, useTransition } from "react";
 import {
   ActivityIndicator,
   Modal,
@@ -12,6 +12,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
 import { orderRefetch } from "@store/rtk/slices/orderSlice";
+import { useGetCartQuery } from "@store/rtk/apis/cartApi";
 
 function PlaceOrderModal({
   modalVisible,
@@ -22,34 +23,41 @@ function PlaceOrderModal({
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [redirectRemaining, setRedirectRemaining] = useState(10);
+  const handleGotoMyOrder = () => {
+    clearInterval(timerRef.current);
+    setModalVisible(false);
+    dispatch(orderRefetch());
+    if (router.canDismiss()) {
+      router.dismiss();
+    }
+    router.replace("/(tabs)/my_orders");
+  };
 
   const timerRef = useRef(null);
+  const [redirectRemaining, setRedirectRemaining] = useState(10);
 
   useEffect(() => {
-    (() => {
-      if (orderPlaceStatus !== "success") {
-        return clearImmediate(timerRef.current);
-      }
-      timerRef.current = setInterval(() => {
-        setRedirectRemaining((prev) => {
-          console.log(timerRef.current);
-          if (prev <= 1) {
-            clearInterval(timerRef.current);
-            setModalVisible(false);
-            dispatch(orderRefetch(1));
-            router.replace("/(tabs)/my_orders");
-            return 10;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    })();
+    if (orderPlaceStatus !== "success") {
+      clearInterval(timerRef.current);
+      return;
+    }
+
+    const intervalId = setInterval(() => {
+      setRedirectRemaining((prev) => {
+        if (prev <= 1) {
+          handleGotoMyOrder();
+          return 10;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    timerRef.current = intervalId;
 
     return () => {
       clearInterval(timerRef.current);
     };
-  }, [orderPlaceStatus]);
+  }, [orderPlaceStatus, handleGotoMyOrder]);
 
   return (
     <Modal animationType="slide" transparent={true} visible={modalVisible}>
@@ -82,15 +90,7 @@ function PlaceOrderModal({
             </Text>
             <Pressable
               className="w-full mx-2 bg-dark-purple rounded-md h-10 items-center justify-center mt-4"
-              onPress={() => {
-                setModalVisible(false);
-                clearInterval(timerRef.current);
-                dispatch(orderRefetch());
-                if (router.canDismiss()) {
-                  router.dismiss();
-                }
-                router.replace("/(tabs)/my_orders");
-              }}>
+              onPress={handleGotoMyOrder}>
               <Text style={styles.textStyle}>My Orders</Text>
             </Pressable>
           </View>

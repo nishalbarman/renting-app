@@ -142,7 +142,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/view/:productId", async (req, res) => {
+router.post("/view/:productId", async (req, res) => {
   try {
     const token = req?.jwt?.token;
     if (!token) {
@@ -162,7 +162,13 @@ router.get("/view/:productId", async (req, res) => {
     }
 
     const params = req.params;
-    console.log(TAG, params);
+    const productType = req.body?.productType;
+
+    if (!productType) {
+      return res
+        .status(400)
+        .json({ redirect: "/products", message: "Product Type missing!" });
+    }
 
     // check whether we have the product id or not
     if (!params.productId) {
@@ -176,17 +182,29 @@ router.get("/view/:productId", async (req, res) => {
       { path: "productVariant" },
     ]);
 
+    console.log("has user bought", {
+      product: params.productId,
+      user: userDetails._id,
+      orderType: productType,
+      orderStatus: "Delivered",
+    });
+
     const doesUserBoughtThisProduct = await Order.countDocuments({
       product: params.productId,
       user: userDetails._id,
+      orderType: productType,
+      orderStatus: "Delivered",
     });
 
-    console.log(TAG, product);
+    console.log("bought", doesUserBoughtThisProduct);
     if (!product) {
       return res.status(404).json({ message: "No such product found." });
     }
 
-    return res.status(200).json({ product, doesUserBoughtThisProduct });
+    return res.status(200).json({
+      product,
+      doesUserBoughtThisProduct: !!doesUserBoughtThisProduct,
+    });
   } catch (error) {
     console.error(TAG, error);
     return res.status(500).json({ message: error.message });

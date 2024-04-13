@@ -8,9 +8,12 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useStripe } from "@stripe/stripe-react-native";
 import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";
+import { useGetCartQuery } from "@store/rtk/apis/cartApi";
 
 export default function AddressList() {
   const searchParams = useLocalSearchParams();
+
+  const { refetch: refetchCart } = useGetCartQuery();
 
   const { name, mobileNo, email, jwtToken } = useSelector(
     (state) => state.auth
@@ -85,16 +88,15 @@ export default function AddressList() {
       setPaymentLoading(true);
       await initializePaymentSheet();
       const { error } = await presentPaymentSheet();
-      console.log("Presented");
+
+      setIsModalVisible(true);
 
       if (error) {
         console.error("Error ->", error);
         setOrderStatus("failed");
-        setIsModalVisible(true);
         setOrderError(error);
       } else {
         setOrderStatus("success");
-        setIsModalVisible(true);
       }
     } catch (error) {
       console.error(error);

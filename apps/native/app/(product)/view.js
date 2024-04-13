@@ -112,17 +112,25 @@ function product() {
   // PRODUCTS: fetch
   const getProductDetails = async () => {
     try {
-      const res = await axios.get(
+      const res = await axios.post(
         `${process.env.EXPO_PUBLIC_API_URL}/products/view/${productId}`,
+        {
+          productType: productType,
+        },
         {
           headers: {
             authorization: `Bearer ${jwtToken}`,
           },
         }
       );
-      const { data } = res;
-      setProductDetails(data?.product || {});
-      setHasUserBoughtThisProduct(data?.hasUserBoughtThisProduct || false);
+
+      console.log(res);
+      setProductDetails(res.data?.product || {});
+      console.log(
+        "Is order placed already -->",
+        res.data?.hasUserBoughtThisProduct
+      );
+      setHasUserBoughtThisProduct(res.data?.hasUserBoughtThisProduct);
     } catch (error) {
       handleError(error);
     }
