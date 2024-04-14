@@ -381,8 +381,8 @@ function product() {
                 height={width}
                 autoPlay={false}
                 data={
-                  filteredVariant?.showPictures ||
-                  productDetails?.showPictures ||
+                  filteredVariant?.slideImages ||
+                  productDetails?.slideImages ||
                   []
                 }
                 scrollAnimationDuration={1000}
@@ -394,7 +394,7 @@ function product() {
                   return (
                     <Image
                       className="bg-white w-[100%] h-[100%]"
-                      source={{ uri: productDetails.showPictures[index] }}
+                      source={{ uri: productDetails.slideImages[index] }}
                       contentFit="contain"
                       contentPosition={"center"}
                     />
@@ -403,8 +403,8 @@ function product() {
               />
               <AnimatedDotsCarousel
                 length={
-                  filteredVariant?.showPictures?.length ||
-                  productDetails?.showPictures?.length ||
+                  filteredVariant?.slideImages?.length ||
+                  productDetails?.slideImages?.length ||
                   0
                 }
                 currentIndex={carouselCurrentIndex}

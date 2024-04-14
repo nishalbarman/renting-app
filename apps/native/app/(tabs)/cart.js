@@ -60,6 +60,8 @@ const CartPage = () => {
           let totalOriginalPrice = 0; // price for one cart item
           let discountedTotalPrice = 0; // price for one cart item
 
+          console.log("Cart Item -->", cartItem);
+
           // if type is buy and product have variants (diffent color different size etc etc)
           if (productType === "buy" && !!cartItem?.variant) {
             const OriginalPrice = cartItem.variant.originalPrice;

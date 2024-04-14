@@ -11,14 +11,14 @@ import { useSelector } from "react-redux";
 function Product({
   details: {
     _id,
-    previewUrl,
+    previewImage,
     title,
     category,
     productType: typeOfProduct,
     rentingPrice,
     discountedPrice,
     originalPrice,
-    showPictures,
+    slideImages,
     description,
     stars,
     totalFeedbacks,
@@ -104,7 +104,7 @@ function Product({
         <Image
           style={{ height: 200 }}
           className="w-[100%] h-[200px] bg-[transparent] rounded-lg flex-1 bg-white"
-          source={{ uri: previewUrl }}
+          source={{ uri: previewImage }}
           contentFit="contain"
           contentPosition={"center"}
           onError={(error) => console.error("Image load error:", error)}
@@ -141,22 +141,24 @@ function Product({
         </View>
 
         {typeOfProduct === "both" ? (
-          <View className="flex flex-col gap-y-[0.8px]">
-            {/* <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
-              ₹{rentingPrice}{" "}
-              <Text className="text-[13px] align-middle">/ Day</Text>
-            </Text>
-            <Text className="text-[10px] font-[poppins-bold]"> OR </Text>
-            <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
-              ₹{discountedPrice}
-              {"  "}
-              {originalPrice && (
-                <Text className="text-[13px] text-[#727273] line-through line-offset-[2px]">
-                  ₹{originalPrice}
-                </Text>
-              )}
-            </Text> */}
-          </View>
+          <>
+            {productType === "rent" ? (
+              <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
+                ₹{rentingPrice}{" "}
+                <Text className="text-[13px] align-middle">/ Day</Text>
+              </Text>
+            ) : (
+              <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
+                ₹{discountedPrice}
+                {"  "}
+                {originalPrice && (
+                  <Text className="text-[13px] text-[#727273] line-through line-offset-[2px]">
+                    ₹{originalPrice}
+                  </Text>
+                )}
+              </Text>
+            )}
+          </>
         ) : typeOfProduct === "rent" ? (
           <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
             ₹{rentingPrice}{" "}

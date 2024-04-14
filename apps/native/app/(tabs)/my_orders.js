@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import OrderItem from "../../components/OrderScreen/OrderItem";
 import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import product from "../(product)/view";
 
 const OrderScreen = () => {
   const { productType } = useSelector((state) => state.product_store);
@@ -25,47 +26,50 @@ const OrderScreen = () => {
   const [orders, setOrders] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
 
-  const getOrders = async (type = undefined) => {
-    try {
-      setOrderFetching(true);
-      const response = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/orders/${productType}?page=${paginationPage}&limit=20`,
-        {
-          headers: {
-            authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+  const getOrders = useCallback(
+    async ({ productType, paginationPage, clearAll = false }) => {
+      try {
+        setOrderFetching(true);
+        console.log(productType);
+        const response = await axios.get(
+          `${process.env.EXPO_PUBLIC_API_URL}/orders/${productType}?page=${paginationPage}&limit=20`,
+          {
+            headers: {
+              authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
 
-      console.log(response);
-      if (!!response.data?.data && !type) {
-        setOrders([...orders, ...response.data?.data]);
-      } else setOrders(response.data?.data);
-      setTotalPage(response.data?.totalPage || 0);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setOrderFetching(false);
-    }
-  };
+        if (!!response.data?.data && !clearAll) {
+          setOrders([...orders, ...response.data?.data]);
+        } else setOrders(response.data?.data);
+        setTotalPage(response.data?.totalPage || 0);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setOrderFetching(false);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    getOrders({ productType, paginationPage, clearAll: false });
+  }, [paginationPage]);
 
   const orderRefetch = useSelector((state) => state.order.orderRefetch);
 
   useEffect(() => {
-    getOrders();
-  }, [paginationPage, productType]);
-
-  useEffect(() => {
-    getOrders("cancel");
-  }, [orderRefetch]);
+    getOrders({ productType, paginationPage, clearAll: true });
+  }, [orderRefetch, productType]);
 
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    await getOrders("cancel");
+    await getOrders({ productType, paginationPage, clearAll: true });
     setRefreshing(false);
-  }, []);
+  }, [productType, paginationPage]);
 
   return (
     <SafeAreaView className={`flex-1 bg-white`}>

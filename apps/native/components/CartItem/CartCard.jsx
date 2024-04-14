@@ -30,10 +30,6 @@ function CartCard({
     quantity,
     productType,
     rentDays,
-    discountedPrice,
-    originalPrice,
-    rentingPrice,
-    shippingPrice,
     freeDelivery,
   },
 }) {
@@ -123,7 +119,7 @@ function CartCard({
       <View className={`flex-row p-1 gap-x-5`}>
         <Image
           source={{
-            uri: product?.previewUrl,
+            uri: product?.previewImage,
           }}
           className={`w-[100px] aspect-square self-center rounded`}
           contentFit="contain"
@@ -172,9 +168,9 @@ function CartCard({
           {productType === "buy" ? (
             <>
               <Text className="text-[20px] font-[poppins-bold]">
-                ₹{variant?.discountedPrice ||  product?.discountedPrice}{" "}
+                ₹{variant?.discountedPrice || product?.discountedPrice}{" "}
                 <Text className="text-[15px] text-[#787878] font-[poppins] line-through">
-                  ₹{variant?.originalPrice ||  product?.originalPrice}
+                  ₹{variant?.originalPrice || product?.originalPrice}
                 </Text>
               </Text>
             </>

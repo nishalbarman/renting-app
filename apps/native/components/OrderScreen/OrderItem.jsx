@@ -21,7 +21,7 @@ function OrderItem({
     _id,
     txnid,
     user,
-    previewUrl,
+    previewImage,
     title,
     price,
     shippingPrice,
@@ -133,7 +133,7 @@ function OrderItem({
       <View className={`flex-row p-1 gap-x-5`}>
         <Image
           source={{
-            uri: previewUrl,
+            uri: previewImage,
           }}
           className={`w-[100px] aspect-square self-center rounded`}
           contentFit="contain"

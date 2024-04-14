@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 import { useDeleteWishlistMutation } from "@store/rtk/apis/wishlistApi";
 import AnimateSpin from "../AnimateSpin/AnimateSpin";
 
-function Product({ details, width }) {
+function Product({ details, width, productType }) {
   const router = useRouter();
 
   const [removeFromWishlist, { isLoading }] = useDeleteWishlistMutation();
@@ -84,7 +84,7 @@ function Product({ details, width }) {
         <Image
           style={{ height: 200 }}
           className="w-[100%] h-[200px] bg-[transparent] rounded-lg flex-1"
-          source={{ uri: details.previewUrl }}
+          source={{ uri: details.previewImage }}
           contentFit="contain"
           contentPosition={"center"}
           onError={(error) => console.error("Image load error:", error)}
@@ -125,22 +125,24 @@ function Product({ details, width }) {
         </View>
 
         {details.productType === "both" ? (
-          <View className="flex flex-col gap-y-[0.8px]">
-            {/* <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
-              ₹{rentingPrice}{" "}
-              <Text className="text-[13px] align-middle">/ Day</Text>
-            </Text>
-            <Text className="text-[10px] font-[poppins-bold]"> OR </Text>
-            <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
-              ₹{discountedPrice}
-              {"  "}
-              {originalPrice && (
-                <Text className="text-[13px] text-[#727273] line-through line-offset-[2px]">
-                  ₹{originalPrice}
-                </Text>
-              )}
-            </Text> */}
-          </View>
+          <>
+            {productType === "rent" ? (
+              <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
+                ₹{details.rentingPrice}{" "}
+                <Text className="text-[13px] align-middle">/ Day</Text>
+              </Text>
+            ) : (
+              <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
+                ₹{details.discountedPrice}
+                {"  "}
+                {details.originalPrice && (
+                  <Text className="text-[13px] text-[#727273] line-through line-offset-[2px]">
+                    ₹{details.originalPrice}
+                  </Text>
+                )}
+              </Text>
+            )}
+          </>
         ) : details.productType === "rent" ? (
           <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
             ₹{details.rentingPrice}{" "}
