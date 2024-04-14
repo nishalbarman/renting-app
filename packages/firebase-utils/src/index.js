@@ -1,41 +1,50 @@
-const { v4: uuidv4 } = require('uuid');
-const { initializeApp, credential } = require('firebase-admin/app');
-const { getStorage } = require('firebase-admin/storage');
+const { v4: uuidv4 } = require("uuid");
+const { getStorage } = require("firebase-admin/storage");
+const admin = require("firebase-admin");
 
-const serviceAccount = require('./service-account-key.json');
+const serviceAccount = require("./service-account-key.json");
 
-initializeApp({
-  credential: credential.cert(serviceAccount),
+console.log(serviceAccount);
+
+// Initialize the app with a service account, granting admin privileges
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
 });
 
 const storage = getStorage();
 
-const bucket = storage.bucket('crafter-ecommerce.appspot.com');
+const bucket = storage.bucket("crafter-ecommerce.appspot.com");
 
-async function uploadImage(buffer, file) {
-  const uniqueFileName = uuidv4();
-  const fileReference = bucket.file(`images/products/${uniqueFileName}`);
+class FirebaseUtils {
+  static async uploadImage(buffer, type) {
+    const uniqueFileName = uuidv4();
+    const fileReference = bucket.file(`renting/images/products/${uniqueFileName}`);
 
-  const writeFilePromise = new Promise((resolve, reject) => {
-    const blobStream = fileReference.createWriteStream({
-      resumable: false,
-      contentType: file.type,
+    const writeFilePromise = new Promise((resolve, reject) => {
+      const blobStream = fileReference.createWriteStream({
+        resumable: false,
+        contentType: type,
+      });
+
+      console.log("Content Type -->", type);
+
+      blobStream.on("error", (error) => {
+        reject(error);
+      });
+
+      blobStream.on("finish", async () => {
+        await fileReference.makePublic();
+        const publicUrl = `https://storage.googleapis.com/crafter-ecommerce.appspot.com/${fileReference.name}`;
+        resolve(publicUrl);
+      });
+
+      blobStream.end(buffer);
     });
 
-    blobStream.on('error', (error) => {
-      reject(error);
-    });
+    return writeFilePromise;
+  }
 
-    blobStream.on('finish', async () => {
-      await fileReference.makePublic();
-      const publicUrl = `https://storage.googleapis.com/crafter-ecommerce.appspot.com/${fileReference.name}`;
-      resolve(publicUrl);
-    });
-
-    blobStream.end(buffer);
-  });
-
-  return writeFilePromise;
+  constructor() {}
 }
 
-module.exports = { uploadImage };
+module.exports = { FirebaseUtils };

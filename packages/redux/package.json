@@ -1,15 +1,8 @@
 {
   "name": "@store/rtk",
   "version": "1.0.0",
-  "exports": {
-    "./store": "./store.js",
-    "./userApi": "./slices/userApi.js",
-    "./auth": "./slices/authSlice.js",
-    "./address": "./slices/addressSlice.js",
-    "./cartApi": "./apis/cartApi.js",
-    "./wishlistApi": "./apis/wishlistApi.js",
-    "./categoryApi": "./apis/categoryApi.js"
-  },
+  "main": "./index.js",
+  "module": "./index.js",
   "license": "MIT",
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.1",

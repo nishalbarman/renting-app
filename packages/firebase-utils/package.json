@@ -1,16 +1,10 @@
 {
   "name": "firebase-utils",
   "version": "1.0.0",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "./src/index.js",
   "license": "ISC",
-  "scripts": {
-    "build": "tsup ./src/index.js",
-    "dev": "yarn workspace firebase-utils build --watch",
-    "test": "node ./src/index.js"
-  },
   "dependencies": {
-    "firebase-admin": "^12.0.0",
+    "firebase-admin": "^12.1.0",
     "validators": "*"
   }
 }
