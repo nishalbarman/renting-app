@@ -1,0 +1,30 @@
+import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=c6102944"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import __vite__cjsImport1_react from "/node_modules/.vite/deps/react.js?v=c6102944"; const React = __vite__cjsImport1_react.__esModule ? __vite__cjsImport1_react.default : __vite__cjsImport1_react;
+import __vite__cjsImport2_reactDom_client from "/node_modules/.vite/deps/react-dom_client.js?v=c6102944"; const createRoot = __vite__cjsImport2_reactDom_client["createRoot"];
+import { Provider } from "/node_modules/.vite/deps/react-redux.js?v=c6102944";
+import "/node_modules/.vite/deps/core-js.js?v=c6102944";
+import { ToastContainer } from "/node_modules/.vite/deps/react-toastify.js?v=c6102944";
+import "/@fs/E:/RENTING_APP/node_modules/react-toastify/dist/ReactToastify.css";
+import "/src/global.css";
+import App from "/src/App.js?t=1713036885271";
+import { store } from "/@fs/E:/RENTING_APP/packages/redux/index.js?t=1713034989996";
+createRoot(document.getElementById("root")).render(
+  /* @__PURE__ */ jsxDEV(Provider, { store, children: [
+    /* @__PURE__ */ jsxDEV(ToastContainer, {}, void 0, false, {
+      fileName: "E:/RENTING_APP/apps/admin/src/index.js",
+      lineNumber: 16,
+      columnNumber: 5
+    }, this),
+    /* @__PURE__ */ jsxDEV(App, {}, void 0, false, {
+      fileName: "E:/RENTING_APP/apps/admin/src/index.js",
+      lineNumber: 17,
+      columnNumber: 5
+    }, this)
+  ] }, void 0, true, {
+    fileName: "E:/RENTING_APP/apps/admin/src/index.js",
+    lineNumber: 15,
+    columnNumber: 3
+  }, this)
+);
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCBmcm9tICdyZWFjdCdcbmltcG9ydCB7IGNyZWF0ZVJvb3QgfSBmcm9tICdyZWFjdC1kb20vY2xpZW50J1xuaW1wb3J0IHsgUHJvdmlkZXIgfSBmcm9tICdyZWFjdC1yZWR1eCdcbmltcG9ydCAnY29yZS1qcydcblxuaW1wb3J0IHsgVG9hc3RDb250YWluZXIgfSBmcm9tICdyZWFjdC10b2FzdGlmeSdcbmltcG9ydCAncmVhY3QtdG9hc3RpZnkvZGlzdC9SZWFjdFRvYXN0aWZ5LmNzcydcblxuaW1wb3J0ICcuL2dsb2JhbC5jc3MnXG5cbmltcG9ydCBBcHAgZnJvbSAnLi9BcHAnXG5pbXBvcnQgeyBzdG9yZSB9IGZyb20gJ0BzdG9yZS9ydGsnXG5cbmNyZWF0ZVJvb3QoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ3Jvb3QnKSkucmVuZGVyKFxuICA8UHJvdmlkZXIgc3RvcmU9e3N0b3JlfT5cbiAgICA8VG9hc3RDb250YWluZXIgLz5cbiAgICA8QXBwIC8+XG4gIDwvUHJvdmlkZXI+LFxuKVxuIl0sIm1hcHBpbmdzIjoiQUFlSTtBQWZKLE9BQU8sV0FBVztBQUNsQixTQUFTLGtCQUFrQjtBQUMzQixTQUFTLGdCQUFnQjtBQUN6QixPQUFPO0FBRVAsU0FBUyxzQkFBc0I7QUFDL0IsT0FBTztBQUVQLE9BQU87QUFFUCxPQUFPLFNBQVM7QUFDaEIsU0FBUyxhQUFhO0FBRXRCLFdBQVcsU0FBUyxlQUFlLE1BQU0sQ0FBQyxFQUFFO0FBQUEsRUFDMUMsdUJBQUMsWUFBUyxPQUNSO0FBQUEsMkJBQUMsb0JBQUQ7QUFBQTtBQUFBO0FBQUE7QUFBQSxXQUFnQjtBQUFBLElBQ2hCLHVCQUFDLFNBQUQ7QUFBQTtBQUFBO0FBQUE7QUFBQSxXQUFLO0FBQUEsT0FGUDtBQUFBO0FBQUE7QUFBQTtBQUFBLFNBR0E7QUFDRjsiLCJuYW1lcyI6W119
