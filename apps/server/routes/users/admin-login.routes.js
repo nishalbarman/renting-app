@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const User = require("../../models/user.model");
 const Role = require("../../models/role.model");
-const { isValidIndianMobileNumber } = require("custom-validator-renting");
+const { isValidEmail } = require("custom-validator-renting");
 
 const router = express.Router();
 const secret = process.env.JWT_SECRET;
@@ -17,25 +17,22 @@ router.get("/", (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const error = [];
-    const { mobileNo, password } = req.body;
+    const { email, password } = req.body;
 
     console.log(req.body);
 
-    if (!isValidIndianMobileNumber(mobileNo)) {
+    if (!isValidEmail(email)) {
       error.push("Invalid email address");
     }
 
     if (error.length > 0) {
-      return res.status(400).json({ status: false, message: error.join(", ") });
+      return res.status(400).json({ message: error.join(", ") });
     }
 
-    const user = await User.findOne({ mobileNo }).populate("role");
+    const user = await User.findOne({ email }).populate("role");
 
-    console.log(user);
-
-    if (!user) {
+    if (!user || user.role?.name !== "admin") {
       return res.status(400).json({
-        status: true,
         message: "The provided credentials are invalid.",
       });
     }
@@ -43,19 +40,9 @@ router.post("/", async (req, res) => {
     const isPassValid = bcrypt.compareSync(password, user.password);
     if (!isPassValid) {
       return res.status(400).json({
-        status: true,
         message: "The provided credentials are invalid.",
       });
     }
-
-    // if (!user?.isMobileNoVerified) {
-    //   return res.status(403).json({
-    //     status: true,
-    //     message: "Account not verified yet!",
-    //   });
-    // }
-
-    const oneDay = 24 * 60 * 60 * 1000;
 
     const jwtToken = jwt.sign(
       {
@@ -64,13 +51,11 @@ router.post("/", async (req, res) => {
         role: user.role.role,
         email: user.email,
         mobileNo: user.mobileNo,
-        center: user?.center,
       },
       secret
     );
 
     return res.status(200).json({
-      status: true,
       message: "Login successful",
       user: {
         name: user.name,

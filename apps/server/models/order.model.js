@@ -7,7 +7,7 @@ const orderSchema = new mongoose.Schema(
 
     product: { type: mongoose.Types.ObjectId, ref: "products" },
 
-    previewUrl: { type: String },
+    previewImage: { type: String },
     title: { type: String, required: true },
 
     // pricing

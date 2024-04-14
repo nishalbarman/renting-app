@@ -8,10 +8,19 @@ const {
 
 const productSchema = new mongoose.Schema(
   {
-    previewUrl: { type: String, required: true },
+    previewImage: { type: String, required: true },
     title: { type: String, required: true },
-    category: { type: mongoose.Types.ObjectId, ref: "categories" },
-    showPictures: { type: Array, required: true }, // images array
+    category: {
+      type: mongoose.Types.ObjectId,
+      ref: "categories",
+      default: "65f6c9f882ba818ab0e43d64",
+    },
+    category: {
+      type: mongoose.Types.ObjectId,
+      ref: "categories",
+      default: "65f6c9f882ba818ab0e43d64",
+    },
+    slideImages: { type: Array, required: true }, // images array
     description: { type: String, required: true },
 
     stars: { type: Number, default: 0 },
@@ -36,11 +45,6 @@ const productSchema = new mongoose.Schema(
       type: [mongoose.Types.ObjectId],
       ref: "product_variants",
     },
-
-    // isSizeVaries: { type: Boolean, default: false },
-    // isColorVaries: { type: Boolean, default: false },
-    // defaultSize: { type: mongoose.Types.ObjectId, ref: "product_sizes" },
-    // defaultColor: { type: mongoose.Types.ObjectId, ref: "product_colors" },
   },
   {
     timestamps: true,
@@ -68,6 +72,10 @@ productSchema.index({
 const productVariantSchema = new mongoose.Schema(
   {
     product: { type: mongoose.Types.ObjectId, ref: "products" },
+
+    previewImage: { type: String, required: true },
+    slideImages: { type: [String], required: true }, // images array
+
     size: { type: String, required: true },
     color: { type: String, required: true },
 
@@ -98,9 +106,10 @@ const ProductVariant =
 /****************************************** */
 // ----------------------------------------->
 
-Product.schema.path("previewUrl").validate({
-  validator: (value) => value && isValidUrl(value),
-  message: "Invalid Preview URL",
+Product.schema.path("previewImage").validate({
+  validator: (value) => !!value,
+  // && isValidUrl(value)
+  message: "Invalid Preview Image Url",
 });
 
 Product.schema.path("discountedPrice").validate({
@@ -108,9 +117,9 @@ Product.schema.path("discountedPrice").validate({
   message: "Discounted Price must be non zero number",
 });
 
-Product.schema.path("showPictures").validate({
-  validator: (value) => value && value.length == 4,
-  message: "Show pictures must contain atleast 4 images",
+Product.schema.path("slideImages").validate({
+  validator: (value) => value && value.length >= 1,
+  message: "Slide Images must contain atleast 1 images",
 });
 
 // ProductVarient.schema.path("product").validate({

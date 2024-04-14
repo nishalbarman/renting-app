@@ -225,14 +225,14 @@ router.post("/:productType", async (req, res) => {
 
             // product details
             title: item.product.title,
-            previewUrl: item.product.previewUrl,
-            price: item.variant.discountedPrice,
+            previewImage: item.product.previewImage,
+            price: item.variant.discountedPrice * item.quantity,
             shippingPrice: item.variant.shippingPrice,
             quantity: item.quantity,
             orderType: "buy",
             color: item.variant.color,
             size: item.variant.size,
-            address: item.user.defaultSelectedAddress,
+            address: address,
 
             center: centerAddresses[0]._id,
 
@@ -256,12 +256,12 @@ router.post("/:productType", async (req, res) => {
 
           // product details
           title: item.product.title,
-          previewUrl: item.product.previewUrl,
-          price: item.product.discountedPrice,
+          previewImage: item.product.previewImage,
+          price: item.product.discountedPrice * item.quantity,
           shippingPrice: item.product.shippingPrice,
           quantity: item.quantity,
           orderType: "buy",
-          address: "address",
+          address: address,
 
           center: centerAddresses[0]._id,
 
@@ -328,17 +328,6 @@ router.post("/:productType", async (req, res) => {
       customer: user.stripeCustomer.id,
       publishableKey: STRIPE_PUBLISHABLE_KEY,
     });
-
-    // return res.status(200).json({
-    //   payment: {
-    //     razorpayOrderId: razorpayOrder.id,
-    //     amount: razorpayOrder.amount,
-    //     name: userDetails.name,
-    //     email: userDetails.email,
-    //     mobileNo: userDetails.mobileNo,
-    //     productinfo: productNames,
-    //   },
-    // });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ status: false, message: error.message });

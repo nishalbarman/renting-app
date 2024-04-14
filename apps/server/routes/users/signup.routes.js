@@ -99,6 +99,7 @@ router.post("/", async (req, res) => {
         role: userObject.role.role,
         email: userObject.email,
         mobileNo: userObject.mobileNo,
+        center: userObject?.center,
       },
       secret
     );

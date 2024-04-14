@@ -116,8 +116,8 @@ router.post("/:productType", async (req, res) => {
 
             // product details
             title: item.product.title,
-            previewUrl: item.product.previewUrl,
-            price: item.variant.discountedPrice,
+            previewImage: item.product.previewImage,
+            price: item.variant.discountedPrice * item.quantity,
             shippingPrice: item.variant.shippingPrice,
             orderType: "buy",
             color: item.variant.color,
@@ -140,11 +140,11 @@ router.post("/:productType", async (req, res) => {
 
           // product details
           title: item.product.title,
-          previewUrl: item.product.previewUrl,
-          price: item.discountedPrice,
-          shippingPrice: item.shippingPrice,
+          previewImage: item.product.previewImage,
+          price: item.product.discountedPrice * item.quantity,
+          shippingPrice: item.product.shippingPrice,
           orderType: "buy",
-          address: item.user.defaultSelectedAddress,
+          // address: item.user.defaultSelectedAddress,
 
           center: centerId,
 
@@ -163,8 +163,8 @@ router.post("/:productType", async (req, res) => {
 
             // product details
             title: item.product.title,
-            previewUrl: item.product.previewUrl,
-            price: item.variant.rentingPrice,
+            previewImage: item.product.previewImage,
+            price: item.variant.rentingPrice * item.quantity * item.rentDays,
             shippingPrice: item.variant.shippingPrice,
             orderType: "rent",
             color: item.variant.color,
@@ -196,8 +196,8 @@ router.post("/:productType", async (req, res) => {
 
           // product details
           title: item.product.title,
-          previewUrl: item.product.previewUrl,
-          price: item.product.rentingPrice,
+          previewImage: item.product.previewImage,
+          price: item.product.rentingPrice * item.quantity * item.rentDays,
           shippingPrice: item.product.shippingPrice,
           orderType: "rent",
           quantity: item.quantity,

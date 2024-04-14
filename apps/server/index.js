@@ -48,6 +48,7 @@ const extractToken = async (req, res, next) => {
       req.url === "/" ||
       req.url === "/helloworld" ||
       req.url === "/auth/login" ||
+      req.url === "/auth/admin-login" ||
       req.url === "/auth/signup" ||
       req.url === "/auth/sendOtp" ||
       req.url === "/pay/razorpay/hook" ||
@@ -86,11 +87,12 @@ app.use(
 app.use("/stripe/hook", require("./hooks/stripe-hook.routes"));
 
 app.use(limiter);
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 app.use(extractToken);
 
 app.use("/user", require("./routes/users/user.routes"));
 app.use("/auth/login", require("./routes/users/login.routes"));
+app.use("/auth/admin-login", require("./routes/users/admin-login.routes"));
 app.use("/auth/signup", require("./routes/users/signup.routes"));
 app.use("/auth/sendOtp", require("./routes/otpSend/mobile.routes"));
 app.use("/categories", require("./routes/categories/category.routes"));

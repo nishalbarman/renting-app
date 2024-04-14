@@ -6,96 +6,150 @@ const { Product, ProductVariant } = require("../../models/product.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 const { isValidUrl } = require("custom-validator-renting");
 const Order = require("../../models/order.model");
-const Size = require("../../models/size.model");
-const Color = require("../../models/color.model");
+
+const { Base64Decode } = require("base64-stream");
+
+const { FirebaseUtils } = require("firebase-utils");
 
 const TAG = "products/route.js:--";
 
 // product validation function, so we can determine an product has valid or invalid data
-const isProductHasError = ({
-  previewUrl,
+const checkProductHasError = ({
+  previewImage,
   title,
   category,
   discountedPrice,
   originalPrice,
-  showPictures,
+  slideImages,
   description,
   shippingPrice,
   availableStocks,
-  isSizeVaries,
-  isColorVaries,
-  availableSizes,
-  availableColors,
+  isVariantAvailable,
+  productVariant,
+  rentingPrice,
 }) => {
   const error = [];
-  if (!isValidUrl(previewUrl)) {
-    error.push("preview image is not valid");
+  // if (!Array.isArray(previewImage)) {
+  //   error.push("Preview Image should be a non empty array");
+  // }
+
+  if (!title || title?.length < 5) {
+    error.push("Title should be of minimum 5 characters");
   }
 
-  if (!title || title.length < 7) {
-    error.push("title should be of minimum 7 characters");
+  // const ObjectId = mongoose.Types.ObjectId;
+  // if (
+  //   !category ||
+  //   !(ObjectId.isValid(category) && String(new ObjectId(category)) === category)
+  // ) {
+  //   error.push("Category is not valid");
+  // }
+
+  if (!discountedPrice && !originalPrice && !rentingPrice) {
+    error.push("Original price and Discounted price needs to be given");
   }
 
-  const ObjectId = mongoose.Types.ObjectId;
   if (
-    !category ||
-    !(ObjectId.isValid(category) && String(new ObjectId(category)) === category)
+    isNaN(Number(rentingPrice)) ||
+    isNaN(Number(discountedPrice)) ||
+    isNaN(Number(originalPrice))
   ) {
-    error.push("select a valid category");
-  }
-
-  if (!discountedPrice && !originalPrice) {
-    error.push("price needs to be given");
+    error.push(
+      "Original price, Discounted price and Renting price should be numbers"
+    );
   }
 
   if (
     !!discountedPrice &&
     !!originalPrice &&
-    originalPrice <= discountedPrice
+    +originalPrice <= +discountedPrice
   ) {
-    error.push("discounted price should be lesser than original price");
+    error.push("Discounted price should be lesser than Original price");
   }
 
-  if (!Array.isArray(showPictures)) {
-    error.push("pictures should be an array");
-  }
+  // if (!Array.isArray(slideImages)) {
+  //   error.push("Slide images should be an non empty array");
+  // }
 
   try {
     const html = cheerio.load(description);
-  } catch (error) {
-    error.push("description is not valid html");
+  } catch (err) {
+    error.push("Description is not valid html");
   }
 
   if (!!shippingPrice && isNaN(parseInt(shippingPrice))) {
-    error.push("shipping price should be a valid number");
+    error.push("Shipping price must be a valid number");
   }
 
   if (!!availableStocks && isNaN(parseInt(availableStocks))) {
-    error.push("stock should be a valid number");
+    error.push("Stock mube be a valid non zero number");
   }
 
-  if (
-    !!isSizeVaries &&
-    (!Array.isArray(availableSizes) ||
-      !availableSizes.every((obj) => typeof obj === "object"))
-  ) {
-    error.push(
-      "available sizes should be an array of objects, each with a size and price"
-    );
-  }
+  if (!!isVariantAvailable) {
+    productVariant.forEach((variant, index) => {
+      if (Object.keys(variant).length !== 9) {
+        return error.push("Variant does not contain all the required keys");
+      }
 
-  if (
-    !!isColorVaries &&
-    (!Array.isArray(availableColors) ||
-      !availableColors.every((color) => typeof color === "object"))
-  ) {
-    error.push(
-      "available colors should be an array of objects, each with a color and price"
-    );
+      const localError = [];
+
+      // if (!isValidUrl(variant?.previewImage)) {
+      //   localError.push("Preview Image is not valid");
+      // }
+
+      if (!variant?.discountedPrice && !variant?.originalPrice) {
+        localError.push(
+          "Original price and Discounted price needs to be given"
+        );
+      }
+
+      if (
+        !!variant?.discountedPrice &&
+        !!variant?.originalPrice &&
+        variant?.originalPrice <= variant?.discountedPrice
+      ) {
+        localError.push(
+          "Discounted price should be lesser than Original price"
+        );
+      }
+
+      // if (!Array.isArray(variant?.slideImages)) {
+      //   localError.push("Slide images should be an non empty array");
+      // }
+
+      if (!!variant?.shippingPrice && isNaN(parseInt(variant?.shippingPrice))) {
+        localError.push("Shipping price must be a valid number");
+      }
+
+      if (
+        !!variant?.availableStocks &&
+        isNaN(parseInt(variant?.availableStocks))
+      ) {
+        localError.push("Stock mube be a valid non zero number");
+      }
+
+      if (!variant?.color) {
+        localError.push(
+          "Variant +" + (index + 1) + ": " + "Color is not vallid"
+        );
+      }
+
+      if (!variant?.size) {
+        localError.push(
+          "Variant +" + (index + 1) + ": " + "Size is not vallid"
+        );
+      }
+
+      if (localError.length > 0) {
+        error.push(
+          `Variant: ${index + 1}, has errors. Message: ${localError.join(", ")}`
+        );
+      }
+    });
   }
 
   return error;
-}; // validator function
+};
 
 router.get("/", async (req, res) => {
   try {
@@ -117,7 +171,7 @@ router.get("/", async (req, res) => {
     }
 
     if (TYPE) {
-      filter.productType = TYPE;
+      filter.productType = { $in: [TYPE, "both"] };
     }
 
     if (CATEGORY) {
@@ -210,7 +264,31 @@ router.post("/view/:productId", async (req, res) => {
   }
 });
 
-// product create route, admin can create products
+const bufferStreamToBuffer = (stream) => {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    stream.on("data", (chunk) => chunks.push(chunk));
+    stream.on("end", () => resolve(Buffer.concat(chunks)));
+    stream.on("error", reject);
+  });
+};
+
+const uploadBulkImages = async (filesArray) => {
+  const promises = filesArray.map(async (imageData) => {
+    const bufferStream = new Base64Decode();
+    bufferStream.write(
+      imageData.base64String.replace(/^data:image\/\w+;base64,/, "")
+    );
+    bufferStream.end();
+
+    const buffer = await bufferStreamToBuffer(bufferStream);
+    return FirebaseUtils.uploadImage(buffer, imageData.type);
+  });
+
+  return Promise.all(promises);
+};
+
+// ADMIN ROUTE : Product create route
 router.post("/", async (req, res) => {
   try {
     const token = req?.jwt?.token || null;
@@ -223,34 +301,124 @@ router.post("/", async (req, res) => {
       return res.redirect("/auth/login");
     }
 
-    const reqBody = req.body;
+    const productData = req.body?.productData;
 
-    // if the key products in request object is missing or it is not an array then return false
-    if (!reqBody?.products || !Array.isArray(reqBody?.products)) {
-      return res.status(400).json({ message: "Expected an array!" });
+    if (!productData) {
+      return res.status(400).json({ message: "Product Data Not Found" });
     }
 
+    // // if the key products in request object is missing or it is not an array then return false
+    // if (!reqBody?.products || !Array.isArray(reqBody?.products)) {
+    //   return res.status(400).json({ message: "Expected an array!" });
+    // }
+
     // validate recieved products and filter out valid products and insert them on database
-    const errorProductList = [];
-    const validProducts = reqBody.productList.filter((singleProduct, index) => {
-      const errorObject = {};
-      const error = isProductHasError(singleProduct); // validate the product
-      if (error.length > 0) {
-        errorObject.message = error.join(", ");
-        errorObject.index = index;
-        errorProductList.push(errorObject);
-        return false; // false as product does not has valid data
-      } else {
-        return true; // true as product has valid data
+    // const errorProductList = [];
+    // const validProducts = reqBody.productList.filter((singleProduct, index) => {
+    //   const errorObject = {};
+    //   const error = isProductHasError(singleProduct); // validate the product
+    //   if (error.length > 0) {
+    //     errorObject.message = error.join(", ");
+    //     errorObject.index = index;
+    //     errorProductList.push(errorObject);
+    //     return false; // false as product does not has valid data
+    //   } else {
+    //     return true; // true as product has valid data
+    //   }
+    // });
+
+    productData.productVariant = Object.values(productData.productVariant);
+
+    const error = checkProductHasError(productData);
+
+    if (error.length > 0) {
+      return res.status(400).json({ message: error.join(", ") });
+    }
+
+    try {
+      productData.previewImage = await uploadBulkImages(
+        productData.previewImage
+      );
+
+      if (productData.slideImages.length > 0) {
+        const slideImages = await uploadBulkImages(productData.slideImages);
+        productData.slideImages = slideImages;
       }
+
+      const variants = productData.productVariant;
+
+      for (let i = 0; i < variants.length; i++) {
+        variants[i].previewImage = await uploadBulkImages(
+          variants[i].previewImage
+        );
+        if (variants[i].slideImages.length > 0) {
+          const slideImages = await uploadBulkImages(variants[i].slideImages);
+          variants[i].slideImages = slideImages;
+        }
+      }
+
+      // console.log("Variants --> is object or array -->", variants);
+    } catch (error) {
+      console.error(error);
+      return res.status(400).json({ message: "File upload error" });
+    }
+
+    // Now here till this point we have uploaded all the images in firebase storage.. (previewImage, slideImages, variant.previewImage, variant.slideImages ...)
+
+    // Now we are going to save the product to our database
+
+    console.log(productData);
+
+    // Create a new product document
+    const newProduct = new Product({
+      previewImage: productData.previewImage[0],
+      title: productData.title,
+      // category: productData.category,
+      category: "65f6c9f882ba818ab0e43d64",
+      slideImages: productData.slideImages,
+      description: productData.description,
+      productType: productData.productType,
+      shippingPrice: +productData.shippingPrice,
+      availableStocks: +productData.availableStocks,
+      rentingPrice: +productData.rentingPrice,
+      discountedPrice: +productData.discountedPrice,
+      originalPrice: +productData.originalPrice,
+      isVariantAvailable: !!productData.isVariantAvailable,
     });
 
-    // insert into database
-    await Product.insertMany(validProducts);
+    if (productData?.isVariantAvailable) {
+      // variants structure ==> [{key: value},{...}, {...}]
+      const variantPromises = Object.entries(productData.productVariant).map(
+        async ([key, value]) => {
+          const variantData = {
+            product: newProduct._id,
+
+            previewImage: value.previewImage[0],
+            slideImages: value.slideImages,
+
+            size: value.size,
+            color: value.color,
+            availableStocks: +value.availableStocks,
+            shippingPrice: +value.shippingPrice,
+            rentingPrice: +value.rentingPrice,
+            discountedPrice: +value.discountedPrice,
+            originalPrice: +value.originalPrice,
+          };
+
+          return ProductVariant.create(variantData);
+        }
+      );
+      const variants = await Promise.all(variantPromises);
+      newProduct.productVariant = variants.map((variant) => variant._id);
+    }
+
+    console.log(newProduct);
+
+    await newProduct.save();
 
     return res.status(200).json({
-      message: `Product${req?.products?.length > 1 && "'s"} created`,
-      error: errorProductList.length > 0 ? errorProductList : undefined,
+      message: `Product created`,
+      data: productData,
     });
   } catch (error) {
     console.error(TAG, error);
