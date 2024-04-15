@@ -7,9 +7,7 @@ const getTokenDetails = require("../../helpter/getTokenDetails");
 const { isValidUrl } = require("custom-validator-renting");
 const Order = require("../../models/order.model");
 
-const { Base64Decode } = require("base64-stream");
-
-const { FirebaseUtils } = require("firebase-utils");
+const { ImageUploadHelper } = require("../../helpter/imgUploadhelpter");
 
 const TAG = "products/route.js:--";
 
@@ -183,6 +181,7 @@ router.get("/", async (req, res) => {
       !!QUERY ? { score: { $meta: "textScore" } } : undefined
     );
     const products = await Product.find(filter)
+      .populate("category")
       .sort(!!QUERY ? { score: { $meta: "textScore" } } : { createdAt: "desc" })
       .skip(SKIP)
       .limit(LIMIT);
@@ -264,30 +263,6 @@ router.post("/view/:productId", async (req, res) => {
   }
 });
 
-const bufferStreamToBuffer = (stream) => {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    stream.on("data", (chunk) => chunks.push(chunk));
-    stream.on("end", () => resolve(Buffer.concat(chunks)));
-    stream.on("error", reject);
-  });
-};
-
-const uploadBulkImages = async (filesArray) => {
-  const promises = filesArray.map(async (imageData) => {
-    const bufferStream = new Base64Decode();
-    bufferStream.write(
-      imageData.base64String.replace(/^data:image\/\w+;base64,/, "")
-    );
-    bufferStream.end();
-
-    const buffer = await bufferStreamToBuffer(bufferStream);
-    return FirebaseUtils.uploadImage(buffer, imageData.type);
-  });
-
-  return Promise.all(promises);
-};
-
 // ADMIN ROUTE : Product create route
 router.post("/", async (req, res) => {
   try {
@@ -336,23 +311,27 @@ router.post("/", async (req, res) => {
     }
 
     try {
-      productData.previewImage = await uploadBulkImages(
+      productData.previewImage = await ImageUploadHelper.uploadBulkImages(
         productData.previewImage
       );
 
       if (productData.slideImages.length > 0) {
-        const slideImages = await uploadBulkImages(productData.slideImages);
+        const slideImages = await ImageUploadHelper.uploadBulkImages(
+          productData.slideImages
+        );
         productData.slideImages = slideImages;
       }
 
       const variants = productData.productVariant;
 
       for (let i = 0; i < variants.length; i++) {
-        variants[i].previewImage = await uploadBulkImages(
+        variants[i].previewImage = await ImageUploadHelper.uploadBulkImages(
           variants[i].previewImage
         );
         if (variants[i].slideImages.length > 0) {
-          const slideImages = await uploadBulkImages(variants[i].slideImages);
+          const slideImages = await ImageUploadHelper.uploadBulkImages(
+            variants[i].slideImages
+          );
           variants[i].slideImages = slideImages;
         }
       }

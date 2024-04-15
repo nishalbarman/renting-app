@@ -52,6 +52,11 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 // Products
 const ProductAdd = React.lazy(() => import('./views/product/add/ProductAdd'))
+const ListOfProducts = React.lazy(() => import('./views/product/list/ListProducts'))
+
+// category
+const AddCategory = React.lazy(() => import('./views/category/add/AddCategory'))
+//
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -60,6 +65,10 @@ const routes = [
   // my additions
   { path: '/product', name: 'Add Product', element: ProductAdd, exact: true },
   { path: '/product/add', name: 'Add Product', element: ProductAdd, exact: true },
+  { path: '/product/list', name: 'List Products', element: ListOfProducts, exact: true },
+
+  { path: '/category', name: 'Add Category', element: AddCategory, exact: true },
+  { path: '/category/add', name: 'Add Category', element: AddCategory, exact: true },
 
   // old
   { path: '/theme', name: 'Theme', element: Colors, exact: true },

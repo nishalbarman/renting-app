@@ -7,6 +7,8 @@ import { FlatList, View } from "react-native";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
+import { TbCategoryPlus } from "react-icons/tb";
+
 function Categories() {
   const { jwtToken } = useSelector((state) => state.auth);
 
@@ -48,14 +50,15 @@ function Categories() {
   useEffect(() => {
     (() => {
       // if we have less categories then totalPage will be 1
-      if (totalPages > -1) {
+      if (totalPages > 1) {
         setCategoryList([
           ...categoryList,
           {
             _id: "cate_id_unique",
             categoryName: "See More",
-            categoryImage:
-              "https://cdn-icons-png.flaticon.com/512/3137/3137672.png",
+            categoryImageUrl:
+              "https://firebasestorage.googleapis.com/v0/b/crafter-ecommerce.appspot.com/o/renting%2Fimages%2Fproducts%2F360_F_385956366_Zih7xDcSLqDxiJRYUfG5ZHNoFCSLMRjm.jpg?alt=media&token=75b164a4-43bd-462b-95b3-77862c7aadc9",
+            categoryKey: "more_category",
           },
         ]);
       }
@@ -87,8 +90,9 @@ function Categories() {
             renderItem={({ item }) => (
               <CategoryItem
                 key={item?._id}
-                categoryImage={item?.imageUrl}
+                categoryImageUrl={item?.categoryImageUrl}
                 categoryName={item?.categoryName}
+                categoryKey={item?.categoryKey}
               />
             )}
           />

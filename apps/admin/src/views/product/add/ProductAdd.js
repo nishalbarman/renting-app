@@ -169,13 +169,6 @@ const ProductAdd = () => {
 
   return (
     <CRow>
-      <img
-        src={productData?.previewImage[0]?.base64String}
-        style={{
-          width: 80,
-          height: 80,
-        }}
-      />
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
@@ -772,6 +765,13 @@ const ProductAdd = () => {
                 >
                   Submit form
                 </CButton>
+                {/* <CButton
+                  type="submit"
+                  color="primary"
+                  disabled={isSubmitDisabled || isFormSubmitting}
+                >
+                  Submit form
+                </CButton> */}
               </div>
             </CForm>
           </CCardBody>

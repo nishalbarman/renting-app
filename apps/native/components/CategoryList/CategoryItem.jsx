@@ -1,24 +1,32 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableHighlight, View } from "react-native";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 
-function CategoryItem({ categoryImage, categoryName }) {
+function CategoryItem({ categoryImageUrl, categoryName }) {
+  const router = useRouter();
   return (
-    <View className="w-fit h-fit flex flex-col align-center justify-center gap-y-2 m-2">
-      <View className="bg-white w-fit h-fit rounded-full flex justify-center align-center shadow-sm border border-gray-300">
-        <Image
-          className="h-[70px] w-[70px] rounded-full aspect-square"
-          source={{
-            uri: categoryImage,
-          }}
-          contentFit="contain"
-          contentPosition={"center"}
-        />
+    <TouchableHighlight
+      underlayColor={"white"}
+      onPress={() => {
+        router.navigate(`/products?category=${categoryKey}`);
+      }}>
+      <View className="w-fit h-fit flex flex-col align-center justify-center gap-y-2 m-2">
+        <View className="h-[70px] w-[70px] bg-white w-fit h-fit rounded-full flex justify-center align-center shadow-sm border border-gray-300 self-center">
+          <Image
+            className="h-[70px] w-[70px] rounded-full aspect-square"
+            source={{
+              uri: categoryImageUrl,
+            }}
+            contentFit="contain"
+            contentPosition={"center"}
+          />
+        </View>
+        <Text className="font-[poppins-mid] self-center text-[12px] text-nowrap">
+          {categoryName}
+        </Text>
       </View>
-      <Text className="font-[poppins-mid] self-center text-[12px] text-nowrap">
-        {categoryName}
-      </Text>
-    </View>
+    </TouchableHighlight>
   );
 }
 

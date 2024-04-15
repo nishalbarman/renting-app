@@ -1,0 +1,29 @@
+summary {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+details {
+  margin-bottom: 10px;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary:before {
+  content: '+';
+  padding-right: 5px;
+}
+
+details[open] > summary:before {
+  content: '-';
+}
+
+details > summary {
+  list-style: none;
+}
+
+.answer {
+  margin-left: 20px;
+}
