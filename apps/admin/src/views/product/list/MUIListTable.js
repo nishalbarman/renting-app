@@ -13,28 +13,19 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import CIcon from '@coreui/icons-react'
 import { cilPen, cilTrash } from '@coreui/icons'
 import {
-  CButton,
   CCard,
   CCardBody,
   CCardHeader,
-  CCol,
-  CRow,
-  CSpinner,
-  CModal,
-  CModalHeader,
-  CModalTitle,
-  CModalBody,
-  CModalFooter,
   CCarousel,
   CCarouselItem,
+  CCol,
   CImage,
+  CRow,
 } from '@coreui/react'
 import axios from 'axios'
 import { Box, Button, MenuItem, lighten } from '@mui/material'
 
-import { toast } from 'react-toastify'
-
-const ListProduct = () => {
+const Example = () => {
   const { jwtToken } = useSelector((state) => state.auth)
 
   //data and fetching state
@@ -436,7 +427,7 @@ const ListProduct = () => {
         </CCard>
       </CCol>
     ),
-    renderRowActionMenuItems: ({ row, closeMenu }) => [
+    renderRowActionMenuItems: ({ closeMenu }) => [
       <MenuItem
         key={0}
         onClick={() => {
@@ -451,9 +442,7 @@ const ListProduct = () => {
       <MenuItem
         key={1}
         onClick={() => {
-          console.log(row)
           // Send email logic...
-          setDeleteProductId([row.original._id])
           closeMenu()
         }}
         sx={{ m: 0 }}
@@ -501,26 +490,22 @@ const ListProduct = () => {
     },
   })
 
-  const [deleteProductId, setDeleteProductId] = useState(null)
+  const [deleteCategoryId, setDeleteCategoryId] = useState(null)
   const [deleteButtonLoading, setDeleteButtonLoading] = useState(false)
 
-  const handleDeleteProudct = async () => {
+  const handleDeleteCategory = async () => {
     try {
       setDeleteButtonLoading(true)
-      // const response = await axios.delete(
-      //   `${process.env.VITE_APP_API_URL}/categories/${deleteProductId}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${jwtToken}`,
-      //     },
-      //   },
-      // )
-      await new Promise((res) => {
-        setTimeout(res, 3000)
-      })
-      toast.success('Product deleted')
-      setDeleteProductId(null)
-
+      const response = await axios.delete(
+        `${process.env.VITE_APP_API_URL}/categories/${deleteCategoryId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        },
+      )
+      toast.success('Category deleted')
+      setDeleteCategoryId(null)
       // getCategories()
     } catch (error) {
       console.error(error)
@@ -546,31 +531,22 @@ const ListProduct = () => {
         </CCol>
       </CRow>
       <CModal
-        visible={!!deleteProductId && !!deleteProductId.length}
-        onClose={() => setDeleteProductId(null)}
+        visible={!!deleteCategoryId}
+        onClose={() => setDeleteCategoryId(null)}
         aria-labelledby="LiveDemoExampleLabel"
       >
-        <CModalHeader onClose={() => setDeleteProductId(null)}>
+        <CModalHeader onClose={() => setDeleteCategoryId(null)}>
           <CModalTitle id="LiveDemoExampleLabel">Are you sure about that?</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <p>
-            Deleting this product will permanently delete this product information from server also
-            it will erase information any related information to this product from database such as
-            variants.
-          </p>
+          <p>Deleting this category will remove this category from database</p>
         </CModalBody>
         <CModalFooter>
-          <CButton color="secondary" onClick={() => setDeleteProductId(null)}>
+          <CButton color="secondary" onClick={() => setDeleteCategoryId(null)}>
             Close
           </CButton>
-          <CButton
-            disabled={deleteButtonLoading}
-            onClick={handleDeleteProudct}
-            color="danger"
-            style={{ color: 'white' }}
-          >
-            {deleteButtonLoading ? <CSpinner size="sm" /> : 'Delete'}
+          <CButton disabled={deleteButtonLoading} onClick={handleDeleteCategory} color="primary">
+            {deleteButtonLoading ? <CSpinner /> : 'Delete'}
           </CButton>
         </CModalFooter>
       </CModal>
@@ -578,4 +554,4 @@ const ListProduct = () => {
   )
 }
 
-export default ListProduct
+export default Example

@@ -56,7 +56,10 @@ const ListOfProducts = React.lazy(() => import('./views/product/list/ListProduct
 
 // category
 const AddCategory = React.lazy(() => import('./views/category/add/AddCategory'))
-//
+
+// center
+const AddCenter = React.lazy(() => import('./views/center/add/AddCenter'))
+const CenterList = React.lazy(() => import('./views/center/list/CenterList'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -69,6 +72,10 @@ const routes = [
 
   { path: '/category', name: 'Add Category', element: AddCategory, exact: true },
   { path: '/category/add', name: 'Add Category', element: AddCategory, exact: true },
+
+  { path: '/center', name: 'Add Category', element: AddCategory },
+  { path: '/center/add', name: 'Add Center', element: AddCenter, exact: true },
+  { path: '/center/list', name: 'Center List', element: CenterList, exact: true },
 
   // old
   { path: '/theme', name: 'Theme', element: Colors, exact: true },

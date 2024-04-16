@@ -9,6 +9,7 @@ import {
   cilCursor,
   cilDescription,
   cilDrop,
+  cilHouse,
   cilNotes,
   cilPencil,
   cilPuzzle,
@@ -41,7 +42,7 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'List Products',
+    name: 'Products List',
     to: '/product/list',
     icon: <CIcon icon={cilTruck} customClassName="nav-icon" />,
   },
@@ -51,9 +52,26 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Add Category',
+    name: 'Create Category',
     to: '/category/add',
     icon: <CIcon icon={cilApplicationsSettings} customClassName="nav-icon" />,
+  },
+
+  {
+    component: CNavTitle,
+    name: 'Center',
+  },
+  {
+    component: CNavItem,
+    name: 'Add Center',
+    to: '/center/add',
+    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Center List',
+    to: '/center/list',
+    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
   },
 
   {
