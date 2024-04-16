@@ -3,8 +3,7 @@ import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useAddWishlistMutation } from "@store/rtk/apis/wishlistApi";
-import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
+import { useAddWishlistMutation, useDeleteWishlistMutation } from "@store/rtk";
 
 import { useSelector } from "react-redux";
 
@@ -38,10 +37,10 @@ function Product({
 
   const [addWishlist] = useAddWishlistMutation();
 
-  const [onCart, setOnCart] = useState(false);
+  const [onWishlist, setOnWishlist] = useState(false);
 
   useEffect(() => {
-    setOnCart(!!wishlistIdMap?.hasOwnProperty(_id));
+    setOnWishlist(!!wishlistIdMap?.hasOwnProperty(_id));
   }, [wishlistIdMap]);
 
   const loadingBlurHash = useMemo(() => {
@@ -52,13 +51,37 @@ function Product({
     return Array.from({ length: 5 });
   }, []);
 
+  const [removeFromWishlist] = useDeleteWishlistMutation();
+
+  const handleRemoveFromWishlist = async () => {
+    try {
+      setOnWishlist(false);
+      const wishlistItemID = wishlistIdMap[_id];
+      const resPayload = await removeFromWishlist({
+        _id: wishlistItemID,
+      }).unwrap();
+      console.log("Remove from wishlist response -->", resPayload);
+    } catch (error) {
+      setOnWishlist(true);
+      console.error(error);
+    }
+  };
+
   const handleAddToWishlist = async () => {
     try {
-      setOnCart((prev) => !prev);
+      setOnWishlist((prev) => !prev);
       const resPayload = await addWishlist({ id: _id, productType }).unwrap();
       console.log("Add to Wishlist response -->", resPayload);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleLoveIconClick = () => {
+    if (!!wishlistIdMap?.hasOwnProperty(_id)) {
+      handleRemoveFromWishlist();
+    } else {
+      handleAddToWishlist();
     }
   };
 
@@ -92,9 +115,9 @@ function Product({
           style={{
             backgroundColor: "rgba(0,0,0,0.1)",
           }}
-          onPress={handleAddToWishlist}
+          onPress={handleLoveIconClick}
           className="absolute top-2 right-3 h-10 w-10 rounded-full items-center justify-center z-[1]">
-          {onCart ? (
+          {onWishlist ? (
             <FontAwesome name="heart" size={19} color={"red"} />
           ) : (
             <FontAwesome name="heart-o" size={19} color={"black"} />

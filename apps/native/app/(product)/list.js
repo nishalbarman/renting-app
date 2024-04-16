@@ -25,7 +25,7 @@ function ProductsList() {
   const [data, setData] = useState([]);
   const [isProductDataLoading, setIsProductDataLoading] = useState(true);
 
-  const [paginationPage, setPaginationPage] = useState(1);
+  const [paginationPage, setPaginationPage] = useState(0);
 
   const getProductData = async () => {
     try {
@@ -111,7 +111,7 @@ function ProductsList() {
                     ? {
                         borderWidth: 4,
                         borderColor: "green",
-                        backgroundColor: "lightgreen",
+                        backgroundColor: "white",
                       }
                     : undefined,
                 },
@@ -125,7 +125,7 @@ function ProductsList() {
                     ? {
                         borderWidth: 4,
                         borderColor: "green",
-                        backgroundColor: "lightgreen",
+                        backgroundColor: "white",
                       }
                     : undefined,
                 },
@@ -139,7 +139,7 @@ function ProductsList() {
                     ? {
                         borderWidth: 4,
                         borderColor: "green",
-                        backgroundColor: "lightgreen",
+                        backgroundColor: "white",
                       }
                     : undefined,
                 },
@@ -153,7 +153,7 @@ function ProductsList() {
                     ? {
                         borderWidth: 4,
                         borderColor: "green",
-                        backgroundColor: "lightgreen",
+                        backgroundColor: "white",
                       }
                     : undefined,
                 },
@@ -167,7 +167,7 @@ function ProductsList() {
                     ? {
                         borderWidth: 4,
                         borderColor: "green",
-                        backgroundColor: "lightgreen",
+                        backgroundColor: "white",
                       }
                     : undefined,
                 },
@@ -181,7 +181,7 @@ function ProductsList() {
                     ? {
                         borderWidth: 4,
                         borderColor: "green",
-                        backgroundColor: "lightgreen",
+                        backgroundColor: "white",
                       }
                     : undefined,
                 },

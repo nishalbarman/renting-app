@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 import { Image } from "expo-image";
-import HTML from "react-native-render-html";
+import RenderHTML from "react-native-render-html";
 
 import { AntDesign } from "@expo/vector-icons";
 
@@ -451,7 +451,7 @@ function product() {
                 {productDetails.title}
               </Text>
               {/* rating and start */}
-              <View className="flex flex-row gap-x-2 h-10 items-center mb-3 mt-1">
+              <View className="flex flex-row gap-x-2 h-10 items-center">
                 <View className="flex flex-row items-center justify-center">
                   {starsArray.map((item, index) => {
                     return (
@@ -574,9 +574,9 @@ function product() {
                   </View>
                 )}
 
-              {/* price and quantity section */}
-              <View>
-                <View className="flex flex-row justify-between items-center gap-y-1 p-[0px_10px]">
+              {/* //!price and quantity section */}
+              <View className="bg-[#e3eeff] rounded-md mt-2">
+                <View className="flex flex-row justify-between items-center p-3 ">
                   {/* price */}
                   <View className="flex gap-y-2">
                     {productType === "rent" ? (
@@ -600,22 +600,22 @@ function product() {
                         </Text>
                       </Text>
                     )}
-                    <Text className="text-[15px] leading-2">
+                    <Text className="text-[15px] font-[poppins]">
                       Shipping: ₹
                       {productDetails?.variant?.shippingPrice ||
-                        productDetails?.shippingPrice}
-                      {!freeDelivery && "\n\nFREE shipping above 500"}
+                        productDetails?.shippingPrice}{" "}
+                      {!freeDelivery && "\nFREE shipping above 500"}
                     </Text>
                   </View>
 
                   {/* quantity section */}
                   <View className="flex flex-col gap-y-2">
-                    <View className="flex flex-row bg-[#F2F3F2] justify-center items-center p-[8px] rounded-[30px] self-start">
+                    <View className="flex flex-row bg-[#F2F3F2] bg-white justify-center items-center rounded-[30px] self-start">
                       <TouchableOpacity
                         onPress={() => {
                           setQuantity((prev) => (prev == 1 ? 1 : prev - 1));
                         }}
-                        className="rounded-full w-[37px] h-[37px] flex flex items-center justify-center bg-white">
+                        className="rounded-full w-10 h-10 flex flex items-center justify-center bg-white border border-gray-500">
                         <AntDesign name="minus" size={29} color="black" />
                       </TouchableOpacity>
                       <Text className="font-[poppins-xbold] text-[18px] mr-4 ml-4">
@@ -625,18 +625,18 @@ function product() {
                         onPress={() => {
                           setQuantity((prev) => (prev >= 50 ? 50 : prev + 1));
                         }}
-                        className="rounded-full w-[37px] h-[37px] flex flex items-center justify-center bg-white">
+                        className="rounded-full w-10 h-10 flex flex items-center justify-center bg-white border border-gray-500">
                         <AntDesign name="plus" size={24} color="black" />
                       </TouchableOpacity>
                     </View>
 
                     {productType == "rent" && (
-                      <View className="flex flex-row bg-[#F2F3F2] justify-center items-center p-[8px] rounded-[30px] self-start">
+                      <View className="flex flex-row bg-[#F2F3F2] bg-white justify-center items-center rounded-[30px] self-start">
                         <TouchableOpacity
                           onPress={() => {
                             setRentDays((prev) => (prev == 1 ? 1 : prev - 1));
                           }}
-                          className="rounded-full w-[37px] h-[37px] flex flex items-center justify-center bg-white">
+                          className="rounded-full w-10 h-10 flex flex items-center justify-center bg-white border border-gray-500">
                           <AntDesign name="minus" size={29} color="black" />
                         </TouchableOpacity>
 
@@ -652,13 +652,13 @@ function product() {
                           onPress={() => {
                             setRentDays((prev) => (prev >= 50 ? 50 : prev + 1));
                           }}
-                          className="rounded-full w-[37px] h-[37px] flex flex items-center justify-center bg-white">
+                          className="rounded-full w-10 h-10 flex flex items-center justify-center bg-white border border-gray-500">
                           <AntDesign name="plus" size={24} color="black" />
                         </TouchableOpacity>
                       </View>
                     )}
 
-                    <View>
+                    <View className="mt-5">
                       {!inStock ? (
                         <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
                           Not in stock
@@ -674,7 +674,7 @@ function product() {
                 </View>
 
                 {/* buy now or add to cart button */}
-                <View className="pt-7 flex flex-row gap-y-3 gap-x-5 justify-center items-center">
+                <View className="flex flex-row justify-center items-center mt-2">
                   <TouchableHighlight
                     onPress={handleAddToCart}
                     style={
@@ -683,7 +683,8 @@ function product() {
                         : {}
                     }
                     disabled={!inStock || inCart}
-                    className="bg-dark-purple h-[50px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
+                    className="bg-black border border-gray-600 h-14 flex-1 flex flex-row justify-center items-center rounded-md">
+                    {/* className="bg-dark-purple h-[50px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md"> */}
                     {isAddToCartLoading ? (
                       <ActivityIndicator size={20} color={"white"} />
                     ) : inCart ? (
@@ -704,7 +705,7 @@ function product() {
                           : {}
                       }
                       disabled={!inStock}
-                      className="bg-[#f07354] h-[50px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
+                      className="bg-[#f57842] h-14 flex-1 flex flex-row justify-center items-center rounded-md">
                       <Text className="text-white text-[16px] font-[poppins-bold]">
                         Rent It
                       </Text>
@@ -718,7 +719,7 @@ function product() {
                           : {}
                       }
                       disabled={!inStock}
-                      className="bg-[#f07354] h-[50px] flex-1 text-[16px] text-white flex flex-row justify-center items-center rounded-md">
+                      className="bg-[#f57842] h-14 flex-1 flex flex-row justify-center items-center rounded-md">
                       <Text className="text-white text-[16px] font-[poppins-bold]">
                         By Now
                       </Text>
@@ -726,43 +727,49 @@ function product() {
                   )} */}
                 </View>
               </View>
-              {/* product description */}
-              <View className="pt-4 pb-6 pl-1 pr-1">
-                <Text className="text-[18px] font-[poppins-bold]">
-                  Product Details
+
+              {/* //! product description */}
+              <View className="my-7">
+                <Text className="text-2xl font-bold text-orange mb-2">
+                  💁‍♂️ Product Details
                 </Text>
-                <HTML
-                  systemFonts={["poppins", "poppins-mid", "poppins-bold"]}
-                  contentWidth={width}
-                  source={{
-                    html: productDetails.description || "<p>No description</p>",
-                  }}
-                />
+                <View className="mt-2 pt-4 pb-6 bg-[#f2f2f2] rounded-md p-3">
+                  <RenderHTML
+                    systemFonts={["poppins", "poppins-mid", "poppins-bold"]}
+                    contentWidth={width}
+                    source={{
+                      html:
+                        `<html style="font-size: 13px">${productDetails.description}</html>` ||
+                        "<p>No description</p>",
+                    }}
+                  />
+                </View>
               </View>
-              {/* rating and reviews */}
-              <View className="pt-4 pb-6 flex flex-col gap-y-2 pl-1 pr-1">
-                <View className="flex flex-row justify-between items-center">
-                  <View className="flex flex-col gap-y-2">
-                    <Text className="text-[18px] font-[poppins-bold]">
-                      Feedbacks
-                    </Text>
-                    <View>
-                      <View className="flex flex-row items-center gap-x-1">
-                        <AntDesign name={"star"} size={20} color={"black"} />
-                        <Text className="text-[18px] align-middle">
-                          {productDetails.stars}{" "}
-                        </Text>
-                        <Text className="text-[#787878] text-[15px] align-middle">
-                          ({productDetails.totalFeedbacks})
-                        </Text>
-                      </View>
+
+              {/* //! rating and reviews */}
+              <View className="my-3 pb-6 flex flex-col gap-y-2 bg-[#f2f2f2] rounded-md px-2 py-2 -mx-2">
+                <View className="relative flex flex-row justify-between items-center w-full">
+                  <View className="flex flex-col items-center gap-y-2 w-full">
+                    <View className="bg-white h-10 rounded-md mb-1 px-5 flex justify-center">
+                      <Text className="text-xl font-[poppins-bold]">
+                        Feedbacks
+                      </Text>
+                    </View>
+                    <View className="flex flex-row items-center gap-x-1">
+                      <AntDesign name={"star"} size={20} color={"black"} />
+                      <Text className="text-[18px] align-middle">
+                        {productDetails.stars}{" "}
+                      </Text>
+                      <Text className="text-[#787878] text-[15px] align-middle">
+                        ({productDetails.totalFeedbacks})
+                      </Text>
                     </View>
                   </View>
 
                   {hasUserBoughtThisProduct && (
                     <TouchableOpacity
                       onPress={handleReviewSheetOpen}
-                      className="rounded-full w-[40px] h-[40px] flex flex-row self-start items-center justify-center bg-dark-purple shadow">
+                      className="rounded-full w-[40px] h-[40px] flex flex-row self-start items-center justify-center bg-dark-purple shadow absolute right-0">
                       <AntDesign name="plus" size={24} color="white" />
                     </TouchableOpacity>
                   )}
@@ -770,7 +777,7 @@ function product() {
 
                 {/* feedback cards */}
                 <View className={"flex flex-col items-center w-full"}>
-                  <View className="flex flex-col pt-5 w-full">
+                  <View className="flex flex-col items-center py-5 w-full">
                     {isProductFetching ? (
                       <>
                         <FeedbackCardSkeleton />

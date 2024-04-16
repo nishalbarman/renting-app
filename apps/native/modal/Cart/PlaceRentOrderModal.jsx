@@ -63,11 +63,12 @@ function PlaceOrderModal({
     <Modal animationType="slide" transparent={true} visible={modalVisible}>
       <View
         style={{
-          backgroundColor: "rgba(0,0,0,0.6)",
+          backgroundColor: "transparent",
         }}
         className="flex-1 items-center justify-center mt-[22px] min-h-screen">
         {orderPlaceStatus === "pending" ? (
           <View
+            elevation={3}
             style={styles.modalView}
             className="m-[20px] bg-white rounded-md p-[35px] flex items-center w-[70%]">
             <ActivityIndicator size={40} color={"#514FB6"} />

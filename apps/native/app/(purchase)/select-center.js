@@ -73,6 +73,7 @@ function LocationMap() {
 
   const getCenterLocations = async () => {
     try {
+      console.log(searchParams?.address);
       const response = await axios.get(
         `${process.env.EXPO_PUBLIC_API_URL}/center/addresses/${searchParams?.address}`,
         {
@@ -81,6 +82,7 @@ function LocationMap() {
           },
         }
       );
+      console.log(response.data);
       setUserCloseCenterList(response.data.availableCenters);
       setClosestCenter(response.data.availableCenters[0]);
     } catch (error) {
@@ -91,17 +93,6 @@ function LocationMap() {
   useEffect(() => {
     getCenterLocations();
   }, []);
-
-  // const {
-  //   data: centerAddresses,
-  //   isLoading: isCenterLoadingAddress,
-  //   isFethcing: isCenterFetchingAddress,
-  //   error,
-  // } = useGetAddressQuery();
-
-  // const selectedCenterDetails = useSelector(
-  //   (state) => state.selectedCenterDetails
-  // );
 
   const [selectedCenterAddress, setSelectedCenterAddress] = useState(null);
 
@@ -157,6 +148,7 @@ function LocationMap() {
         <>
           <MapView
             ref={mapViewRef}
+            key={process.env.EXPO_PUBLIC_ANDROID_MAP_API_KEY}
             className="h-full w-full"
             showsUserLocation={true}
             followsUserLocation={true}

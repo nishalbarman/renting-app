@@ -17,7 +17,7 @@ function FeedbackCard({
     <View className="p-[0_0_0_10px] mt-[5px] mb-[18px] w-[100%]">
       <View className="relative w-[100%] h-fit p-1 w-full">
         <Image
-          className="h-[45px] w-[45px] absolute top-[-15px] left-[-15px] z-[999]"
+          className="h-[45px] w-[45px] rounded-full absolute top-[-15px] left-[-15px] z-[999] border border-gray-500"
           source={{
             uri: userIcon,
           }}

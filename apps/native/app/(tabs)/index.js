@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   Image,
+  Pressable,
   ScrollView,
   Text,
   TextInput,
@@ -28,7 +29,7 @@ export default function Tab() {
   };
 
   return (
-    <SafeAreaView className="bg-white flex-1">
+    <SafeAreaView className="bg-white flex-1 min-h-screen">
       <ScrollView
         showsVerticalScrollIndicator={false}
         ounces={false} // Set this to false to disable overscroll effect
@@ -40,7 +41,19 @@ export default function Tab() {
           rowGap: 10,
           flexGrow: 1,
         }}>
-        <View className="flex flex-row gap-x-3 justify-center px-8 mt-5">
+        <View className="flex flex-row h-9 rounded-md w-[40%] bg-[#ebebeb] border border-gray-300">
+          <Pressable
+            onPress={handleProductTypeRent}
+            className={`${productType === "rent" ? "bg-white" : ""} rounded-md w-[50%] flex items-center justify-center`}>
+            <Text>Rent</Text>
+          </Pressable>
+          <Pressable
+            onPress={handleProductTypePurchase}
+            className={`${productType === "buy" ? "bg-white" : ""} rounded-md w-[50%] bg-none flex items-center justify-center`}>
+            <Text>Purchase</Text>
+          </Pressable>
+        </View>
+        {/* <View className="flex flex-row gap-x-3 justify-center px-8 mt-5">
           <TouchableOpacity
             onPress={handleProductTypeRent}
             className={`${productType === "rent" ? "bg-[#4587de]" : "bg-white"} flex flex-row rounded-lg items-center justify-center h-[41px] w-[50%]  border border-gray-300`}>
@@ -58,15 +71,16 @@ export default function Tab() {
               Purchase
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <Categories />
 
-        <View className="flex-1 w-[100%]">
+        <View className="flex-1 w-[100%] min-h-screen">
           <ProductsList
             title={`✌️ Our Products`}
             viewAllPath={productType}
-            bgColor="#fff9f2"
+            // bgColor="#fff9f2"
+            bgColor="#f2f2f2"
             titleColor="black"
           />
         </View>

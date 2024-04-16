@@ -135,6 +135,7 @@ function LocationMap() {
         <>
           <MapView
             ref={mapViewRef}
+            key={process.env.EXPO_PUBLIC_ANDROID_MAP_API_KEY}
             style={{ width: width }}
             className="h-full"
             showsUserLocation={true}

@@ -52,6 +52,6 @@ export default function Page() {
     return <Redirect href={"/auth/login"} />;
   }
 
-  // return <Redirect href={"/product"} />;
+  // return <Redirect href={"/view?id=662ba219c3ecbd98499c9e2b"} />;
   return <Redirect href={"/(tabs)"} />;
 }
