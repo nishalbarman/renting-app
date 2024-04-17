@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAddAddressMutation } from "@store/rtk/apis/addressApi";
 import { setAddressDataFromMap } from "@store/rtk/slices/addressSlice";
 import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
-import { Toast } from "expo-react-native-toastify";
+import { Toast } from "toastify-react-native";
 
 import { useRouter } from "expo-router";
 
@@ -143,8 +143,8 @@ export default function AddAddress() {
       if (response.status == 200) {
         dispatch(setAddressDataFromMap({ address: null, coordinates: null }));
       }
-      console.log(response);
-      Toast.success(response.message);
+
+      Toast.success(response.data?.message);
       router.dismiss();
     } catch (error) {
       Toast.error(error?.data?.message || "Address add failed!");

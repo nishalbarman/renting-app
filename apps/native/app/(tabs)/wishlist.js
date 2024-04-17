@@ -37,7 +37,11 @@ export default function Tab() {
               data={wishlistData}
               renderItem={({ item }) => {
                 return item?.product ? (
-                  <WishlistCard details={item?.product} productType={productType} />
+                  <WishlistCard
+                    wishlistId={item?._id}
+                    details={item?.product}
+                    productType={productType}
+                  />
                 ) : (
                   <></>
                 );

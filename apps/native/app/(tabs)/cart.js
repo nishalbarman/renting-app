@@ -278,7 +278,7 @@ const CartPage = () => {
                           <TouchableOpacity
                             onPress={handleChangeCenter}
                             disabled={isGlobalButtonDisabled}
-                            className="flex items-center justify-center h-10 w-full bg-dark-purple rounded-md">
+                            className="flex items-center justify-center h-12 w-full bg-orange-600 rounded-md">
                             <Text className="text-white font-bold">
                               {isCenterSelected
                                 ? "Change Center"
@@ -332,12 +332,12 @@ const CartPage = () => {
                         onPress={handleContinueClick}
                         disabled={productType === "rent" && !isCenterSelected}
                         style={{
-                          backgroundColor:
+                          opacity:
                             productType === "rent" && !isCenterSelected
-                              ? "#b5b4d6"
-                              : "#514FB6",
+                              ? 0.3
+                              : 1,
                         }}
-                        className="bg-dark-purple p-[12px_16px] h-15 rounded-[4px] w-full items-center justify-center">
+                        className="h-12 rounded-md w-full items-center justify-center bg-black">
                         {isPlacingOrder ? (
                           <ActivityIndicator size={23} color="white" />
                         ) : (

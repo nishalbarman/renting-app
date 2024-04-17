@@ -162,7 +162,7 @@ function CartCard({
         </View>
       </View>
 
-      <View className="flex flex-row justify-between items-start gap-y-1 p-[0px_10px]">
+      <View className="flex flex-row justify-between items-start gap-y-1 px-[10px] mt-1">
         {/* price */}
         <View className="flex gap-y-2 basis-1/2">
           {productType === "buy" ? (
@@ -183,9 +183,9 @@ function CartCard({
             </>
           )}
 
-          <Text className="text-[13px] leading-2">
+          <Text className="text-[13px] leading-2 font-[poppins]">
             Shipping price: ₹{variant?.shippingPrice || product?.shippingPrice}
-            {!freeDelivery && "\n\nFREE shipping above 500"}
+            {!freeDelivery && "FREE shipping above 500"}
           </Text>
         </View>
 
@@ -261,7 +261,7 @@ function CartCard({
         <TouchableHighlight
           onPress={handleMoveWishlist}
           underlayColor={"#514FB6"}
-          className="bg-[#514FB6] pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
+          className="bg-blue-600 pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
           {isWishlistAddLoading ? (
             <AnimateSpin>
               <EvilIcons name="spinner" size={24} color="white" />

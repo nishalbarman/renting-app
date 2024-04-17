@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAddAddressMutation } from "@store/rtk/apis/addressApi";
 import { setAddressDataFromMap } from "@store/rtk/slices/addressSlice";
 import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
-import { Toast } from "expo-react-native-toastify";
+import { Toast } from "toastify-react-native";
 
 export default function AddAddress() {
   const handlers = useScrollHandlers();

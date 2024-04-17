@@ -9,7 +9,11 @@ import {
 } from "react-native";
 import { SheetManager } from "react-native-actions-sheet";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
-import MapView, { Marker, addressForCoordinate } from "react-native-maps";
+import MapView, {
+  Marker,
+  PROVIDER_GOOGLE,
+  addressForCoordinate,
+} from "react-native-maps";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
@@ -135,7 +139,7 @@ function LocationMap() {
         <>
           <MapView
             ref={mapViewRef}
-            key={process.env.EXPO_PUBLIC_ANDROID_MAP_API_KEY}
+            provider={PROVIDER_GOOGLE}
             style={{ width: width }}
             className="h-full"
             showsUserLocation={true}

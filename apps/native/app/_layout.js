@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { persistor, store } from "@store/rtk/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { SheetProvider } from "react-native-actions-sheet";
-import ToastManager, { Toast } from "expo-react-native-toastify";
+import ToastManager from "toastify-react-native";
 
 import "../sheetManager/sheets";
 
@@ -48,12 +48,9 @@ export default function RootLayout() {
 
     getUrlAsync();
 
-    const deepLinkListener = Linking.addEventListener(
-      'url',
-      (event) => {
-        handleDeepLink(event.url);
-      }
-    );
+    const deepLinkListener = Linking.addEventListener("url", (event) => {
+      handleDeepLink(event.url);
+    });
 
     return () => deepLinkListener.remove();
   }, [handleDeepLink]);

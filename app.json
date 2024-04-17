@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "RENTING_APP",
+    "slug": "renting_app",
+    "version": "1.0.0",
+    "sdkVersion": "50.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ]
+  }
+}
