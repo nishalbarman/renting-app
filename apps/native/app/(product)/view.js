@@ -747,7 +747,7 @@ function product() {
               </View>
 
               {/* //! rating and reviews */}
-              <View className="my-3 pb-6 flex flex-col gap-y-2 bg-[#f2f2f2] rounded-md px-2 py-2 -mx-2">
+              <View className="my-3 pb-6 flex flex-col gap-y-2 bg-[#f2f2f2] rounded-md px-2 py-2">
                 <View className="relative flex flex-row justify-between items-center w-full">
                   <View className="flex flex-col items-center gap-y-2 w-full">
                     <View className="bg-white h-10 rounded-md mb-1 px-5 flex justify-center">
@@ -776,7 +776,7 @@ function product() {
                 </View>
 
                 {/* feedback cards */}
-                <View className={"flex flex-col items-center w-full"}>
+                <View className={"flex flex-col items-center w-full px-1"}>
                   <View className="flex flex-col items-center py-5 w-full">
                     {isProductFetching ? (
                       <>

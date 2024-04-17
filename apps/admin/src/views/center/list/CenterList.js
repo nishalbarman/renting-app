@@ -707,10 +707,10 @@ const ListProduct = () => {
           <CModalTitle id="LiveDemoExampleLabel">Are you sure about that?</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <strong>Warning: Permanent Deletion of Product Information</strong>
+          <strong>Warning: Permanent Deletion of Center Information</strong>
           <p>
-            Deleting this product will permanently remove all associated information from the server
-            and erase any related data from the database, including variants.
+            Deleting this center will permanently remove all associated information from the server
+            and erase any related data from the database, including owner information.
           </p>
         </CModalBody>
         <CModalFooter>

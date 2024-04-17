@@ -33,8 +33,13 @@ import axios from 'axios'
 import { Box, Button, MenuItem, lighten } from '@mui/material'
 
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
+
+import UpdateModal from './UpdateModal'
 
 const ListProduct = () => {
+  const navigate = useNavigate()
+
   const { jwtToken } = useSelector((state) => state.auth)
 
   //data and fetching state
@@ -45,52 +50,46 @@ const ListProduct = () => {
   const [rowCount, setRowCount] = useState(0)
 
   //table state
-  const [columnFilters, setColumnFilters] = useState([])
-  const [globalFilter, setGlobalFilter] = useState('')
-  const [sorting, setSorting] = useState([])
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   })
 
+  const fetchProductData = async () => {
+    if (!data.length) {
+      setIsLoading(true)
+    } else {
+      setIsRefetching(true)
+    }
+
+    const url = new URL('/products', process.env.VITE_APP_API_URL)
+
+    url.searchParams.set('page', `${pagination.pageIndex}`)
+    url.searchParams.set('limit', `${pagination.pageSize}`)
+
+    try {
+      const res = await axios.get(url.href, {
+        headers: {
+          authorization: `Bearer ${jwtToken}`,
+        },
+      })
+      setData(res.data?.data || [])
+      setRowCount(res.data?.totalProductCount || 0)
+    } catch (error) {
+      setIsError(true)
+      console.error(error)
+      return
+    }
+    setIsError(false)
+    setIsLoading(false)
+    setIsRefetching(false)
+  }
+
   //if you want to avoid useEffect, look at the React Query example instead
   useEffect(() => {
-    const fetchData = async () => {
-      if (!data.length) {
-        setIsLoading(true)
-      } else {
-        setIsRefetching(true)
-      }
-
-      const url = new URL(
-        '/products',
-        process.env.NODE_ENV === 'production'
-          ? 'https://www.material-react-table.com'
-          : 'http://localhost:8000',
-      )
-      url.searchParams.set('page', `${pagination.pageIndex}`)
-      url.searchParams.set('limit', `${pagination.pageSize}`)
-
-      try {
-        const res = await axios.get(url.href, {
-          headers: {
-            authorization: `Bearer ${jwtToken}`,
-          },
-        })
-        setData(res.data?.data || [])
-        setRowCount(res.data?.totalProductCount || 0)
-      } catch (error) {
-        setIsError(true)
-        console.error(error)
-        return
-      }
-      setIsError(false)
-      setIsLoading(false)
-      setIsRefetching(false)
-    }
-    fetchData()
+    fetchProductData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [columnFilters, globalFilter, pagination.pageIndex, pagination.pageSize, sorting])
+  }, [pagination.pageIndex, pagination.pageSize])
 
   const columns = useMemo(
     () => [
@@ -436,11 +435,15 @@ const ListProduct = () => {
         </CCard>
       </CCol>
     ),
+
     renderRowActionMenuItems: ({ row, closeMenu }) => [
       <MenuItem
         key={0}
         onClick={() => {
           // View profile logic...
+          // navigate(`/product/add?id=${row.original._id}`)
+          localStorage.setItem('productId', row.original._id)
+          setUpdateModalVisible(true)
           closeMenu()
         }}
         sx={{ m: 0 }}
@@ -463,10 +466,8 @@ const ListProduct = () => {
       </MenuItem>,
     ],
     renderTopToolbar: ({ table }) => {
-      const handleDeactivate = () => {
-        table.getSelectedRowModel().flatRows.map((row) => {
-          alert('deactivating ' + row.getValue('name'))
-        })
+      const handleDeleted = () => {
+        setDeleteProductId(table.getSelectedRowModel().flatRows.map((row) => row.original._id))
       }
 
       return (
@@ -488,11 +489,11 @@ const ListProduct = () => {
             <Box sx={{ display: 'flex', gap: '0.5rem' }}>
               <Button
                 color="error"
-                disabled={!table.getIsSomeRowsSelected()}
-                onClick={handleDeactivate}
+                disabled={!(table.getIsSomePageRowsSelected() || table.getIsAllRowsSelected())}
+                onClick={handleDeleted}
                 variant="contained"
               >
-                Delete Selected
+                Delete
               </Button>
             </Box>
           </Box>
@@ -507,21 +508,22 @@ const ListProduct = () => {
   const handleDeleteProudct = async () => {
     try {
       setDeleteButtonLoading(true)
-      // const response = await axios.delete(
-      //   `${process.env.VITE_APP_API_URL}/categories/${deleteProductId}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${jwtToken}`,
-      //     },
-      //   },
-      // )
-      await new Promise((res) => {
-        setTimeout(res, 3000)
-      })
+      const response = await axios.post(
+        `${process.env.VITE_APP_API_URL}/products/delete`,
+        {
+          deletableProductIds: deleteProductId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        },
+      )
+
       toast.success('Product deleted')
       setDeleteProductId(null)
 
-      // getCategories()
+      fetchProductData()
     } catch (error) {
       console.error(error)
       toast.error(error.response?.data?.message || error.message)
@@ -529,6 +531,8 @@ const ListProduct = () => {
       setDeleteButtonLoading(false)
     }
   }
+
+  const [updateModalVisible, setUpdateModalVisible] = useState(false)
 
   return (
     <>
@@ -554,10 +558,10 @@ const ListProduct = () => {
           <CModalTitle id="LiveDemoExampleLabel">Are you sure about that?</CModalTitle>
         </CModalHeader>
         <CModalBody>
+          <strong>Warning: Permanent Deletion of Product Information</strong>
           <p>
-            Deleting this product will permanently delete this product information from server also
-            it will erase information any related information to this product from database such as
-            variants.
+            Deleting this product will permanently remove all associated information from the server
+            and erase any related data from the database, including variants.
           </p>
         </CModalBody>
         <CModalFooter>
@@ -574,6 +578,13 @@ const ListProduct = () => {
           </CButton>
         </CModalFooter>
       </CModal>
+      {updateModalVisible && (
+        <UpdateModal
+          visible={updateModalVisible}
+          setVisible={setUpdateModalVisible}
+          fetchProductData={fetchProductData}
+        />
+      )}
     </>
   )
 }

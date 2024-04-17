@@ -57,11 +57,11 @@ router.post(
               .map((id) => new mongoose.Types.ObjectId(id));
           console.log("Cart ID'S --->", idsToDeleteAsObjectId);
 
-          await Cart.deleteMany({
-            _id: {
-              $in: idsToDeleteAsObjectId,
-            },
-          });
+          // await Cart.deleteMany({
+          //   _id: {
+          //     $in: idsToDeleteAsObjectId,
+          //   },
+          // });
 
           console.log("Center ID", paymentIntentSucceeded.metadata.center);
           console.log("Type of Center ID", typeof paymentIntentSucceeded.metadata.center);
