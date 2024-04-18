@@ -1,13 +1,14 @@
+require("dotenv").config();
 const { v4: uuidv4 } = require("uuid");
 const { getStorage } = require("firebase-admin/storage");
 const admin = require("firebase-admin");
 
-const serviceAccount =
-  process.env.NODE_ENV === "development"
-    ? require("./service-account-key.json")
-    : require("/etc/secrets/service-account-key.json");
+const { decryptToString } = require("./secure-file.js"); // replace with your location
 
-console.log(serviceAccount);
+// const serviceAccount = require("./service-account-key.json");
+const secureFileName = "./service-account-key.json.secure"; // replace with your filename
+const jsonStr = await decryptToString(secureFileName);
+const serviceAccount = JSON.parse(jsonStr);
 
 // Initialize the app with a service account, granting admin privileges
 admin.initializeApp({
