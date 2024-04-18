@@ -2,7 +2,10 @@ const { v4: uuidv4 } = require("uuid");
 const { getStorage } = require("firebase-admin/storage");
 const admin = require("firebase-admin");
 
-const serviceAccount = require("./service-account-key.json");
+const serviceAccount =
+  process.env.NODE_ENV === "development"
+    ? require("./service-account-key.json")
+    : require("/etc/secrets/service-account-key.json");
 
 console.log(serviceAccount);
 

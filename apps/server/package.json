@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js",
-    "dev_start": "nodemon index.js",
-    "start:validator": "yarn workspace custom-validator-renting dev",
-    "start:firebase-utils": "yarn workspace firebase-utils dev",
-    "build": "node index.js"
+    "start": "node ./dist/index.js",
+    "dev": "concurrently \"yarn dev:validator\" \"yarn dev:firebase-utils\" \"yarn server_dev_start\"",
+    "server_dev_start": "nodemon index.js",
+    "dev:validator": "yarn workspace custom-validator-renting dev",
+    "dev:firebase-utils": "yarn workspace firebase-utils dev",
+    "build": "concurrently \"yarn build:firebase-utils\" \"yarn build:validator\" \"yarn build:tsup-build\"",
+    "build:tsup-build": "tsup ./index.js",
+    "build:firebase-utils": "yarn workspace firebase-utils build",
+    "build:validator": "yarn workspace custom-validator-renting build"
   },
   "author": "Nishal Barman",
   "license": "ISC",
