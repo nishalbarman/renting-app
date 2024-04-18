@@ -11,6 +11,7 @@ const User = require("../../../models/user.model");
 const Cart = require("../../../models/cart.model");
 const Coupon = require("../../../models/coupon.model");
 const Order = require("../../../models/order.model");
+const { OrderList } = require("../../../models/order.model");
 const Address = require("../../../models/address.model");
 const Center = require("../../../models/center.model");
 
@@ -210,71 +211,6 @@ router.post("/:productType", async (req, res) => {
         .json({ message: "Service not available in your location" });
     }
 
-    let txnAndOrderIdInsertedCartItems;
-
-    if (productType === "buy") {
-      txnAndOrderIdInsertedCartItems = cartItemsForUser.map((item) => {
-        if (!!item.variant) {
-          return {
-            ...item,
-            product: item.product._id,
-
-            // order related
-            orderId: uuidv4(),
-            paymentTxnId: paymentTxnId,
-
-            // product details
-            title: item.product.title,
-            previewImage: item.product.previewImage,
-            price: item.variant.discountedPrice * item.quantity,
-            shippingPrice: item.variant.shippingPrice,
-            quantity: item.quantity,
-            orderType: "buy",
-            color: item.variant.color,
-            size: item.variant.size,
-            address: address,
-
-            center: centerAddresses[0]._id,
-
-            orderStatus: "Pending",
-            shipmentType: "delivery_partner",
-            paymentMode: "PREPAID",
-
-            // user details
-            user: userDetails._id,
-          };
-        }
-
-        // if no variant available
-        return {
-          ...item,
-          product: item.product._id,
-
-          // order related
-          orderId: uuidv4(),
-          paymentTxnId: paymentTxnId,
-
-          // product details
-          title: item.product.title,
-          previewImage: item.product.previewImage,
-          price: item.product.discountedPrice * item.quantity,
-          shippingPrice: item.product.shippingPrice,
-          quantity: item.quantity,
-          orderType: "buy",
-          address: address,
-
-          center: centerAddresses[0]._id,
-
-          orderStatus: "Pending",
-          shipmentType: "delivery_partner",
-          paymentMode: "PREPAID",
-
-          // user details
-          user: userDetails._id,
-        };
-      });
-    }
-
     // Use an existing Customer ID if this is a returning customer.
     const user = await User.findById(userDetails._id);
 
@@ -289,8 +225,6 @@ router.post("/:productType", async (req, res) => {
       { customer: user.stripeCustomer.id },
       { apiVersion: "2024-04-10" }
     );
-
-    console.log(centerAddresses[0]._id);
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: paymentObject.amount,
@@ -310,7 +244,68 @@ router.post("/:productType", async (req, res) => {
       },
     });
 
-    const orders = await Order.insertMany(txnAndOrderIdInsertedCartItems);
+    const orderGroupID = uuidv4();
+
+    let orderItemsWithOrderIDandPaymentId;
+
+    if (productType === "buy") {
+      orderItemsWithOrderIDandPaymentId = cartItemsForUser.map((item) => {
+        console.log(item);
+
+        const createdOrder = {
+          ...item,
+
+          product: item.product._id,
+          user: userDetails._id,
+
+          // order related
+          orderGroupID: orderGroupID,
+          paymentTxnId: paymentIntent.id,
+
+          // product details
+          title: item.product.title,
+
+          quantity: item.quantity,
+          orderType: "buy",
+
+          address: {
+            address: `${addressDocument.name}, ${addressDocument.streetName}, ${addressDocument.locality}, ${addressDocument.postalCode}, ${addressDocument.country}`,
+            location: [addressDocument.longitude, addressDocument.latitude],
+          },
+
+          center: centerAddresses[0]._id,
+
+          orderStatus: "Pending",
+          paymentMode: "PREPAID",
+          shipmentType: "delivery_partner",
+        };
+
+        if (!!item.variant) {
+          createdOrder.previewImage = item.variant.previewImage;
+          createdOrder.price = item.variant.discountedPrice * item.quantity;
+          createdOrder.shippingPrice = item.variant.shippingPrice;
+
+          createdOrder.color = item.variant.color;
+          createdOrder.size = item.variant.size;
+        } else {
+          createdOrder.previewImage = item.product.previewImage;
+          createdOrder.price = item.product.discountedPrice * item.quantity;
+          createdOrder.shippingPrice = item.product.shippingPrice;
+
+          createdOrder.color = null;
+          createdOrder.size = null;
+        }
+
+        return createdOrder;
+      });
+    }
+
+    const orders = await Order.insertMany(orderItemsWithOrderIDandPaymentId);
+
+    // OrderList.create({
+    //   user: userDetails._id,
+    //   orders: orders.map((item) => item._id),
+    // });
 
     // const razorpayOrderIdList = orders.map((item) => ({
     //   razorPayOrderId: razorpayOrder.id,

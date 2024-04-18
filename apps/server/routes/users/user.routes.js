@@ -6,6 +6,8 @@ const passValidator = require("password-validator");
 
 const User = require("../../models/user.model");
 
+const checkRole = require("../../middlewares");
+
 const {
   isValidEmail,
   hasOneSpaceBetweenNames,
@@ -110,6 +112,94 @@ router.patch("/update", async (req, res) => {
     }
     return res.status(500).json({
       status: false,
+      message: "Internal server error",
+    });
+  }
+});
+
+router.get("/get-user-chart-data", checkRole(1), async (req, res) => {
+  try {
+    const year = parseInt(req.query?.year);
+    const month = parseInt(req.query?.month);
+
+    const pipeline = [
+      // Stage 1: Match users created within the specified date range
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(year, month - 1, 1), // Start of the month
+            $lt: new Date(year, month, 1), // Start of the next month
+          },
+        },
+      },
+      // Stage 2: Group by date and count users
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+            day: { $dayOfMonth: "$createdAt" },
+          },
+          count: { $sum: 1 }, // Count users
+        },
+      },
+      // Stage 3: Project to format date and rename fields
+      {
+        $project: {
+          _id: 0,
+          date: {
+            $dateToString: {
+              format: "%B %d, %Y",
+              date: {
+                $dateFromParts: {
+                  year: "$_id.year",
+                  month: "$_id.month",
+                  day: "$_id.day",
+                },
+              },
+            },
+          },
+          count: 1,
+        },
+      },
+      // Stage 4: Sort by date
+      {
+        $sort: { date: 1 },
+      },
+      // Stage 5: Group to calculate total users
+      {
+        $group: {
+          _id: null,
+          totalUsers: { $sum: "$count" },
+          chartData: { $push: "$$ROOT" },
+        },
+      },
+      // Stage 6: Project to reshape output
+      {
+        $project: {
+          _id: 0,
+          totalUsers: 1,
+          chartData: 1,
+        },
+      },
+    ];
+
+    // Replace "createdAt" with the appropriate timestamp field if you're using a different field
+    // Execute the pipeline using the aggregate function on your User model
+    const chartData = await User.aggregate(pipeline);
+    return res.status(200).json(chartData[0]);
+  } catch (error) {
+    console.log(error);
+    if (error instanceof mongoose.Error && error?.errors) {
+      const errArray = Object.values(error.errors).map(
+        (properties) => properties.message
+      );
+
+      return res.status(400).json({
+        message: errArray.join(", "),
+      });
+    }
+    return res.status(500).json({
       message: "Internal server error",
     });
   }

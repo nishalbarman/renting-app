@@ -133,9 +133,9 @@ export default function AddAddress() {
       if (response.status == 200) {
         dispatch(setAddressDataFromMap({ address: null, coordinates: null }));
       }
-      Toast.success(response.message);
+      Toast.success(response.data?.message);
     } catch (error) {
-      Toast.error(error?.data?.message || "Address not added");
+      Toast.error(error?.response.data?.message || "Address not added");
       console.error(error);
     }
   };

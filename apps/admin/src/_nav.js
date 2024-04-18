@@ -30,6 +30,24 @@ const _nav = [
       text: 'NEW',
     },
   },
+
+  {
+    component: CNavTitle,
+    name: 'Orders',
+  },
+  // {
+  //   component: CNavItem,
+  //   name: 'Add Center',
+  //   to: '/center/add',
+  //   icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
+  // },
+  {
+    component: CNavItem,
+    name: 'Orders',
+    to: '/orders/list',
+    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
+  },
+
   {
     component: CNavTitle,
     name: 'Product',

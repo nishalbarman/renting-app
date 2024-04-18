@@ -61,6 +61,10 @@ const AddCategory = React.lazy(() => import('./views/category/add/AddCategory'))
 const AddCenter = React.lazy(() => import('./views/center/add/AddCenter'))
 const CenterList = React.lazy(() => import('./views/center/list/CenterList'))
 
+// orders
+// const AddCenter = React.lazy(() => import('./views/center/add/AddCenter'))
+const OrderList = React.lazy(() => import('./views/orders/list/OrderList'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -69,6 +73,8 @@ const routes = [
   { path: '/product', name: 'Add Product', element: ProductAdd, exact: true },
   { path: '/product/add', name: 'Add Product', element: ProductAdd, exact: true },
   { path: '/product/list', name: 'List Products', element: ListOfProducts, exact: true },
+
+  { path: '/orders/list', name: 'Order List', element: OrderList, exact: true },
 
   { path: '/category', name: 'Add Category', element: AddCategory, exact: true },
   { path: '/category/add', name: 'Add Category', element: AddCategory, exact: true },

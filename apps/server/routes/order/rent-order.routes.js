@@ -7,7 +7,7 @@ const getTokenDetails = require("../../helpter/getTokenDetails");
 
 // const Coupon = require("../../../../models/coupon.model");
 
-// GET endpoint
+//! CURRENTLY NOT IN USE
 router.get("/", async (req, res) => {
   try {
     const token = req?.jwt?.token;
@@ -236,7 +236,7 @@ router.post("/:productType", async (req, res) => {
   }
 });
 
-// PATCH endpoint
+//! CURRENTLY NOT IN USE
 router.patch("/", async (req, res) => {
   try {
     const token = req.jwt.token || null;

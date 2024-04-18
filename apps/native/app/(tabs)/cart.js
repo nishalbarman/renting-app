@@ -242,7 +242,7 @@ const CartPage = () => {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
           <View className="pb-2">
-            {isCartLoading || isCartFetching ? (
+            {isCartLoading ? (
               <>
                 <AddressCardSkeletop />
               </>

@@ -9,9 +9,12 @@ function CenterModal({ visible, setVisible, fetchProductData }) {
   return (
     <>
       <CModal
-        fullscreen={false}
+        fullscreen={true}
         visible={true}
-        onClose={() => setVisible(false)}
+        onClose={() => {
+          sessionStorage.removeItem('productId')
+          setVisible(false)
+        }}
         aria-labelledby="FullscreenExample1"
       >
         <CModalHeader>

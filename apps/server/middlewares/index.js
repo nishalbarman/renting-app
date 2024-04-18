@@ -22,6 +22,8 @@ const checkRole = (...allowedRoles) => {
 
       // const allowedRoles = role.split("|");
       if (allowedRoles.includes(userDetails.role)) {
+        req.jwt.role = userDetails?.role;
+        req.jwt.center = userDetails?.center;
         return next();
       }
 

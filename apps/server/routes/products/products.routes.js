@@ -224,7 +224,7 @@ const checkUpdatedProductHasError = ({
 
   if (!!isVariantAvailable) {
     productVariant.forEach((variant, index) => {
-      if (Object.keys(variant).length !== 9) {
+      if (Object.keys(variant).length !== 14) {
         return error.push("Variant does not contain all the required keys");
       }
 
@@ -608,8 +608,6 @@ router.patch("/update/:productId", checkRole(1), async (req, res) => {
         );
       }
 
-      console.log(productData.slideImages);
-
       if (productData.slideImages.length > 0) {
         const slideImages = await ImageUploadHelper.uploadBulkImages(
           productData.slideImages
@@ -620,7 +618,9 @@ router.patch("/update/:productId", checkRole(1), async (req, res) => {
       const variants = productData?.productVariant;
 
       for (let i = 0; i < variants.length; i++) {
-        if (variants.previewImage.length > 0) {
+        console.log(variants[i]);
+
+        if (variants[i].previewImage.length > 0) {
           variants[i].previewImage = await ImageUploadHelper.uploadBulkImages(
             variants[i].previewImage
           );

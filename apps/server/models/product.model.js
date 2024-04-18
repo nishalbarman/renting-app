@@ -15,11 +15,6 @@ const productSchema = new mongoose.Schema(
       ref: "categories",
       default: "65f6c9f882ba818ab0e43d64",
     },
-    category: {
-      type: mongoose.Types.ObjectId,
-      ref: "categories",
-      default: "65f6c9f882ba818ab0e43d64",
-    },
     slideImages: { type: Array, required: true }, // images array
     description: { type: String, required: true },
 

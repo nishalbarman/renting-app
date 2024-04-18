@@ -22,7 +22,7 @@ const OrderScreen = () => {
   const { jwtToken } = useSelector((state) => state.auth);
 
   const [isOrderFetching, setOrderFetching] = useState(true);
-  const [paginationPage, setPaginationPage] = useState(1);
+  const [paginationPage, setPaginationPage] = useState(0);
   const [orders, setOrders] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
 
@@ -32,7 +32,7 @@ const OrderScreen = () => {
         setOrderFetching(true);
         console.log(productType);
         const response = await axios.get(
-          `${process.env.EXPO_PUBLIC_API_URL}/orders/${productType}?page=${paginationPage}&limit=20`,
+          `${process.env.EXPO_PUBLIC_API_URL}/orders/l/${productType}?page=${paginationPage}&limit=20`,
           {
             headers: {
               authorization: `Bearer ${jwtToken}`,

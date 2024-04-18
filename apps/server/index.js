@@ -54,7 +54,8 @@ const extractToken = async (req, res, next) => {
       req.url === "/pay/razorpay/hook" ||
       req.url === "/stripe/hook" ||
       req.url === "/get-image-bg-color" ||
-      req.url === "/categories/view/:categoryId";
+      req.url === "/categories/view/:categoryId" ||
+      req.url === "/orders/get-order-chart-data";
 
     // console.log("Is public router -->", publicRoute);
 

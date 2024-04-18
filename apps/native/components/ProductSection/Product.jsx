@@ -68,11 +68,11 @@ function Product({
         _id: wishlistItemID,
       }).unwrap();
 
-      Toast.success("Wishlist removed", "bottom");
+      Toast.success("Wishlist removed", "top");
 
       console.log("Remove from wishlist response -->", resPayload);
     } catch (error) {
-      Toast.success("Wishlist remove failed", "bottom");
+      Toast.success("Wishlist remove failed", "top");
       setOnWishlist(true);
       console.error(error);
     }
@@ -83,9 +83,9 @@ function Product({
       setOnWishlist((prev) => !prev);
       const resPayload = await addWishlist({ id: _id, productType }).unwrap();
       console.log("Add to Wishlist response -->", resPayload);
-      Toast.success("Wishlist added", "bottom");
+      Toast.success("Wishlist added", "top");
     } catch (error) {
-      Toast.success("Wishlist add failed", "bottom");
+      Toast.success("Wishlist add failed", "top");
       console.error(error);
     }
   };

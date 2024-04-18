@@ -26,10 +26,10 @@ function Product({ wishlistId, details, width, productType }) {
       const resPayload = await removeFromWishlist({
         _id: wishlistId,
       }).unwrap();
-      Toast.success("Wishlist removed", "bottom");
+      Toast.success("Wishlist removed", "top");
       // console.log("Remove from wishlist response -->", resPayload);
     } catch (error) {
-      Toast.success("Wishlist remove failed", "bottom");
+      Toast.success("Wishlist remove failed", "top");
       console.error(error);
     }
   };

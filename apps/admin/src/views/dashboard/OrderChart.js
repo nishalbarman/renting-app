@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 
 import axios from 'axios'
 
-const MainChart = ({ activeMonth, chartData }) => {
+const OrderChart = ({ activeMonth, chartData }) => {
   const chartRef = useRef(null)
 
   return (
@@ -18,46 +18,38 @@ const MainChart = ({ activeMonth, chartData }) => {
           labels: chartData?.map((item) => `${item.date}`),
           datasets: [
             {
-              label: 'Joined Users',
+              label: 'Delivered Orders',
               backgroundColor: `rgba(${getStyle('--cui-info-rgb')}, .1)`,
-              borderColor: getStyle('--cui-info'),
-              pointHoverBackgroundColor: getStyle('--cui-info'),
+              borderColor: getStyle('--cui-success'),
+              pointHoverBackgroundColor: getStyle('--cui-success'),
               borderWidth: 2,
-              data: chartData?.map((item) => +item.count),
+              data: chartData?.map((item) => +item.deliveredCount),
               fill: true,
             },
-            // {
-            //   label: 'My Second dataset',
-            //   backgroundColor: 'transparent',
-            //   borderColor: getStyle('--cui-success'),
-            //   pointHoverBackgroundColor: getStyle('--cui-success'),
-            //   borderWidth: 2,
-            //   data: [
-            //     random(50, 200),
-            //     random(50, 200),
-            //     random(50, 200),
-            //     random(50, 200),
-            //     random(50, 200),
-            //     random(50, 200),
-            //     random(50, 200),
-            //   ],
-            // },
-            // {
-            //   label: 'My Third dataset',
-            //   backgroundColor: 'transparent',
-            //   borderColor: getStyle('--cui-danger'),
-            //   pointHoverBackgroundColor: getStyle('--cui-danger'),
-            //   borderWidth: 1,
-            //   borderDash: [8, 5],
-            //   data: [65, 65, 65, 65, 65, 65, 65],
-            // },
+            {
+              label: 'Cancelled Orders',
+              backgroundColor: 'transparent',
+              borderColor: getStyle('--cui-danger'),
+              pointHoverBackgroundColor: getStyle('--cui-danger'),
+              borderWidth: 2,
+              data: chartData?.map((item) => +item.cancelledCount),
+            },
+            {
+              label: 'Rejected Orders',
+              backgroundColor: 'transparent',
+              borderColor: getStyle('--cui-danger'),
+              pointHoverBackgroundColor: getStyle('--cui-danger'),
+              borderWidth: 1,
+              borderDash: [8, 5],
+              data: chartData?.map((item) => +item.rejectedCount),
+            },
           ],
         }}
         options={{
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              display: false,
+              display: true,
             },
           },
           scales: {
@@ -103,4 +95,4 @@ const MainChart = ({ activeMonth, chartData }) => {
   )
 }
 
-export default MainChart
+export default OrderChart
