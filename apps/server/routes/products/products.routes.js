@@ -647,7 +647,7 @@ router.patch("/update/:productId", checkRole(1), async (req, res) => {
     const productUpdatedData = {
       title: productData.title,
       // category: productData.category,
-      category: "65f6c9f882ba818ab0e43d64",
+      category: productData.category,
       description: productData.description,
       productType: productData.productType,
       shippingPrice: +productData.shippingPrice,

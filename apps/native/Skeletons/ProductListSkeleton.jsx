@@ -32,8 +32,8 @@ const ProductsListSkeleton = ({ title, bgColor, titleColor, viewAllPath }) => {
       style={{
         backgroundColor: bgColor,
       }}
-      className={`w-[100%] p-[20px_10px] h-fit rounded`}>
-      <View className="flex flex-row justify-between p-[0px_1px] items-center mb-[16px]">
+      className={`w-screen px-2 h-fit rounded`}>
+      <View className="flex-row justify-between mb-1">
         <Animated.View
           style={{ opacity: opacityAnimation }}
           className="font-[poppins-xbold] text-[22px] bg-gray-300 rounded h-7 w-32"
@@ -44,8 +44,9 @@ const ProductsListSkeleton = ({ title, bgColor, titleColor, viewAllPath }) => {
         />
       </View>
 
-      <View className="flex flex-row flex-wrap gap-2">
+      <View>
         <FlatList
+          className="w-full"
           data={Array.from({ length: 6 })}
           renderItem={({ item, index }) => <ProductSkeleton key={index} />}
           numColumns={2}

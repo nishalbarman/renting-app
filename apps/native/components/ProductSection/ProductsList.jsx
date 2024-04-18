@@ -37,8 +37,6 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
     }
   };
 
-  console.log("Product Data -->", data);
-
   useEffect(() => {
     getProductData();
   }, [viewAllPath]);
@@ -72,7 +70,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
           style={{
             backgroundColor: bgColor,
           }}
-          className={`w-[100%] p-[20px_10px] h-[100%] rounded`}>
+          className={`w-screen p-[20px_10px] h-[100%] rounded`}>
           <View className="flex flex-row justify-between p-[0px_1px] items-center mb-[16px]">
             <Text
               style={{

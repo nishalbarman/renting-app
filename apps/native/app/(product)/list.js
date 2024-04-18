@@ -1,11 +1,11 @@
-import { Link, Stack } from "expo-router";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { FlatList, SafeAreaView, ScrollView, Text, View } from "react-native";
+import { Stack } from "expo-router";
+import React, { useEffect, useMemo, useState } from "react";
+import { FlatList, SafeAreaView, View } from "react-native";
 import Product from "../../components/ProductSection/Product";
 
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
+import { useGetWishlistQuery } from "@store/rtk";
 
 import ProductsListSkeleton from "../../Skeletons/ProductListSkeleton";
 
@@ -38,7 +38,6 @@ function ProductsList() {
           },
         }
       );
-      console.log(res.data.data);
       setData(res.data.data);
     } catch (error) {
       console.error(error);
@@ -46,8 +45,6 @@ function ProductsList() {
       setIsProductDataLoading(false);
     }
   };
-
-  console.log("Product Data -->", data);
 
   useEffect(() => {
     getProductData();

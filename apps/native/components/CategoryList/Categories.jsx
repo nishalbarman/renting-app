@@ -74,9 +74,11 @@ function Categories() {
   // }, [isError]);
 
   return (
-    <View className="flex flex-row gap-x-2 w-[100%] pl-2 pr-2">
+    <View className="flex flex-row gap-x-2 w-screen pl-2 pr-2">
       {isLoading ? (
         <>
+          <CategorySkeleton />
+          <CategorySkeleton />
           <CategorySkeleton />
           <CategorySkeleton />
           <CategorySkeleton />
@@ -96,10 +98,6 @@ function Categories() {
               />
             )}
           />
-
-          {/* {categoryList?.data?.map(({ _id, categoryName, imageUrl }) => (
-            
-          ))} */}
         </>
       )}
     </View>

@@ -144,10 +144,10 @@ export default function AddAddress() {
         dispatch(setAddressDataFromMap({ address: null, coordinates: null }));
       }
 
-      Toast.success(response.data?.message);
+      Toast.success(response.data?.message, 'top');
       router.dismiss();
     } catch (error) {
-      Toast.error(error?.data?.message || "Address add failed!");
+      Toast.error(error?.data?.message || "Address add failed!", 'top');
       console.error(error);
     }
   };

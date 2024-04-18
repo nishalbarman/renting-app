@@ -11,20 +11,26 @@ router.get("/", async (req, res) => {
   try {
     const searchQuery = req.query;
 
-    const PAGE = searchQuery?.page || 1;
-    const LIMIT = searchQuery?.limit || 5;
-    const SKIP = (PAGE - 1) * LIMIT;
+    const PAGE = searchQuery?.page || 0;
+    const LIMIT = searchQuery?.limit || 0;
+    const SKIP = PAGE * LIMIT;
 
     const totalCounts = await Category.countDocuments({});
 
-    const categories = await Category.find({})
-      .sort({ createdAt: "desc" })
-      .skip(SKIP)
-      .limit(LIMIT);
+    let categories;
+
+    if (LIMIT === 0) {
+      categories = await Category.find({}).sort({ createdAt: "desc" });
+    } else {
+      categories = await Category.find({})
+        .sort({ createdAt: "desc" })
+        .skip(SKIP)
+        .limit(LIMIT);
+    }
 
     const totalPages = Math.ceil(totalCounts / LIMIT);
 
-    return res.status(200).json({ totalPages, data: categories });
+    return res.status(200).json({ totalPages, categories });
   } catch (error) {
     console.log(TAG, error);
     return res

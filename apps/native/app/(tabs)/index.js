@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  FlatList,
   Image,
   Pressable,
   ScrollView,
@@ -29,8 +30,8 @@ export default function Tab() {
   };
 
   return (
-    <SafeAreaView className="bg-white flex-1 min-h-screen">
-      <ScrollView
+    <SafeAreaView className="bg-white flex-1">
+      {/* <ScrollView
         showsVerticalScrollIndicator={false}
         ounces={false} // Set this to false to disable overscroll effect
         contentContainerStyle={{
@@ -40,51 +41,49 @@ export default function Tab() {
           alignItems: "center",
           rowGap: 10,
           flexGrow: 1,
-        }}>
-        <View className="flex flex-row h-9 rounded-md w-[40%] bg-[#ebebeb] border border-gray-300">
-          <Pressable
-            onPress={handleProductTypeRent}
-            className={`${productType === "rent" ? "bg-white" : ""} rounded-md w-[50%] flex items-center justify-center`}>
-            <Text>Rent</Text>
-          </Pressable>
-          <Pressable
-            onPress={handleProductTypePurchase}
-            className={`${productType === "buy" ? "bg-white" : ""} rounded-md w-[50%] bg-none flex items-center justify-center`}>
-            <Text>Purchase</Text>
-          </Pressable>
-        </View>
-        {/* <View className="flex flex-row gap-x-3 justify-center px-8 mt-5">
-          <TouchableOpacity
-            onPress={handleProductTypeRent}
-            className={`${productType === "rent" ? "bg-[#4587de]" : "bg-white"} flex flex-row rounded-lg items-center justify-center h-[41px] w-[50%]  border border-gray-300`}>
-            <Text
-              className={`${productType === "rent" ? "text-white" : "text-black"} text-[17px] font-extrabold`}>
-              Rent
-            </Text>
-          </TouchableOpacity>
+        }}> */}
+      <FlatList
+        className="w-screen"
+        contentContainerStyle={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        data={[""]}
+        renderItem={() => (
+          <>
+            <View className="w-screen flex items-center">
+              <View className="flex flex-row h-9 rounded-md w-[40%] bg-[#ebebeb] border border-gray-300">
+                <Pressable
+                  onPress={handleProductTypeRent}
+                  className={`${productType === "rent" ? "bg-white" : ""} rounded-md w-[50%] flex items-center justify-center`}>
+                  <Text>Rent</Text>
+                </Pressable>
+                <Pressable
+                  onPress={handleProductTypePurchase}
+                  className={`${productType === "buy" ? "bg-white" : ""} rounded-md w-[50%] bg-none flex items-center justify-center`}>
+                  <Text>Purchase</Text>
+                </Pressable>
+              </View>
+            </View>
 
-          <TouchableOpacity
-            onPress={handleProductTypePurchase}
-            className={`${productType === "buy" ? "bg-[#3bc489]" : "bg-white"} flex flex-row rounded-lg items-center justify-center h-[41px] w-[50%]  border border-gray-300`}>
-            <Text
-              className={`${productType === "buy" ? "text-white" : "text-black"} text-[17px] font-extrabold`}>
-              Purchase
-            </Text>
-          </TouchableOpacity>
-        </View> */}
+            <Categories />
 
-        <Categories />
-
-        <View className="flex-1 w-[100%] min-h-screen">
-          <ProductsList
-            title={`✌️ Our Products`}
-            viewAllPath={productType}
-            // bgColor="#fff9f2"
-            bgColor="#f2f2f2"
-            titleColor="black"
-          />
-        </View>
-      </ScrollView>
+            <View className="flex-1 w-screen min-h-screen">
+              <ProductsList
+                title={`✌️ Our Products`}
+                viewAllPath={productType}
+                // bgColor="#fff9f2"
+                bgColor="#f2f2f2"
+                titleColor="black"
+              />
+            </View>
+          </>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+      {/* </ScrollView> */}
     </SafeAreaView>
   );
 }

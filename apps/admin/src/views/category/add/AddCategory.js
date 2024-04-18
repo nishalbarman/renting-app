@@ -87,12 +87,12 @@ const ProductAdd = () => {
           Authorization: `Bearer ${jwtToken}`,
         },
       })
-      setCategoryList(response.data?.data)
+      setCategoryList(response.data?.categories)
       setPaginationPage(response.data?.totalPages)
     } catch (error) {
       toast.error(error.response?.data?.message || error.message)
     } finally {
-      sestIsCategoriesLoading(false)
+      sestIsCategoriesLoading(false);
     }
   }
 

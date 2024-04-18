@@ -52,6 +52,27 @@ const ProductAdd = ({
     productVariant: {},
   })
 
+  const [categoryList, setCategoryList] = useState([])
+
+  // ! Fetch category logic
+  useEffect(() => {
+    const fetchCategoryData = async () => {
+      try {
+        const response = await axios.get(`${process.env.VITE_APP_API_URL}/categories`, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        })
+        setCategoryList(response.data.categories)
+      } catch (error) {
+        console.error(error)
+        toast.error(error.response.data?.message || 'Some unknown error occured')
+      }
+    }
+
+    fetchCategoryData()
+  }, [])
+
   // ! Update product logic
   useEffect(() => {
     const id = sessionStorage.getItem('productId') || null
@@ -396,9 +417,11 @@ const ProductAdd = ({
                     aria-label="select example"
                   >
                     <option>Select Category</option>
-                    <option value="cloth">Cloth</option>
-                    <option value="biking">Biking</option>
-                    <option value="riding">Riding</option>
+                    {categoryList?.map((category) => (
+                      <option key={category?._id?.toString()} value={category._id}>
+                        {category.categoryName}
+                      </option>
+                    ))}
                   </CFormSelect>
                 </div>
 

@@ -82,46 +82,44 @@ export default function AddressList() {
                     address.length > 0 &&
                     address.map((item) => {
                       return (
-                        <>
-                          <View
-                            key={item._id}
-                            className="bg-light-blue-200 p-4 rounded-md mb-3 w-[100%] border border-gray-300">
-                            <View>
-                              <Text className="text-black font-medium mb-2">
-                                {name}
-                              </Text>
-                              <Text className="text-gray-700 mb-2">
-                                {item.name}, {item.locality}, {item.streetName},{" "}
-                                {item.postalCode}, {item.country}
-                              </Text>
-                              <Text className="text-gray-700">{mobileNo}</Text>
-                            </View>
-                            <View className="w-full flex items-end">
-                              {isAddressDeleteLoading ? (
-                                <>
-                                  <ActivityIndicator
-                                    size={15}
-                                    color={"dark-purple"}
-                                  />
-                                </>
-                              ) : (
-                                <>
-                                  <TouchableOpacity
-                                    onPress={() => {
-                                      handleDeleteAddress(item._id);
-                                    }}
-                                    className="flex items-center justify-center flex-0 p-1 rounded-full bg-dark-purple w-10 h-10 mt-4">
-                                    <MaterialIcons
-                                      name="delete"
-                                      size={24}
-                                      color="white"
-                                    />
-                                  </TouchableOpacity>
-                                </>
-                              )}
-                            </View>
+                        <View
+                          key={item._id}
+                          className="bg-light-blue-200 p-4 rounded-md mb-3 w-[100%] border border-gray-300">
+                          <View>
+                            <Text className="text-black font-medium mb-2">
+                              {name}
+                            </Text>
+                            <Text className="text-gray-700 mb-2">
+                              {item.name}, {item.locality}, {item.streetName},{" "}
+                              {item.postalCode}, {item.country}
+                            </Text>
+                            <Text className="text-gray-700">{mobileNo}</Text>
                           </View>
-                        </>
+                          <View className="w-full flex items-end">
+                            {isAddressDeleteLoading ? (
+                              <>
+                                <ActivityIndicator
+                                  size={15}
+                                  color={"dark-purple"}
+                                />
+                              </>
+                            ) : (
+                              <>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    handleDeleteAddress(item._id);
+                                  }}
+                                  className="flex items-center justify-center flex-0 p-1 rounded-full bg-dark-purple w-10 h-10 mt-4">
+                                  <MaterialIcons
+                                    name="delete"
+                                    size={24}
+                                    color="white"
+                                  />
+                                </TouchableOpacity>
+                              </>
+                            )}
+                          </View>
+                        </View>
                       );
                     })}
 
