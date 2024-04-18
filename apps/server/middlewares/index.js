@@ -11,8 +11,8 @@ const checkRole = (...allowedRoles) => {
       }
 
       const userDetails = getTokenDetails(token);
-      if (!userDetails ?? userDetails.role === undefined) {
-        return res.redirect("/#login/login");
+      if (!userDetails) {
+        return res.status(400).json({ message: "Token validation failed" });
       }
 
       console.log(

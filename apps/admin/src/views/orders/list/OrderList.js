@@ -37,6 +37,8 @@ import { useNavigate } from 'react-router-dom'
 
 import ViewOrderDetails from './ViewOrderDetails'
 
+import { attachComma } from '../../../../helper/utils'
+
 const OrderList = () => {
   const navigate = useNavigate()
 
@@ -119,7 +121,7 @@ const OrderList = () => {
             //custom conditional format and styling
             Cell: ({ renderedCellValue, cell }) => (
               <Box component="span">
-                <strong>{renderedCellValue}</strong>
+                <strong>{attachComma(+renderedCellValue)}</strong>
               </Box>
             ),
           },
