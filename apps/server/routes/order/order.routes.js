@@ -52,6 +52,7 @@ router.get("/list", checkRole(1, 2), async (req, res) => {
           totalDocumentCount: { $sum: 1 }, // Count total documents per orderGroupID
           totalPrice: { $sum: "$price" }, // Calculate total price per orderGroupID
           paymentTransactionId: { $push: "$paymentTxnId" },
+          orderType: { $push: "$orderType" },
           orders: { $push: "$$ROOT" }, // Push all matching orders into an array
         },
       },
@@ -99,6 +100,9 @@ router.get("/list", checkRole(1, 2), async (req, res) => {
                 totalDocumentCount: "$$group.totalDocumentCount",
                 paymentTransactionId: {
                   $arrayElemAt: ["$$group.paymentTransactionId", 0],
+                },
+                orderType: {
+                  $arrayElemAt: ["$$group.orderType", 0],
                 },
                 totalPrice: "$$group.totalPrice", // Include totalPrice field
                 address: {

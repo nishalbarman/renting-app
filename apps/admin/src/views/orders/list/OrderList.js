@@ -150,6 +150,17 @@ const OrderList = () => {
               </Box>
             ),
           },
+          {
+            header: 'Order Type',
+            accessorKey: 'orderType',
+            size: 200,
+            //custom conditional format and styling
+            Cell: ({ renderedCellValue, cell }) => (
+              <Box component="span">
+                <strong>{renderedCellValue}</strong>
+              </Box>
+            ),
+          },
         ],
       },
 
