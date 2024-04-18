@@ -8,11 +8,14 @@ const SECRET_PASSPHRASE =
 
 const secretKey = crypto.scryptSync(SECRET_PASSPHRASE, SECRET_SALT, 32); // salt can be random, but in this case we are just using a string
 
-function decryptToString(inputPath, key = secretKey) {
-  console.log(`Decrypting ${inputPath}...`);
+function decryptToString(secureServiceAccountKeyFileContent, key = secretKey) {
+  // console.log(`Decrypting ${inputPath}...`);
 
-  const data = fs.readFileSync(inputPath, "utf8");
-  const encryptedData = JSON.parse(data);
+  // const data = fs.readFileSync(inputPath, "utf8");
+
+  // console.log(data);
+
+  const encryptedData = JSON.parse(secureServiceAccountKeyFileContent);
 
   const decipher = crypto.createDecipheriv(
     algorithm,
