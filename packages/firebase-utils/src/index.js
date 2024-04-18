@@ -7,7 +7,7 @@ const { decryptToString } = require("./secure-file.js"); // replace with your lo
 
 // const serviceAccount = require("./service-account-key.json");
 const secureFileName = "./service-account-key.json.secure"; // replace with your filename
-const jsonStr = await decryptToString(secureFileName);
+const jsonStr = decryptToString(secureFileName);
 const serviceAccount = JSON.parse(jsonStr);
 
 // Initialize the app with a service account, granting admin privileges
@@ -31,8 +31,6 @@ class FirebaseUtils {
         resumable: false,
         contentType: type,
       });
-
-      console.log("Content Type -->", type);
 
       blobStream.on("error", (error) => {
         reject(error);
