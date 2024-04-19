@@ -1,5 +1,6 @@
-const crypto = require("crypto");
-const fs = require("fs");
+import crypto from "node:crypto";
+import fs from "node:fs";
+
 const algorithm = "aes-256-gcm";
 
 const SECRET_SALT = process.env.SECRET_SALT || "Secret Salt You Should Update";
@@ -8,14 +9,14 @@ const SECRET_PASSPHRASE =
 
 const secretKey = crypto.scryptSync(SECRET_PASSPHRASE, SECRET_SALT, 32); // salt can be random, but in this case we are just using a string
 
-function decryptToString(secureServiceAccountKeyFileContent, key = secretKey) {
-  // console.log(`Decrypting ${inputPath}...`);
+function decryptToString(inputPath, key = secretKey) {
+  console.log(`Decrypting ${inputPath}...`);
 
-  // const data = fs.readFileSync(inputPath, "utf8");
+  const data = fs.readFileSync(inputPath, "utf8");
 
   // console.log(data);
 
-  const encryptedData = JSON.parse(secureServiceAccountKeyFileContent);
+  const encryptedData = JSON.parse(data);
 
   const decipher = crypto.createDecipheriv(
     algorithm,
@@ -32,6 +33,4 @@ function decryptToString(secureServiceAccountKeyFileContent, key = secretKey) {
   return decrypted.toString("utf8");
 }
 
-module.exports = {
-  decryptToString,
-};
+export { decryptToString };
