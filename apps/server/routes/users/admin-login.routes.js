@@ -19,8 +19,6 @@ router.post("/", async (req, res) => {
     const error = [];
     const { email, password } = req.body;
 
-    console.log(req.body);
-
     if (!isValidEmail(email)) {
       error.push("Invalid email address");
     }

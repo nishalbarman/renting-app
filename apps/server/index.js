@@ -57,8 +57,6 @@ const extractToken = async (req, res, next) => {
       req.url === "/categories/view/:categoryId" ||
       req.url === "/orders/get-order-chart-data";
 
-    // console.log("Is public router -->", publicRoute);
-
     if (publicRoute) {
       return next();
     }
@@ -90,11 +88,13 @@ app.use("/stripe/hook", require("./hooks/stripe-hook.routes"));
 
 app.use(limiter);
 app.use(express.json({ limit: "50mb" }));
+
+app.use("/auth/admin-login", require("./routes/users/admin-login.routes"));
+
 app.use(extractToken);
 
 app.use("/user", require("./routes/users/user.routes"));
 app.use("/auth/login", require("./routes/users/login.routes"));
-app.use("/auth/admin-login", require("./routes/users/admin-login.routes"));
 app.use("/auth/signup", require("./routes/users/signup.routes"));
 app.use("/auth/sendOtp", require("./routes/otpSend/mobile.routes"));
 app.use("/categories", require("./routes/categories/category.routes"));
