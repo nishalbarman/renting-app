@@ -14,6 +14,7 @@ const {
   isValidIndianMobileNumber,
   hasOneSpaceBetweenNames,
 } = require("custom-validator-renting");
+const { globalErrorHandler } = require("../../helpter/globalErrorHandler");
 
 const validatePass = new passValidator();
 validatePass.is().min(8).has().uppercase().has().lowercase();
@@ -71,20 +72,7 @@ router.post("/admin-login", async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
-    if (error instanceof mongoose.Error && error?.errors) {
-      const errArray = Object.values(error.errors).map(
-        (properties) => properties.message
-      );
-
-      return res.status(400).json({
-        status: false,
-        message: errArray.join(", "),
-      });
-    }
-    return res
-      .status(500)
-      .json({ status: false, message: "Internal server error" });
+    globalErrorHandler(error);
   }
 });
 
