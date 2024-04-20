@@ -136,6 +136,7 @@ router.post("/:productType", async (req, res) => {
 
     const freeDeliveryAboveMinimumPurchase = true;
     const freeDeliveryMinimumAmount = 500;
+    const shippingApplied = false;
 
     if (
       !(
@@ -144,6 +145,7 @@ router.post("/:productType", async (req, res) => {
       )
     ) {
       paymentObject.amount += shippingPrice;
+      shippingApplied = true;
     }
 
     paymentObject.amount *= 100; // razor pay takes amount as paisa (1 rupee = 100 paisa)
@@ -250,8 +252,6 @@ router.post("/:productType", async (req, res) => {
 
     if (productType === "buy") {
       orderItemsWithOrderIDandPaymentId = cartItemsForUser.map((item) => {
-        console.log(item);
-
         const createdOrder = {
           ...item,
 
@@ -302,20 +302,19 @@ router.post("/:productType", async (req, res) => {
 
     const orders = await Order.insertMany(orderItemsWithOrderIDandPaymentId);
 
-    // OrderList.create({
-    //   user: userDetails._id,
-    //   orders: orders.map((item) => item._id),
-    // });
+    await PaymentTransModel.create({
+      paymentTransactionID: paymentIntent.id,
+      user: userDetails._id,
+      order: orders.map((item) => item._id),
 
-    // const razorpayOrderIdList = orders.map((item) => ({
-    //   razorPayOrderId: razorpayOrder.id,
-    //   paymentTxnId,
-    //   order: item._id,
-    //   user: userDetails._id,
-    // }));
+      //! Status of Payment
+      paymentStatus: "Pending",
 
-    // insert the records in razor pay collection
-    // await RazorPayOrder.insertMany(razorpayOrderIdList);
+      //! PRICE related keys
+      shippingPrice: !!shippingApplied ? shipping : 0,
+      subTotal: paymentObject.amount - (!!shippingApplied ? shipping : 0),
+      totalPrice: paymentObject.amount,
+    });
 
     res.json({
       paymentIntent: paymentIntent.client_secret,

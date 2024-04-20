@@ -112,6 +112,7 @@ app.use("/pay/razorpay/hook", require("./hooks/hook.routes"));
 
 // stripe payment gateway
 app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));
+app.use("/payment/summary", require("./routes/payment/summary.routes"));
 
 app.use(
   "/image-bg-color",

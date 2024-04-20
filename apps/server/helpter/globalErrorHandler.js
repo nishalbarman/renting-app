@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const globalErrorHandler = (error, statusCode, message) => {
+const globalErrorHandler = (res, error, statusCode, message) => {
   console.error(error);
   if (error !== undefined && error instanceof mongoose.Error && error?.errors) {
     const errArray = Object.values(error.errors).map(

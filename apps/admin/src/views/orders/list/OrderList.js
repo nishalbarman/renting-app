@@ -85,7 +85,6 @@ const OrderList = () => {
     } catch (error) {
       setIsError(true)
       console.error(error)
-      return
     }
     setIsError(false)
     setIsLoading(false)

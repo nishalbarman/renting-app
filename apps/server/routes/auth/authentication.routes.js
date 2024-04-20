@@ -72,7 +72,7 @@ router.post("/admin-login", async (req, res) => {
       },
     });
   } catch (error) {
-    globalErrorHandler(error);
+    globalErrorHandler(res, error);
   }
 });
 
