@@ -40,8 +40,10 @@ const Login = () => {
   const [isPending, setIsPending] = useState(false)
 
   const handleLogin = async () => {
+    const toastId = toast.loading('Request sent... Please wait...')
     try {
       setIsPending(true)
+
       const extractedData = Object.keys(formData).reduce(
         (newFormData, keyName) => {
           return { ...newFormData, [keyName]: formData[keyName].value }
@@ -56,9 +58,13 @@ const Login = () => {
 
       dispatch(setUserAuthData({ ...response.data.user }))
       navigator('/')
+      toast.update(toastId, { success: 'Login successfull', autoClose: true })
     } catch (error) {
-      toast.error(error.response?.data.message || 'Opps, some error occured. Please try again')
-      console.log(error)
+      console.error(error)
+      toast.update(toastId, {
+        error: error.response?.data.message || 'Opps, some error occured. Please try again',
+        autoClose: true,
+      })
     } finally {
       setIsPending(false)
     }

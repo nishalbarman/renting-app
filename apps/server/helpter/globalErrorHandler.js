@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-export const globalErrorHandler = (error, statusCode, message) => {
+const globalErrorHandler = (error, statusCode, message) => {
   console.error(error);
   if (error !== undefined && error instanceof mongoose.Error && error?.errors) {
     const errArray = Object.values(error.errors).map(
@@ -15,3 +15,5 @@ export const globalErrorHandler = (error, statusCode, message) => {
     .status(statusCode || 500)
     .json({ message: message || "Internal server error" });
 };
+
+module.exports = { globalErrorHandler };
