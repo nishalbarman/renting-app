@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"yarn dev:validator\" \"yarn dev:firebase-utils\" \"yarn startt\"",
-    "startt": "node ./dist/index.js",
+    "start": "node ./dist/index.js",
     "dev": "concurrently \"yarn dev:validator\" \"yarn dev:firebase-utils\" \"yarn server_dev_start\"",
     "server_dev_start": "nodemon index.js",
     "dev:validator": "yarn workspace custom-validator-renting dev",
@@ -42,7 +41,6 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0",
-    "concurrently": "^8.2.2"
+    "nodemon": "^3.1.0"
   }
 }

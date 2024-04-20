@@ -353,6 +353,13 @@ const CartPage = () => {
 
                 {!cartItems || cartItems.length === 0 ? (
                   <View className="flex justify-center items-center min-h-screen -mt-20">
+                    <Image
+                      source={{
+                        uri: "https://firebasestorage.googleapis.com/v0/b/crafter-ecommerce.appspot.com/o/app_illustrations%2Flost.svg?alt=media&token=https://firebasestorage.googleapis.com/v0/b/crafter-ecommerce.appspot.com/o/app_illustrations%2Flost.svg?alt=media&token=b601f916-3e3a-4ea7-9f7f-caf321d1a35a",
+                      }}
+                      width={200}
+                      height={200}
+                    />
                     <Text className="text-lg">Your cart is empty</Text>
                   </View>
                 ) : (

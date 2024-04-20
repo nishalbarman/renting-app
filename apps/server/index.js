@@ -47,8 +47,8 @@ const extractToken = async (req, res, next) => {
     const publicRoute =
       req.url === "/" ||
       req.url === "/helloworld" ||
-      req.url === "/auth/login" ||
       req.url === "/auth/admin-login" ||
+      req.url === "/auth/login" ||
       req.url === "/auth/signup" ||
       req.url === "/auth/sendOtp" ||
       req.url === "/pay/razorpay/hook" ||
@@ -89,8 +89,6 @@ app.use("/stripe/hook", require("./hooks/stripe-hook.routes"));
 app.use(limiter);
 app.use(express.json({ limit: "50mb" }));
 
-app.use("/auth/admin-login", require("./routes/auth/admin-login.routes"));
-
 app.use(extractToken);
 
 app.use("/user", require("./routes/users/user.routes"));
@@ -115,7 +113,10 @@ app.use("/pay/razorpay/hook", require("./hooks/hook.routes"));
 // stripe payment gateway
 app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));
 
-app.use("/image-bg-color", require("./routes/image-bg-color/imageColor.routes"));
+app.use(
+  "/image-bg-color",
+  require("./routes/image-bg-color/imageColor.routes")
+);
 
 app.get("/helloworld", (_, res) => {
   res.send("Hello World!");
