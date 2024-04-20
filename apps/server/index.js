@@ -108,19 +108,14 @@ app.use("/orders", require("./routes/order/order.routes"));
 // center related routes
 app.use("/center", require("./routes/centers/center.routes"));
 
-app.use(
-  "/pay/razorpay/create-cart-order",
-  require("./routes/payment/razorpay/pay-cart.routes")
-);
+// payment hooks
+app.use("/pay/razorpay/cart", require("./routes/payment/razorpay/cart.routes"));
 app.use("/pay/razorpay/hook", require("./hooks/hook.routes"));
 
 // stripe payment gateway
 app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));
 
-app.use(
-  "/get-image-bg-color",
-  require("./routes/get-image-color/getImageColor.routes")
-);
+app.use("/image-bg-color", require("./routes/image-bg-color/imageColor.routes"));
 
 app.get("/helloworld", (_, res) => {
   res.send("Hello World!");
