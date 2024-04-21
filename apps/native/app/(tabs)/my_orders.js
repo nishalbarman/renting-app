@@ -1,16 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  View,
-  SafeAreaView,
-  RefreshControl,
-  FlatList,
-} from "react-native";
+import { View, SafeAreaView, RefreshControl, FlatList } from "react-native";
 import OrderItem from "../../components/OrderScreen/OrderItem";
 import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
-import EmptyBag from "../../components/EmptyBag";
+import EmptyBag from "../../components/EmptyBag/EmptyBag";
 
 const OrderScreen = () => {
   const { productType } = useSelector((state) => state.product_store);
