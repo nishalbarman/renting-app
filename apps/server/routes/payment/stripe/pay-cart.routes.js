@@ -136,7 +136,7 @@ router.post("/:productType", async (req, res) => {
 
     const freeDeliveryAboveMinimumPurchase = true;
     const freeDeliveryMinimumAmount = 500;
-    const shippingApplied = false;
+    let shippingApplied = false;
 
     if (
       !(
