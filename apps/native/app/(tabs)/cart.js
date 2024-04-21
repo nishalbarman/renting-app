@@ -3,17 +3,11 @@ import {
   View,
   Text,
   SafeAreaView,
-  Button,
-  TouchableHighlight,
-  ScrollView,
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import { Image } from "expo-image";
-import { EvilIcons } from "@expo/vector-icons";
-import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
 import { useGetCartQuery } from "@store/rtk/apis/cartApi";
 import { useSelector } from "react-redux";
 import CartCard from "../../components/CartItem/CartCard";
@@ -22,6 +16,8 @@ import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
 import axios from "axios";
 import { useRouter } from "expo-router";
 import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";
+
+import EmptyBag from "../../components/EmptyBag/EmptyBag";
 
 const CartPage = () => {
   const router = useRouter();
@@ -233,23 +229,21 @@ const CartPage = () => {
   }, [ordreRefetch]);
 
   return (
-    <>
-      <SafeAreaView className={`flex-1 bg-white`}>
-        <ScrollView
-          showsHorizontalScrollIndicator={false}
-          className={`flex-1 bg-white p-2`}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }>
-          <View className="pb-2">
-            {isCartLoading ? (
-              <>
-                <AddressCardSkeletop />
-              </>
-            ) : (
-              <>
-                {cartItems?.length > 0 && (
-                  <>
+    <SafeAreaView className={`flex-1 bg-white`}>
+      {isCartLoading ? (
+        <>
+          <AddressCardSkeletop />
+        </>
+      ) : (
+        <>
+          {!cartItems || cartItems.length === 0 ? (
+            <EmptyBag message={"Your cart is empty"} />
+          ) : (
+            <>
+              <FlatList
+                data={[""]}
+                renderItem={() => (
+                  <View className="pb-2">
                     {productType === "rent" && (
                       <View className="border border-gray-300 rounded-md p-3">
                         <Text className="text-lg font-bold">
@@ -288,6 +282,7 @@ const CartPage = () => {
                         </View>
                       </View>
                     )}
+
                     <View className="flex-col mt-1 p-[13px] bg-white w-full border border-gray-300 rounded-md mb-3 gap-y-1 mt-1">
                       {amountDetails?.originalAmount && (
                         <View className="flex-row justify-between w-full">
@@ -348,35 +343,30 @@ const CartPage = () => {
                         )}
                       </TouchableOpacity>
                     </View>
-                  </>
-                )}
 
-                {!cartItems || cartItems.length === 0 ? (
-                  <View className="flex justify-center items-center min-h-screen -mt-20">
-                    <Image
-                      source={{
-                        uri: "https://firebasestorage.googleapis.com/v0/b/crafter-ecommerce.appspot.com/o/app_illustrations%2Flost.svg?alt=media&token=https://firebasestorage.googleapis.com/v0/b/crafter-ecommerce.appspot.com/o/app_illustrations%2Flost.svg?alt=media&token=b601f916-3e3a-4ea7-9f7f-caf321d1a35a",
+                    <FlatList
+                      data={cartItems}
+                      renderItem={({ item }) => {
+                        return <CartCard cart={item} />;
                       }}
-                      width={200}
-                      height={200}
+                      numColumns={1}
+                      keyExtractor={(item, index) => index.toString()}
                     />
-                    <Text className="text-lg">Your cart is empty</Text>
                   </View>
-                ) : (
-                  <FlatList
-                    data={cartItems}
-                    renderItem={({ item }) => {
-                      return <CartCard cart={item} />;
-                    }}
-                    numColumns={1}
-                    keyExtractor={(item, index) => index.toString()}
-                  />
                 )}
-              </>
-            )}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+                showsHorizontalScrollIndicator={false}
+                className={`flex-1 bg-white p-2`}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }></FlatList>
+            </>
+          )}
+        </>
+      )}
+
       {orderPlaceModalVisible && (
         <PlaceOrderModal
           modalVisible={orderPlaceModalVisible}
@@ -384,7 +374,7 @@ const CartPage = () => {
           orderPlaceStatus={orderPlaceStatus}
         />
       )}
-    </>
+    </SafeAreaView>
   );
 };
 

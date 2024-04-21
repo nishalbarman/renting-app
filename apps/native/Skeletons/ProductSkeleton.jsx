@@ -1,5 +1,5 @@
 import React, { memo, useEffect } from "react";
-import { View, Text, Animated } from "react-native";
+import { View, Animated } from "react-native";
 
 const ProductSkeleton = ({ width }) => {
   const animationValue = new Animated.Value(0);

@@ -1,9 +1,8 @@
 import { Link } from "expo-router";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import Product from "./Product";
 
-import { useGetAllProductsQuery } from "@store/rtk/apis/productApi";
 import ProductsListSkeleton from "../../Skeletons/ProductListSkeleton";
 import axios from "axios";
 import { useSelector } from "react-redux";

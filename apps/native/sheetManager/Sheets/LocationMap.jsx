@@ -1,22 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Dimensions,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import ActionSheet, {
   SheetManager,
   useScrollHandlers,
 } from "react-native-actions-sheet";
-import { NativeViewGestureHandler } from "react-native-gesture-handler";
-import MapView, { Marker, addressForCoordinate } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
 import * as Location from "expo-location";
-import { setAddressDataFromMap } from "@store/rtk/slices/addressSlice";
+import { setAddressDataFromMap } from "@store/rtk";
 import { useDispatch } from "react-redux";
 import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
 

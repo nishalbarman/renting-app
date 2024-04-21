@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  AntDesign,
-  Entypo,
-  Feather,
-  Fontisto,
-  Foundation,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Feather, Fontisto, Foundation } from "@expo/vector-icons";
 import {
   ActivityIndicator,
   ScrollView,
@@ -16,12 +9,8 @@ import {
   View,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import ActionSheet, {
-  SheetManager,
-  useScrollHandlers,
-} from "react-native-actions-sheet";
+import ActionSheet, { useScrollHandlers } from "react-native-actions-sheet";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
-import { useRouter } from "expo-router";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import {
@@ -41,13 +30,6 @@ export default function Widget() {
     email: { value: auth.email, isTouched: true, isError: null },
     password: { value: undefined, isTouched: true, isError: undefined },
   });
-
-  // const [formData, setFormData] = useState({
-  //   name: { value: "Nishal Barman", isTouched: true, isError: null },
-  //   // email: { value: "nishalbarman@gmail.com", isTouched: true, isError: null },
-  //   // mobileNo: { value: "9101114906", isTouched: true, isError: null },
-  //   password: { value: "@NishalBoss21", isTouched: true, isError: null },
-  // });
 
   const [modalVisible, setModalVisible] = useState(false);
 

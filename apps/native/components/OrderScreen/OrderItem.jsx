@@ -2,10 +2,7 @@ import React, { useMemo, useState } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
-  Button,
   TouchableHighlight,
-  ScrollView,
 } from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";

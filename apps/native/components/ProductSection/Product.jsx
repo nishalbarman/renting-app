@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
@@ -33,12 +33,6 @@ function Product({
   wishlistIdMap,
 }) {
   const router = useRouter();
-
-  const [visible, setVisible] = React.useState(false);
-
-  const onToggleSnackBar = () => setVisible(!visible);
-
-  const onDismissSnackBar = () => setVisible(false);
 
   const { productType } = useSelector((state) => state.product_store);
 

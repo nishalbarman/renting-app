@@ -8,6 +8,17 @@
       "ios",
       "android",
       "web"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "8550e956-fda9-4373-bea2-4b847e0d02bb"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.nishal.renting"
+    },
+    "android": {
+      "package": "com.nishal.renting"
+    }
   }
 }

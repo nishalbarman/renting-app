@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, Easing } from "react-native";
-import { Feather } from "@expo/vector-icons";
 
 const AnimateSpin = ({ children }) => {
   const spinValue = useRef(new Animated.Value(0)).current;

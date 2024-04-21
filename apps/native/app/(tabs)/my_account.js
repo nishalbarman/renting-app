@@ -7,7 +7,7 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import { FontAwesome, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 import { SheetManager } from "react-native-actions-sheet";
 import { useDispatch, useSelector } from "react-redux";

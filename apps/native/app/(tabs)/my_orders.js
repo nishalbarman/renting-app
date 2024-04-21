@@ -1,21 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
-  Text,
   SafeAreaView,
-  Button,
-  TouchableHighlight,
-  ScrollView,
   RefreshControl,
+  FlatList,
 } from "react-native";
-import { Image } from "expo-image";
-import { EvilIcons } from "@expo/vector-icons";
-import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
 import OrderItem from "../../components/OrderScreen/OrderItem";
 import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import product from "../(product)/view";
+
+import EmptyBag from "../../components/EmptyBag";
 
 const OrderScreen = () => {
   const { productType } = useSelector((state) => state.product_store);
@@ -73,23 +68,16 @@ const OrderScreen = () => {
 
   return (
     <SafeAreaView className={`flex-1 bg-white`}>
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        className={`flex-1 bg-white p-2`}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
-        {isOrderFetching ? (
-          <>
-            <AddressCardSkeletop />
-          </>
-        ) : (
-          <View className={`mb-4 p-2`}>
-            {!orders || orders.length === 0 ? (
-              <View className="flex justify-center items-center min-h-screen -mt-20">
-                <Text className="text-lg">Your order list is empty</Text>
-              </View>
-            ) : (
+      {isOrderFetching && <AddressCardSkeletop />}
+
+      {!isOrderFetching || !orders || orders.length === 0 ? (
+        <EmptyBag message={"Your order list is empty"} />
+      ) : (
+        <FlatList
+          data={[""]}
+          renderItem={() => (
+            <View className={`mb-4 p-2`}>
+              (
               <>
                 {orders?.map((item, index) => (
                   <OrderItem
@@ -100,10 +88,15 @@ const OrderScreen = () => {
                   />
                 ))}
               </>
-            )}
-          </View>
-        )}
-      </ScrollView>
+              )
+            </View>
+          )}
+          showsHorizontalScrollIndicator={false}
+          className={`flex-1 bg-white p-2`}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }></FlatList>
+      )}
     </SafeAreaView>
   );
 };

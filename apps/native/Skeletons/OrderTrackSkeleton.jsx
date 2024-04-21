@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { View, Text, Animated } from "react-native";
+import { View, Animated } from "react-native";
 
 function OrderTrackSkeleton() {
   const animationValue = new Animated.Value(0);

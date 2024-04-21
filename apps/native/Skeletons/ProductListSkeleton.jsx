@@ -1,5 +1,5 @@
 import React, { memo, useEffect } from "react";
-import { View, Text, Animated, FlatList } from "react-native";
+import { View, Animated, FlatList } from "react-native";
 import ProductSkeleton from "./ProductSkeleton";
 
 const ProductsListSkeleton = ({ title, bgColor, titleColor, viewAllPath }) => {

@@ -1,18 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
-  Button,
   TouchableHighlight,
-  ScrollView,
   TouchableOpacity,
 } from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
 
 import AnimateSpin from "../AnimateSpin/AnimateSpin";
-import { SheetManager } from "react-native-actions-sheet";
 import {
   useDeleteCartMutation,
   useUpdateQuantityCartMutation,
@@ -20,7 +16,6 @@ import {
 } from "@store/rtk/apis/cartApi";
 import { useAddWishlistMutation } from "@store/rtk/apis/wishlistApi";
 import { useRouter } from "expo-router";
-import { useSelector } from "react-redux";
 
 function CartCard({
   cart: {

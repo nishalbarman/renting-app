@@ -8,11 +8,12 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 
 import { TbCategoryPlus } from "react-icons/tb";
+import { Toast } from "toastify-react-native";
 
 function Categories() {
   const { jwtToken } = useSelector((state) => state.auth);
 
-  const [paginationPage, setPaginationPage] = useState(1);
+  const [paginationPage, setPaginationPage] = useState(0);
   const [limit, setLimit] = useState(5);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -20,12 +21,14 @@ function Categories() {
   const [totalPages, setTotalPages] = useState(0);
   const [categoryList, setCategoryList] = useState([]);
 
+  console.log("Categories List", categoryList);
+
   const getCategories = async () => {
     try {
       setIsLoading(true);
 
       const response = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/categories?page=${paginationPage}`,
+        `${process.env.EXPO_PUBLIC_API_URL}/categories?page=${paginationPage}&limit=5`,
         {
           headers: {
             authorization: `Bearer ${jwtToken}`,
@@ -34,10 +37,11 @@ function Categories() {
       );
 
       console.log(response.data);
-      setCategoryList(response.data.data);
+      setCategoryList(response.data.categories);
       setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error(error);
+      Toast.error("Opps there is some error while fetching categories.");
     } finally {
       setIsLoading(false);
     }

@@ -71,10 +71,14 @@ function CenterModal({ visible, setVisible, row }) {
             backgroundColor: 'rgb(245,248,253)',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center'
+            alignItems: 'center',
           }}
         >
-          <CRow sm={{ cols: 'auto' }} xs={{ gutterX: 10, cols: 'auto' }}>
+          <CRow
+            sm={{ cols: 1 }}
+            xs={{ gutterX: 10, gutterY: 10, cols: 1 }}
+            lg={{ gutterX: 10, gutterY: 10, cols: 2 }}
+          >
             <CCol xs={{ gutterY: 10 }}>
               <CCard>
                 <CCardHeader>
@@ -88,7 +92,6 @@ function CenterModal({ visible, setVisible, row }) {
                     className="p-2 bg-white"
                   > */}
                   <CRow
-                    
                     style={{
                       backgroundColor: 'white',
                     }}
@@ -275,141 +278,135 @@ function CenterModal({ visible, setVisible, row }) {
               </div>
             </CCol>
             {/* </CCol> */}
-            <CCol
-              style={{
-                border: '1px solid rgba(0,0,0,0.1)',
-                borderRadius: '5px',
-                backgroundColor: 'white',
-                padding: '15px',
-              }}
-            >
-              <CCardHeader>
-                <strong>Customer</strong>
-              </CCardHeader>
-              <CCardBody className="mt-2">
-                <div
+            <CCol>
+              <CCard>
+                <CCardHeader
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                    marginTop: '10px',
-                  }}
-                >
-                  <CImage
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '100%',
-                      border: '1px solid black',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                    src="https://static-00.iconduck.com/assets.00/user-icon-2048x2048-ihoxz4vq.png"
-                  />
-                  <span
-                    className="ml-2"
-                    style={{
-                      marginLeft: '6px',
-                    }}
-                  >
-                    {row.original.user.name}
-                  </span>
-                </div>
-                <div
-                  style={{
-                    height: '1px',
-                    marginTop: '10px',
-                    backgroundColor: 'rgba(0,0,0,0.2)',
+                    backgroundColor: 'white',
                     width: '100%',
                   }}
-                ></div>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                    marginTop: '10px',
-                  }}
                 >
-                  <CImage
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '100%',
-                      border: '1px solid black',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                    src="https://st5.depositphotos.com/4226061/62815/v/450/depositphotos_628157962-stock-illustration-invoice-icon-payment-bill-invoice.jpg"
-                  />
-                  <span
-                    className="ml-2"
-                    style={{
-                      marginLeft: '6px',
-                    }}
-                  >
-                    {row.original.totalDocumentCount} Order(s)
-                  </span>
-                </div>
-                <div
-                  style={{
-                    height: '1px',
-                    marginTop: '10px',
-                    backgroundColor: 'rgba(0,0,0,0.2)',
-                    width: '100%',
-                  }}
-                ></div>
-                <div className="mt-2">
-                  <strong>Contact info</strong>
-                  <div className="mt-2">
-                    <CIcon icon={cilPhone} />
-                    <span
-                      style={{
-                        marginLeft: '5px',
-                      }}
-                    >
-                      {row.original.user.email}
-                    </span>
-                  </div>
                   <div>
-                    <CIcon icon={cilPhone} />
-                    <span
+                    <strong>Customer</strong>
+                  </div>
+                </CCardHeader>
+                <CCardBody>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      marginTop: '10px',
+                    }}
+                  >
+                    <CImage
                       style={{
-                        marginLeft: '5px',
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '100%',
+                        border: '1px solid black',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      src="https://static-00.iconduck.com/assets.00/user-icon-2048x2048-ihoxz4vq.png"
+                    />
+                    <span
+                      className="ml-2"
+                      style={{
+                        marginLeft: '6px',
                       }}
                     >
-                      {row.original.user.mobileNo}
+                      {row.original.user.name}
                     </span>
                   </div>
-                </div>
-                <div
-                  style={{
-                    height: '1px',
-                    marginTop: '10px',
-                    backgroundColor: 'rgba(0,0,0,0.2)',
-                    width: '100%',
-                  }}
-                ></div>
-                <div className="mt-2">
-                  <strong>Delivery Address</strong>
-                  <div className="mt-2">
-                    <div>{row.original.address.address}</div>
-                    <span>Longitude : {row.original.address.location[0]}</span>
-                    {', '}
-                    <span>Latitude : {row.original.address.location[1]}</span>
+                  <div
+                    style={{
+                      height: '1px',
+                      marginTop: '10px',
+                      backgroundColor: 'rgba(0,0,0,0.2)',
+                      width: '100%',
+                    }}
+                  ></div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      marginTop: '10px',
+                    }}
+                  >
+                    <CImage
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '100%',
+                        border: '1px solid black',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      src="https://st5.depositphotos.com/4226061/62815/v/450/depositphotos_628157962-stock-illustration-invoice-icon-payment-bill-invoice.jpg"
+                    />
+                    <span
+                      className="ml-2"
+                      style={{
+                        marginLeft: '6px',
+                      }}
+                    >
+                      {row.original.totalDocumentCount} Order(s)
+                    </span>
                   </div>
-                </div>
-                <div
-                  style={{
-                    height: '1px',
-                    marginTop: '10px',
-                    backgroundColor: 'rgba(0,0,0,0.2)',
-                    width: '100%',
-                  }}
-                ></div>
-              </CCardBody>
+                  <div
+                    style={{
+                      height: '1px',
+                      marginTop: '10px',
+                      backgroundColor: 'rgba(0,0,0,0.2)',
+                      width: '100%',
+                    }}
+                  ></div>
+                  <div className="mt-2">
+                    <strong>Contact info</strong>
+                    <div className="mt-2">
+                      <CIcon icon={cilPhone} />
+                      <span
+                        style={{
+                          marginLeft: '5px',
+                        }}
+                      >
+                        {row.original.user.email}
+                      </span>
+                    </div>
+                    <div>
+                      <CIcon icon={cilPhone} />
+                      <span
+                        style={{
+                          marginLeft: '5px',
+                        }}
+                      >
+                        {row.original.user.mobileNo}
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      height: '1px',
+                      marginTop: '10px',
+                      backgroundColor: 'rgba(0,0,0,0.2)',
+                      width: '100%',
+                    }}
+                  ></div>
+                  <div className="mt-2">
+                    <strong>Delivery Address</strong>
+                    <div className="mt-2">
+                      <div>{row.original.address.address}</div>
+                      <span>Longitude : {row.original.address.location[0]}</span>
+                      {', '}
+                      <span>Latitude : {row.original.address.location[1]}</span>
+                    </div>
+                  </div>
+                </CCardBody>
+              </CCard>
             </CCol>
           </CRow>
         </CModalBody>

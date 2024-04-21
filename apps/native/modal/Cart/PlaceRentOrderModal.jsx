@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState, useTransition } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Modal,
@@ -12,7 +12,6 @@ import { AntDesign } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
 import { orderRefetch } from "@store/rtk/slices/orderSlice";
-import { useGetCartQuery } from "@store/rtk/apis/cartApi";
 
 function PlaceOrderModal({
   modalVisible,

@@ -1,12 +1,5 @@
-import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import ActionSheet, {
   SheetManager,
   useScrollHandlers,
@@ -15,13 +8,10 @@ import { NativeViewGestureHandler } from "react-native-gesture-handler";
 
 import { useRouter } from "expo-router";
 
-import { useDispatch, useSelector } from "react-redux";
-import AddressCardSkeleton from "../../Skeletons/AddressCardSkeleton";
-
-import { MaterialIcons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
 
 import RadioGroup from "react-native-radio-buttons-group";
-import { setSort } from "@store/rtk/slices/productListSlice";
+import { setSort } from "@store/rtk";
 
 export default function ProductSort() {
   const handlers = useScrollHandlers();

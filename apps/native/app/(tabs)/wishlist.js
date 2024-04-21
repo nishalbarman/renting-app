@@ -50,7 +50,7 @@ export default function Tab() {
               keyExtractor={(item, index) => index.toString()}
             />
           ) : (
-            <EmptyBag />
+            <EmptyBag message={"Your wishlist is empty"} />
           )}
         </View>
       )}

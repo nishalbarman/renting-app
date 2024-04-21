@@ -1,12 +1,7 @@
-import { useEffect, useState } from "react";
 import {
   FlatList,
-  Image,
   Pressable,
-  ScrollView,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";

@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, EvilIcons, MaterialIcons } from "@expo/vector-icons";
