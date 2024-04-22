@@ -22,7 +22,7 @@
       "supportsTablet": true,
       "userInterfaceStyle": "light",
       "config": {
-        "googleMapsApiKey": "AIzaSyAEWQ-_fgz6IhfsVTAQwSytF9ZbibBX7dU",
+        "googleMapsApiKey": "AIzaSyAVBtu9gFRzmHnlMnZl_sqZGY3mXRPV3so",
         "usesNonExemptEncryption": false,
         "usesCleartextTraffic": true
       }
@@ -37,7 +37,7 @@
       "package": "com.nishalbarman.renting_app",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyAEWQ-_fgz6IhfsVTAQwSytF9ZbibBX7dU"
+          "apiKey": "AIzaSyAVBtu9gFRzmHnlMnZl_sqZGY3mXRPV3so"
         },
         "networkSecurityConfig": "./network_security_config.xml"
       }

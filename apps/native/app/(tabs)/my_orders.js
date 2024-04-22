@@ -62,35 +62,39 @@ const OrderScreen = () => {
   }, [productType, paginationPage]);
 
   return (
-    <SafeAreaView className={`flex-1 bg-white`}>
-      {isOrderFetching && <AddressCardSkeletop />}
-
-      {!isOrderFetching || !orders || orders.length === 0 ? (
-        <EmptyBag message={"Your order list is empty"} />
+    <SafeAreaView className={`flex-1 bg-white px-2`}>
+      {isOrderFetching ? (
+        <AddressCardSkeletop />
       ) : (
-        <FlatList
-          data={[""]}
-          renderItem={() => (
-            <View className={`mb-4 p-2`}>
-              (
-              <>
-                {orders?.map((item, index) => (
-                  <OrderItem
-                    key={index}
-                    order={item}
-                    productType={productType}
-                    jwtToken={jwtToken}
-                  />
-                ))}
-              </>
-              )
-            </View>
+        <>
+          {!orders || orders.length === 0 ? (
+            <EmptyBag message={"Your order list is empty"} />
+          ) : (
+            <FlatList
+              data={[""]}
+              renderItem={() => (
+                <View className={`mb-4 p-2`}>
+                  (
+                  <>
+                    {orders?.map((item, index) => (
+                      <OrderItem
+                        key={index}
+                        order={item}
+                        productType={productType}
+                        jwtToken={jwtToken}
+                      />
+                    ))}
+                  </>
+                  )
+                </View>
+              )}
+              showsHorizontalScrollIndicator={false}
+              className={`flex-1 bg-white p-2`}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }></FlatList>
           )}
-          showsHorizontalScrollIndicator={false}
-          className={`flex-1 bg-white p-2`}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }></FlatList>
+        </>
       )}
     </SafeAreaView>
   );

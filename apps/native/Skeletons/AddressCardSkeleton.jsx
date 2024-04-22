@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { View } from "react-native";
 
 function AddressCardSkeletop() {
@@ -19,4 +19,4 @@ function AddressCardSkeletop() {
   );
 }
 
-export default AddressCardSkeletop;
+export default memo(AddressCardSkeletop);

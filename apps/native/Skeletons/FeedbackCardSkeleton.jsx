@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Text, View } from "react-native";
 
 function FeedbackCardSkeleton() {
@@ -25,4 +25,4 @@ function FeedbackCardSkeleton() {
   );
 }
 
-export default FeedbackCardSkeleton;
+export default memo(FeedbackCardSkeleton);

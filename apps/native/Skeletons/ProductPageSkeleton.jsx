@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import FeedbackCardSkeleton from "./FeedbackCardSkeleton";
 import { View } from "react-native";
 
@@ -77,4 +77,4 @@ function ProductPageSkeleton() {
   );
 }
 
-export default ProductPageSkeleton;
+export default memo(ProductPageSkeleton);

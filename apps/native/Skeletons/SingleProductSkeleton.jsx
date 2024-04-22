@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { memo, useEffect } from "react";
 import { View, Animated, SafeAreaView, ScrollView } from "react-native";
 
 const SingleProductSkeleton = () => {
@@ -144,4 +144,4 @@ const SingleProductSkeleton = () => {
   );
 };
 
-export default SingleProductSkeleton;
+export default memo(SingleProductSkeleton);

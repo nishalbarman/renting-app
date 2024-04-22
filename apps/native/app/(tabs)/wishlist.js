@@ -1,4 +1,4 @@
-import { View, FlatList, SafeAreaView, Text } from "react-native";
+import { View, FlatList, SafeAreaView, Text, RefreshControl } from "react-native";
 
 import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
 import WishlistCard from "../../components/Wishlist/WishlistCard";
@@ -34,6 +34,7 @@ export default function Tab() {
         <View>
           {!!wishlistData && wishlistData.length > 0 ? (
             <FlatList
+              refreshControl={<RefreshControl onRefresh={refetch} />}
               data={wishlistData}
               renderItem={({ item }) => {
                 return item?.product ? (

@@ -58,14 +58,14 @@ const ProductSkeleton = ({ width }) => {
           />
         </View>
 
-        <View className="flex flex-col gap-y-[0.8px]">
+        <View className="flex flex-col">
           <Animated.View
             style={{ opacity: opacityAnimation }}
             className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black bg-gray-300 rounded h-6 w-24"
           />
           <Animated.View
             style={{ opacity: opacityAnimation }}
-            className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black bg-gray-300 rounded h-6 w-32"
+            className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black bg-gray-300 rounded h-6 w-32 mt-2"
           />
         </View>
       </View>
