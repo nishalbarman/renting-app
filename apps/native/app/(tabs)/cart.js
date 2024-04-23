@@ -229,8 +229,8 @@ const CartPage = () => {
   }, [ordreRefetch]);
 
   return (
-    <SafeAreaView className={`flex-1 bg-white`}>
-      {isCartLoading || isCartFetching ? (
+    <SafeAreaView className={`flex-1 bg-white px-2`}>
+      {isCartLoading? (
         <>
           <AddressCardSkeletop />
         </>
@@ -272,8 +272,8 @@ const CartPage = () => {
                           <TouchableOpacity
                             onPress={handleChangeCenter}
                             disabled={isGlobalButtonDisabled}
-                            className="flex items-center justify-center h-12 w-full bg-orange-600 rounded-md">
-                            <Text className="text-white font-bold">
+                            className="flex items-center justify-center h-12 w-full bg-white border-orange-500 border-[2px] rounded-md">
+                            <Text className="text-orange-500 font-bold text-md">
                               {isCenterSelected
                                 ? "Change Center"
                                 : "Select Center"}
@@ -332,11 +332,11 @@ const CartPage = () => {
                               ? 0.3
                               : 1,
                         }}
-                        className="h-12 rounded-md w-full items-center justify-center bg-black">
+                        className="h-12 rounded-md w-full items-center justify-center bg-green-600">
                         {isPlacingOrder ? (
                           <ActivityIndicator size={23} color="white" />
                         ) : (
-                          <Text className="text-white text-[16px] font-bold">
+                          <Text className="text-white text-md font-bold">
                             Place {productType === "rent" ? "Rent" : "Buy"}{" "}
                             Order
                           </Text>

@@ -5,6 +5,9 @@ const Cart = require("../../models/cart.model");
 const Order = require("../../models/order.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 
+const checkRole = require("../../middlewares");
+const PaymentTransModel = require("../../models/transaction.model");
+
 // const Coupon = require("../../../../models/coupon.model");
 
 //! CURRENTLY NOT IN USE
@@ -55,19 +58,19 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/:productType", async (req, res) => {
+router.post("/:productType", checkRole(0), async (req, res) => {
   try {
-    const token = req?.jwt?.token;
+    // const token = req?.jwt?.token;
 
-    if (!token) {
-      return res.status(401).json({ message: "No auth token provided" });
-    }
+    // if (!token) {
+    //   return res.status(401).json({ message: "No auth token provided" });
+    // }
 
-    const userDetails = getTokenDetails(token);
+    // const userDetails = getTokenDetails(token);
 
-    if (!userDetails) {
-      return res.status(401).json({ message: "Authorization failed" });
-    }
+    // if (!userDetails) {
+    //   return res.status(401).json({ message: "Authorization failed" });
+    // }
 
     const productType = req.params?.productType;
 
@@ -81,10 +84,17 @@ router.post("/:productType", async (req, res) => {
       return res.status(400).json({ message: "Center not selected" });
     }
 
+    // TODO: May be usefull in future time
+    // const address = req.body?.address;
+
+    // if (!address) {
+    //   return res.status(400).json({ message: "Address missing" });
+    // }
+
     // const appliedCouponID = req?.query?.coupon;
 
     const cartItemsForUser = await Cart.find({
-      user: userDetails._id,
+      user: req.user._id,
       productType: productType,
     }).populate([
       {
@@ -101,131 +111,165 @@ router.post("/:productType", async (req, res) => {
       return res.status(400).json({ message: "No items on cart" });
     }
 
-    const paymentTxnId = uuidv4();
+    let shippingPrice = 0;
+
+    // TODO: Still NEED to handle out of stock products
+
+    const paymentObject = cartItemsForUser.reduce(
+      (pay, cartItem) => {
+        let totalPrice; // price for one cart item
+        const Title = cartItem.product.title;
+
+        // if type is buy and product have variants (diffent color different size etc etc)
+        if (productType === "buy" && !!cartItem.variant) {
+          const Price = cartItem.variant.discountedPrice;
+          const Quantity = cartItem.quantity;
+          totalPrice = Price * Quantity;
+
+          shippingPrice += cartItem.variant.shippingPrice;
+        }
+        // else if type is buy and product does not have variants (diffent color different size etc etc)
+        else if (productType === "buy" && !cartItem.variant) {
+          const Price = cartItem.product.discountedPrice;
+          const Quantity = cartItem.quantity;
+          totalPrice = Price * Quantity;
+
+          shippingPrice += cartItem.product.shippingPrice;
+        }
+        // else if type is rent and product does not have variants (diffent color different size etc etc)
+        else if (productType === "rent" && !!cartItem.variant) {
+          const Price = cartItem.variant.rentingPrice;
+          const Quantity = cartItem.quantity;
+          const RentDays = cartItem.rentDays;
+          totalPrice = Price * Quantity * RentDays;
+
+          shippingPrice += cartItem.variant.shippingPrice;
+        }
+        // else if type is rent and product does not have variants (diffent color different size etc etc)
+        else if (productType === "rent" && !cartItem.variant) {
+          const Price = cartItem.product.rentingPrice;
+          const Quantity = cartItem.quantity;
+          const RentDays = cartItem.rentDays;
+          totalPrice = Price * Quantity * RentDays;
+
+          shippingPrice += cartItem.variant.shippingPrice;
+        }
+
+        return {
+          amount: pay.amount + totalPrice,
+          productinfo: [...pay.productinfo, Title],
+        };
+      },
+      { amount: 0, productinfo: [] }
+    );
+
+    // if (!!appliedCouponID) {
+    //   const appliedCoupon = await Coupon.findOne({ _id: appliedCouponID });
+
+    //   if (!!appliedCoupon) {
+    //     const discountedPrice = appliedCoupon?.isPercentage
+    //       ? (paymentObject.amount / 100) * parseInt(appliedCoupon.off) || 0
+    //       : paymentObject.amount >
+    //           (appliedCoupon.minimumPayAmount || paymentObject.amount + 100)
+    //         ? appliedCoupon.off
+    //         : 0;
+
+    //     paymentObject.amount -= discountedPrice;
+    //   }
+    // }
+
+    const freeDeliveryAboveMinimumPurchase = true;
+    const freeDeliveryMinimumAmount = 500;
+    let shippingApplied = false;
+
+    if (
+      !(
+        freeDeliveryAboveMinimumPurchase &&
+        paymentObject.amount >= freeDeliveryMinimumAmount
+      )
+    ) {
+      paymentObject.amount += shippingPrice;
+      shippingApplied = true;
+    }
+
+    const paymentTransactionID = "RNT-" + uuidv4();
+
+    const orderGroupID = uuidv4();
 
     let txnAndOrderIdInsertedCartItems;
 
-    if (productType === "buy") {
-      txnAndOrderIdInsertedCartItems = cartItemsForUser.map((item) => {
-        if (!!item.variant) {
-          return {
-            ...item,
-            // order related
-            orderId: uuidv4(),
-            paymentTxnId: paymentTxnId,
+    txnAndOrderIdInsertedCartItems = cartItemsForUser.map((item) => {
+      const createdOrder = {
+        ...item,
 
-            // product details
-            title: item.product.title,
-            previewImage: item.product.previewImage,
-            price: item.variant.discountedPrice * item.quantity,
-            shippingPrice: item.variant.shippingPrice,
-            orderType: "buy",
-            color: item.variant.color,
-            size: item.variant.size,
-            address: item.user.defaultSelectedAddress,
+        product: item.product._id,
+        user: req.user._id,
 
-            center: centerId,
+        // order related
+        orderGroupID: orderGroupID,
+        paymentTxnId: paymentTransactionID,
 
-            // user details
-            user: userDetails._id,
-          };
-        }
+        // product details
+        title: item.product.title,
 
-        // if no variant available
-        return {
-          ...item,
-          // order related
-          orderId: uuidv4(),
-          paymentTxnId: paymentTxnId,
+        quantity: item.quantity,
+        rentDays: item.rentDays,
+        orderType: "rent",
 
-          // product details
-          title: item.product.title,
-          previewImage: item.product.previewImage,
-          price: item.product.discountedPrice * item.quantity,
-          shippingPrice: item.product.shippingPrice,
-          orderType: "buy",
-          // address: item.user.defaultSelectedAddress,
+        address: null, // TODO: Maybe later on we can add the address as well for now its not needed
 
-          center: centerId,
+        center: centerId,
 
-          // user details
-          user: userDetails._id,
-        };
-      });
-    } else {
-      txnAndOrderIdInsertedCartItems = cartItemsForUser.map((item) => {
-        if (!!item?.variant) {
-          return {
-            ...item,
-            // order related
-            orderId: "RENT-" + uuidv4(),
-            // paymentTxnId: paymentTxnId,
+        orderStatus: "On Hold",
+        paymentMode: "COC",
+        shipmentType: "self_pickup",
+      };
 
-            // product details
-            title: item.product.title,
-            previewImage: item.product.previewImage,
-            price: item.variant.rentingPrice * item.quantity * item.rentDays,
-            shippingPrice: item.variant.shippingPrice,
-            orderType: "rent",
-            color: item.variant.color,
-            size: item.variant.size,
-            quantity: item.quantity,
-            rentDays: item.rentDays,
+      if (!!item.variant) {
+        createdOrder.previewImage = item.variant.previewImage;
+        createdOrder.price =
+          item.variant.rentingPrice * item.rentDays * item.quantity;
+        // createdOrder.shippingPrice = item.variant.shippingPrice;
 
-            orderStatus: "On Hold",
+        createdOrder.color = item.variant.color;
+        createdOrder.size = item.variant.size;
+      } else {
+        createdOrder.previewImage = item.product.previewImage;
+        createdOrder.price =
+          item.variant.rentingPrice * item.rentDays * item.quantity;
+        // createdOrder.shippingPrice = item.product.shippingPrice;
 
-            // address: item.user.defaultSelectedAddress,
-            pickupCenter: centerId,
-            shipmentType: "self_pickup",
-            paymentMode: "COP",
+        createdOrder.color = null;
+        createdOrder.size = null;
+      }
 
-            center: centerId,
-
-            // user details
-            user: userDetails._id,
-            paymentStatus: null,
-          };
-        }
-
-        // if no variant available
-        return {
-          ...item,
-          // order related
-          orderId: "RENT-" + uuidv4(),
-          // paymentTxnId: paymentTxnId,
-
-          // product details
-          title: item.product.title,
-          previewImage: item.product.previewImage,
-          price: item.product.rentingPrice * item.quantity * item.rentDays,
-          shippingPrice: item.product.shippingPrice,
-          orderType: "rent",
-          quantity: item.quantity,
-          rentDays: item.rentDays,
-
-          orderStatus: "On Hold",
-
-          // address: item.user.defaultSelectedAddress,
-          pickupCenter: centerId,
-          shipmentType: "self_pickup",
-          paymentMode: "COP",
-
-          center: centerId,
-
-          // user details
-          user: userDetails._id,
-          paymentStatus: null,
-        };
-      });
-    }
+      return createdOrder;
+    });
 
     // insert order for user
     const orders = await Order.insertMany(txnAndOrderIdInsertedCartItems);
     if (!!orders) {
-      const cartRemoved = await Cart.deleteMany({
-        user: userDetails._id,
-        productType: productType,
+      // const cartRemoved = await Cart.deleteMany({
+      //   user: userDetails._id,
+      //   productType: productType,
+      // });
+
+      await PaymentTransModel.create({
+        orderGroupID,
+        paymentTransactionID: paymentTransactionID,
+        user: req.user._id,
+        order: orders.map((item) => item._id),
+
+        //! Status of Payment
+        paymentStatus: "COC",
+
+        //! PRICE related keys
+        shippingPrice: !!shippingApplied ? shippingPrice : 0,
+        subTotalPrice:
+          paymentObject.amount / 100 - (!!shippingApplied ? shippingPrice : 0),
+        totalPrice: paymentObject.amount / 100,
       });
+
       return res.status(200).json({ message: "Order Placed!" });
     }
 

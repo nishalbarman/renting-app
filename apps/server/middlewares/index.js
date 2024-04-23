@@ -15,6 +15,8 @@ const checkRole = (...allowedRoles) => {
         return res.status(400).json({ message: "Token validation failed" });
       }
 
+      req.user = userDetails;
+
       console.log(
         "User Details from checkRole middleware function ->",
         userDetails.role

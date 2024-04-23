@@ -85,12 +85,6 @@ function CenterModal({ visible, setVisible, row }) {
                   <strong>Order Details</strong>
                 </CCardHeader>
                 <CCardBody>
-                  {/* <CCol
-                    style={{
-                      border: '1px solid rgba(0,0,0,0.1)',
-                    }}
-                    className="p-2 bg-white"
-                  > */}
                   <CRow
                     style={{
                       backgroundColor: 'white',
@@ -187,9 +181,16 @@ function CenterModal({ visible, setVisible, row }) {
                                     (Shipping/-)
                                   </div>
                                   <div>
+                                    {order.orderType == 'rent' && (
+                                      <div>
+                                        Renting Days: <b>{order.rentDays || '1'}</b>
+                                      </div>
+                                    )}
+
                                     <div>
                                       Qty: <b>{order.quantity || '1'}</b>
                                     </div>
+
                                     <div>
                                       Color: <b>{order.color || 'Black'}</b>
                                     </div>
@@ -205,16 +206,9 @@ function CenterModal({ visible, setVisible, row }) {
                       </CCol>
                     ))}
                   </CRow>
-                  {/* </CCol> */}
                 </CCardBody>
               </CCard>
 
-              {/* <CCol
-                style={{
-                  border: '1px solid rgba(0,0,0,0.1)',
-                }}
-                className="p-3 bg-white"
-              > */}
               <div className="mt-2">
                 <CCard>
                   <CCardHeader>
@@ -226,18 +220,20 @@ function CenterModal({ visible, setVisible, row }) {
                       }}
                     >
                       <strong>Payment Summary</strong>
-                      <div
-                        style={{
-                          padding: '5px 10px',
-                          backgroundColor: 'lightgreen',
-                          color: 'black',
-                          border: '1px solid green',
-                          fontWeight: 'semibold',
-                          borderRadius: '7px',
-                        }}
-                      >
-                        {summary.paymentStatus || 'Failed'}
-                      </div>
+                      {row.original.orderType === 'buy' && (
+                        <div
+                          style={{
+                            padding: '5px 10px',
+                            backgroundColor: 'lightgreen',
+                            color: 'black',
+                            border: '1px solid green',
+                            fontWeight: 'semibold',
+                            borderRadius: '7px',
+                          }}
+                        >
+                          {summary.paymentStatus || 'Failed'}
+                        </div>
+                      )}
                     </div>
                   </CCardHeader>
                   <CCardBody>
@@ -250,7 +246,7 @@ function CenterModal({ visible, setVisible, row }) {
                         }}
                       >
                         <span>Subtotal ({row.original.totalDocumentCount} items)</span>
-                        <b>{summary.subTotalPrice}</b>
+                        <b>₹{summary.subTotalPrice}</b>
                       </div>
                       <div
                         style={{
@@ -260,7 +256,7 @@ function CenterModal({ visible, setVisible, row }) {
                         }}
                       >
                         <span>Delivery</span>
-                        <b>{summary.shippingPrice}</b>
+                        <b>₹{summary.shippingPrice}</b>
                       </div>
                       <div
                         style={{
@@ -270,14 +266,13 @@ function CenterModal({ visible, setVisible, row }) {
                         }}
                       >
                         <span>Total</span>
-                        <b>{summary.totalPrice}</b>
+                        <b>₹{summary.totalPrice}</b>
                       </div>
                     </div>
                   </CCardBody>
                 </CCard>
               </div>
             </CCol>
-            {/* </CCol> */}
             <CCol>
               <CCard>
                 <CCardHeader
@@ -388,23 +383,28 @@ function CenterModal({ visible, setVisible, row }) {
                       </span>
                     </div>
                   </div>
-                  <div
-                    style={{
-                      height: '1px',
-                      marginTop: '10px',
-                      backgroundColor: 'rgba(0,0,0,0.2)',
-                      width: '100%',
-                    }}
-                  ></div>
-                  <div className="mt-2">
-                    <strong>Delivery Address</strong>
-                    <div className="mt-2">
-                      <div>{row.original.address.address}</div>
-                      <span>Longitude : {row.original.address.location[0]}</span>
-                      {', '}
-                      <span>Latitude : {row.original.address.location[1]}</span>
-                    </div>
-                  </div>
+
+                  {!!row.original.address && (
+                    <>
+                      <div
+                        style={{
+                          height: '1px',
+                          marginTop: '10px',
+                          backgroundColor: 'rgba(0,0,0,0.2)',
+                          width: '100%',
+                        }}
+                      ></div>
+                      <div className="mt-2">
+                        <strong>Delivery Address</strong>
+                        <div className="mt-2">
+                          <div>{row.original.address.address}</div>
+                          <span>Longitude : {row.original.address.location[0]}</span>
+                          {', '}
+                          <span>Latitude : {row.original.address.location[1]}</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </CCardBody>
               </CCard>
             </CCol>

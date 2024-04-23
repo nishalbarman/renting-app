@@ -74,25 +74,22 @@ const OrderScreen = () => {
               data={[""]}
               renderItem={() => (
                 <View className={`mb-4 p-2`}>
-                  (
-                  <>
-                    {orders?.map((item, index) => (
-                      <OrderItem
-                        key={index}
-                        order={item}
-                        productType={productType}
-                        jwtToken={jwtToken}
-                      />
-                    ))}
-                  </>
-                  )
+                  {orders?.map((item, index) => (
+                    <OrderItem
+                      key={index}
+                      order={item}
+                      productType={productType}
+                      jwtToken={jwtToken}
+                    />
+                  ))}
                 </View>
               )}
               showsHorizontalScrollIndicator={false}
               className={`flex-1 bg-white p-2`}
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }></FlatList>
+              }
+            />
           )}
         </>
       )}

@@ -14,6 +14,7 @@ const Order = require("../../../models/order.model");
 const { OrderList } = require("../../../models/order.model");
 const Address = require("../../../models/address.model");
 const Center = require("../../../models/center.model");
+const PaymentTransModel = require("../../../models/transaction.model");
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY;
@@ -148,7 +149,7 @@ router.post("/:productType", async (req, res) => {
       shippingApplied = true;
     }
 
-    paymentObject.amount *= 100; // razor pay takes amount as paisa (1 rupee = 100 paisa)
+    paymentObject.amount *= 100; // gateway takes amount as paisa (1 rupee = 100 paisa)
 
     const paymentTxnId = uuidv4();
 
@@ -303,6 +304,7 @@ router.post("/:productType", async (req, res) => {
     const orders = await Order.insertMany(orderItemsWithOrderIDandPaymentId);
 
     await PaymentTransModel.create({
+      orderGroupID,
       paymentTransactionID: paymentIntent.id,
       user: userDetails._id,
       order: orders.map((item) => item._id),
@@ -311,9 +313,10 @@ router.post("/:productType", async (req, res) => {
       paymentStatus: "Pending",
 
       //! PRICE related keys
-      shippingPrice: !!shippingApplied ? shipping : 0,
-      subTotal: paymentObject.amount - (!!shippingApplied ? shipping : 0),
-      totalPrice: paymentObject.amount,
+      shippingPrice: !!shippingApplied ? shippingPrice : 0,
+      subTotalPrice:
+        paymentObject.amount / 100 - (!!shippingApplied ? shippingPrice : 0),
+      totalPrice: paymentObject.amount / 100,
     });
 
     res.json({

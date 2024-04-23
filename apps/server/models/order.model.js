@@ -25,11 +25,11 @@ const orderSchema = new mongoose.Schema(
     address: {
       address: {
         type: String,
-        required: true,
+        required: false,
       },
       location: {
         type: [Number, Number], // Array of [longitude, latitude]
-        required: true,
+        required: false,
       },
     },
 

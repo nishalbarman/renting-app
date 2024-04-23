@@ -9,6 +9,7 @@ const User = require("../models/user.model");
 const { sendMail } = require("../helpter/sendEmail");
 const Cart = require("../models/cart.model");
 const { default: mongoose } = require("mongoose");
+const PaymentTransModel = require("../models/transaction.model");
 const router = Router();
 
 const endpointSecret = "whsec_O3JO59y2d6GU3T73AkIkDf3OJ5zc3aj6";
@@ -34,28 +35,46 @@ router.post(
       switch (event.type) {
         case "payment_intent.payment_failed":
           const paymentIntentPaymentFailed = event.data.object;
-          console.log(paymentIntentPaymentFailed);
+          // console.log(paymentIntentPaymentFailed);
 
           await OrderModel.updateMany(
             { paymentTxnId: paymentIntentPaymentFailed.metadata.paymentTxnId },
             { $set: { paymentStatus: "Failed", orderStatus: "Rejected" } }
           );
+
+          await PaymentTransModel.updateOne(
+            { _id: paymentIntentPaymentFailed.id },
+            {
+              $set: {
+                paymentStatus: "Failed",
+              },
+            }
+          );
+
           break;
 
         case "payment_intent.succeeded":
           const paymentIntentSucceeded = event.data.object;
-          console.log(paymentIntentSucceeded);
 
           await OrderModel.updateMany(
             { paymentTxnId: paymentIntentSucceeded.metadata.paymentTxnId },
             { $set: { paymentStatus: "Success", orderStatus: "On Progress" } }
           );
 
-          const idsToDeleteAsObjectId =
-            paymentIntentSucceeded.metadata.cartProductIds
-              .split(",")
-              .map((id) => new mongoose.Types.ObjectId(id));
-          console.log("Cart ID'S --->", idsToDeleteAsObjectId);
+          await PaymentTransModel.updateOne(
+            { _id: paymentIntentSucceeded.id },
+            {
+              $set: {
+                paymentStatus: "Paid",
+              },
+            }
+          );
+
+          // const idsToDeleteAsObjectId =
+          //   paymentIntentSucceeded.metadata.cartProductIds
+          //     .split(",")
+          //     .map((id) => new mongoose.Types.ObjectId(id));
+          // console.log("Cart ID'S --->", idsToDeleteAsObjectId);
 
           // await Cart.deleteMany({
           //   _id: {
@@ -63,8 +82,11 @@ router.post(
           //   },
           // });
 
-          console.log("Center ID", paymentIntentSucceeded.metadata.center);
-          console.log("Type of Center ID", typeof paymentIntentSucceeded.metadata.center);
+          // console.log("Center ID", paymentIntentSucceeded.metadata.center);
+          // console.log(
+          //   "Type of Center ID",
+          //   typeof paymentIntentSucceeded.metadata.center
+          // );
 
           const centerDetails = await User.findOne({
             center: paymentIntentSucceeded.metadata.center,
@@ -82,7 +104,7 @@ router.post(
                       </div>
                       <div style="padding: 40px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
                         <center>
-                          <span style="font-size: 18px;">Hey, You got a new order. Fullfill the order as soon as possible.
+                          <span style="font-size: 18px;">Hey Yo Brother you just got a new order, You got a new order. Fullfill the order as soon as possible.
                         </center>
                       </div>
                     </body>

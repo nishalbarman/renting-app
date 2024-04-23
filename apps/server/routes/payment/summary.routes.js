@@ -4,22 +4,24 @@ const router = express.Router();
 const { globalErrorHandler } = require("../../helpter/globalErrorHandler");
 const checkRole = require("../../middlewares");
 
-const PaymentTransModel = require("../../models/stripe.model");
+const PaymentTransModel = require("../../models/transaction.model");
 
-router.get("/:paymentTransactionId", checkRole(1), async (req, res) => {
+router.get("/:orderGroupId", checkRole(1), async (req, res) => {
   try {
-    const paymentTransactionId = req.params?.paymentTransactionId;
+    const orderGroupId = req.params?.orderGroupId;
 
-    if (!paymentTransactionId) {
-      return res.status(400).json({ message: "Transaction ID missing" });
+    if (!orderGroupId) {
+      return res.status(400).json({ message: "Order Group ID missing" });
     }
 
-    const paymentTransaction = PaymentTransModel.findOne(
-      paymentTransactionId
-    ).select("paymentStatus subTotalPrice shippingPrice totalPrice");
+    const paymentTransaction = await PaymentTransModel.findOne({
+      orderGroupID: orderGroupId,
+    }).select("paymentStatus subTotalPrice shippingPrice totalPrice");
+
+    console.log(paymentTransaction);
 
     return res.status(200).json({
-      PaymentStatus: paymentTransaction.PaymentStatus,
+      paymentStatus: paymentTransaction.paymentStatus,
       subTotalPrice: paymentTransaction.subTotalPrice,
       shippingPrice: paymentTransaction.shippingPrice,
       totalPrice: paymentTransaction.totalPrice,

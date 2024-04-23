@@ -256,13 +256,13 @@ function CartCard({
         <TouchableHighlight
           onPress={handleMoveWishlist}
           underlayColor={"#514FB6"}
-          className="bg-blue-600 pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
+          className="bg-transparent pl-2 pr-2 h-[45px] border border-red-700 flex items-center justify-center rounded-lg w-[48%]">
           {isWishlistAddLoading ? (
             <AnimateSpin>
               <EvilIcons name="spinner" size={24} color="white" />
             </AnimateSpin>
           ) : (
-            <Text className="font-semibold text-lg text-white">
+            <Text className="font-semibold text-lg text-red-700">
               Move Wishlist
             </Text>
           )}
