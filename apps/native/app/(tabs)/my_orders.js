@@ -85,7 +85,7 @@ const OrderScreen = () => {
                 </View>
               )}
               showsHorizontalScrollIndicator={false}
-              className={`flex-1 bg-white p-2`}
+              className={`flex-1 bg-white`}
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }

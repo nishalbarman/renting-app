@@ -266,8 +266,8 @@ router.post("/:productType", checkRole(0), async (req, res) => {
         //! PRICE related keys
         shippingPrice: !!shippingApplied ? shippingPrice : 0,
         subTotalPrice:
-          paymentObject.amount / 100 - (!!shippingApplied ? shippingPrice : 0),
-        totalPrice: paymentObject.amount / 100,
+          paymentObject.amount - (!!shippingApplied ? shippingPrice : 0),
+        totalPrice: paymentObject.amount,
       });
 
       return res.status(200).json({ message: "Order Placed!" });

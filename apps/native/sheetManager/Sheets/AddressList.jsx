@@ -10,10 +10,7 @@ import ActionSheet, {
   useScrollHandlers,
 } from "react-native-actions-sheet";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
-import {
-  useDeleteAddressMutation,
-  useGetAddressQuery,
-} from "@store/rtk/apis/addressApi";
+import { useDeleteAddressMutation, useGetAddressQuery } from "@store/rtk";
 
 import { useRouter } from "expo-router";
 
@@ -62,7 +59,10 @@ export default function AddressList() {
   };
 
   return (
-    <ActionSheet closeOnPressBack={true} gestureEnabled={true}>
+    <ActionSheet
+      enableGesturesInScrollView={true}
+      closeOnPressBack={true}
+      gestureEnabled={true}>
       <NativeViewGestureHandler
         simultaneousHandlers={handlers.simultaneousHandlers}>
         <ScrollView {...handlers}>

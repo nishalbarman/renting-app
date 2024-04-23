@@ -109,7 +109,7 @@ const CartPage = () => {
 
       const discountedTotalAmount = paymentObject.discountedTotalAmount;
 
-      const freeDeliveryAboveMinimumPurchase = true;
+      const freeDeliveryAboveMinimumPurchase = false; // TODO: Need to get it from server.
       const freeDeliveryMinimumAmount = 500;
 
       if (
@@ -230,7 +230,7 @@ const CartPage = () => {
 
   return (
     <SafeAreaView className={`flex-1 bg-white px-2`}>
-      {isCartLoading? (
+      {isCartLoading ? (
         <>
           <AddressCardSkeletop />
         </>

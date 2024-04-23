@@ -149,298 +149,78 @@ const OrderList = () => {
               </Box>
             ),
           },
+          // {
+          //   header: 'Order Type',
+          //   accessorKey: 'orderType',
+          //   size: 200,
+          //   //custom conditional format and styling
+          //   Cell: ({ renderedCellValue, cell }) => (
+          //     <Box component="span">
+          //       <strong>{renderedCellValue}</strong>
+          //     </Box>
+          //   ),
+          // },
+
           {
+            accessorFn: (row) => `${row.orderType}`,
+            // accessorKey: 'category', //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
+            filterVariant: 'autocomplete',
             header: 'Order Type',
-            accessorKey: 'orderType',
-            size: 200,
-            //custom conditional format and styling
-            Cell: ({ renderedCellValue, cell }) => (
-              <Box component="span">
-                <strong>{renderedCellValue}</strong>
+            size: 300,
+            Cell: ({ renderedCellValue, row }) => (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  // alignItems: 'center',
+                  gap: '5px',
+                }}
+              >
+                <div>
+                  <span>
+                    <b>{renderedCellValue === 'buy' ? 'Bought' : 'Rented'}</b>
+                  </span>
+                </div>
+                {row.original.paymentTxnId && (
+                  <div
+                    style={{
+                      fontSize: '12px',
+                    }}
+                  >
+                    <span>Txn ID: {row.original.paymentTxnId}</span>
+                  </div>
+                )}
               </Box>
             ),
           },
         ],
       },
 
-      // {
-      //   id: 'order_info', //id used to define `group` column
-      //   header: 'Order Information',
-      //   columns: [
-      //     {
-      //       accessorKey: 'previewImage', //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
-      //       header: 'Preview Image',
-      //       size: 50,
-      //       enableColumnFilter: false,
-      //       enableColumnFilterModes: false,
-      //       enableFilters: false,
-      //       Cell: ({ cell, renderedCellValue, row }) => (
-      //         <Box
-      //           sx={{
-      //             display: 'flex',
-      //             alignItems: 'center',
-      //             gap: '1rem',
-      //           }}
-      //         >
-      //           <img
-      //             alt="avatar"
-      //             height={30}
-      //             src={cell.getValue()}
-      //             loading="lazy"
-      //             style={{
-      //               borderRadius: '10px',
-      //               border: '1px solid black',
-      //               width: 50,
-      //               height: 50,
-      //               objectFit: 'cover',
-      //             }}
-      //           />
-      //         </Box>
-      //       ),
-      //     },
-      //     {
-      //       accessorFn: (row) => `${row.title}`, //accessorFn used to join multiple data into a single cell
-      //       id: 'title', //id is still required when using accessorFn instead of accessorKey
-      //       header: 'Title',
-      //       size: 250,
-      //       Cell: ({ renderedCellValue, row }) => (
-      //         <Box
-      //           sx={{
-      //             display: 'flex',
-      //             alignItems: 'center',
-      //             gap: '1rem',
-      //           }}
-      //         >
-      //           <span>{renderedCellValue}</span>
-      //         </Box>
-      //       ),
-      //     },
-      //     {
-      //       accessorFn: (row) => `${row.orderStatus}`, //accessorFn used to join multiple data into a single cell
-      //       id: 'orderStatus', //id is still required when using accessorFn instead of accessorKey
-      //       header: 'Current Status',
-      //       size: 250,
-      //       Cell: ({ renderedCellValue, row }) => (
-      //         <Box
-      //           sx={{
-      //             display: 'flex',
-      //             alignItems: 'center',
-      //             gap: '1rem',
-      //           }}
-      //         >
-      //           <span>
-      //             <strong>{renderedCellValue}</strong>
-      //           </span>
-      //         </Box>
-      //       ),
-      //     },
-      //     {
-      //       accessorFn: (row) => `${row.orderType}`,
-      //       // accessorKey: 'category', //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
-      //       filterVariant: 'autocomplete',
-      //       header: 'Order Type',
-      //       size: 300,
-      //       Cell: ({ renderedCellValue, row }) => (
-      //         <Box
-      //           sx={{
-      //             display: 'flex',
-      //             flexDirection: 'column',
-      //             // alignItems: 'center',
-      //             gap: '5px',
-      //           }}
-      //         >
-      //           <div>
-      //             <span>
-      //               <b>{renderedCellValue === 'buy' ? 'Bought' : 'Rented'}</b>
-      //             </span>
-      //           </div>
-      //           {row.original.paymentTxnId && (
-      //             <div
-      //               style={{
-      //                 fontSize: '12px',
-      //               }}
-      //             >
-      //               <span>Txn ID: {row.original.paymentTxnId}</span>
-      //             </div>
-      //           )}
-      //         </Box>
-      //       ),
-      //     },
-
-      //     {
-      //       accessorKey: 'quantity',
-      //       enableClickToCopy: false,
-      //       header: 'Quantity',
-      //       size: 300,
-      //       Cell: ({ renderedCellValue, row }) => (
-      //         <Box
-      //           sx={{
-      //             display: 'flex',
-      //             alignItems: 'center',
-      //             gap: '1rem',
-      //           }}
-      //         >
-      //           <span>
-      //             <b>{renderedCellValue}</b>
-      //           </span>
-      //         </Box>
-      //       ),
-      //     },
-      //   ],
-      // },
-
-      // {
-      //   id: 'price',
-      //   header: 'Pricing Info',
-      //   columns: [
-      //     {
-      //       accessorKey: 'price',
-      //       // filterVariant: 'range', //if not using filter modes feature, use this instead of filterFn
-      //       filterFn: 'between',
-      //       header: 'Price',
-      //       size: 200,
-      //       //custom conditional format and styling
-      //       Cell: ({ renderedCellValue, cell }) => (
-      //         <Box
-      //           component="span"
-      //           sx={(theme) => ({
-      //             color: 'black',
-      //             maxWidth: '9ch',
-      //             p: '0.25rem',
-      //           })}
-      //         >
-      //           {renderedCellValue}
-      //         </Box>
-      //       ),
-      //     },
-      //     {
-      //       accessorKey: 'shippingPrice',
-      //       // filterVariant: 'range', //if not using filter modes feature, use this instead of filterFn
-      //       filterFn: 'between',
-      //       header: 'Shipping Price',
-      //       size: 200,
-      //       //custom conditional format and styling
-      //       Cell: ({ cell }) => <Box component="span">{cell.getValue()}</Box>,
-      //     },
-      //   ],
-      // },
-
-      // {
-      //   id: 'Variant',
-      //   header: 'Product Variant',
-      //   columns: [
-      //     {
-      //       accessorKey: 'size',
-      //       header: 'Size',
-      //       size: 200,
-      //       //custom conditional format and styling
-      //       Cell: ({ cell }) => <Box component="span">{cell.getValue() || 'Not Applicable'}</Box>,
-      //     },
-      //     {
-      //       accessorKey: 'color',
-      //       header: 'Color',
-      //       size: 200,
-      //       //custom conditional format and styling
-      //       Cell: ({ cell }) => <Box component="span">{cell.getValue() || 'Not Applicable'}</Box>,
-      //     },
-      //   ],
-      // },
-
-      // {
-      //   id: 'Shipment_Info',
-      //   header: 'Shipment Info',
-      //   columns: [
-      //     {
-      //       accessorKey: 'shipmentType',
-      //       header: 'Shipment Type',
-      //       size: 200,
-      //       //custom conditional format and styling
-      //       Cell: ({ renderedCellValue, cell }) => (
-      //         <Box component="span">
-      //           {renderedCellValue === 'self_pickup'
-      //             ? 'Pickup By Customer'
-      //             : 'Through Delivery Partner'}
-      //         </Box>
-      //       ),
-      //     },
-      //     {
-      //       accessorKey: 'rentPickedUpDate',
-      //       header: 'Rent Pick Up Date',
-      //       size: 200,
-      //       //custom conditional format and styling
-      //       Cell: ({ row, renderedCellValue }) => (
-      //         <Box component="span">
-      //           {row.original.orderType === 'buy'
-      //             ? 'Not Applicable'
-      //             : renderedCellValue || 'No Data'}
-      //         </Box>
-      //       ),
-      //     },
-      //     {
-      //       accessorKey: 'rentReturnDueDate',
-      //       header: 'Rent Return Date',
-      //       size: 200,
-      //       //custom conditional format and styling
-      //       Cell: ({ row, renderedCellValue }) => (
-      //         <Box component="span">
-      //           {row.original.orderType === 'buy'
-      //             ? 'Not Applicable'
-      //             : renderedCellValue || 'No Data'}
-      //         </Box>
-      //       ),
-      //     },
-      //     {
-      //       accessorKey: 'trackingLink',
-      //       header: 'Track Link',
-      //       size: 200,
-      //       //custom conditional format and styling
-      //       Cell: ({ row, renderedCellValue }) => (
-      //         <Box component="span">
-      //           {row.original.orderType === 'buy'
-      //             ? renderedCellValue || 'No Data'
-      //             : 'Not Applicable'}
-      //         </Box>
-      //       ),
-      //     },
-      //   ],
-      // },
-
-      // {
-      //   id: 'date',
-      //   header: 'Date',
-      //   columns: [
-      //     {
-      //       accessorFn: (row) => new Date(row.createdAt), //convert to Date for sorting and filtering
-      //       id: 'createdAt',
-      //       header: 'Created Date',
-      //       filterVariant: 'date',
-      //       filterFn: 'lessThan',
-      //       sortingFn: 'datetime',
-      //       Cell: ({ cell }) => cell.getValue()?.toLocaleDateString(), //render Date as a string
-      //       Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
-      //       muiFilterTextFieldProps: {
-      //         sx: {
-      //           minWidth: '250px',
-      //         },
-      //       },
-      //     },
-      //     {
-      //       accessorFn: (row) => new Date(row.createdAt), //convert to Date for sorting and filtering
-      //       id: 'updatedAt',
-      //       header: 'Updated Date',
-      //       filterVariant: 'date',
-      //       filterFn: 'lessThan',
-      //       sortingFn: 'datetime',
-      //       Cell: ({ cell }) => cell.getValue()?.toLocaleDateString(), //render Date as a string
-      //       Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
-      //       muiFilterTextFieldProps: {
-      //         sx: {
-      //           minWidth: '250px',
-      //         },
-      //       },
-      //     },
-      //   ],
-      // },
+      {
+        id: 'Date', //id used to define `group` column
+        header: 'Date',
+        columns: [
+          {
+            accessorKey: 'createdAt', //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
+            header: 'Order Date',
+            size: 50,
+            enableColumnFilter: false,
+            enableColumnFilterModes: false,
+            enableFilters: false,
+            Cell: ({ cell, renderedCellValue, row }) => (
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1rem',
+                }}
+              >
+                {renderedCellValue.toLocaleString()}
+              </Box>
+            ),
+          },
+        ],
+      },
     ],
     [],
   )

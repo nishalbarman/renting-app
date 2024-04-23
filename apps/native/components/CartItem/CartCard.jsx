@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableHighlight,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, TouchableHighlight, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
 
@@ -255,11 +250,11 @@ function CartCard({
       <View className="flex-row mt-3 justify-between">
         <TouchableHighlight
           onPress={handleMoveWishlist}
-          underlayColor={"#514FB6"}
+          underlayColor={"transparent"}
           className="bg-transparent pl-2 pr-2 h-[45px] border border-red-700 flex items-center justify-center rounded-lg w-[48%]">
           {isWishlistAddLoading ? (
             <AnimateSpin>
-              <EvilIcons name="spinner" size={24} color="white" />
+              <EvilIcons name="spinner" size={24} color="#b83a21" />
             </AnimateSpin>
           ) : (
             <Text className="font-semibold text-lg text-red-700">

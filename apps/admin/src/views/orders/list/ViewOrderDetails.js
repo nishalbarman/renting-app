@@ -54,6 +54,8 @@ function CenterModal({ visible, setVisible, row }) {
   return (
     <>
       <CModal
+        scrollable
+        backdrop="static"
         fullscreen={true}
         visible={true}
         onClose={() => {
@@ -95,6 +97,7 @@ function CenterModal({ visible, setVisible, row }) {
                         <CCard
                           style={{
                             backgroundColor: 'white',
+                            width: '100%',
                           }}
                         >
                           <CCardHeader
@@ -110,18 +113,227 @@ function CenterModal({ visible, setVisible, row }) {
                               <span>{order._id}</span>
                             </div>
 
-                            <div>
-                              <span
-                                style={{
-                                  backgroundColor: 'orange',
-                                  padding: '4px 10px',
-                                  borderRadius: '8px',
-                                  color: 'white',
-                                  fontSize: '15px',
-                                }}
-                              >
-                                {order.orderStatus}
-                              </span>
+                            <div
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                              }}
+                            >
+                              {order.orderStatus === 'On Progress' && (
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    padding: '5px 10px',
+                                    borderRadius: '4px',
+                                    backgroundColor: '#f0ffff',
+                                    border: '1px solid #2AAABF',
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      color: '#2AAABF',
+                                      fontSize: '16px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    On Progress
+                                  </span>
+                                </div>
+                              )}
+                              {order.orderStatus === 'Accepted' && (
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    padding: '5px 10px',
+                                    borderRadius: '4px',
+                                    backgroundColor: '#f5fff6',
+                                    border: '1px solid #79E7A8',
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      color: '#36664c',
+                                      fontSize: '16px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    Accepted
+                                  </span>
+                                </div>
+                              )}
+                              {order.orderStatus === 'Delivered' && (
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    padding: '5px 10px',
+                                    borderRadius: '4px',
+                                    backgroundColor: '#f0e6ff',
+                                    border: '1px solid #754db0',
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      color: '#754db0',
+                                      fontSize: '16px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    Delivered
+                                  </span>
+                                </div>
+                              )}
+                              {order.orderStatus === 'On Hold' && (
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    padding: '5px 10px',
+                                    borderRadius: '4px',
+                                    backgroundColor: '#fff6c7',
+                                    border: '1px solid #ebb434',
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      color: '#7a5c14',
+                                      fontSize: '16px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    On Hold
+                                  </span>
+                                </div>
+                              )}
+                              {order.orderStatus === 'Cancelled' && (
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    padding: '5px 10px',
+                                    borderRadius: '4px',
+                                    backgroundColor: '#f7eae9',
+                                    border: '1px solid #db3125',
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      color: '#a11b12',
+                                      fontSize: '16px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    Cancelled
+                                  </span>
+                                </div>
+                              )}
+                              {order.orderStatus === 'On The Way' && (
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    padding: '5px 10px',
+                                    borderRadius: '4px',
+                                    backgroundColor: '#b1ebf0',
+                                    border: '1px solid #2e7e85',
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      color: '#2e7e85',
+                                      fontSize: '16px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    On The Way
+                                  </span>
+                                </div>
+                              )}
+                              {order.orderStatus === 'PickUp Ready' && (
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    padding: '5px 10px',
+                                    borderRadius: '4px',
+                                    backgroundColor: '#f0e6ff',
+                                    border: '1px solid #754db0',
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      color: '#754db0',
+                                      fontSize: '16px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    PickUp Ready
+                                  </span>
+                                </div>
+                              )}
+                              {order.orderStatus === 'Pending' && (
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center',
+                                    padding: '5px 10px',
+                                    borderRadius: '4px',
+                                    backgroundColor: '#f0ffff',
+                                    border: '1px solid #2AAABF',
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      color: '#2AAABF',
+                                      fontSize: '16px',
+                                      fontWeight: 'bold',
+                                    }}
+                                  >
+                                    Pending
+                                  </span>
+                                </div>
+                              )}
+                              {order.orderStatus !== 'On Progress' &&
+                                order.orderStatus !== 'Accepted' &&
+                                order.orderStatus !== 'Delivered' &&
+                                order.orderStatus !== 'On Hold' &&
+                                order.orderStatus !== 'Cancelled' &&
+                                order.orderStatus !== 'On The Way' &&
+                                order.orderStatus !== 'PickUp Ready' &&
+                                order.orderStatus !== 'Pending' && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'center',
+                                      padding: '5px 10px',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#f7eae9',
+                                      border: '1px solid #db3125',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: '#a11b12',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    >
+                                      Rejected
+                                    </span>
+                                  </div>
+                                )}
                             </div>
                           </CCardHeader>
 
@@ -147,7 +359,7 @@ function CenterModal({ visible, setVisible, row }) {
                                 <div>
                                   <div
                                     style={{
-                                      fontSize: '18px',
+                                      fontSize: '16px',
                                       WebkitBoxOrient: 'vertical',
                                       display: '-webkit-box',
                                       WebkitLineClamp: 1,
@@ -158,7 +370,7 @@ function CenterModal({ visible, setVisible, row }) {
                                   </div>
                                   <div
                                     style={{
-                                      fontSize: '18px',
+                                      fontSize: '16px',
                                       margin: '10px 0px',
                                     }}
                                   >
@@ -169,7 +381,7 @@ function CenterModal({ visible, setVisible, row }) {
                                   </div>
                                   <div
                                     style={{
-                                      fontSize: '18px',
+                                      fontSize: '16px',
                                       margin: '10px 0px',
                                     }}
                                   >
@@ -220,23 +432,42 @@ function CenterModal({ visible, setVisible, row }) {
                       }}
                     >
                       <strong>Payment Summary</strong>
-                      {row.original.orderType === 'buy' && (
-                        <div
-                          style={{
-                            padding: '5px 10px',
-                            backgroundColor: 'lightgreen',
-                            color: 'black',
-                            border: '1px solid green',
-                            fontWeight: 'semibold',
-                            borderRadius: '7px',
-                          }}
-                        >
-                          {summary.paymentStatus || 'Failed'}
-                        </div>
-                      )}
                     </div>
                   </CCardHeader>
                   <CCardBody>
+                    {row.original.orderType === 'rent' && (
+                      <div
+                        style={{
+                          color: 'red',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        * This is a rent order, so collect cash upon pickup.
+                      </div>
+                    )}
+
+                    {row.original.orderType === 'buy' && (
+                      <div
+                        style={{
+                          color: 'green',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        * This is a buy order, so make sure that payment has been received before
+                        proceeding.
+                      </div>
+                    )}
+
+                    <div
+                      style={{
+                        height: '1px',
+                        marginTop: '10px',
+                        marginBottom: '10px',
+                        backgroundColor: 'rgba(0,0,0,0.2)',
+                        width: '100%',
+                      }}
+                    ></div>
+
                     <div className="mt-2">
                       <div
                         style={{
@@ -246,7 +477,7 @@ function CenterModal({ visible, setVisible, row }) {
                         }}
                       >
                         <span>Subtotal ({row.original.totalDocumentCount} items)</span>
-                        <b>₹{summary.subTotalPrice}</b>
+                        <span>₹{summary.subTotalPrice}</span>
                       </div>
                       <div
                         style={{
@@ -256,7 +487,7 @@ function CenterModal({ visible, setVisible, row }) {
                         }}
                       >
                         <span>Delivery</span>
-                        <b>₹{summary.shippingPrice}</b>
+                        <span>₹{summary.shippingPrice}</span>
                       </div>
                       <div
                         style={{
@@ -268,6 +499,115 @@ function CenterModal({ visible, setVisible, row }) {
                         <span>Total</span>
                         <b>₹{summary.totalPrice}</b>
                       </div>
+
+                      {row.original.orderType === 'buy' && (
+                        <>
+                          <div
+                            style={{
+                              height: '1px',
+                              marginTop: '10px',
+                              marginBottom: '10px',
+                              backgroundColor: 'rgba(0,0,0,0.2)',
+                              width: '100%',
+                            }}
+                          ></div>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                            }}
+                          >
+                            <b>Payment Status</b>
+                            <div
+                              style={{
+                                color: 'black',
+                                borderRadius: '7px',
+                              }}
+                            >
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'space-between',
+                                  paddingBottom: '2px',
+                                  paddingLeft: '2px',
+                                }}
+                              >
+                                {summary.paymentStatus === 'Pending' && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'center',
+                                      padding: '5px 10px',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#f0ffff',
+                                      border: '1px solid #2AAABF',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: '#2AAABF',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    >
+                                      Pending
+                                    </span>
+                                  </div>
+                                )}
+                                {summary.paymentStatus === 'Paid' && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'center',
+                                      padding: '5px 10px',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#f5fff6',
+                                      border: '1px solid #79E7A8',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: '#36664c',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    >
+                                      Paid
+                                    </span>
+                                  </div>
+                                )}
+                                {summary.paymentStatus === 'Failed' && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'center',
+                                      padding: '5px 10px',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#f0e6ff',
+                                      border: '1px solid #754db0',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: '#754db0',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    >
+                                      Failed
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </CCardBody>
                 </CCard>

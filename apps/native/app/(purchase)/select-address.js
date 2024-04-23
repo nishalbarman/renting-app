@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  FlatList,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -70,90 +71,92 @@ export default function AddressList() {
           headerShadowVisible: false,
         }}
       />
-      <View className="px-4 pt-3 ">
-        <Pressable
-          disabled={!selectedAddress}
-          onPress={handleContinueClick}
-          className="rounded-md h-12 w-full bg-dark-purple flex items-center justify-center">
-          {nextScreenClicked ? (
-            <ActivityIndicator size={25} color={"white"} />
-          ) : (
-            <Text className="text-white text-lg">Continue</Text>
-          )}
-        </Pressable>
-      </View>
-      <ScrollView className="bg-white">
-        <View className="pt-6 px-4 flex flex-col items-center w-[100%] min-h-screen">
-          {isAddressLoading ? (
-            <AddressCardSkeleton />
-          ) : (
-            <>
-              {address &&
-                address.length > 0 &&
-                address.map((item) => {
-                  return (
-                    <>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setSelectedAddress(item._id);
-                        }}
-                        style={{
-                          position: "relative",
-                        }}
-                        key={item._id}
-                        className={`bg-light-blue-200 p-4 rounded-md mb-3 w-[100%] border ${selectedAddress === item._id ? "border-dark-purple border-[2px]" : "border-gray-300"}`}>
-                        <View>
-                          {selectedAddress === item._id && (
-                            <>
-                              <View
-                                style={{
-                                  position: "absolute",
-                                  bottom: -10,
-                                  right: -8,
-                                  backgroundColor: "white",
-                                }}
-                                className="border border-[2px] border-dark-purple  rounded-md p-1">
-                                <AntDesign
-                                  name="check"
-                                  size={22}
-                                  color="#514FB6"
-                                />
-                              </View>
-                            </>
-                          )}
 
-                          <Text className="text-black font-medium mb-2">
-                            {name}
-                          </Text>
-                          <Text className="text-gray-700 mb-2">
-                            {item.name}, {item.locality}, {item.streetName},{" "}
-                            {item.postalCode}, {item.country}
-                          </Text>
-                          <Text className="text-gray-700">{mobileNo}</Text>
-                        </View>
-                      </TouchableOpacity>
-                    </>
-                  );
-                })}
-
-              {(!address || address.length <= 0) && (
-                <>
-                  <Text className="font-[poppins-mid] text-[18px] text-center">
-                    No address found
-                  </Text>
-                  {(!address || address.length < 5) && (
+      <View className="pt-1 px-2 flex flex-col items-center w-screen min-h-screen">
+        {isAddressLoading ? (
+          <AddressCardSkeleton />
+        ) : (
+          <>
+            {address && address.length > 0 ? (
+              <FlatList
+                keyExtractor={(item, index) => index.toString()}
+                data={address}
+                ItemSeparatorComponent={() => <View className="my-1"></View>}
+                ListHeaderComponent={() => (
+                  <View>
+                    <Pressable
+                      disabled={!selectedAddress}
+                      onPress={handleContinueClick}
+                      className="rounded-md h-12 mb-3 w-full bg-green-600 flex items-center justify-center">
+                      {nextScreenClicked ? (
+                        <ActivityIndicator size={25} color={"white"} />
+                      ) : (
+                        <Text className="text-white text-lg">Continue</Text>
+                      )}
+                    </Pressable>
+                  </View>
+                )}
+                renderItem={({ item }) => (
+                  <>
                     <TouchableOpacity
-                      //   onPress={handleAddAddressClick}
-                      className="mt-6 flex items-center justify-center self-center w-[200px] h-[45px] p-[0px_20px] bg-dark-purple rounded-lg">
-                      <Text className="text-white font-bold">Add One</Text>
+                      onPress={() => {
+                        setSelectedAddress(item._id);
+                      }}
+                      style={{
+                        position: "relative",
+                      }}
+                      className={`bg-light-blue-200 p-4 rounded-md w-[100%] border ${selectedAddress === item._id ? "border-green-600 border-[2px]" : "border-gray-300"}`}>
+                      <View>
+                        {selectedAddress === item._id && (
+                          <>
+                            <View
+                              style={{
+                                position: "absolute",
+                                bottom: -10,
+                                right: -8,
+                                backgroundColor: "white",
+                              }}
+                              className="border border-[2px] border-green-600 rounded-md p-1">
+                              <AntDesign
+                                name="check"
+                                size={22}
+                                color="#514FB6"
+                              />
+                            </View>
+                          </>
+                        )}
+
+                        <Text className="text-black font-medium mb-2">
+                          {name}
+                        </Text>
+                        <Text className="text-gray-700 mb-2">
+                          {item.name}, {item.locality}, {item.streetName},{" "}
+                          {item.postalCode}, {item.country}
+                        </Text>
+                        <Text className="text-gray-700">{mobileNo}</Text>
+                      </View>
                     </TouchableOpacity>
-                  )}
-                </>
-              )}
-            </>
-          )}
-        </View>
-      </ScrollView>
+                  </>
+                )}
+              />
+            ) : (
+              <>
+                <Text className="font-[poppins-mid] text-[18px] text-center">
+                  No address found
+                </Text>
+                {(!address || address.length < 5) && (
+                  <TouchableOpacity
+                    onPress={handleAddAddressClick}
+                    className="mt-6 flex items-center justify-center self-center w-[200px] h-[45px] p-[0px_20px] bg-dark-purple rounded-lg">
+                    <Text className="text-white font-bold">Add One</Text>
+                  </TouchableOpacity>
+                )}
+              </>
+            )}
+          </>
+        )}
+      </View>
+
       {/* {paymentLoading ||
         (isModalVisible && (
           <PlaceOrderModal

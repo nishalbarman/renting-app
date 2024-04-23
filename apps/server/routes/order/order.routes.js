@@ -29,41 +29,43 @@ router.get("/list", checkRole(1, 2), async (req, res) => {
       filterQuery.orderStatus = orderStatus;
     }
 
-    // const totalOrderCount = await Order.countDocuments(filterQuery);
-
-    // const orderDetails = await Order.find(filterQuery)
-    //   .sort({ createdAt: "desc" })
-    //   .skip(SKIP)
-    //   .limit(LIMIT)
-    //   .populate([
-    //     { path: "address" },
-    //     { path: "user", select: "name email mobileNo" },
-    //   ]);
-
     const pipeline = [
       {
         $match: {
-          orderGroupID: { $exists: true, $ne: null }, // Filter orders with orderGroupID
+          orderGroupID: { $exists: true, $ne: null },
+          orderStatus: orderStatus ? orderStatus : { $exists: true },
+          ...(role === 2 && { center: req.jwt?.center }),
         },
+      },
+      {
+        $sort: { createdAt: 1 },
       },
       {
         $group: {
           _id: "$orderGroupID",
-          totalDocumentCount: { $sum: 1 }, // Count total documents per orderGroupID
-          totalPrice: { $sum: "$price" }, // Calculate total price per orderGroupID
+          totalDocumentCount: { $sum: 1 },
+          totalPrice: { $sum: "$price" },
           paymentTransactionId: { $push: "$paymentTxnId" },
           orderType: { $push: "$orderType" },
-          orders: { $push: "$$ROOT" }, // Push all matching orders into an array
+          orders: { $push: "$$ROOT" },
+          createdAt: { $first: "$createdAt" }, // Extract createdAt from the first order in each group
         },
+      },
+      {
+        $addFields: {
+          createdAt: "$createdAt", // Add createdAt field to the grouped document
+        },
+      },
+      {
+        $sort: { createdAt: -1 }, // Sort the output list based on createdAt in descending order
       },
       {
         $group: {
           _id: null,
-          globalTotalDocumentCount: { $sum: 1 }, // Count the total number of grouped order groups
-          // paymentTransactionId: { $first: "$orders.paymentTxnId" }, // payment Transaction ID
-          address: { $first: "$orders.address" }, // Extract one address from the first document
-          user: { $first: "$orders.user" }, // Extract one user from the first document
-          groupedOrders: { $push: "$$ROOT" }, // Push all grouped orders into an array
+          globalTotalDocumentCount: { $sum: 1 },
+          address: { $first: "$orders.address" },
+          user: { $first: "$orders.user" },
+          groupedOrders: { $push: "$$ROOT" },
         },
       },
       {
@@ -81,7 +83,7 @@ router.get("/list", checkRole(1, 2), async (req, res) => {
                 mobileNo: 1,
                 isMobileNoVerifed: 1,
               },
-            }, // Add select options here
+            },
           ],
           as: "user",
         },
@@ -90,7 +92,6 @@ router.get("/list", checkRole(1, 2), async (req, res) => {
         $project: {
           _id: 0,
           globalTotalDocumentCount: 1,
-
           groupedOrders: {
             $map: {
               input: "$groupedOrders",
@@ -104,14 +105,15 @@ router.get("/list", checkRole(1, 2), async (req, res) => {
                 orderType: {
                   $arrayElemAt: ["$$group.orderType", 0],
                 },
-                totalPrice: "$$group.totalPrice", // Include totalPrice field
+                totalPrice: "$$group.totalPrice",
                 address: {
-                  $arrayElemAt: ["$address", 0], // Extract the address data
+                  $arrayElemAt: ["$address", 0],
                 },
-                user: { $arrayElemAt: ["$user", 0] }, // Extract the user data
+                user: { $arrayElemAt: ["$user", 0] },
                 orders: {
-                  $slice: ["$$group.orders", SKIP, LIMIT], // Apply pagination
+                  $slice: ["$$group.orders", SKIP, LIMIT],
                 },
+                createdAt: "$$group.createdAt", // Include createdAt field
               },
             },
           },

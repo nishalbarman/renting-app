@@ -135,7 +135,7 @@ router.post("/:productType", async (req, res) => {
       }
     }
 
-    const freeDeliveryAboveMinimumPurchase = true;
+    const freeDeliveryAboveMinimumPurchase = false; // TODO: Need to get it from server.
     const freeDeliveryMinimumAmount = 500;
     let shippingApplied = false;
 
@@ -166,7 +166,7 @@ router.post("/:productType", async (req, res) => {
           },
           distanceField: "distance",
           spherical: true,
-          maxDistance: 50000, // Max distance in meters here(50KM)
+          // maxDistance: 50000, // Max distance in meters here(50KM)
           query: {}, // Additional query conditions can be added here if needed
           key: "location", // Specify the field containing the coordinates
         },
