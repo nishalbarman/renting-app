@@ -4,6 +4,7 @@ import {
   cilApplicationsSettings,
   cilBell,
   cilCalculator,
+  cilCart,
   cilChartPie,
   cilColorBorder,
   cilCursor,
@@ -45,7 +46,7 @@ const _nav = [
     component: CNavItem,
     name: 'Orders',
     to: '/orders/list',
-    icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
   },
 
   {

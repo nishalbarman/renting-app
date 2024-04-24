@@ -12,7 +12,7 @@ const { default: mongoose } = require("mongoose");
 const PaymentTransModel = require("../models/transaction.model");
 const router = Router();
 
-const endpointSecret = "whsec_O3JO59y2d6GU3T73AkIkDf3OJ5zc3aj6";
+const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
 
 router.post(
   "/",
@@ -43,7 +43,7 @@ router.post(
           );
 
           await PaymentTransModel.updateOne(
-            { _id: paymentIntentPaymentFailed.id },
+            { paymentTransactionID: paymentIntentPaymentFailed.id },
             {
               $set: {
                 paymentStatus: "Failed",
@@ -62,7 +62,7 @@ router.post(
           );
 
           await PaymentTransModel.updateOne(
-            { _id: paymentIntentSucceeded.id },
+            { paymentTransactionID: paymentIntentSucceeded.id },
             {
               $set: {
                 paymentStatus: "Paid",

@@ -133,6 +133,108 @@ router.get("/list", checkRole(1, 2), async (req, res) => {
   }
 });
 
+router.get("/details/:orderGroupID", checkRole(1, 2), async (req, res) => {
+  try {
+    const orderGroupID = req.params?.orderGroupID;
+
+    const role = req.jwt?.role;
+
+    const pipeline = [
+      {
+        $match: {
+          orderGroupID: orderGroupID,
+          ...(role === 2 && { center: req.jwt?.center || "_blank" }),
+        },
+      },
+      {
+        $group: {
+          _id: "$orderGroupID",
+          totalDocumentCount: { $sum: 1 },
+          totalPrice: { $sum: "$price" },
+          paymentTransactionId: { $push: "$paymentTxnId" },
+          orderType: { $push: "$orderType" },
+          orders: { $push: "$$ROOT" },
+          createdAt: { $first: "$createdAt" }, // Extract createdAt from the first order in each group
+        },
+      },
+      {
+        $addFields: {
+          createdAt: "$createdAt", // Add createdAt field to the grouped document
+        },
+      },
+
+      {
+        $group: {
+          _id: null,
+          globalTotalDocumentCount: { $sum: 1 },
+          address: { $first: "$orders.address" },
+          user: { $first: "$orders.user" },
+          groupedOrders: { $push: "$$ROOT" },
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          pipeline: [
+            { $match: {} },
+            {
+              $project: {
+                _id: 1,
+                name: 1,
+                email: 1,
+                mobileNo: 1,
+                isMobileNoVerifed: 1,
+              },
+            },
+          ],
+          as: "user",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          globalTotalDocumentCount: 1,
+          groupedOrders: {
+            $map: {
+              input: "$groupedOrders",
+              as: "group",
+              in: {
+                orderGroupID: "$$group._id",
+                totalDocumentCount: "$$group.totalDocumentCount",
+                paymentTransactionId: {
+                  $arrayElemAt: ["$$group.paymentTransactionId", 0],
+                },
+                orderType: {
+                  $arrayElemAt: ["$$group.orderType", 0],
+                },
+                totalPrice: "$$group.totalPrice",
+                address: {
+                  $arrayElemAt: ["$address", 0],
+                },
+                user: { $arrayElemAt: ["$user", 0] },
+                orders: "$$group.orders",
+                createdAt: "$$group.createdAt", // Include createdAt field
+              },
+            },
+          },
+        },
+      },
+    ];
+
+    const orderDetails = await Order.aggregate(pipeline);
+
+    return res.json(orderDetails[0].groupedOrders[0]);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error!",
+    });
+  }
+});
+
 //! ORDER LISTING ROUTE FOR NORMAL USERS
 router.get("/l/:productType", async (req, res) => {
   try {
@@ -213,19 +315,27 @@ router.get("/l/:productType", async (req, res) => {
 });
 
 //! ORDER STATUS UPDATING ROUTE CAN BE USED BY ADMIN AND CENTER
-router.patch("/orderStatus/:orderId", checkRole(1, 2), async (req, res) => {
+router.patch("/update-status", checkRole(1, 2), async (req, res) => {
   try {
-    const orderId = req.params?.orderId;
+    const order = req.body?.order;
     const orderStatus = req.body?.orderStatus;
 
-    if (!orderId || !orderStatus) {
+    if (!order || !orderStatus) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
     const role = req?.jwt?.role;
     const center = req?.jwt?.center;
 
-    const orderFilter = { _id: orderId };
+    let orderFilter = {};
+
+    //! FROM admin panel we can get an array or signle group id. if admin selects multiple orders updation will happen based on order _id otherwise it will happen based on orderGroupID
+
+    if (Array.isArray(order)) {
+      orderFilter = { _id: { $in: order } };
+    } else {
+      orderFilter = { orderGroupID: order };
+    }
 
     if (role === 2) {
       // center
@@ -237,7 +347,7 @@ router.patch("/orderStatus/:orderId", checkRole(1, 2), async (req, res) => {
       orderFilter.center = center;
     }
 
-    await Order.updateOne(orderFilter, { $set: { orderStatus } });
+    await Order.updateMany(orderFilter, { $set: { orderStatus } });
 
     return res.json({
       message: "Order status updated",
