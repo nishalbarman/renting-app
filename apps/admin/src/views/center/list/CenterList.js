@@ -63,12 +63,7 @@ const ListProduct = () => {
       setIsRefetching(true)
     }
 
-    const url = new URL(
-      '/center/list',
-      process.env.NODE_ENV === 'production'
-        ? 'https://www.material-react-table.com'
-        : 'http://localhost:8000',
-    )
+    const url = new URL('/center/list', process.env.VITE_APP_API_URL)
     url.searchParams.set('page', `${pagination.pageIndex}`)
     url.searchParams.set('limit', `${pagination.pageSize}`)
 
@@ -123,19 +118,6 @@ const ListProduct = () => {
                   gap: '1rem',
                 }}
               >
-                {/* <img
-                  alt="avatar"
-                  height={30}
-                  src={cell.getValue()}
-                  loading="lazy"
-                  style={{
-                    borderRadius: '10px',
-                    border: '1px solid black',
-                    width: 50,
-                    height: 50,
-                    objectFit: 'cover',
-                  }}
-                /> */}
                 <span>{renderedCellValue}</span>
               </Box>
             ),
@@ -491,7 +473,7 @@ const ListProduct = () => {
         sx={{ m: 0 }}
       >
         <CIcon icon={cilFile} />
-        <span style={{ marginLeft: '9px' }}>View Documents</span>
+        <span style={{ marginLeft: '9px' }}>View</span>
       </MenuItem>,
       <MenuItem
         style={{

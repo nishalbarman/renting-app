@@ -7,6 +7,7 @@ import {
   CCarousel,
   CCarouselItem,
   CCol,
+  CFormInput,
   CFormSelect,
   CHeader,
   CImage,
@@ -80,11 +81,20 @@ function CenterModal({ visible, setVisible, row }) {
   }, [row])
 
   const [orderUpdatableStatus, setOrderUpdatableStatus] = useState('')
+  const [groupTrackingLink, setGroupTrackingLink] = useState('')
+
   const handleUpdateOrderStatus = async () => {
     if (!orderUpdatableStatus) return toast.info('Order status not selected')
     const toastId = toast.loading('Please wait.. sending your request..')
     try {
-      console.log(row.original.orderGroupID)
+      if (orderUpdatableStatus === 'On The Way' && !groupTrackingLink)
+        return toast.update(toastId, {
+          render: 'Fill the order tracking link',
+          type: 'info',
+          isLoading: false,
+          autoClose: 5000,
+        })
+
       const response = await axios.patch(
         `${process.env.VITE_APP_API_URL}/orders/update-status`,
         {
@@ -122,7 +132,7 @@ function CenterModal({ visible, setVisible, row }) {
       <CModal
         scrollable
         backdrop="static"
-        fullscreen={true}
+        fullscreen={false}
         visible={true}
         onClose={() => {
           setVisible(null)
@@ -145,30 +155,53 @@ function CenterModal({ visible, setVisible, row }) {
           {isGroupOrderFetching ? (
             <CSpinner />
           ) : (
-            <CRow
-              sm={{ cols: 1 }}
-              xs={{ gutterX: 10, gutterY: 10, cols: 1 }}
-              lg={{ gutterX: 10, gutterY: 10, cols: 2 }}
-            >
-              <CCol xs={{ gutterY: 10 }}>
+            <CRow sm={{ cols: 1 }} xs={{ cols: 1 }} lg={{ cols: 1 }}>
+              <CCol>
                 <CCard>
                   <CCardHeader>
                     <strong>Order Details</strong>
                   </CCardHeader>
                   <CCardBody>
                     <CRow
-                      style={{
-                        backgroundColor: 'white',
-                      }}
+                    // style={{
+                    //   backgroundColor: 'white',
+                    // }}
                     >
                       {groupOrderDetails.orders?.map((order) => (
-                        <CCol>
+                        <CCol xs={{ gutterX: 0, gutterY: 0 }}>
                           <CCard
                             style={{
                               backgroundColor: 'white',
                               width: '100%',
                             }}
                           >
+                            {order.orderStatus === 'Cancelled' && (
+                              <div
+                                style={{
+                                  position: 'absolute',
+                                  height: '100%',
+                                  width: '100%',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  backdropFilter: 'blur(2px)',
+                                  background: 'rgba(0,0,0,0.1)',
+                                }}
+                              >
+                                <strong
+                                  style={{
+                                    rotate: '-18deg',
+                                    color: 'red',
+                                    fontWeight: 'bolder',
+                                    fontSize: '18px',
+                                    textShadow: '0px 0px 3px white',
+                                    textAlign: 'center',
+                                  }}
+                                >
+                                  Order Cancelled By User, Do not fullfill this order
+                                </strong>
+                              </div>
+                            )}
                             <CCardHeader
                               style={{
                                 display: 'flex',
@@ -490,7 +523,7 @@ function CenterModal({ visible, setVisible, row }) {
                   </CCardBody>
                 </CCard>
 
-                <div className="mt-2">
+                <div>
                   <CCard>
                     <CCardHeader>
                       <div
@@ -878,11 +911,12 @@ function CenterModal({ visible, setVisible, row }) {
                           }}
                         >
                           <option value={''}>Select Status</option>
+                          {groupOrderDetails.orderType === 'rent' && (
+                            <option value={'On Progress'}>On Progress</option>
+                          )}
                           <option value={'Accepted'}>Accept</option>
                           <option value={'Rejected'}>Reject</option>
-                          <option value={'Cancelled'}>Cancel</option>
-
-                          <option value={'On Progress'}>On Progress</option>
+                          {/* <option value={'Cancelled'}>Cancel</option> */}
 
                           <option value={'On The Way'}>On The Way</option>
 
@@ -894,6 +928,24 @@ function CenterModal({ visible, setVisible, row }) {
                             <option value={'PickUp Ready'}>PickUp Ready</option>
                           )}
                         </CFormSelect>
+
+                        {orderUpdatableStatus === 'On The Way' && (
+                          <>
+                            <div style={{ marginTop: '10px' }}>
+                              <b>Tracking Link</b>
+                            </div>
+                            <CFormInput
+                              className="mt-1"
+                              type="url"
+                              placeholder="https://example.com/id-13"
+                              value={groupTrackingLink}
+                              onChange={(e) => {
+                                setGroupTrackingLink(e.target.value)
+                              }}
+                            />
+                          </>
+                        )}
+
                         <CButton
                           onClick={handleUpdateOrderStatus}
                           style={{

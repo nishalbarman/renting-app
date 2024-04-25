@@ -265,6 +265,15 @@ const OrderList = () => {
       showProgressBars: isRefetching,
     },
 
+    muiTableBodyRowProps: ({ row, table }) => {
+      console.log(row)
+      return {
+        sx: {
+          backgroundColor: row.original.orderType === 'rent' ? '#ffd7d4' : '#f0fff0',
+        },
+      }
+    },
+
     // renderDetailPanel: ({ row }) => (
     //   <CCol>
     //     <CCard>
@@ -358,33 +367,33 @@ const OrderList = () => {
         <CIcon icon={cilFile} />
         <span style={{ marginLeft: '9px' }}>View Order</span>
       </MenuItem>,
-      <MenuItem
-        key={0}
-        onClick={() => {
-          // View profile logic...
-          // navigate(`/product/add?id=${row.original._id}`)
-          sessionStorage.setItem('productId', row.original._id)
-          setUpdateModalVisible(true)
-          closeMenu()
-        }}
-        sx={{ m: 0 }}
-      >
-        <CIcon icon={cilPen} />
-        <span style={{ marginLeft: '9px' }}>Update</span>
-      </MenuItem>,
-      <MenuItem
-        key={1}
-        onClick={() => {
-          console.log(row)
-          // Send email logic...
-          setDeleteProductId([row.original._id])
-          closeMenu()
-        }}
-        sx={{ m: 0 }}
-      >
-        <CIcon icon={cilTrash} />
-        <span style={{ marginLeft: '9px' }}>Delete</span>
-      </MenuItem>,
+      // <MenuItem
+      //   key={0}
+      //   onClick={() => {
+      //     // View profile logic...
+      //     // navigate(`/product/add?id=${row.original._id}`)
+      //     sessionStorage.setItem('productId', row.original._id)
+      //     setUpdateModalVisible(true)
+      //     closeMenu()
+      //   }}
+      //   sx={{ m: 0 }}
+      // >
+      //   <CIcon icon={cilPen} />
+      //   <span style={{ marginLeft: '9px' }}>Update</span>
+      // </MenuItem>,
+      // <MenuItem
+      //   key={1}
+      //   onClick={() => {
+      //     console.log(row)
+      //     // Send email logic...
+      //     setDeleteProductId([row.original._id])
+      //     closeMenu()
+      //   }}
+      //   sx={{ m: 0 }}
+      // >
+      //   <CIcon icon={cilTrash} />
+      //   <span style={{ marginLeft: '9px' }}>Delete</span>
+      // </MenuItem>,
     ],
 
     renderTopToolbar: ({ table }) => {

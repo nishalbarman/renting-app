@@ -5,6 +5,7 @@ const getTokenDetails = require("../../helpter/getTokenDetails");
 const Center = require("../../models/center.model");
 const { default: mongoose } = require("mongoose");
 const checkRole = require("../../middlewares");
+const { shipRocketLogin } = require("../../helpter/shipRocketLogin");
 
 //! ORDER LISTING ROUTE FOR ADMIN AND CENTER
 router.get("/list", checkRole(1, 2), async (req, res) => {
@@ -12,7 +13,7 @@ router.get("/list", checkRole(1, 2), async (req, res) => {
     const searchQuery = req.query;
 
     const PAGE = +searchQuery.page || 0;
-    const LIMIT = +searchQuery.limit || 20;
+    const LIMIT = +searchQuery.limit || 10;
     const SKIP = +PAGE * LIMIT;
 
     const orderStatus = searchQuery?.orderStatus;
@@ -37,9 +38,9 @@ router.get("/list", checkRole(1, 2), async (req, res) => {
           ...(role === 2 && { center: req.jwt?.center }),
         },
       },
-      {
-        $sort: { createdAt: 1 },
-      },
+      // {
+      //   $sort: { createdAt: 1 },
+      // },
       {
         $group: {
           _id: "$orderGroupID",
@@ -93,29 +94,33 @@ router.get("/list", checkRole(1, 2), async (req, res) => {
           _id: 0,
           globalTotalDocumentCount: 1,
           groupedOrders: {
-            $map: {
-              input: "$groupedOrders",
-              as: "group",
-              in: {
-                orderGroupID: "$$group._id",
-                totalDocumentCount: "$$group.totalDocumentCount",
-                paymentTransactionId: {
-                  $arrayElemAt: ["$$group.paymentTransactionId", 0],
+            $slice: [
+              {
+                $map: {
+                  input: "$groupedOrders",
+                  as: "group",
+                  in: {
+                    orderGroupID: "$$group._id",
+                    totalDocumentCount: "$$group.totalDocumentCount",
+                    paymentTransactionId: {
+                      $arrayElemAt: ["$$group.paymentTransactionId", 0],
+                    },
+                    orderType: {
+                      $arrayElemAt: ["$$group.orderType", 0],
+                    },
+                    totalPrice: "$$group.totalPrice",
+                    address: {
+                      $arrayElemAt: ["$address", 0],
+                    },
+                    user: { $arrayElemAt: ["$user", 0] },
+                    orders: "$$group.orders",
+                    createdAt: "$$group.createdAt", // Include createdAt field
+                  },
                 },
-                orderType: {
-                  $arrayElemAt: ["$$group.orderType", 0],
-                },
-                totalPrice: "$$group.totalPrice",
-                address: {
-                  $arrayElemAt: ["$address", 0],
-                },
-                user: { $arrayElemAt: ["$user", 0] },
-                orders: {
-                  $slice: ["$$group.orders", SKIP, LIMIT],
-                },
-                createdAt: "$$group.createdAt", // Include createdAt field
               },
-            },
+              SKIP,
+              LIMIT,
+            ],
           },
         },
       },
@@ -337,6 +342,8 @@ router.patch("/update-status", checkRole(1, 2), async (req, res) => {
       orderFilter = { orderGroupID: order };
     }
 
+    orderFilter.orderStatus = { $ne: "Cancelled" };
+
     if (role === 2) {
       // center
       if (!center) {
@@ -544,6 +551,32 @@ router.get("/get-order-chart-data", checkRole(1), async (req, res) => {
         message: errArray.join(", "),
       });
     }
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+});
+
+//! ORDER TRACKING DATA -- used by normal user
+router.get("/track/:orderId", checkRole(0), async (req, res) => {
+  try {
+    const shipRocketAuthToken = await shipRocketLogin();
+
+    const response = await fetch(
+      `https://apiv2.shiprocket.in/v1/external/courier/track?order_id=123&channel_id=12345'`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${shipRocketAuthToken}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });

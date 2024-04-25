@@ -50,7 +50,7 @@ function CenterModal({ visible, viewDocuments, setViewDocuments }) {
           >
             Next Document
           </CButton>
-          <CButton
+          {/* <CButton
             style={{
               color: 'white',
             }}
@@ -60,7 +60,7 @@ function CenterModal({ visible, viewDocuments, setViewDocuments }) {
             }}
           >
             Full Screen
-          </CButton>
+          </CButton> */}
         </div>
       </>
     )
@@ -69,7 +69,8 @@ function CenterModal({ visible, viewDocuments, setViewDocuments }) {
   return (
     <>
       <CModal
-        fullscreen={fullScreen}
+        backdrop="static"
+        fullscreen={true}
         visible={visible}
         onClose={() => setViewDocuments(false)}
         aria-labelledby="FullscreenExample1"

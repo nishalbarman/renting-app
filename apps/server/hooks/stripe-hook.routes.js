@@ -94,8 +94,9 @@ router.post(
 
           await sendMail({
             from: `"Rent Karo" <${process.env.SENDER_EMAIL_ADDRESS}>`, // sender address
-            to: centerDetails.email, // list of receivers
-            bcc: "nishalbarman@gmail.com", // can be the admin email address
+            // to: centerDetails.email, // list of receivers
+            to: "nishalbarman+admin@gmail.com", // list of receivers
+            // bcc: "nishalbarman@gmail.com", // can be the admin email address
             subject: "RentKaro: New Order Recieved", // Subject line
             html: `<html>
                     <body>

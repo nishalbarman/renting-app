@@ -157,68 +157,73 @@ router.post("/:productType", async (req, res) => {
 
     const addressDocument = await Address.findById(address);
 
-    const centerAddresses = await Center.aggregate([
-      {
-        $geoNear: {
-          near: {
-            type: "Point",
-            coordinates: addressDocument.location.coordinates,
-          },
-          distanceField: "distance",
-          spherical: true,
-          // maxDistance: 50000, // Max distance in meters here(50KM)
-          query: {}, // Additional query conditions can be added here if needed
-          key: "location", // Specify the field containing the coordinates
-        },
-      },
-      {
-        $lookup: {
-          from: "addresses", // Assuming 'users' is the collection name for the referenced model
-          localField: "address",
-          foreignField: "_id",
-          as: "populatedAddress",
-        },
-      },
-      {
-        $addFields: {
-          address: { $arrayElemAt: ["$populatedAddress", 0] },
-        },
-      },
-      {
-        $lookup: {
-          from: "users", // Assuming 'users' is the collection name for the referenced model
-          localField: "user",
-          foreignField: "_id",
-          as: "populatedUser",
-        },
-      },
-      {
-        $addFields: {
-          user: { $arrayElemAt: ["$populatedUser", 0] },
-        },
-      },
-      {
-        $project: {
-          populatedAddress: 0, // Remove the temporary populatedAddress field
-          populatedUser: 0, // Remove the temporary populatedUser field
-          location: 0,
-        },
-      },
-      { $sort: { distance: 1 } }, // Sort by distance in ascending order
-      { $limit: 1 }, // Limit to the closest center
-    ]);
+    // const centerAddresses = await Center.aggregate([
+    //   {
+    //     $geoNear: {
+    //       near: {
+    //         type: "Point",
+    //         coordinates: addressDocument.location.coordinates,
+    //       },
+    //       distanceField: "distance",
+    //       spherical: true,
+    //       // maxDistance: 50000, // Max distance in meters here(50KM)
+    //       query: {}, // Additional query conditions can be added here if needed
+    //       key: "location", // Specify the field containing the coordinates
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "addresses", // Assuming 'users' is the collection name for the referenced model
+    //       localField: "address",
+    //       foreignField: "_id",
+    //       as: "populatedAddress",
+    //     },
+    //   },
+    //   {
+    //     $addFields: {
+    //       address: { $arrayElemAt: ["$populatedAddress", 0] },
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "users", // Assuming 'users' is the collection name for the referenced model
+    //       localField: "user",
+    //       foreignField: "_id",
+    //       as: "populatedUser",
+    //     },
+    //   },
+    //   {
+    //     $addFields: {
+    //       user: { $arrayElemAt: ["$populatedUser", 0] },
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       populatedAddress: 0, // Remove the temporary populatedAddress field
+    //       populatedUser: 0, // Remove the temporary populatedUser field
+    //       location: 0,
+    //     },
+    //   },
+    //   { $sort: { distance: 1 } }, // Sort by distance in ascending order
+    //   { $limit: 1 }, // Limit to the closest center
+    // ]);
 
-    if (!centerAddresses) {
-      return res
-        .status(400)
-        .json({ message: "Service not available in your location" });
-    }
+    // if (!centerAddresses) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Service not available in your location" });
+    // }
 
     // Use an existing Customer ID if this is a returning customer.
     const user = await User.findById(userDetails._id);
 
     if (!user.stripeCustomer) {
-      const customer = await stripe.customers.create();
+      const customer = await stripe.customers.create({
+        email: user.email, // Provide the email address
+        name: user.name, // Provide the customer's name
+        phone: user.mobileNo,
+        // Add other details as needed
+      });
       user.stripeCustomer = customer;
     }
 
@@ -284,14 +289,14 @@ router.post("/:productType", async (req, res) => {
         if (!!item.variant) {
           createdOrder.previewImage = item.variant.previewImage;
           createdOrder.price = item.variant.discountedPrice * item.quantity;
-          createdOrder.shippingPrice = item.variant.shippingPrice;
+          createdOrder.shippingPrice = +item.variant.shippingPrice;
 
           createdOrder.color = item.variant.color;
           createdOrder.size = item.variant.size;
         } else {
           createdOrder.previewImage = item.product.previewImage;
           createdOrder.price = item.product.discountedPrice * item.quantity;
-          createdOrder.shippingPrice = item.product.shippingPrice;
+          createdOrder.shippingPrice = +item.product.shippingPrice;
 
           createdOrder.color = null;
           createdOrder.size = null;
@@ -300,6 +305,8 @@ router.post("/:productType", async (req, res) => {
         return createdOrder;
       });
     }
+
+    console.log("Created At -->", orderItemsWithOrderIDandPaymentId);
 
     const orders = await Order.insertMany(orderItemsWithOrderIDandPaymentId);
 

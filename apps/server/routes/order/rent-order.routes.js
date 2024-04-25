@@ -3,10 +3,12 @@ const router = express.Router();
 const { v4: uuidv4 } = require("uuid");
 const Cart = require("../../models/cart.model");
 const Order = require("../../models/order.model");
+const Center = require("../../models/center.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 
 const checkRole = require("../../middlewares");
 const PaymentTransModel = require("../../models/transaction.model");
+const { sendMail } = require("../../helpter/sendEmail");
 
 // const Coupon = require("../../../../models/coupon.model");
 
@@ -268,6 +270,26 @@ router.post("/:productType", checkRole(0), async (req, res) => {
         subTotalPrice:
           paymentObject.amount - (!!shippingApplied ? shippingPrice : 0),
         totalPrice: paymentObject.amount,
+      });
+
+      const center = await Center.findById(centerId).populate("user");
+
+      await sendMail({
+        from: `"Savero" <${process.env.SENDER_EMAIL_ADDRESS}>`, // sender address
+        to: center.user?.email, // list of receivers
+        // bcc: "nishalbarman@gmail.com", // can be the admin email address
+        subject: "Savero: New Rent Order Recieved", // Subject line
+        html: `<html>
+                <body>
+                  <div style="width: 100%; padding: 5px 0px; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid rgb(0,0,0,0.3)">
+                    <h2>New Rent Order: <span style="font-size: 18px; font-weight: normal">${orderGroupID}</span></h2>
+                  </div>
+                  <div style="padding: 40px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+                    <p style="font-size: 18px;">Dear ${center.user.name},</p>
+                    <p style="font-size: 18px;">You have recieved new rent order with Order Group Id: ${orderGroupID}. Kindly fullfill this order at the earliest possible.</p>
+                  </div>
+                </body>
+              </html>`, // html body
       });
 
       return res.status(200).json({ message: "Order Placed!" });
