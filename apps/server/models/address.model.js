@@ -3,12 +3,13 @@ const mongoose = require("mongoose");
 const addressSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Types.ObjectId, ref: "users", required: true },
-    name: { type: String, required: true },
+    prefix: { type: String, required: true },
     locality: { type: String, required: true },
     postalCode: { type: String, required: true },
     country: { type: String, required: true },
     streetName: { type: String, required: true },
     city: { type: String },
+    state: { type: String },
     longitude: { type: Number, required: true },
     latitude: { type: Number, required: true },
     location: {

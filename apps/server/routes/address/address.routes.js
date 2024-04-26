@@ -33,8 +33,6 @@ router.get("/", async (req, res) => {
       .sort({ createdAt: "desc" })
       .select("-user");
 
-    console.log("Getting request on address route", address);
-
     return res.json({
       data: address,
     });

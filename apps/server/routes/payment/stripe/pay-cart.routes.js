@@ -246,6 +246,8 @@ router.post("/:productType", async (req, res) => {
       description: productNames,
       metadata: {
         paymentTxnId,
+        orderGroupID,
+        address,
         user: userDetails._id.toString(),
         center: centerAddresses[0]._id.toString(),
         cartProductIds: cartIds.join(","),

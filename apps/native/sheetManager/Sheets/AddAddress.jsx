@@ -31,19 +31,14 @@ export default function AddAddress() {
   );
 
   const [formData, setFormData] = useState({
-    name: { value: "", isTouched: true, isError: null },
-    streetName: {
-      value: "",
-      isTouched: true,
-      isError: null,
-    },
-    locality: {
-      value: "",
-      isTouched: true,
-      isError: null,
-    },
-    // city: { value: "", isTouched: true, isError: null },
+    prefix: { value: "", isTouched: true, isError: null },
+    streetName: { value: "", isTouched: true, isError: null },
+    locality: { value: "", isTouched: true, isError: null },
+
+    city: { value: "", isTouched: true, isError: null },
     country: { value: "", isTouched: true, isError: null },
+    state: { value: "", isTouched: true, isError: null },
+
     postalCode: {
       value: "",
       isTouched: true,
@@ -71,14 +66,19 @@ export default function AddAddress() {
         formData.locality.isError ||
         !formData.country.isTouched ||
         formData.country.isError ||
+        !formData.city.isTouched ||
+        formData.city.isError ||
+        !formData.state.isTouched ||
+        formData.state.isError ||
         !formData.postalCode.isTouched ||
         formData.postalCode.isError
     );
   }, [formData]);
 
   useEffect(() => {
+    console.log("Selected Address From Map -->", address);
     setFormData({
-      name: { value: address?.name || "", isTouched: true, isError: null },
+      prefix: { value: address?.name || "", isTouched: true, isError: null },
       streetName: {
         value: address?.thoroughfare || "",
         isTouched: true,
@@ -89,7 +89,12 @@ export default function AddAddress() {
         isTouched: true,
         isError: null,
       },
-      // city: { value: "", isTouched: true, isError: null },
+      city: { value: address.locality || "", isTouched: true, isError: null },
+      state: {
+        value: address.administrativeArea || "",
+        isTouched: true,
+        isError: null,
+      },
       country: {
         value: address?.country || "",
         isTouched: true,
@@ -232,6 +237,35 @@ export default function AddAddress() {
 
               <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
                 <TextInput
+                  className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+                  editable={true}
+                  multiline={false}
+                  inputMode="text"
+                  placeholder="City"
+                  onChangeText={(text) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      locality: {
+                        ...prev["city"],
+                        value: text,
+                        isTouched: true,
+                        isError: text.length === 0,
+                      },
+                    }));
+                  }}
+                  value={formData.city?.value}
+                />
+                {/* <Fontisto name="email" size={26} color="#A9A8A8" /> */}
+              </View>
+
+              {formData.locality.isError && (
+                <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+                  * City required
+                </Text>
+              )}
+
+              <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
+                <TextInput
                   className="h-[100%] w-[100%] rounded-lg font-[poppins-mid] placeholder:text-[16px]"
                   editable={true}
                   multiline={false}
@@ -254,7 +288,36 @@ export default function AddAddress() {
 
               {formData.postalCode.isError && (
                 <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
-                  * Invalid postal code
+                  * Postal code not valid
+                </Text>
+              )}
+
+              <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
+                <TextInput
+                  className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+                  editable={true}
+                  multiline={false}
+                  inputMode="text"
+                  placeholder="State"
+                  onChangeText={(text) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      locality: {
+                        ...prev["state"],
+                        value: text,
+                        isTouched: true,
+                        isError: text.length === 0,
+                      },
+                    }));
+                  }}
+                  value={formData.state?.value}
+                />
+                {/* <Fontisto name="email" size={26} color="#A9A8A8" /> */}
+              </View>
+
+              {formData.state.isError && (
+                <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+                  * State required
                 </Text>
               )}
 

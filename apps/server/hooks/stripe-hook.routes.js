@@ -10,6 +10,7 @@ const { sendMail } = require("../helpter/sendEmail");
 const Cart = require("../models/cart.model");
 const { default: mongoose } = require("mongoose");
 const PaymentTransModel = require("../models/transaction.model");
+const Address = require("../models/address.model");
 const router = Router();
 
 const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
@@ -70,23 +71,65 @@ router.post(
             }
           );
 
-          // const idsToDeleteAsObjectId =
-          //   paymentIntentSucceeded.metadata.cartProductIds
-          //     .split(",")
-          //     .map((id) => new mongoose.Types.ObjectId(id));
-          // console.log("Cart ID'S --->", idsToDeleteAsObjectId);
+          const user = await User.findById(
+            paymentIntentSucceeded.metadata.user
+          );
 
-          // await Cart.deleteMany({
-          //   _id: {
-          //     $in: idsToDeleteAsObjectId,
-          //   },
-          // });
+          const address = await Address.findById(
+            paymentIntentSucceeded.metadata.address
+          );
 
-          // console.log("Center ID", paymentIntentSucceeded.metadata.center);
-          // console.log(
-          //   "Type of Center ID",
-          //   typeof paymentIntentSucceeded.metadata.center
-          // );
+          const date = new Date();
+
+          const shiprocketOrder = {
+            order_id: paymentIntentSucceeded.metadata.orderGroupID,
+            order_date: date.toLocaleDateString(),
+            pickup_location: "Primary",
+            channel_id: process.env.SHIPROCKET_CHANNELID,
+
+            billing_customer_name: user.name,
+            billing_address: `${address.name}, ${address.streetName}, ${address.locality}, ${address.postalCode}`,
+            billing_city: address.locality,
+            billing_pincode: address.postalCode,
+            billing_state: "Assam",
+            billing_country: "India",
+            billing_email: "naruto@uzumaki.com",
+            billing_phone: "9876543210",
+            shipping_is_billing: true,
+            shipping_customer_name: "",
+            shipping_last_name: "",
+            shipping_address: "",
+            shipping_address_2: "",
+            shipping_city: "",
+            shipping_pincode: "",
+            shipping_country: "",
+            shipping_state: "",
+            shipping_email: "",
+            shipping_phone: "",
+            order_items: [
+              {
+                name: "Kunai",
+                sku: "chakra123",
+                units: 10,
+                selling_price: "900",
+                discount: "",
+                tax: "",
+                hsn: 441122,
+              },
+            ],
+            payment_method: "Prepaid",
+            shipping_charges: 0,
+            giftwrap_charges: 0,
+            transaction_charges: 0,
+            total_discount: 0,
+            sub_total: 9000,
+            length: 10,
+            breadth: 15,
+            height: 20,
+            weight: 2.5,
+          };
+
+          const response = await fetch();
 
           const centerDetails = await User.findOne({
             center: paymentIntentSucceeded.metadata.center,

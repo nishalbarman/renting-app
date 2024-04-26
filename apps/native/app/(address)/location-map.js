@@ -60,6 +60,9 @@ function LocationMap() {
         longitude: selectedLocation?.longitude,
         latitude: selectedLocation?.latitude,
       });
+
+      console.log(resAddress);
+
       setAddress(resAddress);
     })();
   }, [selectedLocation]);
