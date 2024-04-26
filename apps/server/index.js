@@ -114,6 +114,9 @@ app.use("/pay/razorpay/hook", require("./hooks/hook.routes"));
 app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));
 app.use("/payment/summary", require("./routes/payment/summary.routes"));
 
+//shiprocket
+app.use("/shiprocket/track", require("./routes/shiprocket/track.routes"));
+
 app.use(
   "/image-bg-color",
   require("./routes/image-bg-color/imageColor.routes")

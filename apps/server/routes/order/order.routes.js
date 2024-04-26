@@ -5,7 +5,7 @@ const getTokenDetails = require("../../helpter/getTokenDetails");
 const Center = require("../../models/center.model");
 const { default: mongoose } = require("mongoose");
 const checkRole = require("../../middlewares");
-const { shipRocketLogin } = require("../../helpter/shipRocketLogin");
+const shipRocketLogin = require("../../helpter/shipRocketLogin");
 
 //! ORDER LISTING ROUTE FOR ADMIN AND CENTER
 router.get("/list", checkRole(1, 2), async (req, res) => {
@@ -551,32 +551,6 @@ router.get("/get-order-chart-data", checkRole(1), async (req, res) => {
         message: errArray.join(", "),
       });
     }
-    return res.status(500).json({
-      message: "Internal server error",
-    });
-  }
-});
-
-//! ORDER TRACKING DATA -- used by normal user
-router.get("/track/:orderId", checkRole(0), async (req, res) => {
-  try {
-    const shipRocketAuthToken = await shipRocketLogin();
-
-    const response = await fetch(
-      `https://apiv2.shiprocket.in/v1/external/courier/track?order_id=123&channel_id=12345'`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${shipRocketAuthToken}`,
-        },
-      }
-    );
-
-    const data = await response.json();
-
-    return res.status(200).json(data);
-  } catch (error) {
-    console.error(error);
     return res.status(500).json({
       message: "Internal server error",
     });
