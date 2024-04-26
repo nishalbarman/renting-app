@@ -126,14 +126,31 @@ export default function AddressList() {
                           </>
                         )}
 
-                        <Text className="text-black font-medium mb-2">
-                          {name}
-                        </Text>
-                        <Text className="text-gray-700 mb-2">
-                          {item.name}, {item.locality}, {item.streetName},{" "}
-                          {item.postalCode}, {item.country}
-                        </Text>
-                        <Text className="text-gray-700">{mobileNo}</Text>
+                        <View>
+                          <Text className="text-black font-medium mb-2">
+                            {name}
+                          </Text>
+                          <Text className="text-gray-700 mb-2">
+                            Full Address:{" "}
+                            <Text className="font-bold">
+                              {item.prefix}, {item.streetName}, {item.city},{" "}
+                              {item.postalCode}, {item.state}, {item.country}
+                            </Text>
+                          </Text>
+                          <Text className="text-gray-700 mb-2">
+                            Road: {item.streetName}
+                          </Text>
+                          <Text className="text-gray-700 mb-2">
+                            City: {item.city}
+                          </Text>
+                          <Text className="text-gray-700 mb-2">
+                            State: {item.state}
+                          </Text>
+                          <Text className="text-gray-700 mb-2">
+                            PinCode: {item.postalCode}
+                          </Text>
+                          <Text className="text-gray-700">{mobileNo}</Text>
+                        </View>
                       </View>
                     </TouchableOpacity>
                   </>

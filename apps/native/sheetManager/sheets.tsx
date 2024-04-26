@@ -1,7 +1,7 @@
 import { SheetDefinition, registerSheet } from "react-native-actions-sheet";
 import FeedbackSheet from "./Sheets/AddFeedback";
 import AddressListSheet from "./Sheets/AddressList";
-import AddAddress from "./Sheets/AddAddress";
+// import AddAddress from "./Sheets/AddAddress";
 import LocationMap from "./Sheets/LocationMap";
 import OrderTrack from "./Sheets/OrderTrack";
 import UserDetailsUpdate from "./Sheets/UserDetailsUpdate";
@@ -9,7 +9,7 @@ import ProductSort from "./Sheets/ProductSort";
 
 registerSheet("add-feedback-sheet", FeedbackSheet);
 registerSheet("address-list-sheet", AddressListSheet);
-registerSheet("add-address-sheet", AddAddress);
+// registerSheet("add-address-sheet", AddAddress);
 registerSheet("location-select-map", LocationMap);
 registerSheet("track-order", OrderTrack);
 registerSheet("update-profile", UserDetailsUpdate);
@@ -25,7 +25,7 @@ declare module "react-native-actions-sheet" {
       };
     }>;
     "address-list-sheet": SheetDefinition;
-    "add-address-sheet": SheetDefinition;
+    // "add-address-sheet": SheetDefinition;
     "location-select-map": SheetDefinition;
     "track-order": SheetDefinition<{
       payload: {

@@ -230,6 +230,8 @@ router.get("/details/:orderGroupID", checkRole(1, 2), async (req, res) => {
 
     const orderDetails = await Order.aggregate(pipeline);
 
+    console.log("Order Details --> ", orderDetails);
+
     return res.json(orderDetails[0].groupedOrders[0]);
   } catch (error) {
     console.log(error);

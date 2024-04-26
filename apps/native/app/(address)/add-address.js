@@ -38,7 +38,7 @@ export default function AddAddress() {
   );
 
   const [formData, setFormData] = useState({
-    name: { value: "", isTouched: false, isError: false },
+    prefix: { value: "", isTouched: false, isError: false },
     streetName: {
       value: "",
       isTouched: false,
@@ -49,8 +49,13 @@ export default function AddAddress() {
       isTouched: false,
       isError: false,
     },
-    // city: { value: "", isTouched: true, isError: false },
+
+    city: { value: "", isTouched: true, isError: false },
+
+    state: { value: "", isTouched: true, isError: false },
+
     country: { value: "", isTouched: false, isError: false },
+
     postalCode: {
       value: "",
       isTouched: false,
@@ -76,6 +81,10 @@ export default function AddAddress() {
         formData.streetName.isError ||
         !formData.locality.isTouched ||
         formData.locality.isError ||
+        !formData.city.isTouched ||
+        formData.city.isError ||
+        !formData.state.isTouched ||
+        formData.state.isError ||
         !formData.country.isTouched ||
         formData.country.isError ||
         !formData.postalCode.isTouched ||
@@ -84,8 +93,9 @@ export default function AddAddress() {
   }, [formData]);
 
   useEffect(() => {
+    console.log(address);
     setFormData({
-      name: { value: address?.name || "", isTouched: true, isError: false },
+      prefix: { value: address?.name || "", isTouched: true, isError: false },
       streetName: {
         value: address?.thoroughfare || "",
         isTouched:
@@ -97,7 +107,15 @@ export default function AddAddress() {
         isTouched: !!address?.locality && address?.locality !== undefined,
         isError: false,
       },
-      // city: { value: "", isTouched: true, isError: false },
+
+      city: { value: address?.locality || "", isTouched: true, isError: false },
+
+      state: {
+        value: address?.administrativeArea || "",
+        isTouched: true,
+        isError: false,
+      },
+
       country: {
         value: address?.country || "",
         isTouched: !!address?.country && address?.country !== undefined,
@@ -144,10 +162,10 @@ export default function AddAddress() {
         dispatch(setAddressDataFromMap({ address: null, coordinates: null }));
       }
 
-      Toast.success(response.data?.message, 'top');
+      Toast.success(response.data?.message, "top");
       router.dismiss();
     } catch (error) {
-      Toast.error(error?.data?.message || "Address add failed!", 'top');
+      Toast.error(error?.data?.message || "Address add failed!", "top");
       console.error(error);
     }
   };
@@ -178,7 +196,7 @@ export default function AddAddress() {
                 editable={false}
                 multiline={false}
                 placeholder="Choose your location"
-                value={`${formData.name.value || "Select from map"} ${formData.streetName.value}`}
+                value={`${formData.prefix.value || "Select from map"} ${formData.streetName.value}`}
               />
               <FontAwesome6
                 name="location-crosshairs"
@@ -248,6 +266,35 @@ export default function AddAddress() {
 
             <View className="h-[60px] w-[100%] p-[0px_6%] border outline-none bg-white border-gray-300 flex flex-row justify-around items-center rounded-lg">
               <TextInput
+                className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+                editable={true}
+                multiline={false}
+                inputMode="text"
+                placeholder="City"
+                onChangeText={(text) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    locality: {
+                      ...prev["city"],
+                      value: text,
+                      isTouched: true,
+                      isError: text.length === 0,
+                    },
+                  }));
+                }}
+                value={formData.city?.value}
+              />
+              {/* <Fontisto name="email" size={26} color="#A9A8A8" /> */}
+            </View>
+
+            {formData.locality.isError && (
+              <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+                * City required
+              </Text>
+            )}
+
+            <View className="h-[60px] w-[100%] p-[0px_6%] border outline-none bg-white border-gray-300 flex flex-row justify-around items-center rounded-lg">
+              <TextInput
                 className="h-[100%] w-[100%] rounded-lg font-[poppins-mid] placeholder:text-[16px]"
                 editable={true}
                 multiline={false}
@@ -271,6 +318,35 @@ export default function AddAddress() {
             {formData.postalCode.isError && (
               <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
                 * Invalid postal code
+              </Text>
+            )}
+
+            <View className="h-[60px] w-[100%] p-[0px_6%]  border outline-none bg-white border-gray-300 flex flex-row justify-around items-center rounded-lg">
+              <TextInput
+                className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+                editable={true}
+                multiline={false}
+                inputMode="text"
+                placeholder="State"
+                onChangeText={(text) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    locality: {
+                      ...prev["state"],
+                      value: text,
+                      isTouched: true,
+                      isError: text.length === 0,
+                    },
+                  }));
+                }}
+                value={formData.state?.value}
+              />
+              {/* <Fontisto name="email" size={26} color="#A9A8A8" /> */}
+            </View>
+
+            {formData.state.isError && (
+              <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+                * State required
               </Text>
             )}
 

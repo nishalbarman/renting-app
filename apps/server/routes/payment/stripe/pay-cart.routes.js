@@ -234,6 +234,8 @@ router.post("/:productType", async (req, res) => {
       { apiVersion: "2024-04-10" }
     );
 
+    const orderGroupID = uuidv4();
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: paymentObject.amount,
       currency: "inr",
@@ -249,12 +251,10 @@ router.post("/:productType", async (req, res) => {
         orderGroupID,
         address,
         user: userDetails._id.toString(),
-        center: centerAddresses[0]._id.toString(),
+        // center: centerAddresses[0]._id.toString(),
         cartProductIds: cartIds.join(","),
       },
     });
-
-    const orderGroupID = uuidv4();
 
     let orderItemsWithOrderIDandPaymentId;
 
@@ -277,14 +277,23 @@ router.post("/:productType", async (req, res) => {
           orderType: "buy",
 
           address: {
-            address: `${addressDocument.name}, ${addressDocument.streetName}, ${addressDocument.locality}, ${addressDocument.postalCode}, ${addressDocument.country}`,
+            address: {
+              prefix: addressDocument.prefix,
+              streetName: addressDocument.streetName,
+              locality: addressDocument.locality,
+              city: addressDocument.locality,
+              state: addressDocument.locality,
+              postalCode: addressDocument.postalCode,
+              country: addressDocument.country,
+            },
             location: [addressDocument.longitude, addressDocument.latitude],
           },
 
-          center: centerAddresses[0]._id,
+          // center: centerAddresses[0]._id,
+          center: null,
 
           orderStatus: "Pending",
-          paymentMode: "PREPAID",
+          paymentMode: "Prepaid",
           shipmentType: "delivery_partner",
         };
 

@@ -24,8 +24,13 @@ const orderSchema = new mongoose.Schema(
 
     address: {
       address: {
-        type: String,
-        required: false,
+        prefix: { type: String, required: true },
+        locality: { type: String, required: true },
+        postalCode: { type: String, required: true },
+        country: { type: String, required: true },
+        streetName: { type: String, required: true },
+        city: { type: String, required: true },
+        state: { type: String, required: true },
       },
       location: {
         type: [Number, Number], // Array of [longitude, latitude]
@@ -50,6 +55,11 @@ const orderSchema = new mongoose.Schema(
         "PickUp Ready",
         "Delivered",
       ],
+    },
+
+    paymentMode: {
+      type: String,
+      enums: ["Prepaid", "Cash On Delivery", "Cash On Pickup"],
     },
 
     paymentStatus: {

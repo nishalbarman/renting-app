@@ -8,8 +8,8 @@ const addressSchema = new mongoose.Schema(
     postalCode: { type: String, required: true },
     country: { type: String, required: true },
     streetName: { type: String, required: true },
-    city: { type: String },
-    state: { type: String },
+    city: { type: String, required: true },
+    state: { type: String, required: true },
     longitude: { type: Number, required: true },
     latitude: { type: Number, required: true },
     location: {

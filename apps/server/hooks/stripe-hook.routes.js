@@ -79,6 +79,10 @@ router.post(
             paymentIntentSucceeded.metadata.address
           );
 
+          const orderDetails = await PaymentTransModel.find({
+            orderGroupID,
+          }).populate("order");
+
           const date = new Date();
 
           const shiprocketOrder = {
@@ -88,52 +92,44 @@ router.post(
             channel_id: process.env.SHIPROCKET_CHANNELID,
 
             billing_customer_name: user.name,
-            billing_address: `${address.name}, ${address.streetName}, ${address.locality}, ${address.postalCode}`,
-            billing_city: address.locality,
+            billing_address: `${address.prefix}, ${address.streetName}, ${address.city}, ${address.state}, ${address.postalCode}`,
+            billing_city: address.city,
             billing_pincode: address.postalCode,
-            billing_state: "Assam",
-            billing_country: "India",
-            billing_email: "naruto@uzumaki.com",
-            billing_phone: "9876543210",
+            billing_state: address.state,
+            billing_country: address.country,
+            billing_email: user.email,
+            billing_phone: user.mobileNo,
             shipping_is_billing: true,
-            shipping_customer_name: "",
-            shipping_last_name: "",
-            shipping_address: "",
-            shipping_address_2: "",
-            shipping_city: "",
-            shipping_pincode: "",
-            shipping_country: "",
-            shipping_state: "",
-            shipping_email: "",
-            shipping_phone: "",
-            order_items: [
-              {
-                name: "Kunai",
-                sku: "chakra123",
-                units: 10,
-                selling_price: "900",
-                discount: "",
-                tax: "",
-                hsn: 441122,
-              },
-            ],
+            order_items: orderDetails.order.map((order_item) => ({
+              name: order_item.title,
+              sku: order_item.product,
+              units: order_item.quantity,
+              selling_price: order_item.price,
+            })),
             payment_method: "Prepaid",
-            shipping_charges: 0,
-            giftwrap_charges: 0,
-            transaction_charges: 0,
-            total_discount: 0,
-            sub_total: 9000,
+            sub_total: orderDetails.totalPrice,
             length: 10,
             breadth: 15,
             height: 20,
             weight: 2.5,
           };
 
-          const response = await fetch();
+          const shipRocketAuthToken = await shipRocketLogin();
 
-          const centerDetails = await User.findOne({
-            center: paymentIntentSucceeded.metadata.center,
-          });
+          const response = await fetch(
+            `https://apiv2.shiprocket.in/v1/external/orders/create/adhoc`,
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${shipRocketAuthToken}`,
+              },
+              body: JSON.stringify(shiprocketOrder),
+            }
+          );
+
+          // const centerDetails = await User.findOne({
+          //   center: paymentIntentSucceeded.metadata.center,
+          // });
 
           await sendMail({
             from: `"Rent Karo" <${process.env.SENDER_EMAIL_ADDRESS}>`, // sender address

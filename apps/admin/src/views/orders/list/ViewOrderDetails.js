@@ -839,7 +839,20 @@ function CenterModal({ visible, setVisible, row }) {
                         <div className="mt-2">
                           <strong>Delivery Address</strong>
                           <div className="mt-2">
-                            <div>{groupOrderDetails.address.address}</div>
+                            <div>
+                              <p>
+                                Full Address:{' '}
+                                <span
+                                  style={{
+                                    fontWeight: 'bold',
+                                  }}
+                                >{`${groupOrderDetails?.address?.address.prefix}, ${groupOrderDetails?.address?.address.streetName}, ${groupOrderDetails?.address?.address.locality}, ${groupOrderDetails?.address?.address.postalCode}, ${groupOrderDetails?.address?.address.country}`}</span>
+                              </p>
+                              <p>Road: {groupOrderDetails?.address?.address.streetName}</p>
+                              <p>Postal Code: {groupOrderDetails?.address?.address.postalCode}</p>
+                              <p>City: {groupOrderDetails?.address?.address.city}</p>
+                              <p>State: {groupOrderDetails?.address?.address.state}</p>
+                            </div>
                             <span>Longitude : {groupOrderDetails.address.location[0]}</span>
                             {', '}
                             <span>Latitude : {groupOrderDetails.address.location[1]}</span>
