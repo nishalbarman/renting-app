@@ -80,7 +80,7 @@ router.post(
           );
 
           const orderDetails = await PaymentTransModel.find({
-            orderGroupID,
+            paymentIntentSucceeded.metadata.orderGroupID,
           }).populate("order");
 
           const date = new Date();

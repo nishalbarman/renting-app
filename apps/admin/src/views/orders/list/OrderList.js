@@ -215,7 +215,7 @@ const OrderList = () => {
                   gap: '1rem',
                 }}
               >
-                {renderedCellValue.toLocaleString()}
+                {renderedCellValue?.toLocaleString()}
               </Box>
             ),
           },

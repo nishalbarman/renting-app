@@ -754,7 +754,7 @@ function CenterModal({ visible, setVisible, row }) {
                           marginLeft: '6px',
                         }}
                       >
-                        {groupOrderDetails.user.name}
+                        {groupOrderDetails?.user?.name}
                       </span>
                     </div>
                     <div
