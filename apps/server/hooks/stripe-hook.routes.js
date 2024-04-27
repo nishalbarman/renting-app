@@ -11,6 +11,7 @@ const Cart = require("../models/cart.model");
 const { default: mongoose } = require("mongoose");
 const PaymentTransModel = require("../models/transaction.model");
 const Address = require("../models/address.model");
+const ShiprocketUtils = require("../helpter/ShiprocketUtils");
 const router = Router();
 
 const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
@@ -83,48 +84,12 @@ router.post(
             orderGroupID: paymentIntentSucceeded.metadata.orderGroupID,
           }).populate("order");
 
-          const date = new Date();
-
-          const shiprocketOrder = {
-            order_id: paymentIntentSucceeded.metadata.orderGroupID,
-            order_date: date.toLocaleDateString(),
-            pickup_location: "Primary",
-            channel_id: process.env.SHIPROCKET_CHANNELID,
-
-            billing_customer_name: user.name,
-            billing_address: `${address.prefix}, ${address.streetName}, ${address.city}, ${address.state}, ${address.postalCode}`,
-            billing_city: address.city,
-            billing_pincode: address.postalCode,
-            billing_state: address.state,
-            billing_country: address.country,
-            billing_email: user.email,
-            billing_phone: user.mobileNo,
-            shipping_is_billing: true,
-            order_items: orderDetails.order.map((order_item) => ({
-              name: order_item.title,
-              sku: order_item.product,
-              units: order_item.quantity,
-              selling_price: order_item.price,
-            })),
-            payment_method: "Prepaid",
-            sub_total: orderDetails.totalPrice,
-            length: 10,
-            breadth: 15,
-            height: 20,
-            weight: 2.5,
-          };
-
-          const shipRocketAuthToken = await shipRocketLogin();
-
-          const response = await fetch(
-            `https://apiv2.shiprocket.in/v1/external/orders/create/adhoc`,
-            {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${shipRocketAuthToken}`,
-              },
-              body: JSON.stringify(shiprocketOrder),
-            }
+          await ShiprocketUtils.createShiprocketOrder(
+            paymentIntentSucceeded.metadata.orderGroupID,
+            process.env.SHIPROCKET_CHANNELID,
+            user,
+            address,
+            orderDetails
           );
 
           // const centerDetails = await User.findOne({

@@ -10,6 +10,7 @@ import {
   cilCursor,
   cilDescription,
   cilDrop,
+  cilFolderOpen,
   cilHouse,
   cilNotes,
   cilPencil,
@@ -36,17 +37,19 @@ const _nav = [
     component: CNavTitle,
     name: 'Orders',
   },
-  // {
-  //   component: CNavItem,
-  //   name: 'Add Center',
-  //   to: '/center/add',
-  //   icon: <CIcon icon={cilHouse} customClassName="nav-icon" />,
-  // },
+
   {
     component: CNavItem,
     name: 'Orders',
     to: '/orders/list',
     icon: <CIcon icon={cilCart} customClassName="nav-icon" />,
+  },
+
+  {
+    component: CNavItem,
+    name: 'View Order',
+    to: '/orders/view',
+    icon: <CIcon icon={cilFolderOpen} customClassName="nav-icon" />,
   },
 
   {

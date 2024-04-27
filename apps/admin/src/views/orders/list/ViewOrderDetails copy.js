@@ -1,5 +1,4 @@
 import {
-  CAlert,
   CButton,
   CCard,
   CCardBody,
@@ -27,82 +26,6 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import { CardHeader } from '@mui/material'
-
-const statusStyles = {
-  OnProgress: {
-    backgroundColor: '#f0ffff',
-    border: '1px solid #2AAABF',
-    color: '#2AAABF',
-  },
-  Accepted: {
-    backgroundColor: '#f5fff6',
-    border: '1px solid #79E7A8',
-    color: '#36664c',
-  },
-  Delivered: {
-    backgroundColor: '#f0e6ff',
-    border: '1px solid #754db0',
-    color: '#754db0',
-  },
-  OnHold: {
-    backgroundColor: '#fff6c7',
-    border: '1px solid #ebb434',
-    color: '#7a5c14',
-  },
-  Cancelled: {
-    backgroundColor: '#f7eae9',
-    border: '1px solid #db3125',
-    color: '#a11b12',
-  },
-  OnTheWay: {
-    backgroundColor: '#b1ebf0',
-    border: '1px solid #2e7e85',
-    color: '#2e7e85',
-  },
-  PickUpReady: {
-    backgroundColor: '#f0e6ff',
-    border: '1px solid #754db0',
-    color: '#754db0',
-  },
-  Pending: {
-    backgroundColor: '#f0ffff',
-    border: '1px solid #2AAABF',
-    color: '#2AAABF',
-  },
-  Rejected: {
-    backgroundColor: '#f7eae9',
-    border: '1px solid #db3125',
-    color: '#a11b12',
-  },
-}
-
-const OrderStatus = ({ status }) => {
-  const style = statusStyles[status.replace(/\s+/g, '')] || statusStyles.Rejected
-
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        padding: '3px 7px',
-        borderRadius: '4px',
-        backgroundColor: style.backgroundColor,
-        border: style.border,
-      }}
-    >
-      <span
-        style={{
-          color: style.color,
-          fontSize: '16px',
-          fontWeight: 'bold',
-        }}
-      >
-        {status}
-      </span>
-    </div>
-  )
-}
 
 function CenterModal({ visible, setVisible, row }) {
   const { jwtToken } = useSelector((state) => state.auth)
@@ -291,6 +214,7 @@ function CenterModal({ visible, setVisible, row }) {
                                 <span className="text-[gray]">Order #</span>
                                 <span>{order._id}</span>
                               </div>
+
                               <div
                                 style={{
                                   display: 'flex',
@@ -298,21 +222,225 @@ function CenterModal({ visible, setVisible, row }) {
                                   justifyContent: 'space-between',
                                 }}
                               >
-                                <OrderStatus status={order.orderStatus} />
+                                {order.orderStatus === 'On Progress' && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'center',
+                                      padding: '5px 10px',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#f0ffff',
+                                      border: '1px solid #2AAABF',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: '#2AAABF',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    >
+                                      On Progress
+                                    </span>
+                                  </div>
+                                )}
+                                {order.orderStatus === 'Accepted' && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'center',
+                                      padding: '5px 10px',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#f5fff6',
+                                      border: '1px solid #79E7A8',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: '#36664c',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    >
+                                      Accepted
+                                    </span>
+                                  </div>
+                                )}
+                                {order.orderStatus === 'Delivered' && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'center',
+                                      padding: '5px 10px',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#f0e6ff',
+                                      border: '1px solid #754db0',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: '#754db0',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    >
+                                      Delivered
+                                    </span>
+                                  </div>
+                                )}
+                                {order.orderStatus === 'On Hold' && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'center',
+                                      padding: '5px 10px',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#fff6c7',
+                                      border: '1px solid #ebb434',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: '#7a5c14',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    >
+                                      On Hold
+                                    </span>
+                                  </div>
+                                )}
+                                {order.orderStatus === 'Cancelled' && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'center',
+                                      padding: '5px 10px',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#f7eae9',
+                                      border: '1px solid #db3125',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: '#a11b12',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    >
+                                      Cancelled
+                                    </span>
+                                  </div>
+                                )}
+                                {order.orderStatus === 'On The Way' && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'center',
+                                      padding: '5px 10px',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#b1ebf0',
+                                      border: '1px solid #2e7e85',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: '#2e7e85',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    >
+                                      On The Way
+                                    </span>
+                                  </div>
+                                )}
+                                {order.orderStatus === 'PickUp Ready' && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'center',
+                                      padding: '5px 10px',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#f0e6ff',
+                                      border: '1px solid #754db0',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: '#754db0',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    >
+                                      PickUp Ready
+                                    </span>
+                                  </div>
+                                )}
+                                {order.orderStatus === 'Pending' && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'center',
+                                      padding: '5px 10px',
+                                      borderRadius: '4px',
+                                      backgroundColor: '#f0ffff',
+                                      border: '1px solid #2AAABF',
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color: '#2AAABF',
+                                        fontSize: '16px',
+                                        fontWeight: 'bold',
+                                      }}
+                                    >
+                                      Pending
+                                    </span>
+                                  </div>
+                                )}
+                                {order.orderStatus !== 'On Progress' &&
+                                  order.orderStatus !== 'Accepted' &&
+                                  order.orderStatus !== 'Delivered' &&
+                                  order.orderStatus !== 'On Hold' &&
+                                  order.orderStatus !== 'Cancelled' &&
+                                  order.orderStatus !== 'On The Way' &&
+                                  order.orderStatus !== 'PickUp Ready' &&
+                                  order.orderStatus !== 'Pending' && (
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        padding: '5px 10px',
+                                        borderRadius: '4px',
+                                        backgroundColor: '#f7eae9',
+                                        border: '1px solid #db3125',
+                                      }}
+                                    >
+                                      <span
+                                        style={{
+                                          color: '#a11b12',
+                                          fontSize: '16px',
+                                          fontWeight: 'bold',
+                                        }}
+                                      >
+                                        Rejected
+                                      </span>
+                                    </div>
+                                  )}
                               </div>
                             </CCardHeader>
 
                             <CCardBody>
                               <CRow>
-                                <CAlert color="warning">
-                                  <div>
-                                    <div>
-                                      <strong>Order #{order._id}</strong>
-                                    </div>
-                                    <div>{order.orderStatus}</div>
-                                  </div>
-                                </CAlert>
-
                                 <div
                                   style={{
                                     display: 'flex',
@@ -336,35 +464,12 @@ function CenterModal({ visible, setVisible, row }) {
                                         fontSize: '16px',
                                         WebkitBoxOrient: 'vertical',
                                         display: '-webkit-box',
-                                        WebkitLineClamp: 3,
+                                        WebkitLineClamp: 1,
                                         overflow: 'hidden',
                                       }}
                                     >
                                       <strong>{order.title}</strong>
                                     </div>
-                                    <div
-                                      style={{
-                                        margin: '5px 0px',
-                                      }}
-                                    >
-                                      <div>
-                                        Qty: <b>{order.quantity || '1'}</b>
-                                      </div>
-
-                                      <div>
-                                        Color: <b>{order.color || 'Black'}</b>
-                                      </div>
-                                      <div>
-                                        Size: <b>{order.size || 'S'}</b>
-                                      </div>
-
-                                      {order.orderType == 'rent' && (
-                                        <div>
-                                          Renting Days: <b>{order.rentDays || '1'}</b>
-                                        </div>
-                                      )}
-                                    </div>
-
                                     <div
                                       style={{
                                         fontSize: '16px',
@@ -388,6 +493,24 @@ function CenterModal({ visible, setVisible, row }) {
                                           : `₹${0}`}{' '}
                                       </strong>
                                       (Shipping/-)
+                                    </div>
+                                    <div>
+                                      {order.orderType == 'rent' && (
+                                        <div>
+                                          Renting Days: <b>{order.rentDays || '1'}</b>
+                                        </div>
+                                      )}
+
+                                      <div>
+                                        Qty: <b>{order.quantity || '1'}</b>
+                                      </div>
+
+                                      <div>
+                                        Color: <b>{order.color || 'Black'}</b>
+                                      </div>
+                                      <div>
+                                        Size: <b>{order.size || 'S'}</b>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -415,18 +538,26 @@ function CenterModal({ visible, setVisible, row }) {
                     </CCardHeader>
                     <CCardBody>
                       {groupOrderDetails.orderType === 'rent' && (
-                        <CAlert color="danger">
-                          <div>This is a rent order, so collect cash upon pickup.</div>
-                        </CAlert>
+                        <div
+                          style={{
+                            color: 'red',
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          * This is a rent order, so collect cash upon pickup.
+                        </div>
                       )}
 
                       {groupOrderDetails.orderType === 'buy' && (
-                        <CAlert color="success">
-                          <div>
-                            This is a buy order, so make sure that payment has been received before
-                            proceeding.
-                          </div>
-                        </CAlert>
+                        <div
+                          style={{
+                            color: 'green',
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          * This is a buy order, so make sure that payment has been received before
+                          proceeding.
+                        </div>
                       )}
 
                       <div
@@ -511,7 +642,7 @@ function CenterModal({ visible, setVisible, row }) {
                                         display: 'flex',
                                         flexDirection: 'row',
                                         justifyContent: 'center',
-                                        padding: '3px 7px',
+                                        padding: '5px 10px',
                                         borderRadius: '4px',
                                         backgroundColor: '#f0ffff',
                                         border: '1px solid #2AAABF',
@@ -534,7 +665,7 @@ function CenterModal({ visible, setVisible, row }) {
                                         display: 'flex',
                                         flexDirection: 'row',
                                         justifyContent: 'center',
-                                        padding: '3px 7px',
+                                        padding: '5px 10px',
                                         borderRadius: '4px',
                                         backgroundColor: '#f5fff6',
                                         border: '1px solid #79E7A8',
@@ -557,7 +688,7 @@ function CenterModal({ visible, setVisible, row }) {
                                         display: 'flex',
                                         flexDirection: 'row',
                                         justifyContent: 'center',
-                                        padding: '3px 7px',
+                                        padding: '5px 10px',
                                         borderRadius: '4px',
                                         backgroundColor: '#f0e6ff',
                                         border: '1px solid #754db0',
@@ -597,15 +728,15 @@ function CenterModal({ visible, setVisible, row }) {
                     </div>
                   </CCardHeader>
                   <CCardBody>
-                    {/* <div
+                    <div
                       style={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: '5px',
                         marginTop: '10px',
                       }}
-                    > */}
-                    {/* <CImage
+                    >
+                      <CImage
                         style={{
                           width: '40px',
                           height: '40px',
@@ -616,16 +747,16 @@ function CenterModal({ visible, setVisible, row }) {
                           alignItems: 'center',
                         }}
                         src="https://static-00.iconduck.com/assets.00/user-icon-2048x2048-ihoxz4vq.png"
-                      /> */}
-                    {/* <span
-                      className="ml-2"
-                      style={{
-                        marginLeft: '6px',
-                      }}
-                    >
-                      {groupOrderDetails?.user?.name}
-                    </span> */}
-                    {/* </div> */}
+                      />
+                      <span
+                        className="ml-2"
+                        style={{
+                          marginLeft: '6px',
+                        }}
+                      >
+                        {groupOrderDetails?.user?.name}
+                      </span>
+                    </div>
                     <div
                       style={{
                         height: '1px',
@@ -673,17 +804,6 @@ function CenterModal({ visible, setVisible, row }) {
                     ></div>
                     <div className="mt-2">
                       <strong>Contact info</strong>
-
-                      <div className="mt-2">
-                        <CIcon icon={cilUser} />
-                        <span
-                          style={{
-                            marginLeft: '5px',
-                          }}
-                        >
-                          {groupOrderDetails?.user?.name}
-                        </span>
-                      </div>
                       <div className="mt-2">
                         <CIcon icon={cilPhone} />
                         <span
@@ -718,29 +838,25 @@ function CenterModal({ visible, setVisible, row }) {
                         ></div>
                         <div className="mt-2">
                           <strong>Delivery Address</strong>
-                          <CAlert className="mt-2" color="warning">
+                          <div className="mt-2">
                             <div>
-                              <div>
-                                <p>
-                                  Full Address:{' '}
-                                  <span
-                                    style={{
-                                      fontWeight: 'bold',
-                                    }}
-                                  >{`${groupOrderDetails?.address?.address.prefix}, ${groupOrderDetails?.address?.address.streetName}, ${groupOrderDetails?.address?.address.locality}, ${groupOrderDetails?.address?.address.postalCode}, ${groupOrderDetails?.address?.address.country}`}</span>
-                                </p>
-                                <p>Road: {groupOrderDetails?.address?.address.streetName}</p>
-                                <p>Postal Code: {groupOrderDetails?.address?.address.postalCode}</p>
-                                <p>City: {groupOrderDetails?.address?.address.city}</p>
-                                <p>State: {groupOrderDetails?.address?.address.state}</p>
-                              </div>
-                              <b>
-                                <span>Longitude : {groupOrderDetails.address.location[0]}</span>
-                                {', '}
-                                <span>Latitude : {groupOrderDetails.address.location[1]}</span>
-                              </b>
+                              <p>
+                                Full Address:{' '}
+                                <span
+                                  style={{
+                                    fontWeight: 'bold',
+                                  }}
+                                >{`${groupOrderDetails?.address?.address.prefix}, ${groupOrderDetails?.address?.address.streetName}, ${groupOrderDetails?.address?.address.locality}, ${groupOrderDetails?.address?.address.postalCode}, ${groupOrderDetails?.address?.address.country}`}</span>
+                              </p>
+                              <p>Road: {groupOrderDetails?.address?.address.streetName}</p>
+                              <p>Postal Code: {groupOrderDetails?.address?.address.postalCode}</p>
+                              <p>City: {groupOrderDetails?.address?.address.city}</p>
+                              <p>State: {groupOrderDetails?.address?.address.state}</p>
                             </div>
-                          </CAlert>
+                            <span>Longitude : {groupOrderDetails.address.location[0]}</span>
+                            {', '}
+                            <span>Latitude : {groupOrderDetails.address.location[1]}</span>
+                          </div>
                         </div>
                       </>
                     )}
@@ -789,12 +905,15 @@ function CenterModal({ visible, setVisible, row }) {
                     )}
 
                     {groupOrderDetails.orderType === 'buy' && (
-                      <CAlert color="success">
-                        <div>
-                          This is a buy order, so make sure that payment has been received before
-                          proceeding.
-                        </div>
-                      </CAlert>
+                      <div
+                        style={{
+                          color: 'green',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        * This is a buy order, so make sure that payment has been received before
+                        proceeding.
+                      </div>
                     )}
                     <div className="mt-2">
                       <strong>Update status of the order</strong>
