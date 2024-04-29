@@ -7,9 +7,14 @@ export const wishlistApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER_URL,
     prepareHeaders: (headers, { getState }) => {
-      console.log(getState().auth.jwtToken);
-      headers.set("authorization", `Bearer ${getState().auth.jwtToken}`);
-      headers.set("producttype", `${getState().product_store.productType}`);
+      headers.set(
+        "authorization",
+        `Bearer ${(getState() as any).auth.jwtToken}`
+      );
+      headers.set(
+        "producttype",
+        `${(getState() as any).product_store.productType}`
+      );
       return headers;
     },
   }),
@@ -20,7 +25,7 @@ export const wishlistApi = createApi({
         url: `wishlist`,
         method: "GET",
       }),
-      transformResponse: (response, meta, arg) => response.data,
+      transformResponse: (response, meta, arg) => (response as any).data,
       // transformErrorResponse: (response, meta, arg) => response.message,
       providesTags: ["Wishlist"],
     }),

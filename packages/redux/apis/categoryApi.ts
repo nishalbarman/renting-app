@@ -8,7 +8,10 @@ export const categoryApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER_URL,
     prepareHeaders: (headers, { getState }) => {
-      headers.set("authorization", `Bearer ${getState().auth.jwtToken}`);
+      headers.set(
+        "authorization",
+        `Bearer ${(getState() as any).auth.jwtToken}`
+      );
       return headers;
     },
   }),

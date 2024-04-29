@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setUserAuthData } from "../slices/authSlice";
 
+import { RootState } from "../store";
+
 const SERVER_URL = `${process.env.EXPO_PUBLIC_API_URL}/`;
 
 export const userAPI = createApi({
@@ -8,7 +10,10 @@ export const userAPI = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER_URL,
     prepareHeaders: (headers, { getState }) => {
-      headers.set("authorization", `Bearer ${getState().auth.jwtToken}`);
+      headers.set(
+        "authorization",
+        `Bearer ${(getState() as any).auth.jwtToken}`
+      );
       return headers;
     },
   }),
@@ -21,7 +26,6 @@ export const userAPI = createApi({
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState()?.auth?.jwtToken}`,
         },
       }),
       onQueryStarted: async (args, { dispatch, queryFulfilled, getState }) => {
@@ -40,7 +44,6 @@ export const userAPI = createApi({
         url: `${id}`,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState()?.auth?.jwtToken}`,
         },
       }),
       onQueryStarted: async (args, { dispatch, queryFulfilled, getState }) => {
@@ -60,7 +63,6 @@ export const userAPI = createApi({
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState()?.auth?.jwtToken}`, // we will get the getState in the onQueryStarted
         },
         body: { email: newEmail, prevEmailOTP, newEmailOTP },
       }),
@@ -81,9 +83,8 @@ export const userAPI = createApi({
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState()?.auth?.jwtToken}`, // we will get the getState in the onQueryStarted
         },
-        body: { id, mobileNo: newMobileNo, prevMobileOTP, newMobileOTP },
+        body: { mobileNo: newMobileNo, prevMobileOTP, newMobileOTP },
       }),
       onQueryStarted: async (args, { dispatch, getState, queryFulfilled }) => {
         try {
@@ -97,12 +98,11 @@ export const userAPI = createApi({
 
     /** REQUIRED ADMIN ROLE **/
     updateUser: builder.mutation({
-      query: (id, newUserObject) => ({
+      query: ({ id, newUserObject }) => ({
         url: `${id}`,
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getState()?.auth?.jwtToken}`,
         },
         body: newUserObject,
       }),

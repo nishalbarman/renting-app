@@ -7,7 +7,10 @@ export const cartApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER_URL,
     prepareHeaders: (headers, { getState }) => {
-      headers.set("authorization", `Bearer ${getState().auth.jwtToken}`);
+      headers.set(
+        "authorization",
+        `Bearer ${(getState() as any).auth.jwtToken}`
+      );
       return headers;
     },
   }),
@@ -16,8 +19,8 @@ export const cartApi = createApi({
     getCart: builder.query({
       query: (productType) => `cart?productType=${productType}`,
       providesTags: ["Cart"],
-      transformResponse: (res, meta, arg) => res.data,
-      transformErrorResponse: (res, meta, arg) => res.message,
+      transformResponse: (res, meta, arg) => (res as any).data,
+      transformErrorResponse: (res, meta, arg) => (res as any).message,
     }),
 
     addOneToCart: builder.mutation({
@@ -48,13 +51,10 @@ export const cartApi = createApi({
           url: `cart/${id}`,
           method: "PATCH",
           body: updatedItem,
-          headers: {
-            Authorization: ` Bearer ${getState().auth.jwtToken}`,
-          },
         };
       },
       invalidatesTags: ["Cart"],
-      transformErrorResponse: (res, meta, arg) => res.message,
+      transformErrorResponse: (res, meta, arg) => (res as any).message,
     }),
 
     updateRentDaysCart: builder.mutation({
@@ -68,7 +68,7 @@ export const cartApi = createApi({
         };
       },
       invalidatesTags: ["Cart"],
-      transformErrorResponse: (res, meta, arg) => res.message,
+      transformErrorResponse: (res, meta, arg) => (res as any).message,
     }),
 
     updateQuantityCart: builder.mutation({
@@ -82,7 +82,7 @@ export const cartApi = createApi({
         };
       },
       invalidatesTags: ["Cart"],
-      transformErrorResponse: (res, meta, arg) => res.message,
+      transformErrorResponse: (res, meta, arg) => (res as any).message,
     }),
 
     deleteCart: builder.mutation({

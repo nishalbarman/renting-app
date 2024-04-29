@@ -7,7 +7,10 @@ export const centerAddressApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER_URL,
     prepareHeaders: (headers, { getState }) => {
-      headers.set("authorization", `Bearer ${getState().auth.jwtToken}`);
+      headers.set(
+        "authorization",
+        `Bearer ${(getState() as any).auth.jwtToken}`
+      );
       return headers;
     },
   }),
@@ -19,7 +22,7 @@ export const centerAddressApi = createApi({
         method: "GET",
       }),
       providesTags: ["Address"],
-      transformResponse: (response, meta, arg) => response.data,
+      transformResponse: (response, meta, arg) => (response as any).data,
       // transformErrorResponse: (response, meta, arg) => response.message,
     }),
 
@@ -43,7 +46,7 @@ export const centerAddressApi = createApi({
     }),
 
     updateCenterAddress: builder.mutation({
-      query: (id, updatedAddress) => ({
+      query: ({ id, updatedAddress }: { id: string; updatedAddress: any }) => ({
         url: `address/${id}`,
         method: "PATCH",
         body: updatedAddress,

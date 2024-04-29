@@ -13,13 +13,14 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
+  PersistConfig,
 } from "redux-persist";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { wishlistApi } from "./apis/wishlistApi";
-import { productsApi } from "./apis/productApi";
+// import { productsApi } from "./apis/productApi.ts.bak";
 import { categoryApi } from "./apis/categoryApi";
 import { storeTypeSlice } from "./slices/storeTypeSlice";
 import { cartApi } from "./apis/cartApi";
@@ -35,21 +36,18 @@ const rootReducer = combineReducers({
   [authSlice.name]: authSlice.reducer,
   [addressSlice.name]: addressSlice.reducer,
   [addressApi.reducerPath]: addressApi.reducer,
-  [productsApi.reducerPath]: productsApi.reducer,
+  // [productsApi.reducerPath]: productsApi.reducer,
   [productListSlice.name]: productListSlice.reducer,
   [cartApi.reducerPath]: cartApi.reducer,
   [wishlistApi.reducerPath]: wishlistApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
   [storeTypeSlice.name]: storeTypeSlice.reducer,
-
   [orderSlice.name]: orderSlice.reducer,
-
-  // center related
   [centerAddressApi.reducerPath]: centerAddressApi.reducer,
   [centerAddressSlice.name]: centerAddressSlice.reducer,
 });
 
-const persistConfig = {
+const persistConfig: PersistConfig<ReturnType<typeof rootReducer>> = {
   key: "root",
   storage: AsyncStorage,
 };
@@ -64,7 +62,7 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     })
-      .concat(productsApi.middleware)
+      // .concat(productsApi.middleware)
       .concat(cartApi.middleware)
       .concat(wishlistApi.middleware)
       .concat(userAPI.middleware)
@@ -81,3 +79,7 @@ export const store = configureStore({
 export const persistor = persistStore(store);
 
 setupListeners(store.dispatch);
+
+// Types for the root state and dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
