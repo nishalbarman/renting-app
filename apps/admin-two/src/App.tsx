@@ -1,9 +1,10 @@
 import React from "react";
 import Sidebar from "./components/Sidebar";
-import "./index.css";
 import AllRoutes from "./routes/AllRoutes";
 import { useLocation } from "react-router-dom";
 import { RiMenuLine } from "react-icons/ri";
+
+import "./index.css";
 
 function App() {
   const [navbarToogle, setNavbarToogle] = React.useState<boolean>(true);
