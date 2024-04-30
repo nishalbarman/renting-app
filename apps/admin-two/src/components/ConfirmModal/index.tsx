@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 
 type ConfirmModalProps = {
   children: React.ReactNode;
-  title: String;
+  title?: String;
   closeModal: any;
 };
 
-function index({ children, title, closeModal }: ConfirmModalProps) {
+function index({ children, closeModal }: ConfirmModalProps) {
   return (
     <>
-      <div className={`fixed inset-0 flex z-50 justify-center md:items-center w-full p-2`}>
+      <div
+        className={`fixed inset-0 flex z-50 justify-center md:items-center w-full p-2`}>
         <div className="fixed bg-black inset-0 opacity-50"></div>
         <div className="bg-white rounded-lg p-4 shadow-lg z-50 w-full lg:w-[45%] h-fit">
           <div className="flex justify-between items-center border-b pb-2">

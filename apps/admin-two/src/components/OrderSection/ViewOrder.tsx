@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { BaseSyntheticEvent, useEffect, useState } from "react";
 import axios from "axios";
 
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-import { CardHeader } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
+import { useAppSelector } from "@store/rtk";
+import { OrderGroup, PaymentSummary } from "../../types";
 
-const statusStyles = {
+type StatusStyleValue = {
+  backgroundColor: string;
+  border: string;
+  color: string;
+};
+
+const statusStyles: { [key: string]: StatusStyleValue } = {
   OnProgress: {
     backgroundColor: "#f0ffff",
     border: "1px solid #2AAABF",
@@ -54,8 +60,12 @@ const statusStyles = {
   },
 };
 
-const OrderStatus = ({ status }) => {
-  const style =
+interface OrderStatusProps {
+  status: string;
+}
+
+const OrderStatus: React.FC<OrderStatusProps> = ({ status }) => {
+  const style: StatusStyleValue =
     statusStyles[status.replace(/\s+/g, "")] || statusStyles.Rejected;
 
   return (
@@ -82,12 +92,14 @@ const OrderStatus = ({ status }) => {
 };
 
 function ViewSingleOrder() {
-  const { jwtToken } = useSelector((state) => state.auth);
+  const { jwtToken } = useAppSelector((state) => state.auth);
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [groupOrderId, setGroupOrderId] = useState();
+  const [searchParams] = useSearchParams();
+  const [groupOrderId, setGroupOrderId] = useState<string | null>();
 
-  const [isLoading, setIsOrderLoading] = useState();
+  const [isLoading, setIsOrderLoading] = useState(true);
+
+  console.log(isLoading);
 
   useEffect(() => {
     if (!!searchParams.get("groupId"))
@@ -95,7 +107,7 @@ function ViewSingleOrder() {
   }, [searchParams]);
 
   const [isGroupOrderFetching, setIsGroupOrderFetching] = useState(true);
-  const [groupOrderDetails, setGroupOrderDetails] = useState({});
+  const [groupOrderDetails, setGroupOrderDetails] = useState<OrderGroup>();
 
   const fetchGroupOrderDetails = async () => {
     try {
@@ -110,7 +122,7 @@ function ViewSingleOrder() {
         }
       );
       setGroupOrderDetails(response.data);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response?.message || error.message);
       console.error(error);
     } finally {
@@ -123,7 +135,9 @@ function ViewSingleOrder() {
     fetchGroupOrderDetails();
   }, [groupOrderId]);
 
-  const [summary, setSummary] = useState({});
+  const [summary, setSummary] = useState<PaymentSummary | undefined>();
+
+  console.log(summary);
 
   useEffect(() => {
     const fetchPaymentSummary = async () => {
@@ -138,7 +152,7 @@ function ViewSingleOrder() {
           }
         );
         setSummary(response.data);
-      } catch (error) {
+      } catch (error: any) {
         toast.error(error.response?.message || error.message);
         console.error(error);
       } finally {
@@ -184,7 +198,7 @@ function ViewSingleOrder() {
         isLoading: false,
         autoClose: 5000,
       });
-    } catch (error) {
+    } catch (error: any) {
       toast.update(toastId, {
         render: error.data.message || "Order status updation failed",
         type: "error",
@@ -202,7 +216,7 @@ function ViewSingleOrder() {
         {!searchParams.get("groupId") && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <form
-              onSubmit={(e) => {
+              onSubmit={(e: BaseSyntheticEvent) => {
                 e.preventDefault();
                 setGroupOrderId(e.target.groupId.value.trim());
               }}>
@@ -228,7 +242,9 @@ function ViewSingleOrder() {
       </div>
 
       <div>
-        {isGroupOrderFetching ? (
+        {isGroupOrderFetching ||
+        groupOrderDetails === undefined ||
+        summary === undefined ? (
           <div className="flex justify-center my-8">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
           </div>
@@ -438,49 +454,51 @@ function ViewSingleOrder() {
 
                           <div className="h-px bg-gray-300 my-4"></div>
 
-                          <div className="mt-2">
-                            <div className="flex justify-between">
-                              <span>
-                                Subtotal ({groupOrderDetails.totalDocumentCount}{" "}
-                                items)
-                              </span>
-                              <span>₹{summary.subTotalPrice}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span>Delivery</span>
-                              <span>₹{summary.shippingPrice}</span>
-                            </div>
-                            <div className="flex justify-between font-bold">
-                              <span>Total</span>
-                              <span>₹{summary.totalPrice}</span>
-                            </div>
+                          {summary !== undefined && (
+                            <div className="mt-2">
+                              <div className="flex justify-between">
+                                <span>
+                                  Subtotal (
+                                  {groupOrderDetails.totalDocumentCount} items)
+                                </span>
+                                <span>₹{summary.subTotalPrice}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Delivery</span>
+                                <span>₹{summary.shippingPrice}</span>
+                              </div>
+                              <div className="flex justify-between font-bold">
+                                <span>Total</span>
+                                <span>₹{summary.totalPrice}</span>
+                              </div>
 
-                            {groupOrderDetails.orderType === "buy" && (
-                              <>
-                                <div className="h-px bg-gray-300 my-4"></div>
-                                <div className="flex justify-between font-bold">
-                                  <span>Payment Status</span>
-                                  <div className="flex flex-col justify-between">
-                                    {summary.paymentStatus === "Pending" && (
-                                      <div className="bg-blue-100 border border-blue-400 text-blue-700 px-3 py-1 rounded-md text-center font-bold">
-                                        Pending
-                                      </div>
-                                    )}
-                                    {summary.paymentStatus === "Paid" && (
-                                      <div className="bg-green-100 border border-green-400 text-green-700 px-3 py-1 rounded-md text-center font-bold">
-                                        Paid
-                                      </div>
-                                    )}
-                                    {summary.paymentStatus === "Failed" && (
-                                      <div className="bg-purple-100 border border-purple-400 text-purple-700 px-3 py-1 rounded-md text-center font-bold">
-                                        Failed
-                                      </div>
-                                    )}
+                              {groupOrderDetails.orderType === "buy" && (
+                                <>
+                                  <div className="h-px bg-gray-300 my-4"></div>
+                                  <div className="flex justify-between font-bold">
+                                    <span>Payment Status</span>
+                                    <div className="flex flex-col justify-between">
+                                      {summary.paymentStatus === "Pending" && (
+                                        <div className="bg-blue-100 border border-blue-400 text-blue-700 px-3 py-1 rounded-md text-center font-bold">
+                                          Pending
+                                        </div>
+                                      )}
+                                      {summary.paymentStatus === "Paid" && (
+                                        <div className="bg-green-100 border border-green-400 text-green-700 px-3 py-1 rounded-md text-center font-bold">
+                                          Paid
+                                        </div>
+                                      )}
+                                      {summary.paymentStatus === "Failed" && (
+                                        <div className="bg-purple-100 border border-purple-400 text-purple-700 px-3 py-1 rounded-md text-center font-bold">
+                                          Failed
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
-                                </div>
-                              </>
-                            )}
-                          </div>
+                                </>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
 

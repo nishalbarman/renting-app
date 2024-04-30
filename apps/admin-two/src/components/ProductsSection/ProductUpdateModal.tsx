@@ -1,7 +1,4 @@
-import React, { useState } from "react";
-import DocViewer, { DocViewerRenderers } from "react-doc-viewer";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa"; // Example icons from React Icons
-import { RiFullscreenFill } from "react-icons/ri"; // Example icons from React Icons
+import { useState } from "react";
 import ProductAdd from "./ProductAdd";
 
 type CenterModalProps = {

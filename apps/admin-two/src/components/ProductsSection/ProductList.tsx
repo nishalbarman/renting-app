@@ -4,27 +4,28 @@ import {
   useMaterialReactTable,
   MRT_GlobalFilterTextField,
   MRT_ToggleFiltersButton,
+  MRT_ColumnDef,
 } from "material-react-table";
 
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-import { useSelector } from "react-redux";
-
 import axios from "axios";
 import { Box, Button, MenuItem, lighten } from "@mui/material";
 
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 import { ClipLoader } from "react-spinners";
 import ConfirmModal from "../ConfirmModal";
 import ProductUpdateModal from "./ProductUpdateModal";
+import { useAppSelector } from "@store/rtk";
+import { Product } from "../../types";
 
 const ListProduct = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const { jwtToken } = useSelector((state) => state.auth);
+  const { jwtToken } = useAppSelector((state) => state.auth);
 
   //data and fetching state
   const [data, setData] = useState([]);
@@ -59,7 +60,7 @@ const ListProduct = () => {
       });
       setData(res.data?.data || []);
       setRowCount(res.data?.totalProductCount || 0);
-    } catch (error) {
+    } catch (error: any) {
       setIsError(true);
       console.error(error);
       return;
@@ -75,7 +76,7 @@ const ListProduct = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.pageIndex, pagination.pageSize]);
 
-  const columns = useMemo(
+  const columns = useMemo<MRT_ColumnDef<Product>[]>(
     () => [
       {
         id: "prodcut_info", //id used to define `group` column
@@ -88,7 +89,7 @@ const ListProduct = () => {
             enableColumnFilter: false,
             enableColumnFilterModes: false,
             enableFilters: false,
-            Cell: ({ cell, renderedCellValue, row }) => (
+            Cell: ({ cell }) => (
               <Box
                 sx={{
                   display: "flex",
@@ -98,7 +99,7 @@ const ListProduct = () => {
                 <img
                   alt="avatar"
                   height={30}
-                  src={cell.getValue()}
+                  src={cell.getValue() as string}
                   loading="lazy"
                   style={{
                     borderRadius: "10px",
@@ -116,7 +117,7 @@ const ListProduct = () => {
             id: "title", //id is still required when using accessorFn instead of accessorKey
             header: "Title",
             size: 250,
-            Cell: ({ renderedCellValue, row }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box
                 sx={{
                   display: "flex",
@@ -132,7 +133,7 @@ const ListProduct = () => {
             filterVariant: "autocomplete",
             header: "Category",
             size: 300,
-            Cell: ({ renderedCellValue }: { renderedCellValue: string }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box
                 sx={{
                   display: "flex",
@@ -149,18 +150,18 @@ const ListProduct = () => {
             enableClickToCopy: false,
             header: "Product Type",
             size: 300,
-            Cell: ({ renderedCellValue, row }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box
                 sx={{
                   display: "flex",
                   alignItems: "center",
                   gap: "1rem",
                 }}>
-                <span>
+                <span className="">
                   <b>
                     {renderedCellValue == "both"
-                      ? "RENT/BUY"
-                      : renderedCellValue?.toUpperCase()}
+                      ? "Rent/Buy"
+                      : (renderedCellValue as string)?.toUpperCase()}
                   </b>
                 </span>
               </Box>
@@ -180,15 +181,15 @@ const ListProduct = () => {
             header: "Average Rating",
             size: 200,
             //custom conditional format and styling
-            Cell: ({ cell }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box
                 component="span"
-                sx={(theme) => ({
+                sx={() => ({
                   color: "black",
                   maxWidth: "9ch",
                   p: "0.25rem",
                 })}>
-                {cell.getValue()}
+                {renderedCellValue}
               </Box>
             ),
           },
@@ -196,15 +197,15 @@ const ListProduct = () => {
             accessorKey: "totalFeedbacks", //hey a simple column for once
             header: "Total Feedbacks",
             size: 350,
-            Cell: ({ cell }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box
                 component="span"
-                sx={(theme) => ({
+                sx={() => ({
                   color: "black",
                   maxWidth: "9ch",
                   p: "0.25rem",
                 })}>
-                {cell.getValue()}
+                {renderedCellValue}
               </Box>
             ),
           },
@@ -222,7 +223,9 @@ const ListProduct = () => {
             header: "Discounted Price",
             size: 200,
             //custom conditional format and styling
-            Cell: ({ cell }) => <Box component="span">{cell.getValue()}</Box>,
+            Cell: ({ renderedCellValue }) => (
+              <Box component="span">{renderedCellValue}</Box>
+            ),
           },
           {
             accessorKey: "originalPrice",
@@ -231,7 +234,9 @@ const ListProduct = () => {
             header: "Original Price",
             size: 200,
             //custom conditional format and styling
-            Cell: ({ cell }) => <Box component="span">{cell.getValue()}</Box>,
+            Cell: ({ renderedCellValue }) => (
+              <Box component="span">{renderedCellValue}</Box>
+            ),
           },
           {
             accessorKey: "rentingPrice",
@@ -240,7 +245,9 @@ const ListProduct = () => {
             header: "Renting Price",
             size: 200,
             //custom conditional format and styling
-            Cell: ({ cell }) => <Box component="span">{cell.getValue()}</Box>,
+            Cell: ({ renderedCellValue }) => (
+              <Box component="span">{renderedCellValue}</Box>
+            ),
           },
           {
             accessorKey: "shippingPrice",
@@ -249,7 +256,9 @@ const ListProduct = () => {
             header: "Shipping Price",
             size: 200,
             //custom conditional format and styling
-            Cell: ({ cell }) => <Box component="span">{cell.getValue()}</Box>,
+            Cell: ({ renderedCellValue }) => (
+              <Box component="span">{renderedCellValue}</Box>
+            ),
           },
         ],
       },
@@ -259,13 +268,13 @@ const ListProduct = () => {
         header: "Date",
         columns: [
           {
-            accessorFn: (row) => new Date(row.createdAt), //convert to Date for sorting and filtering
+            accessorFn: (row) => new Date(row.createdAt as string), //convert to Date for sorting and filtering
             id: "createdAt",
             header: "Created Date",
             filterVariant: "date",
             filterFn: "lessThan",
             sortingFn: "datetime",
-            Cell: ({ cell }) => cell.getValue()?.toLocaleDateString(), //render Date as a string
+            Cell: ({ cell }) => (cell.getValue() as Date)?.toLocaleDateString(), //render Date as a string
             Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
             muiFilterTextFieldProps: {
               sx: {
@@ -274,13 +283,13 @@ const ListProduct = () => {
             },
           },
           {
-            accessorFn: (row) => new Date(row.createdAt), //convert to Date for sorting and filtering
+            accessorFn: (row) => new Date(row.updatedAt as string), //convert to Date for sorting and filtering
             id: "updatedAt",
             header: "Updated Date",
             filterVariant: "date",
             filterFn: "lessThan",
             sortingFn: "datetime",
-            Cell: ({ cell }) => cell.getValue()?.toLocaleDateString(), //render Date as a string
+            Cell: ({ cell }) => (cell.getValue() as Date)?.toLocaleDateString(), //render Date as a string
             Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
             muiFilterTextFieldProps: {
               sx: {
@@ -304,7 +313,7 @@ const ListProduct = () => {
     enableFacetedValues: true,
     enableRowActions: true,
     enableRowSelection: true,
-    getRowId: (row) => row._id,
+    getRowId: (row) => row._id as string,
     initialState: {
       showColumnFilters: false,
       showGlobalFilter: true,
@@ -349,7 +358,7 @@ const ListProduct = () => {
       <MenuItem
         key={0}
         onClick={() => {
-          sessionStorage.setItem("productId", row.original._id);
+          sessionStorage.setItem("productId", row.original._id as string);
           setUpdateModalVisible(true);
           closeMenu();
         }}
@@ -362,7 +371,7 @@ const ListProduct = () => {
         onClick={() => {
           console.log(row);
           // Send email logic...
-          setDeleteProductId([row.original._id]);
+          setDeleteProductId([row.original._id as string]);
           closeMenu();
         }}
         sx={{ m: 0 }}>
@@ -373,7 +382,9 @@ const ListProduct = () => {
     renderTopToolbar: ({ table }) => {
       const handleDeleted = () => {
         setDeleteProductId(
-          table.getSelectedRowModel().flatRows.map((row) => row.original._id)
+          table
+            .getSelectedRowModel()
+            .flatRows.map((row) => row.original._id as string)
         );
       };
 
@@ -412,9 +423,9 @@ const ListProduct = () => {
     },
   });
 
-  const [viewProduct, setViewProduct] = useState(null);
+  // const [viewProduct, setViewProduct] = useState(null);
 
-  const [deleteProductId, setDeleteProductId] = useState(null);
+  const [deleteProductId, setDeleteProductId] = useState<string[] | null>(null);
   const [deleteButtonLoading, setDeleteButtonLoading] = useState(false);
 
   const handleDeleteProudct = async () => {
@@ -432,11 +443,13 @@ const ListProduct = () => {
         }
       );
 
+      console.log(response);
+
       toast.success("Product deleted");
       setDeleteProductId(null);
 
       fetchProductData();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       toast.error(error.response?.data?.message || error.message);
     } finally {

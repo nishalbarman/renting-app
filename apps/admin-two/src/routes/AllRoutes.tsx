@@ -11,7 +11,7 @@ import ViewSingleOrder from "../components/OrderSection/ViewOrder";
 
 const AllRoutes: React.FC = () => {
   const [navbarToogle, setNavbarToogle] = React.useState<Boolean>(true);
-
+  console.log(navbarToogle);
   return (
     <Routes>
       <Route path="/login" element={<Login />} />

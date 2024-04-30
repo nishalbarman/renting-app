@@ -3,6 +3,18 @@ import { setUserAuthData } from "../slices/authSlice";
 
 const SERVER_URL = `${process.env.EXPO_PUBLIC_API_URL}/`;
 
+type User = {
+  name: string;
+  email: string;
+  mobileNo: string;
+  jwtToken: string;
+};
+
+interface Auth {
+  message: string;
+  user: User;
+}
+
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({ baseUrl: SERVER_URL }),

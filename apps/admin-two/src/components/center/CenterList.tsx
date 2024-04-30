@@ -1,17 +1,11 @@
-import React, {
-  Children,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   MaterialReactTable,
   useMaterialReactTable,
   MRT_GlobalFilterTextField,
   MRT_ToggleFiltersButton,
+  MRT_ColumnDef,
 } from "material-react-table";
-import { useSelector } from "react-redux";
 import { Box, Button, MenuItem, lighten } from "@mui/material";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -20,24 +14,25 @@ import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { ClipLoader } from "react-spinners";
 import CenterModal from "./CenterModal";
 import ConfirmModal from "../../components/ConfirmModal";
+import { useAppSelector } from "@store/rtk";
+import { Center } from "../../types";
 
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+type DocViewType = { uri: any };
 
 const ListProduct = () => {
-  const { jwtToken } = useSelector((state) => state.auth);
+  const { jwtToken } = useAppSelector((state) => state.auth);
 
   //data and fetching state
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Center[]>([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefetching, setIsRefetching] = useState(false);
   const [rowCount, setRowCount] = useState(0);
 
   //table state
-  const [columnFilters, setColumnFilters] = useState([]);
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [sorting, setSorting] = useState([]);
+  // const [columnFilters, setColumnFilters] = useState([]);
+  // const [globalFilter, setGlobalFilter] = useState("");
+  // const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
@@ -78,12 +73,12 @@ const ListProduct = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.pageIndex, pagination.pageSize]);
 
-  const [approveCenterIds, setApproveCenterId] = useState([]);
-  const [rejectedCenterId, setRejectCenterId] = useState([]);
+  const [approveCenterIds, setApproveCenterId] = useState<string[]>([]);
+  const [rejectedCenterId, setRejectCenterId] = useState<string[]>([]);
 
-  const [viewDocuments, setViewDocuments] = useState([]);
+  const [viewDocuments, setViewDocuments] = useState<DocViewType[]>([]);
 
-  const columns = useMemo(
+  const columns = useMemo<MRT_ColumnDef<Center>[]>(
     () => [
       {
         id: "center_info", //id used to define `group` column
@@ -97,7 +92,7 @@ const ListProduct = () => {
             enableColumnFilter: false,
             enableColumnFilterModes: false,
             enableFilters: false,
-            Cell: ({ cell, renderedCellValue, row }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box
                 sx={{
                   display: "flex",
@@ -119,17 +114,17 @@ const ListProduct = () => {
               { value: "approved", label: "Approved" },
               { value: "reject", label: "Reject" },
             ],
-            muiEditTextFieldProps: ({ row }) => ({
-              select: true,
-              onChange: (event) => {
-                setEditedCenter((prev) => [
-                  ...prev,
-                  { ...row.original, approvedStatus: event.target.value },
-                ]);
-              },
-            }),
+            // muiEditTextFieldProps: ({ row }) => ({
+            //   select: true,
+            //   onChange: (event) => {
+            //     setEditedCenter((prev) => [
+            //       ...prev,
+            //       { ...row.original, approvedStatus: event.target.value },
+            //     ]);
+            //   },
+            // }),
 
-            Cell: ({ renderedCellValue, row }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box
                 sx={{
                   display: "flex",
@@ -158,7 +153,7 @@ const ListProduct = () => {
             header: "Owner Name",
             enableEditing: false,
             size: 300,
-            Cell: ({ renderedCellValue, row }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box>
                 <span>{renderedCellValue}</span>
               </Box>
@@ -169,10 +164,10 @@ const ListProduct = () => {
             header: "Owner Email",
             enableEditing: false,
             size: 350,
-            Cell: ({ renderedCellValue, cell }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box
                 component="span"
-                sx={(theme) => ({
+                sx={() => ({
                   color: "black",
                   maxWidth: "9ch",
                   p: "0.25rem",
@@ -186,10 +181,10 @@ const ListProduct = () => {
             header: "Mobile No",
             enableEditing: false,
             size: 350,
-            Cell: ({ renderedCellValue, cell }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box
                 component="span"
-                sx={(theme) => ({
+                sx={() => ({
                   color: "black",
                   maxWidth: "9ch",
                   p: "0.25rem",
@@ -207,7 +202,6 @@ const ListProduct = () => {
   const table = useMaterialReactTable({
     columns,
     data,
-    grow: true,
     editDisplayMode: "table", // ('modal', 'row', 'cell', and 'custom' are also
     enableEditing: true,
     enableColumnFilterModes: true,
@@ -217,7 +211,7 @@ const ListProduct = () => {
     enableFacetedValues: true,
     enableRowActions: true,
     enableRowSelection: true,
-    getRowId: (row) => row._id,
+    getRowId: (row) => row._id as string,
     initialState: {
       showColumnFilters: true,
       showGlobalFilter: true,
@@ -248,6 +242,14 @@ const ListProduct = () => {
     },
 
     renderDetailPanel: ({ row }) => {
+      if (
+        row.original.address === undefined ||
+        row.original.address.latitude === undefined ||
+        row.original.address.longitude === undefined
+      ) {
+        return;
+      }
+
       const center = {
         lat: +row.original.address.latitude,
         lng: +row.original.address.longitude,
@@ -261,10 +263,6 @@ const ListProduct = () => {
               <div>
                 {isLoaded ? (
                   <GoogleMap
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                    }}
                     mapContainerStyle={containerStyle}
                     center={center}
                     zoom={10}
@@ -275,10 +273,10 @@ const ListProduct = () => {
                       );
                       map.fitBounds(bounds);
 
-                      setMap(map);
+                      // setMap(map);
                     }}
-                    onUnmount={(map) => {
-                      setMap(null);
+                    onUnmount={(_) => {
+                      // setMap(null);
                     }}>
                     {/* Child components, such as markers, info windows, etc. */}
                     <Marker position={center} />
@@ -301,7 +299,7 @@ const ListProduct = () => {
                   }}>
                   <strong>Street: </strong>
                   <p>
-                    {row.original.address.name},{" "}
+                    {row.original.address.prefix},{" "}
                     {row.original.address.streetName}
                   </p>
                 </div>
@@ -383,7 +381,7 @@ const ListProduct = () => {
         onClick={() => {
           console.log(row);
           // Send email logic...
-          setDeleteCenterId([row.original._id]);
+          setDeleteCenterId([row.original._id as string]);
           closeMenu();
         }}
         sx={{ m: 0 }}>
@@ -398,20 +396,20 @@ const ListProduct = () => {
         const centerIds = table
           .getSelectedRowModel()
           .flatRows.map((row) => row.original._id);
-        setDeleteCenterId(centerIds);
+        setDeleteCenterId(centerIds as string[]);
       };
 
       const handleTableSelectApprove = () => {
         const centerIds = table
           .getSelectedRowModel()
-          .flatRows.map((row) => row.original._id);
+          .flatRows.map((row) => row.original._id as string);
         setApproveCenterId(centerIds);
       };
 
       const handleTableSelectReject = () => {
         const centerIds = table
           .getSelectedRowModel()
-          .flatRows.map((row) => row.original._id);
+          .flatRows.map((row) => row.original._id as string);
         setRejectCenterId(centerIds);
       };
 
@@ -491,7 +489,7 @@ const ListProduct = () => {
     },
   });
 
-  const [deleteCenterId, setDeleteCenterId] = useState(null);
+  const [deleteCenterId, setDeleteCenterId] = useState<string[] | null>(null);
   const [deleteButtonLoading, setDeleteButtonLoading] = useState(false);
 
   const handleDeleteCenter = async () => {
@@ -507,10 +505,12 @@ const ListProduct = () => {
         }
       );
 
+      console.log(response);
+
       toast.success("Center deleted");
       setDeleteCenterId(null);
       fetchData();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       toast.error(error.response?.data?.message || error.message);
     } finally {
@@ -531,10 +531,12 @@ const ListProduct = () => {
         }
       );
 
+      console.log(response);
+
       toast.success("Center approved.");
-      setApproveCenterId(null);
+      setApproveCenterId([]);
       fetchData();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       toast.error(error.response?.data?.message || error.message);
     } finally {
@@ -555,10 +557,12 @@ const ListProduct = () => {
         }
       );
 
+      console.log(response);
+
       toast.success("Center rejected.");
-      setRejectCenterId(null);
+      setRejectCenterId([]);
       fetchData();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       toast.error(error.response?.data?.message || error.message);
     } finally {
@@ -576,9 +580,9 @@ const ListProduct = () => {
     googleMapsApiKey: "AIzaSyAEWQ-_fgz6IhfsVTAQwSytF9ZbibBX7dU",
   });
 
-  const [map, setMap] = React.useState(null);
+  // const [map, setMap] = React.useState<google.maps.Map | null>(null);
 
-  const [imageViewModalVisible, setImageViewModalVisible] = useState(false);
+  // const [imageViewModalVisible, setImageViewModalVisible] = useState(false);
 
   return (
     <div className="flex flex-col flex-1 p-6 bg-gray-100 ml-64 max-md:ml-0">
@@ -639,7 +643,7 @@ const ListProduct = () => {
       {!!approveCenterIds && !!approveCenterIds.length && (
         <ConfirmModal
           title={"Are you sure about that?"}
-          closeModal={() => setApproveCenterId(null)}>
+          closeModal={() => setApproveCenterId([])}>
           <>
             <div className="w-full">
               <p>
@@ -667,7 +671,7 @@ const ListProduct = () => {
       {!!rejectedCenterId && !!rejectedCenterId.length && (
         <ConfirmModal
           title={"Are you sure about that?"}
-          closeModal={() => setRejectCenterId(null)}>
+          closeModal={() => setRejectCenterId([])}>
           <>
             <div className="w-full">
               <p>

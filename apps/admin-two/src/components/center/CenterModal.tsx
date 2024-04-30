@@ -1,7 +1,5 @@
-import React, { useState } from "react";
 import DocViewer, { DocViewerRenderers } from "react-doc-viewer";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa"; // Example icons from React Icons
-import { RiFullscreenFill } from "react-icons/ri"; // Example icons from React Icons
 
 type CenterModalProps = {
   visible: boolean;
@@ -14,9 +12,9 @@ function CenterModal({
   viewDocuments,
   setViewDocuments,
 }: CenterModalProps) {
-  const [fullScreen, setFullScreen] = useState(false);
+  // const [fullScreen, setFullScreen] = useState(false);
 
-  const docHeader = (state, previousDocument, nextDocument) => {
+  const docHeader = (state: any, previousDocument: any, nextDocument: any) => {
     if (!state.currentDocument || state.config?.header?.disableFileName) {
       return null;
     }

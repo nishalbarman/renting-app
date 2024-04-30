@@ -1,12 +1,10 @@
-import React from "react";
-
 const Login = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 w-full">
       <div className="flex w-full max-w-md flex-col space-y-8 bg-white p-8 shadow-lg">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900">
-            Welcome to Vuexy!
+            Welcome to RentPro!
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             Please sign-in to your account and start the adventure

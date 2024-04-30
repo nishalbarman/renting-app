@@ -11,7 +11,6 @@ export const centerAddressSlice = createSlice({
       locality: null,
       postalCode: null,
       longitude: null,
-      longitude: null,
       country: null,
     },
     user: {},

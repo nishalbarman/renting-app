@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { BaseSyntheticEvent, useEffect, useState } from "react";
 import axios from "axios";
 // import { useSelector } from "react-redux";
 import { useAppSelector } from "@store/rtk";
 import { toast } from "react-toastify";
+import { Base64StringWithType, Center } from "../../types";
 
 const AddNewCenter = () => {
-  const [centerData, setCenterData] = useState({
+  const [centerData, setCenterData] = useState<Center>({
     name: "",
     email: "",
     password: "",
@@ -20,9 +21,9 @@ const AddNewCenter = () => {
     country: "",
     longitude: "",
     latitude: "",
-    addressProof: [],
-    identityProof: [],
-    centerImages: [],
+    addressProofImage: [],
+    idProofImage: [],
+    centerImage: [],
   });
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
@@ -40,9 +41,12 @@ const AddNewCenter = () => {
       !!centerData?.state &&
       !!centerData?.country &&
       !!centerData?.postalCode &&
-      centerData.addressProof.length > 0 &&
-      centerData.identityProof.length > 0 &&
-      centerData.centerImages.length > 0 &&
+      centerData.addressProofImage !== null &&
+      centerData.addressProofImage.length > 0 &&
+      centerData.idProofImage !== null &&
+      centerData.idProofImage.length > 0 &&
+      centerData.centerImage !== null &&
+      centerData.centerImage.length > 0 &&
       !isNaN(Number(centerData.longitude)) &&
       !isNaN(Number(centerData.latitude));
     setIsSubmitDisabled(!isEverythingOk);
@@ -52,7 +56,7 @@ const AddNewCenter = () => {
 
   const { jwtToken } = useAppSelector((state) => state.auth);
 
-  function convertImagesToBase64(imageFiles) {
+  function convertImagesToBase64(imageFiles: File[]) {
     const promises = Array.from(imageFiles).map((file) => {
       return new Promise((resolve, reject) => {
         const fileReader = new FileReader();
@@ -66,7 +70,7 @@ const AddNewCenter = () => {
     return Promise.all(promises);
   }
 
-  const handleAddCenter = async (e) => {
+  const handleAddCenter = async (e: BaseSyntheticEvent) => {
     e.preventDefault();
     const id = toast.loading("Sending your request.. Please wait..");
 
@@ -74,19 +78,22 @@ const AddNewCenter = () => {
       setIsFormSubmitting(true);
 
       try {
-        centerData.identityProof = await convertImagesToBase64(
-          centerData.identityProof
-        );
+        centerData.idProofImage = (await convertImagesToBase64(
+          centerData.idProofImage as File[]
+        )) as Base64StringWithType[];
 
-        centerData.addressProof = await convertImagesToBase64(
-          centerData.addressProof
-        );
+        centerData.addressProofImage = (await convertImagesToBase64(
+          centerData.addressProofImage as File[]
+        )) as Base64StringWithType[];
 
-        if (centerData.centerImages.length > 0) {
-          const centerImages = await convertImagesToBase64(
-            centerData.centerImages
-          );
-          centerData.centerImages = centerImages;
+        if (
+          Array.isArray(centerData.centerImage) &&
+          centerData.centerImage.length > 0
+        ) {
+          const centerImage = (await convertImagesToBase64(
+            centerData.centerImage as File[]
+          )) as Base64StringWithType[];
+          centerData.centerImage = centerImage;
         }
       } catch (error) {
         console.error(error);
@@ -105,6 +112,9 @@ const AddNewCenter = () => {
           },
         }
       );
+
+      console.log(response);
+
       setCenterData({
         name: "",
         email: "",
@@ -116,11 +126,12 @@ const AddNewCenter = () => {
         postalCode: "",
         city: "",
         country: "",
+        state: "",
         longitude: "",
         latitude: "",
-        addressProof: [],
-        identityProof: [],
-        centerImages: [],
+        addressProofImage: [],
+        idProofImage: [],
+        centerImage: [],
       });
       toast.update(id, {
         render: "Center Created",
@@ -128,7 +139,7 @@ const AddNewCenter = () => {
         isLoading: false,
         autoClose: 5000,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
 
       toast.update(id, {
@@ -450,19 +461,19 @@ const AddNewCenter = () => {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label
-                  htmlFor="identityProof"
+                  htmlFor="idProofImage"
                   className="block text-sm font-medium text-gray-700">
                   Identity Proof{" "}
                   <span className="text-red-500 font-extrabold">*</span>
                 </label>
                 <input
                   type="file"
-                  id="identityProof"
+                  id="idProofImage"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border border-gray-300"
                   onChange={(e) =>
                     setCenterData({
                       ...centerData,
-                      identityProof: e.target.files,
+                      idProofImage: e.target.files,
                     })
                   }
                   multiple
@@ -473,19 +484,19 @@ const AddNewCenter = () => {
 
               <div>
                 <label
-                  htmlFor="addressProof"
+                  htmlFor="addressProofImage"
                   className="block text-sm font-medium text-gray-700">
                   Address Proof{" "}
                   <span className="text-red-500 font-extrabold">*</span>
                 </label>
                 <input
                   type="file"
-                  id="addressProof"
+                  id="addressProofImage"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border border-gray-300"
                   onChange={(e) =>
                     setCenterData({
                       ...centerData,
-                      addressProof: e.target.files,
+                      addressProofImage: e.target.files,
                     })
                   }
                   multiple
@@ -502,19 +513,19 @@ const AddNewCenter = () => {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label
-                  htmlFor="centerImages"
+                  htmlFor="centerImage"
                   className="block text-sm font-medium text-gray-700">
                   Center Images{" "}
                   <span className="text-red-500 font-extrabold">*</span>
                 </label>
                 <input
                   type="file"
-                  id="centerImages"
+                  id="centerImage"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border border-gray-300"
                   onChange={(e) =>
                     setCenterData({
                       ...centerData,
-                      centerImages: e.target.files,
+                      centerImage: e.target.files,
                     })
                   }
                   multiple

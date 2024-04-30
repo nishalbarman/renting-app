@@ -34,8 +34,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
 
-import { RiMenuLine } from "react-icons/ri";
-
 import TransactionsTable from "./TransactionsTable";
 
 const data = {
@@ -53,7 +51,7 @@ const data = {
   ],
 };
 
-const Dashboard: React.FC<{ setNavbarToogle: any }> = ({ setNavbarToogle }) => {
+const Dashboard: React.FC<{ setNavbarToogle?: any }> = () => {
   const [value, setValue] = React.useState<Dayjs | null>(dayjs(Date.now()));
 
   return (

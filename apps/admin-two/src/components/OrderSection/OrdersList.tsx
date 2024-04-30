@@ -2,43 +2,43 @@ import { useEffect, useMemo, useState } from "react";
 import {
   MaterialReactTable,
   useMaterialReactTable,
-  MRT_GlobalFilterTextField,
-  MRT_ToggleFiltersButton,
+  MRT_ColumnDef,
 } from "material-react-table";
-import { useSelector } from "react-redux";
 
 //Date Picker Imports - these should just be in your Context Provider
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import CIcon from "@coreui/icons-react";
 
 import axios from "axios";
-import { Box, Button, MenuItem, lighten } from "@mui/material";
+import { Box, MenuItem } from "@mui/material";
 
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 import { attachComma } from "../../helper/utils";
 
+import { useAppSelector } from "@store/rtk";
+import { OrderGroup } from "../../types";
+
 const OrderList = () => {
   const navigate = useNavigate();
 
-  const { jwtToken } = useSelector((state) => state.auth);
+  const { jwtToken } = useAppSelector((state) => state.auth);
 
   //data and fetching state
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<OrderGroup[]>([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefetching, setIsRefetching] = useState(false);
   const [rowCount, setRowCount] = useState(0);
+
+  console.log(data);
 
   //table state
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
   });
-
-  console.log(data);
 
   const fetchOrderData = async () => {
     if (!data.length) {
@@ -53,13 +53,13 @@ const OrderList = () => {
     url.searchParams.set("limit", `${pagination.pageSize}`);
 
     try {
-      const res = await axios.get(url.href, {
+      const res: {
+        data: { groupedOrders: OrderGroup[]; globalTotalDocumentCount: number };
+      } = await axios.get(url.href, {
         headers: {
           authorization: `Bearer ${jwtToken}`,
         },
       });
-
-      console.log(res.data?.groupedOrders);
 
       setData(res.data?.groupedOrders || []);
       setRowCount(res.data?.globalTotalDocumentCount || 0);
@@ -78,7 +78,7 @@ const OrderList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.pageIndex, pagination.pageSize]);
 
-  const columns = useMemo(
+  const columns = useMemo<MRT_ColumnDef<OrderGroup>[]>(
     () => [
       {
         id: "payment_info",
@@ -90,7 +90,7 @@ const OrderList = () => {
             enableClickToCopy: true,
             size: 200,
             //custom conditional format and styling
-            Cell: ({ renderedCellValue, cell }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box component="span">
                 {renderedCellValue || "Not Applicable"}
               </Box>
@@ -101,9 +101,16 @@ const OrderList = () => {
             accessorKey: "totalPrice",
             size: 200,
             //custom conditional format and styling
-            Cell: ({ renderedCellValue, cell }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box component="span">
-                <strong>{attachComma(+renderedCellValue)}</strong>
+                <strong>
+                  {attachComma(
+                    renderedCellValue === undefined ||
+                      renderedCellValue === null
+                      ? 0
+                      : +renderedCellValue
+                  )}
+                </strong>
               </Box>
             ),
           },
@@ -119,7 +126,7 @@ const OrderList = () => {
             accessorKey: "orderGroupID",
             size: 200,
             //custom conditional format and styling
-            Cell: ({ renderedCellValue, cell }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box component="span">{renderedCellValue}</Box>
             ),
           },
@@ -128,27 +135,16 @@ const OrderList = () => {
             accessorKey: "totalDocumentCount",
             size: 200,
             //custom conditional format and styling
-            Cell: ({ renderedCellValue, cell }) => (
+            Cell: ({ renderedCellValue }) => (
               <Box component="span">
                 <strong>{renderedCellValue}</strong>
               </Box>
             ),
           },
-          // {
-          //   header: 'Order Type',
-          //   accessorKey: 'orderType',
-          //   size: 200,
-          //   //custom conditional format and styling
-          //   Cell: ({ renderedCellValue, cell }) => (
-          //     <Box component="span">
-          //       <strong>{renderedCellValue}</strong>
-          //     </Box>
-          //   ),
-          // },
 
           {
-            accessorFn: (row) => `${row.orderType}`,
-            // accessorKey: 'category', //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
+            // accessorFn: (row) => `${row.orderType}`,
+            accessorKey: "orderType", //accessorKey used to define `data` column. `id` gets set to accessorKey automatically
             filterVariant: "autocomplete",
             header: "Order Type",
             size: 300,
@@ -165,12 +161,12 @@ const OrderList = () => {
                     <b>{renderedCellValue === "buy" ? "Bought" : "Rented"}</b>
                   </span>
                 </div>
-                {row.original.paymentTxnId && (
+                {row.original.paymentTransactionId && (
                   <div
                     style={{
                       fontSize: "12px",
                     }}>
-                    <span>Txn ID: {row.original.paymentTxnId}</span>
+                    <span>Txn ID: {row.original.paymentTransactionId}</span>
                   </div>
                 )}
               </Box>
@@ -190,7 +186,7 @@ const OrderList = () => {
             enableColumnFilter: false,
             enableColumnFilterModes: false,
             enableFilters: false,
-            Cell: ({ cell, renderedCellValue, row }) => (
+            Cell: ({ renderedCellValue }: { renderedCellValue: any }) => (
               <Box
                 sx={{
                   display: "flex",
@@ -217,7 +213,7 @@ const OrderList = () => {
     enableFacetedValues: true,
     enableRowActions: true,
     enableRowSelection: true,
-    getRowId: (row) => row._id,
+    getRowId: (row) => row.orderGroupID,
     initialState: {
       showColumnFilters: true,
       showGlobalFilter: true,
@@ -247,8 +243,7 @@ const OrderList = () => {
       showProgressBars: isRefetching,
     },
 
-    muiTableBodyRowProps: ({ row, table }) => {
-      console.log(row);
+    muiTableBodyRowProps: ({ row }) => {
       return {
         sx: {
           backgroundColor:
@@ -367,7 +362,6 @@ const OrderList = () => {
       // <MenuItem
       //   key={1}
       //   onClick={() => {
-      //     console.log(row)
       //     // Send email logic...
       //     setDeleteProductId([row.original._id])
       //     closeMenu()
@@ -379,94 +373,58 @@ const OrderList = () => {
       // </MenuItem>,
     ],
 
-    renderTopToolbar: ({ table }) => {
-      const handleDeleted = () => {
-        setDeleteProductId(
-          table.getSelectedRowModel().flatRows.map((row) => row.original._id)
-        );
-      };
+    // renderTopToolbar: ({ table }) => {
+    //   const handleDeleted = () => {
+    //     setDeleteProductId(
+    //       table.getSelectedRowModel().flatRows.map((row) => row.original._id)
+    //     );
+    //   };
 
-      return (
-        <Box
-          sx={(theme) => ({
-            backgroundColor: lighten(theme.palette.background.default, 0.05),
-            display: "flex",
-            gap: "0.5rem",
-            p: "8px",
-            justifyContent: "space-between",
-          })}>
-          <Box sx={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-            {/* import MRT sub-components */}
-            <MRT_GlobalFilterTextField table={table} />
-            <MRT_ToggleFiltersButton table={table} />
-          </Box>
-          <Box>
-            <Box sx={{ display: "flex", gap: "0.5rem" }}>
-              <Button
-                color="error"
-                disabled={
-                  !(
-                    table.getIsSomePageRowsSelected() ||
-                    table.getIsAllRowsSelected()
-                  )
-                }
-                onClick={handleDeleted}
-                variant="contained">
-                Delete
-              </Button>
-            </Box>
-          </Box>
-        </Box>
-      );
-    },
+    //   return (
+    //     <Box
+    //       sx={(theme) => ({
+    //         backgroundColor: lighten(theme.palette.background.default, 0.05),
+    //         display: "flex",
+    //         gap: "0.5rem",
+    //         p: "8px",
+    //         justifyContent: "space-between",
+    //       })}>
+    //       <Box sx={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+    //         {/* import MRT sub-components */}
+    //         <MRT_GlobalFilterTextField table={table} />
+    //         <MRT_ToggleFiltersButton table={table} />
+    //       </Box>
+    //       <Box>
+    //         <Box sx={{ display: "flex", gap: "0.5rem" }}>
+    //           <Button
+    //             color="error"
+    //             disabled={
+    //               !(
+    //                 table.getIsSomePageRowsSelected() ||
+    //                 table.getIsAllRowsSelected()
+    //               )
+    //             }
+    //             onClick={handleDeleted}
+    //             variant="contained">
+    //             Delete
+    //           </Button>
+    //         </Box>
+    //       </Box>
+    //     </Box>
+    //   );
+    // },
   });
 
-  const [viewOrder, setViewOrder] = useState(null);
+  //   const [viewOrder, setViewOrder] = useState<Order | null>(null);
 
-  const [deleteProductId, setDeleteProductId] = useState(null);
-  const [deleteButtonLoading, setDeleteButtonLoading] = useState(false);
-
-  const handleDeleteProudct = async () => {
-    try {
-      setDeleteButtonLoading(true);
-      const response = await axios.post(
-        `${process.env.VITE_APP_API_URL}/products/delete`,
-        {
-          deletableProductIds: deleteProductId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
-
-      toast.success("Product deleted");
-      setDeleteProductId(null);
-
-      fetchOrderData();
-    } catch (error) {
-      console.error(error);
-      toast.error(error.response?.data?.message || error.message);
-    } finally {
-      setDeleteButtonLoading(false);
-    }
-  };
-
-  const [updateModalVisible, setUpdateModalVisible] = useState(false);
+  //   const [deleteProductId, setDeleteProductId] = useState<string[] | null>(null);
+  //   const [deleteButtonLoading, setDeleteButtonLoading] = useState(false);
 
   return (
     <div className="flex flex-col flex-1 p-6 bg-gray-100 ml-64 max-md:ml-0">
       <div className="grid grid-cols-1 mb-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold text-gray-900">Orders</h1>
-          {/* <div>
-          <input
-            type="text"
-            placeholder="Type anywhere to search"
-            className="px-4 py-2 border border-gray-300 rounded-md"
-          />
-        </div> */}
         </div>
         <div className="bg-white p-4 rounded-lg shadow-md">
           <div className="flex justify-between">
@@ -481,100 +439,6 @@ const OrderList = () => {
           </div>
         </div>
       </div>
-
-      {!!deleteProductId && !!deleteProductId.length && (
-        <ConfirmModal
-          title={"Are you sure about that?"}
-          closeModal={() => setDeleteProductId(null)}>
-          <>
-            <div className="w-full">
-              <strong className="text-red-400">
-                Warning: Permanent Deletion of Product Information
-              </strong>
-              <p>
-                Deleting this product will permanently remove all associated
-                information from the server and erase any related data from the
-                database, including variants.
-              </p>
-            </div>
-            <div className="border-t mt-3 pt-3">
-              <button
-                className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 bg-red-400 hover:bg-red-500"
-                disabled={deleteButtonLoading}
-                onClick={handleDeleteProudct}>
-                {deleteButtonLoading ? (
-                  <ClipLoader color="white" size={15} />
-                ) : (
-                  "Delete"
-                )}
-              </button>
-            </div>
-          </>
-        </ConfirmModal>
-      )}
-
-      {updateModalVisible && (
-        <ProductUpdateModal
-          visible={updateModalVisible}
-          setVisible={setUpdateModalVisible}
-          fetchProductData={fetchProductData}
-        />
-      )}
-
-      {/* {!!approveCenterIds && !!approveCenterIds.length && (
-        <ConfirmModal
-          title={"Are you sure about that?"}
-          closeModal={() => setApproveCenterId(null)}>
-          <>
-            <div className="w-full">
-              <p>
-                By selecting this option, you are confirming approval for the
-                selected center. This action will initiate the approval process
-                and update relevant records accordingly.
-              </p>
-            </div>
-            <div className="border-t mt-3 pt-3">
-              <button
-                className="inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 bg-green-400 hover:bg-green-500"
-                disabled={deleteButtonLoading}
-                onClick={handleApproveCenter}>
-                {deleteButtonLoading ? (
-                  <ClipLoader color="white" size={10} />
-                ) : (
-                  "Approve"
-                )}
-              </button>
-            </div>
-          </>
-        </ConfirmModal>
-      )}
-
-      {!!rejectedCenterId && !!rejectedCenterId.length && (
-        <ConfirmModal
-          title={"Are you sure about that?"}
-          closeModal={() => setRejectCenterId(null)}>
-          <>
-            <div className="w-full">
-              <p>
-                Proceeding with this option will result in the rejection of the
-                selected center(s), particularly if multiple centers are chosen.
-              </p>
-            </div>
-            <div className="border-t mt-3 pt-3">
-              <button
-                className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 bg-indigo-400 hover:bg-indigo-500"
-                disabled={deleteButtonLoading}
-                onClick={handleRejectCenter}>
-                {deleteButtonLoading ? (
-                  <ClipLoader color="white" size={10} />
-                ) : (
-                  "Reject"
-                )}
-              </button>
-            </div>
-          </>
-        </ConfirmModal>
-      )} */}
     </div>
   );
 };

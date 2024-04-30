@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "@reduxjs/toolkit": ["node_modules/@reduxjs/toolkit"],
+      "redux-persist": ["node_modules/redux-persist"],
+      "@react-native-async-storage/async-storage": [
+        "node_modules/@react-native-async-storage/async-storage"
+      ],
+      "@reduxjs/toolkit/query": ["node_modules/@reduxjs/toolkit/query"],
+      "@reduxjs/toolkit/query/react": [
+        "node_modules/@reduxjs/toolkit/query/react"
+      ]
+    },
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "jsx": "react",
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

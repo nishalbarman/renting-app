@@ -1,11 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { BaseSyntheticEvent, useEffect, useState } from "react";
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import axios from "axios";
-import { useSelector } from "react-redux";
 
 import { toast } from "react-toastify";
+import { Base64StringWithType, Category, Product } from "../../types";
+import { useAppSelector } from "@store/rtk";
 
 type ProductAddProps = {
   loading?: boolean | undefined;
@@ -14,17 +15,17 @@ type ProductAddProps = {
   setVisible?: any;
 };
 
-const ProductAdd = ({
-  loading = undefined,
+const ProductAdd: React.FC<ProductAddProps> = ({
+  // loading = undefined,
   setIsUpdateLoading = undefined,
   fetchProductData = undefined,
   setVisible = undefined,
-}: ProductAddProps) => {
-  const [updateProductId, setUpdateProductId] = useState(null);
+}) => {
+  const [updateProductId, setUpdateProductId] = useState<string | null>(null);
 
-  const [variantQuantity, setVariantQuantity] = useState();
+  const [variantQuantity, setVariantQuantity] = useState<number | undefined>();
 
-  const [productData, setProductData] = useState({
+  const [productData, setProductData] = useState<Product>({
     title: "",
     previewImage: [],
     slideImages: [],
@@ -55,7 +56,7 @@ const ProductAdd = ({
           }
         );
         setCategoryList(response.data.categories);
-      } catch (error) {
+      } catch (error: any) {
         console.error(error);
         toast.error(
           error.response.data?.message || "Some unknown error occured"
@@ -83,7 +84,9 @@ const ProductAdd = ({
             }
           );
 
-          const product = response.data.product;
+          const product: Product = response.data.product;
+
+          console.log(product);
 
           setProductData({
             title: product.title,
@@ -99,6 +102,8 @@ const ProductAdd = ({
             availableStocks: product.availableStocks,
             isVariantAvailable: product.isVariantAvailable,
             productVariant:
+              product.productVariant !== undefined &&
+              Array.isArray(product.productVariant) &&
               product.productVariant.length > 0
                 ? product.productVariant.reduce((acc, variant, index) => {
                     variant.previewImage = [];
@@ -108,7 +113,12 @@ const ProductAdd = ({
                 : {},
           });
 
-          setVariantQuantity(product?.productVariant?.length || 0);
+          setVariantQuantity(
+            product.productVariant !== undefined &&
+              Array.isArray(product.productVariant)
+              ? product?.productVariant?.length
+              : 0
+          );
           if (typeof setIsFormSubmitting !== undefined)
             setIsUpdateLoading(false);
         } catch (error) {
@@ -125,7 +135,9 @@ const ProductAdd = ({
     let isEverythingOk =
       !!productData?.title &&
       productData.title.length >= 10 &&
+      productData.previewImage !== null &&
       productData.previewImage.length > 0 &&
+      productData.slideImages !== null &&
       productData.slideImages.length > 0 &&
       productData.description?.length > 5 &&
       !!productData.category &&
@@ -145,9 +157,9 @@ const ProductAdd = ({
 
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
 
-  const { jwtToken } = useSelector((state) => state.auth);
+  const { jwtToken } = useAppSelector((state) => state.auth);
 
-  function convertImagesToBase64(imageFiles) {
+  function convertImagesToBase64(imageFiles: File[]) {
     const promises = Array.from(imageFiles).map((file) => {
       return new Promise((resolve, reject) => {
         const fileReader = new FileReader();
@@ -163,27 +175,35 @@ const ProductAdd = ({
 
   const handleAddProduct = async () => {
     try {
-      productData.previewImage = await convertImagesToBase64(
-        productData.previewImage
-      );
+      productData.previewImage = (await convertImagesToBase64(
+        productData.previewImage as File[]
+      )) as Base64StringWithType[];
 
-      if (productData.slideImages.length > 0) {
-        const slideImages = await convertImagesToBase64(
-          productData.slideImages
-        );
+      if (
+        !!Array.isArray(productData.slideImages) &&
+        productData.slideImages.length > 0
+      ) {
+        const slideImages = (await convertImagesToBase64(
+          productData.slideImages as File[]
+        )) as Base64StringWithType[];
         productData.slideImages = slideImages;
       }
 
-      const variants = Object.values(productData.productVariant);
+      const variants = Object.values(
+        productData.productVariant !== undefined &&
+          !Array.isArray(productData.productVariant)
+          ? productData.productVariant
+          : {}
+      );
 
       for (let i = 0; i < variants.length; i++) {
-        variants[i].previewImage = await convertImagesToBase64(
-          variants[i].previewImage
-        );
-        if (variants[i].slideImages.length > 0) {
-          const slideImages = await convertImagesToBase64(
-            variants[i].slideImages
-          );
+        variants[i].previewImage = (await convertImagesToBase64(
+          variants[i].previewImage as File[]
+        )) as Base64StringWithType[];
+        if ((variants[i].slideImages as File[]).length > 0) {
+          const slideImages = (await convertImagesToBase64(
+            variants[i].slideImages as File[]
+          )) as Base64StringWithType[];
           variants[i].slideImages = slideImages;
         }
       }
@@ -204,36 +224,49 @@ const ProductAdd = ({
         },
       }
     );
+
+    console.log(response);
   };
 
   const handleUpdateProduct = async () => {
     try {
-      if (!!productData.previewImage.length) {
-        productData.previewImage = await convertImagesToBase64(
-          productData.previewImage
-        );
+      if (
+        !!Array.isArray(productData.previewImage) &&
+        !!productData.previewImage.length
+      ) {
+        productData.previewImage = (await convertImagesToBase64(
+          productData.previewImage as File[]
+        )) as Base64StringWithType[];
       }
 
-      if (productData.slideImages.length) {
-        const slideImages = await convertImagesToBase64(
-          productData.slideImages
-        );
+      if (
+        !!Array.isArray(productData.slideImages) &&
+        productData.slideImages.length
+      ) {
+        const slideImages = (await convertImagesToBase64(
+          productData.slideImages as File[]
+        )) as Base64StringWithType[];
         productData.slideImages = slideImages;
       }
 
-      const variants = Object.values(productData.productVariant);
+      const variants = Object.values(
+        productData.productVariant !== undefined &&
+          !Array.isArray(productData.productVariant)
+          ? productData.productVariant
+          : {}
+      );
 
       for (let i = 0; i < variants.length; i++) {
-        if (variants[i].previewImage.length) {
-          variants[i].previewImage = await convertImagesToBase64(
-            variants[i].previewImage
-          );
+        if ((variants[i].previewImage as File[]).length) {
+          variants[i].previewImage = (await convertImagesToBase64(
+            variants[i].previewImage as File[]
+          )) as Base64StringWithType[];
         }
 
-        if (variants[i].slideImages.length > 0) {
-          const slideImages = await convertImagesToBase64(
-            variants[i].slideImages
-          );
+        if ((variants[i].slideImages as File[]).length > 0) {
+          const slideImages = (await convertImagesToBase64(
+            variants[i].slideImages as File[]
+          )) as Base64StringWithType[];
           variants[i].slideImages = slideImages;
         }
       }
@@ -254,6 +287,9 @@ const ProductAdd = ({
         },
       }
     );
+
+    console.log(response);
+
     if (typeof fetchProductData !== undefined) {
       fetchProductData();
     }
@@ -264,7 +300,7 @@ const ProductAdd = ({
     sessionStorage.removeItem("productId");
   };
 
-  const handleProductSubmit = async (e) => {
+  const handleProductSubmit = async (e: BaseSyntheticEvent) => {
     e.preventDefault();
     const id = toast.loading("Sending your request.. Please wait..");
     try {
@@ -286,9 +322,8 @@ const ProductAdd = ({
           autoClose: 5000,
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error();
       toast.update(id, {
         render:
           error.response?.data?.message ||
@@ -357,7 +392,7 @@ const ProductAdd = ({
                   // You can store the "editor" and use when it is needed.
                   console.log("Editor is ready to use!", editor);
                 }}
-                onChange={(e, editor) => {
+                onChange={(_, editor) => {
                   setProductData((prev) => {
                     return { ...prev, description: editor.getData() };
                   });
@@ -378,7 +413,7 @@ const ProductAdd = ({
                 <select
                   id="centerCategory"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
-                  value={productData?.category?._id}
+                  value={(productData?.category as Category)?._id}
                   onChange={(e) => {
                     setProductData((prev) => {
                       return { ...prev, category: e.target.value };
@@ -389,9 +424,9 @@ const ProductAdd = ({
                   <option>Select Category</option>
                   {categoryList?.map((category) => (
                     <option
-                      key={category?._id?.toString()}
-                      value={category._id}>
-                      {category.categoryName}
+                      key={(category as Category)?._id?.toString()}
+                      value={(category as Category)._id}>
+                      {(category as Category).categoryName}
                     </option>
                   ))}
                 </select>
@@ -659,7 +694,7 @@ const ProductAdd = ({
 
           {!updateProductId ||
           (!!updateProductId &&
-            Object.keys(productData.productVariant).length > 0) ? (
+            Object.keys(productData.productVariant as {}).length > 0) ? (
             <div className="bg-white p-4 rounded shadow-lg border">
               <h3 className="text-xl font-semibold mb-3">
                 Variant Information
@@ -717,7 +752,7 @@ const ProductAdd = ({
                         type="number"
                         className="form-input ml-2 p-2 border border-gray-300 rounded-md flex-1"
                         onChange={(e) => {
-                          setVariantQuantity(e.target.value);
+                          setVariantQuantity(+e.target.value);
                         }}
                         value={variantQuantity}
                         onWheel={(e) => {
@@ -740,60 +775,61 @@ const ProductAdd = ({
 
               {!!productData?.isVariantAvailable && (
                 <div className="grid grid-cols-1 grid-flow-rows gap-4 md:grid-cols-2 w-full border p-2 rounded-sm">
-                  {Array.from({ length: variantQuantity }).map(
-                    (item, index) => {
-                      return (
-                        <div className="grow">
-                          <div className="w-full p-3 bg-orange-300 rounded-t-md">
-                            <p className="">
-                              <strong>Variant No. {index + 1}</strong>
-                            </p>
-                          </div>
-                          <div className="bg-white p-4 rounded shadow-lg border">
-                            <h3 className="text-xl font-semibold mb-3">
-                              Variant Images
-                            </h3>
+                  {Array.from({
+                    length: variantQuantity === undefined ? 0 : variantQuantity,
+                  }).map((_, index) => {
+                    return (
+                      <div className="grow">
+                        <div className="w-full p-3 bg-orange-300 rounded-t-md">
+                          <p className="">
+                            <strong>Variant No. {index + 1}</strong>
+                          </p>
+                        </div>
+                        <div className="bg-white p-4 rounded shadow-lg border">
+                          <h3 className="text-xl font-semibold mb-3">
+                            Variant Images
+                          </h3>
 
-                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                              <div>
-                                <label
-                                  htmlFor={`variantPreviewImages-${index + 1}`}
-                                  className="block text-sm font-medium text-gray-700">
-                                  Preview Image{" "}
-                                  {!updateProductId && (
-                                    <span className="text-red-500 font-extrabold">
-                                      *
-                                    </span>
-                                  )}
-                                </label>
-                                <input
-                                  id={`variantPreviewImages-${index + 1}`}
-                                  type="file"
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border border-gray-300"
-                                  aria-label="Variant Preview Image"
-                                  accept="image/*"
-                                  onChange={(e) => {
-                                    setProductData((prev) => {
-                                      return {
-                                        ...prev,
-                                        productVariant: {
-                                          ...prev.productVariant,
-                                          [`variant_no_${index}`]: {
-                                            ...prev.productVariant[
-                                              `variant_no_${index}`
-                                            ],
-                                            previewImage: Array.from(
-                                              e.target.files
-                                            ),
-                                          },
+                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div>
+                              <label
+                                htmlFor={`variantPreviewImages-${index + 1}`}
+                                className="block text-sm font-medium text-gray-700">
+                                Preview Image{" "}
+                                {!updateProductId && (
+                                  <span className="text-red-500 font-extrabold">
+                                    *
+                                  </span>
+                                )}
+                              </label>
+                              <input
+                                id={`variantPreviewImages-${index + 1}`}
+                                type="file"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border border-gray-300"
+                                aria-label="Variant Preview Image"
+                                accept="image/*"
+                                onChange={(e) => {
+                                  setProductData((prev) => {
+                                    return {
+                                      ...prev,
+                                      productVariant: {
+                                        ...prev.productVariant,
+                                        [`variant_no_${index}`]: {
+                                          ...(
+                                            prev.productVariant as {
+                                              [key: string]: any;
+                                            }
+                                          )[`variant_no_${index}`],
+                                          previewImage: e.target.files,
                                         },
-                                      };
-                                    });
-                                  }}
-                                  required={!updateProductId}
-                                />
+                                      },
+                                    };
+                                  });
+                                }}
+                                required={!updateProductId}
+                              />
 
-                                {/* <div className="flex items-center justify-center w-fit h-fit">
+                              {/* <div className="flex items-center justify-center w-fit h-fit">
                               <label
                                 htmlFor={`variantPreviewImages-${index + 1}`}
                                 className="cursor-pointer bg-white p-8 rounded-md border-2 border-dashed border-gray-600 shadow-md mt-1"> {!updateProductId && <span className="text-red-500 font-extrabold">*</span>}
@@ -837,48 +873,48 @@ const ProductAdd = ({
                                 />
                               </label>
                             </div> */}
-                              </div>
+                            </div>
 
-                              <div>
-                                <label
-                                  htmlFor={`variantSlideImages-${index + 1}`}
-                                  className="block text-sm font-medium text-gray-700">
-                                  Slider Images{" "}
-                                  {!updateProductId && (
-                                    <span className="text-red-500 font-extrabold">
-                                      *
-                                    </span>
-                                  )}
-                                </label>
-                                <input
-                                  id={`variantSlideImages-${index + 1}`}
-                                  type="file"
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border border-gray-300"
-                                  aria-label="Variant Slide Images"
-                                  accept="image/*"
-                                  onChange={(e) => {
-                                    setProductData((prev) => {
-                                      return {
-                                        ...prev,
-                                        productVariant: {
-                                          ...prev.productVariant,
-                                          [`variant_no_${index}`]: {
-                                            ...prev.productVariant[
-                                              `variant_no_${index}`
-                                            ],
-                                            slideImages: Array.from(
-                                              e.target.files
-                                            ),
-                                          },
+                            <div>
+                              <label
+                                htmlFor={`variantSlideImages-${index + 1}`}
+                                className="block text-sm font-medium text-gray-700">
+                                Slider Images{" "}
+                                {!updateProductId && (
+                                  <span className="text-red-500 font-extrabold">
+                                    *
+                                  </span>
+                                )}
+                              </label>
+                              <input
+                                id={`variantSlideImages-${index + 1}`}
+                                type="file"
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border border-gray-300"
+                                aria-label="Variant Slide Images"
+                                accept="image/*"
+                                onChange={(e) => {
+                                  setProductData((prev) => {
+                                    return {
+                                      ...prev,
+                                      productVariant: {
+                                        ...prev.productVariant,
+                                        [`variant_no_${index}`]: {
+                                          ...(
+                                            prev.productVariant as {
+                                              [key: string]: any;
+                                            }
+                                          )[`variant_no_${index}`],
+                                          slideImages: e.target.files,
                                         },
-                                      };
-                                    });
-                                  }}
-                                  multiple
-                                  required={!updateProductId}
-                                />
+                                      },
+                                    };
+                                  });
+                                }}
+                                multiple
+                                required={!updateProductId}
+                              />
 
-                                {/* <div className="flex items-center justify-center w-fit h-fit">
+                              {/* <div className="flex items-center justify-center w-fit h-fit">
                               <label
                                 htmlFor={`variantSlideImages-${index + 1}`}
                                 className="cursor-pointer bg-white p-8 rounded-md border-2 border-dashed border-gray-600 shadow-md mt-1"> {!updateProductId && <span className="text-red-500 font-extrabold">*</span>}
@@ -923,207 +959,21 @@ const ProductAdd = ({
                                 />
                               </label>
                             </div> */}
-                              </div>
                             </div>
                           </div>
+                        </div>
 
-                          <div className="bg-white p-4 rounded shadow-lg border">
-                            <h3 className="text-xl font-semibold mb-3">
-                              Variant Pricing
-                            </h3>
+                        <div className="bg-white p-4 rounded shadow-lg border">
+                          <h3 className="text-xl font-semibold mb-3">
+                            Variant Pricing
+                          </h3>
 
-                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                              <div>
-                                <label
-                                  htmlFor={`variantRentablePrice-${index + 1}`}
-                                  className="block text-sm font-medium text-gray-700">
-                                  Rent Price{" "}
-                                  {!updateProductId && (
-                                    <span className="text-red-500 font-extrabold">
-                                      *
-                                    </span>
-                                  )}
-                                </label>
-                                <input
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
-                                  placeholder="Enter renting price for variant"
-                                  value={
-                                    productData?.productVariant[
-                                      `variant_no_${index}`
-                                    ]?.rentingPrice
-                                  }
-                                  onChange={(e) => {
-                                    setProductData((prev) => {
-                                      return {
-                                        ...prev,
-                                        productVariant: {
-                                          ...prev.productVariant,
-                                          [`variant_no_${index}`]: {
-                                            ...prev.productVariant[
-                                              `variant_no_${index}`
-                                            ],
-                                            rentingPrice:
-                                              +e.target.value || "" || "",
-                                          },
-                                        },
-                                      };
-                                    });
-                                  }}
-                                  onWheel={(e) => {
-                                    e.preventDefault();
-                                  }}
-                                  type="number"
-                                  id={`variantRentablePrice-${index + 1}`}
-                                  required={!updateProductId}
-                                />
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor={`variantPurchasablePrice-${index + 1}`}
-                                  className="block text-sm font-medium text-gray-700">
-                                  Purchasable Price{" "}
-                                  {!updateProductId && (
-                                    <span className="text-red-500 font-extrabold">
-                                      *
-                                    </span>
-                                  )}
-                                </label>
-                                <input
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
-                                  placeholder="Enter purchasable price for product"
-                                  value={
-                                    productData?.productVariant[
-                                      `variant_no_${index}`
-                                    ]?.discountedPrice
-                                  }
-                                  onChange={(e) => {
-                                    setProductData((prev) => {
-                                      return {
-                                        ...prev,
-                                        productVariant: {
-                                          ...prev.productVariant,
-                                          [`variant_no_${index}`]: {
-                                            ...prev.productVariant[
-                                              `variant_no_${index}`
-                                            ],
-                                            discountedPrice:
-                                              +e.target.value || "",
-                                          },
-                                        },
-                                      };
-                                    });
-                                  }}
-                                  onWheel={(e) => {
-                                    e.preventDefault();
-                                  }}
-                                  type="number"
-                                  id={`variantPurchasablePrice-${index + 1}`}
-                                />
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor={`variantOriginalMRP-${index + 1}`}
-                                  className="block text-sm font-medium text-gray-700">
-                                  Original MRP{" "}
-                                  {!updateProductId && (
-                                    <span className="text-red-500 font-extrabold">
-                                      *
-                                    </span>
-                                  )}
-                                </label>
-                                <input
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
-                                  placeholder="Enter orignal MRP of product"
-                                  value={
-                                    productData?.productVariant[
-                                      `variant_no_${index}`
-                                    ]?.originalPrice
-                                  }
-                                  onChange={(e) => {
-                                    setProductData((prev) => {
-                                      return {
-                                        ...prev,
-                                        productVariant: {
-                                          ...prev.productVariant,
-                                          [`variant_no_${index}`]: {
-                                            ...prev.productVariant[
-                                              `variant_no_${index}`
-                                            ],
-                                            originalPrice:
-                                              +e.target.value || "",
-                                          },
-                                        },
-                                      };
-                                    });
-                                  }}
-                                  onWheel={(e) => {
-                                    e.preventDefault();
-                                  }}
-                                  type="number"
-                                  id={`variantOriginalMRP-${index + 1}`}
-                                  required={!updateProductId}
-                                />
-                              </div>
-
-                              <div>
-                                <label
-                                  htmlFor={`variantDeliveryCharges-${index + 1}`}
-                                  className="block text-sm font-medium text-gray-700">
-                                  Delivery Charge{" "}
-                                  {!updateProductId && (
-                                    <span className="text-red-500 font-extrabold">
-                                      *
-                                    </span>
-                                  )}
-                                </label>
-                                <input
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
-                                  placeholder="Enter delivery charge of product"
-                                  value={
-                                    productData?.productVariant[
-                                      `variant_no_${index}`
-                                    ]?.shippingPrice
-                                  }
-                                  onChange={(e) => {
-                                    setProductData((prev) => {
-                                      return {
-                                        ...prev,
-                                        productVariant: {
-                                          ...prev.productVariant,
-                                          [`variant_no_${index}`]: {
-                                            ...prev.productVariant[
-                                              `variant_no_${index}`
-                                            ],
-                                            shippingPrice:
-                                              +e.target.value || "",
-                                          },
-                                        },
-                                      };
-                                    });
-                                  }}
-                                  onWheel={(e) => {
-                                    e.preventDefault();
-                                  }}
-                                  type="number"
-                                  id={`variantDeliveryCharges-${index + 1}`}
-                                  required={!updateProductId}
-                                />
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="bg-white p-4 rounded shadow-lg border">
-                            <h3 className="text-xl font-semibold mb-3">
-                              Variants Stocks
-                            </h3>
-
+                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                               <label
-                                htmlFor={`variantAvailableStocks-${index + 1}`}
+                                htmlFor={`variantRentablePrice-${index + 1}`}
                                 className="block text-sm font-medium text-gray-700">
-                                Available Stocks{" "}
+                                Rent Price{" "}
                                 {!updateProductId && (
                                   <span className="text-red-500 font-extrabold">
                                     *
@@ -1131,13 +981,14 @@ const ProductAdd = ({
                                 )}
                               </label>
                               <input
-                                id={`variantAvailableStocks-${index + 1}`}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
-                                placeholder="Enter available stocks of the variant"
+                                placeholder="Enter renting price for variant"
                                 value={
-                                  productData?.productVariant[
-                                    `variant_no_${index}`
-                                  ]?.availableStocks
+                                  (
+                                    productData?.productVariant as {
+                                      [key: string]: any;
+                                    }
+                                  )[`variant_no_${index}`]?.rentingPrice
                                 }
                                 onChange={(e) => {
                                   setProductData((prev) => {
@@ -1146,117 +997,326 @@ const ProductAdd = ({
                                       productVariant: {
                                         ...prev.productVariant,
                                         [`variant_no_${index}`]: {
-                                          ...prev.productVariant[
-                                            `variant_no_${index}`
-                                          ],
-                                          availableStocks:
+                                          ...(
+                                            prev.productVariant as {
+                                              [key: string]: any;
+                                            }
+                                          )[`variant_no_${index}`],
+                                          rentingPrice:
+                                            +e.target.value || "" || "",
+                                        },
+                                      },
+                                    };
+                                  });
+                                }}
+                                onWheel={(e) => {
+                                  e.preventDefault();
+                                }}
+                                type="number"
+                                id={`variantRentablePrice-${index + 1}`}
+                                required={!updateProductId}
+                              />
+                            </div>
+
+                            <div>
+                              <label
+                                htmlFor={`variantPurchasablePrice-${index + 1}`}
+                                className="block text-sm font-medium text-gray-700">
+                                Purchasable Price{" "}
+                                {!updateProductId && (
+                                  <span className="text-red-500 font-extrabold">
+                                    *
+                                  </span>
+                                )}
+                              </label>
+                              <input
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
+                                placeholder="Enter purchasable price for product"
+                                value={
+                                  (
+                                    productData?.productVariant as {
+                                      [key: string]: any;
+                                    }
+                                  )[`variant_no_${index}`]?.discountedPrice
+                                }
+                                onChange={(e) => {
+                                  setProductData((prev) => {
+                                    return {
+                                      ...prev,
+                                      productVariant: {
+                                        ...prev.productVariant,
+                                        [`variant_no_${index}`]: {
+                                          ...(
+                                            prev.productVariant as {
+                                              [key: string]: any;
+                                            }
+                                          )[`variant_no_${index}`],
+                                          discountedPrice:
                                             +e.target.value || "",
                                         },
                                       },
                                     };
                                   });
                                 }}
+                                onWheel={(e) => {
+                                  e.preventDefault();
+                                }}
                                 type="number"
+                                id={`variantPurchasablePrice-${index + 1}`}
+                              />
+                            </div>
+
+                            <div>
+                              <label
+                                htmlFor={`variantOriginalMRP-${index + 1}`}
+                                className="block text-sm font-medium text-gray-700">
+                                Original MRP{" "}
+                                {!updateProductId && (
+                                  <span className="text-red-500 font-extrabold">
+                                    *
+                                  </span>
+                                )}
+                              </label>
+                              <input
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
+                                placeholder="Enter orignal MRP of product"
+                                value={
+                                  (
+                                    productData?.productVariant as {
+                                      [key: string]: any;
+                                    }
+                                  )[`variant_no_${index}`]?.originalPrice
+                                }
+                                onChange={(e) => {
+                                  setProductData((prev) => {
+                                    return {
+                                      ...prev,
+                                      productVariant: {
+                                        ...prev.productVariant,
+                                        [`variant_no_${index}`]: {
+                                          ...(
+                                            prev.productVariant as {
+                                              [key: string]: any;
+                                            }
+                                          )[`variant_no_${index}`],
+                                          originalPrice: +e.target.value || "",
+                                        },
+                                      },
+                                    };
+                                  });
+                                }}
+                                onWheel={(e) => {
+                                  e.preventDefault();
+                                }}
+                                type="number"
+                                id={`variantOriginalMRP-${index + 1}`}
+                                required={!updateProductId}
+                              />
+                            </div>
+
+                            <div>
+                              <label
+                                htmlFor={`variantDeliveryCharges-${index + 1}`}
+                                className="block text-sm font-medium text-gray-700">
+                                Delivery Charge{" "}
+                                {!updateProductId && (
+                                  <span className="text-red-500 font-extrabold">
+                                    *
+                                  </span>
+                                )}
+                              </label>
+                              <input
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
+                                placeholder="Enter delivery charge of product"
+                                value={
+                                  (
+                                    productData?.productVariant as {
+                                      [key: string]: any;
+                                    }
+                                  )[`variant_no_${index}`]?.shippingPrice
+                                }
+                                onChange={(e) => {
+                                  setProductData((prev) => {
+                                    return {
+                                      ...prev,
+                                      productVariant: {
+                                        ...prev.productVariant,
+                                        [`variant_no_${index}`]: {
+                                          ...(
+                                            prev.productVariant as {
+                                              [key: string]: any;
+                                            }
+                                          )[`variant_no_${index}`],
+                                          shippingPrice: +e.target.value || "",
+                                        },
+                                      },
+                                    };
+                                  });
+                                }}
+                                onWheel={(e) => {
+                                  e.preventDefault();
+                                }}
+                                type="number"
+                                id={`variantDeliveryCharges-${index + 1}`}
                                 required={!updateProductId}
                               />
                             </div>
                           </div>
+                        </div>
 
-                          <div className="bg-white p-4 rounded shadow-lg border">
-                            <h3 className="text-xl font-semibold mb-3">
-                              Variation
-                            </h3>
+                        <div className="bg-white p-4 rounded shadow-lg border">
+                          <h3 className="text-xl font-semibold mb-3">
+                            Variants Stocks
+                          </h3>
 
-                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                              <div>
-                                <label
-                                  htmlFor={`variantColor-${index + 1}`}
-                                  className="block text-sm font-medium text-gray-700">
-                                  Color{" "}
-                                  {!updateProductId && (
-                                    <span className="text-red-500 font-extrabold">
-                                      *
-                                    </span>
-                                  )}
-                                </label>
-                                <input
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
-                                  // placeholder="Enter color for product variant"
-                                  value={
-                                    productData?.productVariant[
-                                      `variant_no_${index}`
-                                    ]?.color
+                          <div>
+                            <label
+                              htmlFor={`variantAvailableStocks-${index + 1}`}
+                              className="block text-sm font-medium text-gray-700">
+                              Available Stocks{" "}
+                              {!updateProductId && (
+                                <span className="text-red-500 font-extrabold">
+                                  *
+                                </span>
+                              )}
+                            </label>
+                            <input
+                              id={`variantAvailableStocks-${index + 1}`}
+                              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
+                              placeholder="Enter available stocks of the variant"
+                              value={
+                                (
+                                  productData?.productVariant as {
+                                    [key: string]: any;
                                   }
-                                  onChange={(e) => {
-                                    setProductData((prev) => {
-                                      return {
-                                        ...prev,
-                                        productVariant: {
-                                          ...prev.productVariant,
-                                          [`variant_no_${index}`]: {
-                                            ...prev.productVariant[
-                                              `variant_no_${index}`
-                                            ],
-                                            color: e.target.value,
-                                          },
-                                        },
-                                      };
-                                    });
-                                  }}
-                                  type="text"
-                                  id={`variantColor-${index + 1}`}
-                                  placeholder="Black | White | Red etc."
-                                  required={!updateProductId}
-                                />
-                              </div>
+                                )[`variant_no_${index}`]?.availableStocks
+                              }
+                              onChange={(e) => {
+                                setProductData((prev) => {
+                                  return {
+                                    ...prev,
+                                    productVariant: {
+                                      ...prev.productVariant,
+                                      [`variant_no_${index}`]: {
+                                        ...(
+                                          prev.productVariant as {
+                                            [key: string]: any;
+                                          }
+                                        )[`variant_no_${index}`],
+                                        availableStocks: +e.target.value || "",
+                                      },
+                                    },
+                                  };
+                                });
+                              }}
+                              type="number"
+                              required={!updateProductId}
+                            />
+                          </div>
+                        </div>
 
-                              <div>
-                                <label
-                                  htmlFor={`variantSize-${index + 1}`}
-                                  className="block text-sm font-medium text-gray-700">
-                                  Size{" "}
-                                  {!updateProductId && (
-                                    <span className="text-red-500 font-extrabold">
-                                      *
-                                    </span>
-                                  )}
-                                </label>
-                                <input
-                                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
-                                  // placeholder="Enter Size for product variant"
-                                  value={
-                                    productData?.productVariant[
-                                      `variant_no_${index}`
-                                    ]?.size
-                                  }
-                                  onChange={(e) => {
-                                    setProductData((prev) => {
-                                      return {
-                                        ...prev,
-                                        productVariant: {
-                                          ...prev.productVariant,
-                                          [`variant_no_${index}`]: {
-                                            ...prev.productVariant[
-                                              `variant_no_${index}`
-                                            ],
-                                            size: e.target.value,
-                                          },
+                        <div className="bg-white p-4 rounded shadow-lg border">
+                          <h3 className="text-xl font-semibold mb-3">
+                            Variation
+                          </h3>
+
+                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div>
+                              <label
+                                htmlFor={`variantColor-${index + 1}`}
+                                className="block text-sm font-medium text-gray-700">
+                                Color{" "}
+                                {!updateProductId && (
+                                  <span className="text-red-500 font-extrabold">
+                                    *
+                                  </span>
+                                )}
+                              </label>
+                              <input
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
+                                // placeholder="Enter color for product variant"
+                                value={
+                                  (
+                                    productData?.productVariant as {
+                                      [key: string]: any;
+                                    }
+                                  )[`variant_no_${index}`]?.color
+                                }
+                                onChange={(e) => {
+                                  setProductData((prev) => {
+                                    return {
+                                      ...prev,
+                                      productVariant: {
+                                        ...prev.productVariant,
+                                        [`variant_no_${index}`]: {
+                                          ...(
+                                            prev.productVariant as {
+                                              [key: string]: any;
+                                            }
+                                          )[`variant_no_${index}`],
+                                          color: e.target.value,
                                         },
-                                      };
-                                    });
-                                  }}
-                                  type="text"
-                                  id={`variantSize-${index + 1}`}
-                                  placeholder="S | L | XL | 8 etc."
-                                  required={!updateProductId}
-                                />
-                              </div>
+                                      },
+                                    };
+                                  });
+                                }}
+                                type="text"
+                                id={`variantColor-${index + 1}`}
+                                placeholder="Black | White | Red etc."
+                                required={!updateProductId}
+                              />
+                            </div>
+
+                            <div>
+                              <label
+                                htmlFor={`variantSize-${index + 1}`}
+                                className="block text-sm font-medium text-gray-700">
+                                Size{" "}
+                                {!updateProductId && (
+                                  <span className="text-red-500 font-extrabold">
+                                    *
+                                  </span>
+                                )}
+                              </label>
+                              <input
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-10 border border-gray-300 px-2"
+                                // placeholder="Enter Size for product variant"
+                                value={
+                                  (
+                                    productData?.productVariant as {
+                                      [key: string]: any;
+                                    }
+                                  )[`variant_no_${index}`]?.size
+                                }
+                                onChange={(e) => {
+                                  setProductData((prev) => {
+                                    return {
+                                      ...prev,
+                                      productVariant: {
+                                        ...prev.productVariant,
+                                        [`variant_no_${index}`]: {
+                                          ...(
+                                            prev.productVariant as {
+                                              [key: string]: any;
+                                            }
+                                          )[`variant_no_${index}`],
+                                          size: e.target.value,
+                                        },
+                                      },
+                                    };
+                                  });
+                                }}
+                                type="text"
+                                id={`variantSize-${index + 1}`}
+                                placeholder="S | L | XL | 8 etc."
+                                required={!updateProductId}
+                              />
                             </div>
                           </div>
                         </div>
-                      );
-                    }
-                  )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>

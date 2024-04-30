@@ -2,6 +2,25 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const SERVER_URL = `${process.env.EXPO_PUBLIC_API_URL}/`;
 
+// type location = {
+//   type: string;
+//   coordinates: [number, number]; // Array of [longitude, latitude]
+// };
+
+// interface Address {
+//   user: string;
+//   prefix: string;
+//   locality: string;
+//   postalCode: string;
+//   country: string;
+//   streetName: string;
+//   city: string;
+//   state: string;
+//   longitude: number;
+//   latitude: number;
+//   location: location;
+// }
+
 export const addressApi = createApi({
   reducerPath: "addressApi",
   baseQuery: fetchBaseQuery({
@@ -22,7 +41,7 @@ export const addressApi = createApi({
         method: "GET",
       }),
       providesTags: ["Address"],
-      transformResponse: (response, meta, arg) => (response as any).data,
+      transformResponse: (response: any, meta) => response.result.data,
       // transformErrorResponse: (response, meta, arg) => response.message,
     }),
 
@@ -46,7 +65,7 @@ export const addressApi = createApi({
     }),
 
     updateAddress: builder.mutation({
-      query: ({id, updatedAddress}) => ({
+      query: ({ id, updatedAddress }) => ({
         url: `address/${id}`,
         method: "PATCH",
         body: updatedAddress,
