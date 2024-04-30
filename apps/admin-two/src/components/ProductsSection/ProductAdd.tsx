@@ -41,6 +41,8 @@ const ProductAdd: React.FC<ProductAddProps> = ({
     productVariant: {},
   });
 
+  console.log(productData);
+
   const [categoryList, setCategoryList] = useState([]);
 
   // ! Fetch category logic
@@ -179,10 +181,7 @@ const ProductAdd: React.FC<ProductAddProps> = ({
         productData.previewImage as File[]
       )) as Base64StringWithType[];
 
-      if (
-        !!Array.isArray(productData.slideImages) &&
-        productData.slideImages.length > 0
-      ) {
+      if (!!(productData.slideImages as FileList).length) {
         const slideImages = (await convertImagesToBase64(
           productData.slideImages as File[]
         )) as Base64StringWithType[];
@@ -230,19 +229,18 @@ const ProductAdd: React.FC<ProductAddProps> = ({
 
   const handleUpdateProduct = async () => {
     try {
-      if (
-        !!Array.isArray(productData.previewImage) &&
-        !!productData.previewImage.length
-      ) {
+      if (!!(productData.previewImage as FileList).length) {
         productData.previewImage = (await convertImagesToBase64(
           productData.previewImage as File[]
         )) as Base64StringWithType[];
+
+        console.log(
+          "What is the result after convertion -->",
+          productData.previewImage
+        );
       }
 
-      if (
-        !!Array.isArray(productData.slideImages) &&
-        productData.slideImages.length
-      ) {
+      if (!!(productData.slideImages as FileList).length) {
         const slideImages = (await convertImagesToBase64(
           productData.slideImages as File[]
         )) as Base64StringWithType[];
