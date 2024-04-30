@@ -338,11 +338,16 @@ const ProductAdd: React.FC<ProductAddProps> = ({
 
   return (
     <div
-      className={`flex flex-col flex-1 p-6 bg-gray-100 ${!updateProductId && "ml-64"} max-md:ml-0`}>
-      <div className="bg-white shadow-md rounded p-6 mb-4">
-        <h2 className="text-2xl font-bold mb-4">
+      // className={`flex flex-col flex-1 md:p-6 bg-gray-100 ${!updateProductId && "ml-64"} max-md:ml-0`}>
+      className={`flex flex-col flex-1 bg-gray-100 ${!updateProductId && "ml-64"} max-md:ml-0`}>
+      {/* <div className="bg-white shadow-md rounded p-6 mb-4"> */}
+      <div className="bg-white shadow-md rounded mb-4">
+        {/* <h2 className="text-2xl font-bold mb-4">
           {!updateProductId ? "Add Product" : "Update Product"}
-        </h2>
+        </h2> */}
+        {!updateProductId && (
+          <h2 className="text-2xl font-bold mb-4">Add Product</h2>
+        )}
         <form onSubmit={handleProductSubmit} className="space-y-6">
           <div className="bg-white p-4 rounded shadow-lg border">
             <h3 className="text-xl font-semibold mb-3">Product Details</h3>
@@ -772,7 +777,7 @@ const ProductAdd: React.FC<ProductAddProps> = ({
               </div>
 
               {!!productData?.isVariantAvailable && (
-                <div className="grid grid-cols-1 grid-flow-rows gap-4 md:grid-cols-2 w-full border p-2 rounded-sm">
+                <div className="grid grid-cols-1 grid-flow-rows gap-4 md:grid-cols-2 w-full md:border md:p-2 rounded-sm">
                   {Array.from({
                     length: variantQuantity === undefined ? 0 : variantQuantity,
                   }).map((_, index) => {

@@ -105,13 +105,19 @@ export type ProductVariant = {
 };
 
 export type Category = {
-  _id: string;
+  _id?: string;
   categoryName: string;
-  categoryImageUrl: string;
-  createdAt: string;
-  updatedAt: string;
+  categoryImageUrl:
+    | string
+    | File[]
+    | FileList
+    | string[]
+    | Base64StringWithType[]
+    | null;
+  createdAt?: string;
+  updatedAt?: string;
   __v?: number | undefined;
-  categoryKey: string;
+  categoryKey?: string;
 };
 
 export type Product = {

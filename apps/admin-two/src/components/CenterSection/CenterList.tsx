@@ -13,7 +13,7 @@ import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
 import { ClipLoader } from "react-spinners";
 import CenterModal from "./CenterModal";
-import ConfirmModal from "../../components/ConfirmModal";
+import ConfirmModal from "../ConfirmModal";
 import { useAppSelector } from "@store/rtk";
 import { Center } from "../../types";
 

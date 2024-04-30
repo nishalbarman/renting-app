@@ -2,12 +2,13 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Dashboard from "../components/Dashboard";
 import Login from "../components/Login";
-import AddNewCenter from "../components/center/AddCenter";
-import CenterList from "../components/center/CenterList";
+import AddNewCenter from "../components/CenterSection/AddCenter";
+import CenterList from "../components/CenterSection/CenterList";
 import ProductAdd from "../components/ProductsSection/ProductAdd";
 import ProductList from "../components/ProductsSection/ProductList";
 import OrderList from "../components/OrderSection/OrdersList";
 import ViewSingleOrder from "../components/OrderSection/ViewOrder";
+import CategoryList from "../components/CategorySection/CategoryList";
 
 const AllRoutes: React.FC = () => {
   const [navbarToogle, setNavbarToogle] = React.useState<Boolean>(true);
@@ -25,6 +26,7 @@ const AllRoutes: React.FC = () => {
       <Route path="/product/list" element={<ProductList />} />
       <Route path="/orders/list" element={<OrderList />} />
       <Route path="/orders/view" element={<ViewSingleOrder />} />
+      <Route path="/categories" element={<CategoryList />} />
     </Routes>
   );
 };

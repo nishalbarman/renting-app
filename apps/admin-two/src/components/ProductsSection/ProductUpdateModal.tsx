@@ -17,7 +17,7 @@ function CenterModal({
   return (
     <>
       {visible && (
-        <div className="fixed inset-0 z-50 w-full h-full flex justify-center overflow-x-hidden overflow-y-hidden outline-none focus:outline-none p-3 md:p-10 rounded-md">
+        <div className="fixed inset-0 z-50 w-full h-full flex justify-center overflow-x-hidden overflow-y-hidden outline-none focus:outline-none md:p-10 rounded-md">
           <div className="fixed bg-black inset-0 opacity-50"></div>
           <div className="border border-gray-200 shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             <div className="flex items-center justify-between px-3 p-2 border-b border-solid border-gray-300 rounded-t w-full">
@@ -31,7 +31,7 @@ function CenterModal({
                 <span className="text-4xl">×</span>
               </button>
             </div>
-            <div className="relative p-6 flex-auto overflow-auto">
+            <div className="relative md:p-6 flex-auto overflow-auto">
               <ProductAdd
                 loading={isUpdateLoading}
                 setIsUpdateLoading={setIsUpdateLoading}
