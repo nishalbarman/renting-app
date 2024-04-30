@@ -4,9 +4,9 @@ import {
   // FaEnvelope,
   // FaUsers,
   FaFileAlt,
-  FaCogs,
-  FaKey,
-  FaExchangeAlt,
+  // FaCogs,
+  // FaKey,
+  // FaExchangeAlt,
 } from "react-icons/fa";
 
 import { IoMdClose } from "react-icons/io";

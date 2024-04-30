@@ -46,8 +46,8 @@ const ProductAdd = () => {
   };
 
   const [categoryList, setCategoryList] = useState<Category[]>([]);
-  const [paginationPage, setPaginationPage] = useState(1);
-  const [paginationLimit, setPaginationLimit] = useState(10);
+  const [_, setPaginationPage] = useState(1);
+  // const [paginationLimit, setPaginationLimit] = useState(10);
 
   const [isCategoriesLoading, sestIsCategoriesLoading] = useState(true);
 
