@@ -60,10 +60,10 @@ router.post("/", async (req, res) => {
     const dueTimestamp = dateObject.getTime() + 10 * 60 * 1000;
 
     console.log(req.body.otp);
-    console.log("retrieved OTP from db", otpFromDatabase.otp);
-    console.log("Due time ==>", Math.round(dueTimestamp));
-    console.log("Current time ==>", Date.now());
-    console.log(Math.round(dueTimestamp) < Date.now());
+    // console.log("retrieved OTP from db", otpFromDatabase.otp);
+    // console.log("Due time ==>", Math.round(dueTimestamp));
+    // console.log("Current time ==>", Date.now());
+    // console.log(Math.round(dueTimestamp) < Date.now());
 
     if (
       otpFromDatabase.otp != req.body.otp ||
@@ -81,7 +81,7 @@ router.post("/", async (req, res) => {
 
     const verifyToken = uuidv4();
 
-    const userObject = new User({
+    const userObject = await User.create({
       email,
       name,
       mobileNo,
@@ -90,13 +90,11 @@ router.post("/", async (req, res) => {
       role: "65f1c390dd964b2b01a2ee64", // default id for user role
     });
 
-    await userObject.save();
-
     const jwtToken = jwt.sign(
       {
         _id: userObject._id,
         name: userObject.name,
-        role: userObject.role.role,
+        role: 0, //! Default role for user is 0
         email: userObject.email,
         mobileNo: userObject.mobileNo,
         center: userObject?.center,

@@ -1,70 +1,68 @@
 const express = require("express");
 const router = express.Router();
+const bcrypt = require("bcryptjs");
+
 const Address = require("../../models/address.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
 const User = require("../../models/user.model");
 const mongoose = require("mongoose");
 const Center = require("../../models/center.model");
+const checkRole = require("../../middlewares");
 
-router.get("/addresses", async (req, res) => {
-  try {
-    console.log("Here in address router");
+const { ImageUploadHelper } = require("../../helpter/imgUploadhelpter");
 
-    const token = req.jwt.token || null;
+router.get(
+  "/list",
+  checkRole(1) /* required admin role */,
+  async (req, res) => {
+    try {
+      const searchParams = req.query;
 
-    if (!token) {
-      return res.status(400).json({
-        status: false,
-        message: "Token validation failed",
+      let PAGE = searchParams.page || 0;
+      const LIMIT = searchParams.limit || 50;
+      const SKIP = PAGE * LIMIT;
+
+      const centerTotalDocuments = await Center.countDocuments();
+      const center = await Center.find()
+        .sort({ createdAt: "desc" })
+        .populate(["user", "address"])
+        .skip(SKIP)
+        .limit(LIMIT);
+
+      const totalPages = Math.ceil(centerTotalDocuments / LIMIT);
+
+      return res.json({
+        centers: center,
+        totalDocumentCount: centerTotalDocuments,
+        totalPages: totalPages,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "Internal server error!",
       });
     }
-
-    const userDetails = getTokenDetails(token);
-
-    if (!userDetails) {
-      return res.status(400).json({
-        status: false,
-        message: "Token validation failed",
-      });
-    }
-
-    const address = await Address.find({
-      user: userDetails._id,
-    })
-      .sort({ createdAt: "desc" })
-      .select("-user");
-
-    console.log("Getting request on address route", address);
-
-    return res.json({
-      data: address,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Internal server error!",
-    });
   }
-});
+);
 
-// user route
-router.get("/addresses/:userAddressID", async (req, res) => {
+// This is an user route no special role required | Get all the centers available nearby for the given user address id.. This will list all the centers and will calculate addresses based on user address
+router.get("/addresses/:userAddressID", checkRole(0), async (req, res) => {
   try {
-    const token = req?.jwt?.token;
+    // const token = req?.jwt?.token;
 
-    if (!token) {
-      return res.status(400).json({
-        message: "Token validation failed",
-      });
-    }
+    // if (!token) {
+    //   return res.status(400).json({
+    //     message: "Token validation failed",
+    //   });
+    // }
 
-    const userDetails = getTokenDetails(token);
+    // const userDetails = getTokenDetails(token);
 
-    if (!userDetails) {
-      return res.status(400).json({
-        message: "Token validation failed",
-      });
-    }
+    // if (!userDetails) {
+    //   return res.status(400).json({
+    //     message: "Token validation failed",
+    //   });
+    // }
 
     const userAddressID = req.params?.userAddressID;
 
@@ -85,8 +83,10 @@ router.get("/addresses/:userAddressID", async (req, res) => {
           },
           distanceField: "distance",
           spherical: true,
-          maxDistance: 10000, // Max distance in meters
-          query: {}, // Additional query conditions can be added here if needed
+          // maxDistance: 10000, //! Max distance in meters
+          query: {
+            approvedStatus: "approved",
+          }, // Additional query conditions can be added here if needed
           key: "location", // Specify the field containing the coordinates
         },
       },
@@ -143,7 +143,198 @@ router.get("/addresses/:userAddressID", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/add", checkRole(1), async (req, res) => {
+  try {
+    const centerData = req.body?.centerData;
+
+    if (!centerData) {
+      return res.status(400).json({ message: "Center Data not found" });
+    }
+
+    //! User details
+    const userName = centerData?.name;
+    const email = centerData?.email;
+    const mobileNo = centerData?.mobileNo;
+    let password = centerData?.password;
+
+    //! Center details
+    const centerName = centerData?.centerName;
+    const streetName = centerData?.streetName;
+    const locality = centerData?.locality;
+    const postalCode = centerData?.postalCode;
+    const city = centerData?.city;
+    const country = centerData?.country;
+    const longitude = centerData?.longitude;
+    const latitude = centerData?.latitude;
+
+    //! Images to upload
+    let addressProof = centerData?.addressProof;
+    let identityProof = centerData?.identityProof;
+    let centerImages = centerData?.centerImages;
+
+    // TODO: Validate all those fields before saving in database
+
+    centerImages = await ImageUploadHelper.uploadBulkImages(centerImages);
+    addressProof = await ImageUploadHelper.uploadBulkImages(addressProof);
+    identityProof = await ImageUploadHelper.uploadBulkImages(identityProof);
+
+    const salt = bcrypt.genSaltSync(10);
+    password = bcrypt.hashSync(password, salt);
+
+    let user;
+    try {
+      user = await User.create({
+        name: userName,
+        email,
+        mobileNo,
+        password,
+        isEmailVerified: false,
+        isMobileNoVerified: true, // ? As admin creating this center so making mobile no verified for that reason I am out.
+        role: "65f1c3e4dd964b2b01a2ee66",
+      });
+    } catch (error) {
+      console.log(error);
+      if (error instanceof mongoose.Error && error?.errors) {
+        const errArray = Object.values(error.errors).map(
+          (properties) => properties.message
+        );
+
+        return res.status(400).json({
+          message: errArray.join(", "),
+        });
+      }
+
+      return res.status(400).json({ message: "User creation failed!" });
+    }
+
+    const location = { type: "Point", coordinates: [longitude, latitude] };
+
+    let address;
+    try {
+      address = await Address.create({
+        user: user._id,
+        name: "_",
+        locality,
+        city,
+        postalCode,
+        country,
+        streetName,
+        longitude,
+        latitude,
+        location,
+      });
+    } catch (error) {
+      console.log(error);
+
+      User.findByIdAndDelete(user?._id);
+
+      if (error instanceof mongoose.Error && error?.errors) {
+        const errArray = Object.values(error.errors).map(
+          (properties) => properties.message
+        );
+
+        return res.status(400).json({
+          message: errArray.join(", "),
+        });
+      }
+
+      return res.status(400).json({ message: "Address creation failed!" });
+    }
+
+    let center;
+    try {
+      center = await Center.create({
+        user: user._id,
+        address: address._id,
+        centerName,
+        centerImage: centerImages[0],
+        addressProofImage: addressProof[0],
+        idProofImage: identityProof[0],
+        location,
+        approvedStatus: "approved",
+      });
+    } catch (error) {
+      User.findByIdAndDelete(user?._id);
+      Address.findByIdAndDelete(address?._id);
+
+      if (error instanceof mongoose.Error && error?.errors) {
+        const errArray = Object.values(error.errors).map(
+          (properties) => properties.message
+        );
+
+        return res.status(400).json({
+          message: errArray.join(", "),
+        });
+      }
+
+      return res.status(400).json({ message: "Center creation failed!" });
+    }
+
+    return res.send({ message: "Center created." });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+router.post(
+  "/delete",
+  checkRole(1) /* required admin role */,
+  async (req, res) => {
+    try {
+      const centerIds = req.body?.centerIds;
+      if (!centerIds || !Array.isArray(centerIds)) {
+        return res.status(400).send({ message: "Center ID missing!" });
+      }
+
+      await Center.deleteMany({ _id: { $in: centerIds } });
+
+      return res.json({ message: "Deleted Successfully" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "Internal server error!",
+      });
+    }
+  }
+);
+
+router.patch(
+  "/update/status",
+  checkRole(1) /* required admin role */,
+  async (req, res) => {
+    try {
+      const centerIds = req.body?.centerIds;
+      const approvedStatus = req.body?.approvedStatus;
+
+      if (!centerIds || !Array.isArray(centerIds)) {
+        return res.status(400).send({ message: "Center ID missing!" });
+      }
+
+      if (!approvedStatus) {
+        return res.status(400).send({ message: "Status missing!" });
+      }
+
+      const center = await Center.updateMany(
+        { _id: { $in: centerIds } },
+        {
+          $set: {
+            approvedStatus,
+          },
+        }
+      );
+
+      return res.json({ message: "Approved Successfully" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: "Internal server error!",
+      });
+    }
+  }
+);
+
+router.get("/:centerId", async (req, res) => {
   try {
     const token = req?.jwt?.token || null;
 
@@ -209,7 +400,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch("/:address_item_id", async (req, res) => {
+router.patch("/:centerId", async (req, res) => {
   try {
     const token = req.jwt.token || null;
 
@@ -271,68 +462,6 @@ router.patch("/:address_item_id", async (req, res) => {
       message: "Internal server error",
     });
   }
-});
-
-router.delete("/:address_item_id", async (req, res) => {
-  try {
-    const token = req?.jwt?.token;
-
-    if (!token) {
-      return res.status(400).json({
-        message: "Token validation failed",
-      });
-    }
-
-    const userDetails = getTokenDetails(token);
-
-    if (!userDetails) {
-      return res.status(400).json({
-        message: "Token validation failed",
-      });
-    }
-
-    const { address_item_id } = req.params;
-
-    console.log("address_item_id", address_item_id);
-
-    const addressDetails = await Address.findOneAndDelete({
-      _id: address_item_id,
-      user: userDetails._id,
-    });
-
-    if (!addressDetails) {
-      return res.status(400).json({
-        message: "No address found with provided id!",
-      });
-    }
-
-    return res.json({
-      status: true,
-      message: "Address deleted",
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: error.message,
-    });
-  }
-});
-
-router.get("/createCenter", async (req, res) => {
-  const user = "662d3ef1564942fcddc4c5cf";
-  const centerDetails = {
-    user: user,
-    centerName: "Test Center 1",
-    centerImage: "center_demo_image",
-    addressProofImage: "center_demo_image",
-    idProofImage: "center_demo_image",
-    address: "662d2da2a6d8c071c9337208",
-  };
-
-  const center = new Center(centerDetails);
-  await center.save();
-  return res.send("created");
 });
 
 module.exports = router;

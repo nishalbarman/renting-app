@@ -46,7 +46,7 @@ User.schema.path("name").validate({
 
 User.schema.path("email").validate({
   validator: (value) => value && isValidEmail(value),
-  message: "Email Invalid",
+  message: "Provided email address is not valid",
 });
 
 User.schema.path("email").validate({
@@ -54,12 +54,12 @@ User.schema.path("email").validate({
     const count = await User.findOne({ email: value }).count();
     return count === 0;
   },
-  message: "Email already exist",
+  message: "An account with the given email address is already available",
 });
 
 User.schema.path("mobileNo").validate({
   validator: (value) => value && isValidIndianMobileNumber(value),
-  message: "MobileNo Invalid",
+  message: "Provided mobile no is not valid",
 });
 
 module.exports = User;

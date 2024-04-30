@@ -153,9 +153,9 @@ router.get("/", async (req, res) => {
   try {
     const searchParams = req.query;
 
-    const PAGE = searchParams.page || 1;
+    let PAGE = searchParams.page || 0;
     const LIMIT = searchParams.limit || 50;
-    const SKIP = (PAGE - 1) * LIMIT;
+    const SKIP = PAGE * LIMIT;
 
     // filter result by query params
     const TYPE = searchParams?.productType;
@@ -180,15 +180,20 @@ router.get("/", async (req, res) => {
       filter,
       !!QUERY ? { score: { $meta: "textScore" } } : undefined
     );
+
     const products = await Product.find(filter)
-      .populate("category")
+      .populate(["category", "productVariant"])
       .sort(!!QUERY ? { score: { $meta: "textScore" } } : { createdAt: "desc" })
       .skip(SKIP)
       .limit(LIMIT);
 
     const toalPages = Math.ceil(totalProductsCount / LIMIT);
 
-    return res.status(200).json({ toalPages, data: products });
+    return res.status(200).json({
+      toalPages,
+      data: products,
+      totalProductCount: totalProductsCount,
+    });
   } catch (error) {
     console.error(TAG, error);
     return res.status(500).json({ message: error.message });

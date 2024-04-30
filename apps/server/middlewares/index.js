@@ -1,6 +1,8 @@
 const getTokenDetails = require("../helpter/getTokenDetails");
 
 const checkRole = (...allowedRoles) => {
+  // 0 = user, 1 = admin, 2 = center
+
   return (req, res, next) => {
     try {
       const token = req?.jwt?.token;
@@ -9,9 +11,14 @@ const checkRole = (...allowedRoles) => {
       }
 
       const userDetails = getTokenDetails(token);
-      if (!userDetails || userDetails.role === undefined) {
+      if (!userDetails ?? userDetails.role === undefined) {
         return res.redirect("/#login/login");
       }
+
+      console.log(
+        "User Details from checkRole middleware function ->",
+        userDetails.role
+      );
 
       // const allowedRoles = role.split("|");
       if (allowedRoles.includes(userDetails.role)) {

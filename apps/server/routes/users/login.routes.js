@@ -31,11 +31,8 @@ router.post("/", async (req, res) => {
 
     const user = await User.findOne({ mobileNo }).populate("role");
 
-    console.log(user);
-
     if (!user) {
       return res.status(400).json({
-        status: true,
         message: "The provided credentials are invalid.",
       });
     }
@@ -43,17 +40,15 @@ router.post("/", async (req, res) => {
     const isPassValid = bcrypt.compareSync(password, user.password);
     if (!isPassValid) {
       return res.status(400).json({
-        status: true,
         message: "The provided credentials are invalid.",
       });
     }
 
-    // if (!user?.isMobileNoVerified) {
-    //   return res.status(403).json({
-    //     status: true,
-    //     message: "Account not verified yet!",
-    //   });
-    // }
+    if (!user?.isMobileNoVerified) {
+      return res.status(403).json({
+        message: "Account not verified yet!",
+      });
+    }
 
     const oneDay = 24 * 60 * 60 * 1000;
 
@@ -70,7 +65,6 @@ router.post("/", async (req, res) => {
     );
 
     return res.status(200).json({
-      status: true,
       message: "Login successful",
       user: {
         name: user.name,

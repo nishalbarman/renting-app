@@ -9,8 +9,8 @@ const addressSchema = new mongoose.Schema(
     country: { type: String, required: true },
     streetName: { type: String, required: true },
     city: { type: String },
-    longitude: { type: String, required: true },
-    latitude: { type: String, required: true },
+    longitude: { type: Number, required: true },
+    latitude: { type: Number, required: true },
     location: {
       type: {
         type: String,
@@ -31,6 +31,6 @@ const addressSchema = new mongoose.Schema(
 addressSchema.index({ location: "2dsphere" });
 
 const Address =
-  mongoose.models.address || mongoose.model("address", addressSchema);
+  mongoose.models.addresses || mongoose.model("addresses", addressSchema);
 
 module.exports = Address;

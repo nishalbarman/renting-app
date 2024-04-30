@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Wishlist = require("../../models/wishlist.model");
 const getTokenDetails = require("../../helpter/getTokenDetails");
+const checkRole = require("../../middlewares");
 
 /* GET ALL WISHLIST -- User Route */
 router.get("/", async (req, res) => {
@@ -123,21 +124,11 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.delete("/:product_id", async (req, res) => {
+router.delete("/:wishlistId", checkRole(0), async (req, res) => {
   try {
-    const userToken = req.jwt.token || null;
+    const wishlistId = req.params?.wishlistId;
 
-    // handle invalid token
-    if (!userToken)
-      return res.json({ status: false, message: "Invalid token" });
-
-    const { product_id } = req.params;
-    const userDetails = getTokenDetails(userToken);
-
-    const wishlistDetails = await Wishlist.findOneAndDelete({
-      product: product_id,
-      user: userDetails._id,
-    });
+    const wishlistDetails = await Wishlist.findByIdAndDelete(wishlistId);
 
     if (!wishlistDetails) {
       return res.json({

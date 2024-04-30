@@ -47,7 +47,10 @@ router.post("/", async (req, res) => {
     });
     await otpObject.save();
 
-    // await fast2SMS({ numbers: mobileNo, message: randomCode });
+    // TODO: Write a script for sending SMS otps to mobile no.
+    //! Send otp script will be written based on which otp service provider client chooses
+
+    // await fast2SMS({ numbers: mobileNo, message: text });
 
     return res.status(200).json({
       status: true,
