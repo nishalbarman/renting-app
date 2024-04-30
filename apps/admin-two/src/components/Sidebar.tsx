@@ -156,7 +156,7 @@ const Sidebar: React.FC<SidebarProps> = ({ navbarToogle, setNavbarToogle }) => {
             </li>
           </ul>
 
-          <h2 className="mt-8 mb-4 text-sm text-gray-500">SETTINGS</h2>
+          {/* <h2 className="mt-8 mb-4 text-sm text-gray-500">SETTINGS</h2>
           <ul>
             <li
               className={`mb-[1px] flex items-center hover:bg-[rgb(43,49,61)] py-2 px-4 rounded-md cursor-pointer ${location.pathname === "/" && "bg-[rgb(43,49,61)]"}`}>
@@ -173,7 +173,7 @@ const Sidebar: React.FC<SidebarProps> = ({ navbarToogle, setNavbarToogle }) => {
               <FaExchangeAlt className="mr-4" />
               <span>Preferences</span>
             </li>
-          </ul>
+          </ul> */}
         </nav>
       </motion.div>
     </motion.div>

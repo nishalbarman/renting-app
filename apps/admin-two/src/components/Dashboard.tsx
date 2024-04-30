@@ -55,7 +55,7 @@ const Dashboard: React.FC<{ setNavbarToogle?: any }> = () => {
   const [value, setValue] = React.useState<Dayjs | null>(dayjs(Date.now()));
 
   return (
-    <div className="flex flex-col flex-1 p-6 bg-gray-100 ml-64 max-md:ml-0">
+    <div className="flex flex-col flex-1 p-3 md:p-6 bg-gray-100 ml-64 max-md:ml-0">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
         <div>

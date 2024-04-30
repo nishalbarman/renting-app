@@ -204,7 +204,7 @@ const ProductAdd = () => {
   };
 
   return (
-    <div className="flex flex-col flex-1 p-6 bg-gray-100 ml-64 max-md:ml-0">
+    <div className="flex flex-col flex-1 p-3 md:p-6 bg-gray-100 ml-64 max-md:ml-0">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-gray-900">Category</h1>
         {/* <div>
@@ -218,9 +218,11 @@ const ProductAdd = () => {
       <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
         <div>
           <div className="bg-white shadow-md rounded-md p-4">
-            <h2 className="text-lg font-semibold mb-2">Add Category</h2>
+            <h2 className="text-lg font-semibold mb-2">
+              {!updateCategoryId ? "Add Category" : "Update Category"}
+            </h2>
             {!updateCategoryId ? (
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-500 text-md">
                 List one new category to database
               </p>
             ) : (
@@ -229,8 +231,8 @@ const ProductAdd = () => {
                   Update information:{" "}
                   <strong>{categoryData.categoryName}</strong>
                 </p>
-                <ul className="list-disc list-inside">
-                  <li className="text-gray-500 text-sm">
+                <ul className="list-disc list-inside mt-1">
+                  <li className="text-gray-500 text-md">
                     <code>
                       &lt;You can update the category name or category image
                       both or anyone of them. name&gt;

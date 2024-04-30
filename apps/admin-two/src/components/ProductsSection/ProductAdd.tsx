@@ -338,15 +338,23 @@ const ProductAdd: React.FC<ProductAddProps> = ({
 
   return (
     <div
-      // className={`flex flex-col flex-1 md:p-6 bg-gray-100 ${!updateProductId && "ml-64"} max-md:ml-0`}>
-      className={`flex flex-col flex-1 bg-gray-100 ${!updateProductId && "ml-64"} max-md:ml-0`}>
-      {/* <div className="bg-white shadow-md rounded p-6 mb-4"> */}
-      <div className="bg-white shadow-md rounded mb-4">
+      className={`flex flex-col flex-1bg-gray-100 ${!updateProductId && "ml-64 p-3 md:p-6 "} max-md:ml-0`}>
+      {!updateProductId && (
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-semibold text-gray-900">Product</h1>
+        </div>
+      )}
+      {/* className={`flex flex-col flex-1 bg-gray-100 ${!updateProductId && "ml-64"} max-md:ml-0`}> */}
+      <div
+        className={`bg-white shadow-md rounded mb-4 ${!updateProductId && "p-3 md:p-6"}`}>
         {/* <h2 className="text-2xl font-bold mb-4">
           {!updateProductId ? "Add Product" : "Update Product"}
         </h2> */}
-        {!updateProductId && (
+        {/* {!updateProductId && (
           <h2 className="text-2xl font-bold mb-4">Add Product</h2>
+        )} */}
+        {!updateProductId && (
+          <h2 className="text-lg font-bold mb-4">Add Product</h2>
         )}
         <form onSubmit={handleProductSubmit} className="space-y-6">
           <div className="bg-white p-4 rounded shadow-lg border">
@@ -768,7 +776,7 @@ const ProductAdd: React.FC<ProductAddProps> = ({
                     )}
                   </div>
 
-                  {!!productData?.isVariantAvailable && (
+                  {!!productData?.isVariantAvailable && variantQuantity !== undefined && (
                     <p className="text-body-secondary ">
                       Fill the variant details:
                     </p>
@@ -776,7 +784,7 @@ const ProductAdd: React.FC<ProductAddProps> = ({
                 </div>
               </div>
 
-              {!!productData?.isVariantAvailable && (
+              {!!productData?.isVariantAvailable && variantQuantity !== undefined && (
                 <div className="grid grid-cols-1 grid-flow-rows gap-4 md:grid-cols-2 w-full md:border md:p-2 rounded-sm">
                   {Array.from({
                     length: variantQuantity === undefined ? 0 : variantQuantity,
