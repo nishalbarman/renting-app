@@ -65,7 +65,8 @@ const Sidebar: React.FC<SidebarProps> = ({ navbarToogle, setNavbarToogle }) => {
         <div className="flex items-center justify-start px-3 h-20 border-b border-gray-700 gap-2">
           <img
             style={{
-              mixBlendMode: "multiply",
+              filter: "invert(100%)",
+              // mixBlendMode: "multiply",
             }}
             src="https://images.simpletire.com/image/upload/v1712328147/360-line-images/5305/5305_SaveroHT2_360_2.jpg"
             className="w-14 h-14"

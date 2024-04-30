@@ -214,13 +214,6 @@ function ViewSingleOrder() {
     <div className="flex flex-col flex-1 p-3 md:p-6 bg-gray-100 ml-64 max-md:ml-0">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-gray-900">Track Order</h1>
-        {/* <div>
-          <input
-            type="text"
-            placeholder="Type anywhere to search"
-            className="px-4 py-2 border border-gray-300 rounded-md"
-          />
-        </div> */}
       </div>
       <div>
         {!searchParams.get("groupId") && (
@@ -252,13 +245,11 @@ function ViewSingleOrder() {
       </div>
 
       <div>
-        {isGroupOrderFetching ||
-        groupOrderDetails === undefined ||
-        summary === undefined ? (
+        {isGroupOrderFetching ? (
           <div className="flex justify-center my-8">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
           </div>
-        ) : (
+        ) : groupOrderDetails !== undefined && summary !== undefined ? (
           <>
             {!!Object.keys(groupOrderDetails).length &&
             !!Object.keys(summary).length ? (
@@ -605,6 +596,8 @@ function ViewSingleOrder() {
               </div>
             )}
           </>
+        ) : (
+          <></>
         )}
       </div>
     </div>

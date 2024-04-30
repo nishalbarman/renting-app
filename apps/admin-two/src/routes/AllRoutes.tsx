@@ -9,6 +9,7 @@ import ProductList from "../components/ProductsSection/ProductList";
 import OrderList from "../components/OrderSection/OrdersList";
 import ViewSingleOrder from "../components/OrderSection/ViewOrder";
 import CategoryList from "../components/CategorySection/CategoryList";
+import PrivateRoute from "../PrivateRoute";
 
 const AllRoutes: React.FC = () => {
   const [navbarToogle, setNavbarToogle] = React.useState<Boolean>(true);
@@ -18,15 +19,68 @@ const AllRoutes: React.FC = () => {
       <Route path="/login" element={<Login />} />
       <Route
         path="/"
-        element={<Dashboard setNavbarToogle={setNavbarToogle} />}
+        element={
+          <PrivateRoute>
+            <Dashboard setNavbarToogle={setNavbarToogle} />
+          </PrivateRoute>
+        }
       />
-      <Route path="/center/add" element={<AddNewCenter />} />
-      <Route path="/center/list" element={<CenterList />} />
-      <Route path="/product/add" element={<ProductAdd />} />
-      <Route path="/product/list" element={<ProductList />} />
-      <Route path="/orders/list" element={<OrderList />} />
-      <Route path="/orders/view" element={<ViewSingleOrder />} />
-      <Route path="/categories" element={<CategoryList />} />
+      <Route
+        path="/center/add"
+        element={
+          <PrivateRoute>
+            <AddNewCenter />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/center/list"
+        element={
+          <PrivateRoute>
+            <CenterList />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/product/add"
+        element={
+          <PrivateRoute>
+            <ProductAdd />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/product/list"
+        element={
+          <PrivateRoute>
+            <ProductList />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/orders/list"
+        element={
+          <PrivateRoute>
+            <OrderList />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/orders/view"
+        element={
+          <PrivateRoute>
+            <ViewSingleOrder />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/categories"
+        element={
+          <PrivateRoute>
+            <CategoryList />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 };
