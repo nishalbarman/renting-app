@@ -11,7 +11,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
-import { orderRefetch } from "@store/rtk/slices/orderSlice";
+import { orderRefetch } from "@store/rtk";
 
 function PlaceOrderModal({
   modalVisible,

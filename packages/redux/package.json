@@ -10,18 +10,6 @@
     "build": "tsup ./src/",
     "dev": "yarn workspace @store/rtk run build --watch"
   },
-  "dependencies": {
-    "@reduxjs/toolkit": "^2.2.5",
-    "react-native": "^0.74.1",
-    "react-redux": "^9.1.2",
-    "redux-persist-filesystem-storage": "^4.2.0"
-  },
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@types/node": "^20.12.12",
-    "@types/react-redux": "^7.1.33",
-    "rollup": "^4.17.2",
-    "rollup-plugin-terser": "^7.0.2"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }

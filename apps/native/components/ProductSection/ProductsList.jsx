@@ -6,7 +6,7 @@ import Product from "./Product";
 import ProductsListSkeleton from "../../Skeletons/ProductListSkeleton";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
+import { useGetWishlistQuery } from "@store/rtk";
 
 function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
   const jwtToken = useSelector((state) => state.auth.jwtToken);

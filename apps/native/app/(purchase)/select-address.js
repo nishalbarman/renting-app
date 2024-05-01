@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 
-import { useGetAddressQuery } from "@store/rtk/apis/addressApi";
+import { useGetAddressQuery } from "@store/rtk";
 
 import { Stack, useRouter } from "expo-router";
 

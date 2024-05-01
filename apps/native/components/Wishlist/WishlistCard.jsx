@@ -3,7 +3,7 @@ import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, EvilIcons, MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useDeleteWishlistMutation } from "@store/rtk/apis/wishlistApi";
+import { useDeleteWishlistMutation } from "@store/rtk";
 import AnimateSpin from "../AnimateSpin/AnimateSpin";
 
 import { Toast } from "toastify-react-native";

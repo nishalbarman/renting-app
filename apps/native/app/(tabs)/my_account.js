@@ -11,7 +11,7 @@ import { Feather } from "@expo/vector-icons";
 
 import { SheetManager } from "react-native-actions-sheet";
 import { useDispatch, useSelector } from "react-redux";
-import { clearLoginSession } from "@store/rtk/slices/authSlice";
+import { clearLoginSession } from "@store/rtk";
 import { useRouter } from "expo-router";
 
 const AccountScreen = () => {
