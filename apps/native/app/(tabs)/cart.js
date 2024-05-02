@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import { useGetCartQuery } from "@store/rtk";
+import { useGetCartQuery } from "@store/rtk/apis/cartApi";
 import { useSelector } from "react-redux";
 import CartCard from "../../components/CartItem/CartCard";
 import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";

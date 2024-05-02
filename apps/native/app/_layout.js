@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { Provider } from "react-redux";
-import { persistor, store } from "@store/rtk";
+import { persistor, store } from "@store/rtk/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { SheetProvider } from "react-native-actions-sheet";
 import ToastManager from "toastify-react-native";

@@ -3,7 +3,7 @@ import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
-import { clearLoginSession } from "@store/rtk";
+import { clearLoginSession } from "@store/rtk/slices/authSlice";
 import { SheetManager } from "react-native-actions-sheet";
 
 function ReLogin({ modalVisible, setModalVisible }) {
@@ -47,7 +47,7 @@ function ReLogin({ modalVisible, setModalVisible }) {
 
 export default ReLogin;
 
-const styles = StyleSheet?.create({
+const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "center",

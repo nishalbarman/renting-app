@@ -14,16 +14,16 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
 import * as Location from "expo-location";
-import { setAddressDataFromMap } from "@store/rtk";
+import { setAddressDataFromMap } from "@store/rtk/slices/addressSlice";
 import { useDispatch, useSelector } from "react-redux";
 import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
 import { EvilIcons } from "@expo/vector-icons";
 
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
-import { useGetCenterAddressQuery } from "@store/rtk";
-import { setCenterAddress } from "@store/rtk";
-import { useGetAddressQuery } from "@store/rtk";
+import { useGetCenterAddressQuery } from "@store/rtk/apis/centerAddresApi";
+import { setCenterAddress } from "@store/rtk/slices/centerAddressSlice";
+import { useGetAddressQuery } from "@store/rtk/apis/addressApi";
 import axios from "axios";
 
 function LocationMap() {

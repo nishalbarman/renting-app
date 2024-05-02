@@ -1,12 +1,6 @@
-import {
-  View,
-  FlatList,
-  SafeAreaView,
-  Text,
-  RefreshControl,
-} from "react-native";
+import { View, FlatList, SafeAreaView, Text, RefreshControl } from "react-native";
 
-import { useGetWishlistQuery } from "@store/rtk";
+import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
 import WishlistCard from "../../components/Wishlist/WishlistCard";
 
 import { useSelector } from "react-redux";

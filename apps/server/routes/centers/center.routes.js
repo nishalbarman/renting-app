@@ -168,16 +168,15 @@ router.post("/add", checkRole(1), async (req, res) => {
     const latitude = centerData?.latitude;
 
     //! Images to upload
-    let addressProofImage = centerData?.addressProofImage;
-    let idProofImage = centerData?.idProofImage;
-    let centerImage = centerData?.centerImage;
+    let addressProof = centerData?.addressProof;
+    let identityProof = centerData?.identityProof;
+    let centerImages = centerData?.centerImages;
 
     // TODO: Validate all those fields before saving in database
 
-    centerImage = await ImageUploadHelper.uploadBulkImages(centerImage);
-    addressProofImage =
-      await ImageUploadHelper.uploadBulkImages(addressProofImage);
-    idProofImage = await ImageUploadHelper.uploadBulkImages(idProofImage);
+    centerImages = await ImageUploadHelper.uploadBulkImages(centerImages);
+    addressProof = await ImageUploadHelper.uploadBulkImages(addressProof);
+    identityProof = await ImageUploadHelper.uploadBulkImages(identityProof);
 
     const salt = bcrypt.genSaltSync(10);
     password = bcrypt.hashSync(password, salt);
@@ -248,9 +247,9 @@ router.post("/add", checkRole(1), async (req, res) => {
         user: user._id,
         address: address._id,
         centerName,
-        centerImage: centerImage[0],
-        addressProofImage: addressProofImage[0],
-        idProofImage: idProofImage[0],
+        centerImage: centerImages[0],
+        addressProofImage: addressProof[0],
+        idProofImage: identityProof[0],
         location,
         approvedStatus: "approved",
       });

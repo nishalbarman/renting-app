@@ -1,5 +1,9 @@
 import React, { useMemo, useState } from "react";
-import { View, Text, TouchableHighlight } from "react-native";
+import {
+  View,
+  Text,
+  TouchableHighlight,
+} from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
 
@@ -7,7 +11,7 @@ import AnimateSpin from "../AnimateSpin/AnimateSpin";
 import { SheetManager } from "react-native-actions-sheet";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { orderRefetch } from "@store/rtk";
+import { orderRefetch } from "@store/rtk/slices/orderSlice";
 
 function OrderItem({
   order: {

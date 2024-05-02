@@ -1,5 +1,6 @@
 {
   "private": true,
+  "main": "expo-router/entry",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
@@ -21,13 +22,11 @@
   ],
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.23.1",
-    "@reduxjs/toolkit": "^2.2.5",
-    "axios": "^1.6.7",
-    "concurrently": "^8.2.2",
-    "react-redux": "^9.1.2",
+    "react-redux": "^9.1.0",
     "redux-persist": "^6.0.0",
     "tsup": "^8.0.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "concurrently": "^8.2.2"
   },
   "resolutions": {
     "wrap-ansi": "7.0.0",

@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useStripe } from "@stripe/stripe-react-native";
 import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";
-import { useGetCartQuery } from "@store/rtk";
+import { useGetCartQuery } from "@store/rtk/apis/cartApi";
 
 export default function AddressList() {
   const searchParams = useLocalSearchParams();

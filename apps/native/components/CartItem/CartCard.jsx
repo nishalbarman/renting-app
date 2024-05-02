@@ -8,8 +8,8 @@ import {
   useDeleteCartMutation,
   useUpdateQuantityCartMutation,
   useUpdateRentDaysCartMutation,
-} from "@store/rtk";
-import { useAddWishlistMutation } from "@store/rtk";
+} from "@store/rtk/apis/cartApi";
+import { useAddWishlistMutation } from "@store/rtk/apis/wishlistApi";
 import { useRouter } from "expo-router";
 
 function CartCard({

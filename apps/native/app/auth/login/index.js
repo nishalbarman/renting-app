@@ -20,7 +20,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setUserAuthData } from "@store/rtk";
+import { setUserAuthData } from "@store/rtk/slices/authSlice";
 
 export default function Page() {
   const [formData, setFormData] = useState({

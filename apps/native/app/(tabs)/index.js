@@ -1,10 +1,15 @@
-import { FlatList, Pressable, Text, View } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProductsList from "../../components/ProductSection/ProductsList";
 import Categories from "../../components/CategoryList/Categories";
-import { setProductType } from "@store/rtk";
+import { setProductType } from "@store/rtk/slices/storeTypeSlice";
 
 export default function Tab() {
   const { productType } = useSelector((state) => state.product_store);

@@ -23,8 +23,8 @@
       "userInterfaceStyle": "light",
       "config": {
         "googleMapsApiKey": "AIzaSyAVBtu9gFRzmHnlMnZl_sqZGY3mXRPV3so",
-        "usesNonExemptEncryption": false
-        // "usesCleartextTraffic": true
+        "usesNonExemptEncryption": false,
+        "usesCleartextTraffic": true
       }
     },
     "android": {
@@ -38,8 +38,8 @@
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAVBtu9gFRzmHnlMnZl_sqZGY3mXRPV3so"
-        }
-        // "networkSecurityConfig": "./network_security_config.xml"
+        },
+        "networkSecurityConfig": "./network_security_config.xml"
       }
     },
 
@@ -55,6 +55,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-secure-store",
       "./plugins/withDisableForcedDarkModeAndroid.js",
       [
         "expo-location",

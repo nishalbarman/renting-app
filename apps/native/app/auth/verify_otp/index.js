@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { isValid4DigitOtp } from "custom-validator-renting";
-import { setUserAuthData } from "@store/rtk";
+import { setUserAuthData } from "@store/rtk/slices/authSlice";
 import { useDispatch } from "react-redux";
 
 export default function Page() {
