@@ -3,7 +3,7 @@ import CategorySkeleton from "../../Skeletons/CategorySkeleton";
 import CategoryItem from "./CategoryItem";
 import { FlatList, View } from "react-native";
 
-// import { useGetAllCategoryQuery } from "@store/rtk/apis/categoryApi";
+// import { useGetAllCategoryQuery } from "@store/rtk";
 import { useSelector } from "react-redux";
 import axios from "axios";
 

@@ -1,12 +1,16 @@
 {
   "name": "@store/rtk",
+  "private": true,
   "version": "1.0.0",
-  "main": "./index.js",
-  "module": "./index.js",
-  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.mjs",
+  "license": "ISC",
+  "scripts": {
+    "build": "tsup ./src/",
+    "dev": "yarn workspace @store/rtk run build --watch"
+  },
   "dependencies": {
-    "@reduxjs/toolkit": "^2.2.1",
-    "react-native": "0.73.6",
-    "redux-persist-filesystem-storage": "^4.2.0"
+    "@reduxjs/toolkit": "^2.2.5"
   }
 }

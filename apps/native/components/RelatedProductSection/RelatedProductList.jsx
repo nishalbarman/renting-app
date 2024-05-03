@@ -1,7 +1,7 @@
 import React from "react";
 import Product from "../ProductSection/Product";
 import { FlatList } from "react-native";
-import { useGetWishlistQuery } from "@store/rtk/apis/wishlistApi";
+import { useGetWishlistQuery } from "@store/rtk";
 
 function RelatedProduct() {
   const data = [
