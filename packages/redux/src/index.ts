@@ -2,7 +2,7 @@ export * from "./slices/addressSlice";
 export * from "./slices/authSlice";
 export * from "./slices/centerAddressSlice";
 export * from "./slices/orderSlice";
-export * from "./slices/productListSlice";
+export * from "./slices/productSortingFiltering";
 export * from "./slices/storeTypeSlice";
 
 export * from "./apis/addressApi";

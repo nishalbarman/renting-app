@@ -43,6 +43,10 @@ export default function AddressList() {
     }
   }, [address]);
 
+  const handleAddAddressClick = () => {
+    router.push(`/add-address`);
+  };
+
   const handleContinueClick = useCallback(() => {
     setNextScreenClicked(true);
     if (productType === "buy") {
@@ -157,7 +161,7 @@ export default function AddressList() {
                 )}
               />
             ) : (
-              <>
+              <View className="w-full h-full flex-col items-center justify-center">
                 <Text className="font-[poppins-mid] text-[18px] text-center">
                   No address found
                 </Text>
@@ -168,7 +172,7 @@ export default function AddressList() {
                     <Text className="text-white font-bold">Add One</Text>
                   </TouchableOpacity>
                 )}
-              </>
+              </View>
             )}
           </>
         )}

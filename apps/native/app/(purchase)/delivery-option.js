@@ -185,7 +185,7 @@ export default function AddressList() {
                   </Text>
                   {(!address || address.length < 5) && (
                     <TouchableOpacity
-                      //   onPress={handleAddAddressClick}
+                      //   onPress={Click}
                       className="mt-6 flex items-center justify-center self-center w-[200px] h-[45px] p-[0px_20px] bg-dark-purple rounded-lg">
                       <Text className="text-white font-bold">Add One</Text>
                     </TouchableOpacity>

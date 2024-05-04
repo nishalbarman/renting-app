@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
-import ActionSheet, {
-  SheetManager,
-  useScrollHandlers,
-} from "react-native-actions-sheet";
+import React, { useEffect, useMemo, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import ActionSheet, { useScrollHandlers } from "react-native-actions-sheet";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
 
 import { useRouter } from "expo-router";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import RadioGroup from "react-native-radio-buttons-group";
 import { setSort } from "@store/rtk";
@@ -16,16 +13,53 @@ import { setSort } from "@store/rtk";
 export default function ProductSort() {
   const handlers = useScrollHandlers();
 
-  // const { name, mobileNo } = useSelector((state) => state.auth);
+  const radiogroupContents = useMemo(
+    () => [
+      {
+        id: 0,
+        label: <Text className="font-bold">None</Text>,
+        value: "",
+        containerStyle: radiobuttonStyle,
+      },
+      {
+        id: 1,
+        label: <Text className="font-bold">Popularity</Text>,
+        value: "popularity",
+        containerStyle: radiobuttonStyle,
+      },
+      {
+        id: 2,
+        label: <Text className="font-bold">Price -- Low to High</Text>,
+        value: "low-to-hight-price",
+        containerStyle: radiobuttonStyle,
+      },
+      {
+        id: 3,
+        label: <Text className="font-bold">Price -- High to Low</Text>,
+        value: "hight-to-low-price",
+        containerStyle: radiobuttonStyle,
+      },
+      {
+        id: 4,
+        label: <Text className="font-bold">Newest First</Text>,
+        value: "newest",
+        containerStyle: radiobuttonStyle,
+      },
+    ],
+    []
+  );
 
-  const router = useRouter();
   const dispatch = useDispatch();
 
-  const [selectedSortMethod, setSelectedSortMethod] = useState(0);
+  // const [selectedSortMethod, setSelectedSortMethod] = useState(0);
+  const { id: selectedSortMethod } = useSelector(
+    (state) => state.sort_filter_products.sort
+  );
 
-  useEffect(() => {
-    SheetManager.show("product-sort-sheet");
-  }, []);
+  const handleSetSelectedSortMethod = (id, other) => {
+    console.log(id, other);
+    dispatch(setSort({ id: id, value: radiogroupContents[id].value }));
+  };
 
   return (
     <ActionSheet closeOnPressBack={true} gestureEnabled={true}>
@@ -37,22 +71,9 @@ export default function ProductSort() {
 
             <View className="w-full px-4">
               <RadioGroup
-                radioButtons={[
-                  { id: 0, label: "None", value: "na" },
-                  { label: "Popularity", value: "popularity" },
-                  {
-                    id: 1,
-                    label: "Price -- Low to High",
-                    value: "low-to-hight-price",
-                  },
-                  {
-                    id: 2,
-                    label: "Price -- High to Low",
-                    value: "hight-to-low-price",
-                  },
-                  { id: 3, label: "Newest First", value: "newest" },
-                ]}
-                onPress={setSelectedSortMethod}
+                containerStyle={radiogroupStyle}
+                radioButtons={radiogroupContents}
+                onPress={handleSetSelectedSortMethod}
                 selectedId={selectedSortMethod}
               />
             </View>
@@ -62,3 +83,19 @@ export default function ProductSort() {
     </ActionSheet>
   );
 }
+
+const radiogroupStyle = StyleSheet.create({
+  flex: 1,
+  flexDirection: "column",
+  alignContents: "between",
+  justifyContents: "between",
+  width: "100%",
+});
+
+const radiobuttonStyle = StyleSheet.create({
+  flex: 1,
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+  width: "100%",
+});

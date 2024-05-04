@@ -24,13 +24,13 @@ const orderSchema = new mongoose.Schema(
 
     address: {
       address: {
-        prefix: { type: String, required: true },
-        locality: { type: String, required: true },
-        postalCode: { type: String, required: true },
-        country: { type: String, required: true },
-        streetName: { type: String, required: true },
-        city: { type: String, required: true },
-        state: { type: String, required: true },
+        prefix: { type: String, required: false },
+        locality: { type: String, required: false },
+        postalCode: { type: String, required: false },
+        country: { type: String, required: false },
+        streetName: { type: String, required: false },
+        city: { type: String, required: false },
+        state: { type: String, required: false },
       },
       location: {
         type: [Number, Number], // Array of [longitude, latitude]

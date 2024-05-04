@@ -9,6 +9,7 @@ const getTokenDetails = require("../../helpter/getTokenDetails");
 const checkRole = require("../../middlewares");
 const PaymentTransModel = require("../../models/transaction.model");
 const { sendMail } = require("../../helpter/sendEmail");
+const { Product } = require("../../models/product.model");
 
 // const Coupon = require("../../../../models/coupon.model");
 
@@ -154,7 +155,7 @@ router.post("/:productType", checkRole(0), async (req, res) => {
           const RentDays = cartItem.rentDays;
           totalPrice = Price * Quantity * RentDays;
 
-          shippingPrice += cartItem.variant.shippingPrice;
+          shippingPrice += cartItem.product.shippingPrice;
         }
 
         return {
@@ -238,7 +239,7 @@ router.post("/:productType", checkRole(0), async (req, res) => {
       } else {
         createdOrder.previewImage = item.product.previewImage;
         createdOrder.price =
-          item.variant.rentingPrice * item.rentDays * item.quantity;
+          item.product.rentingPrice * item.rentDays * item.quantity;
         // createdOrder.shippingPrice = item.product.shippingPrice;
 
         createdOrder.color = null;
@@ -291,6 +292,16 @@ router.post("/:productType", checkRole(0), async (req, res) => {
                 </body>
               </html>`, // html body
       });
+
+      const orderedProductIds = orders.map((order) => order.product);
+      await Product.updateMany(
+        {
+          _id: { $in: orderedProductIds },
+        },
+        {
+          $inc: { rentTotalOrders: 1 },
+        }
+      );
 
       return res.status(200).json({ message: "Order Placed!" });
     }

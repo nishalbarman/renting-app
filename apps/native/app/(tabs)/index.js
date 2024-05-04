@@ -21,17 +21,6 @@ export default function Tab() {
 
   return (
     <SafeAreaView className="bg-white flex-1">
-      {/* <ScrollView
-        showsVerticalScrollIndicator={false}
-        ounces={false} // Set this to false to disable overscroll effect
-        contentContainerStyle={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          rowGap: 10,
-          flexGrow: 1,
-        }}> */}
       <FlatList
         className="w-screen"
         contentContainerStyle={{
@@ -73,7 +62,6 @@ export default function Tab() {
         )}
         keyExtractor={(item, index) => index.toString()}
       />
-      {/* </ScrollView> */}
     </SafeAreaView>
   );
 }

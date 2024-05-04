@@ -21,6 +21,9 @@ const productSchema = new mongoose.Schema(
     stars: { type: Number, default: 0 },
     totalFeedbacks: { type: Number, default: 0 },
 
+    rentTotalOrders: { type: Number, default: 0 },
+    buyTotalOrders: { type: Number, default: 0 },
+
     // isPurchasable: { type: Boolean, default: false },
     // isRentable: { type: Boolean, default: false },
     productType: {

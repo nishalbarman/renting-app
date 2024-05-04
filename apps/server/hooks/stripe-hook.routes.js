@@ -12,6 +12,7 @@ const { default: mongoose } = require("mongoose");
 const PaymentTransModel = require("../models/transaction.model");
 const Address = require("../models/address.model");
 const ShiprocketUtils = require("../helpter/ShiprocketUtils");
+const { Product } = require("../models/product.model");
 const router = Router();
 
 const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
@@ -69,6 +70,21 @@ router.post(
               $set: {
                 paymentStatus: "Paid",
               },
+            }
+          );
+
+          const orders = await OrderModel.find({
+            paymentTxnId: paymentIntentSucceeded.metadata.paymentTxnId,
+          });
+
+          const productIds = orders.map((order) => order.product);
+
+          await Product.updateMany(
+            {
+              _id: { $in: productIds },
+            },
+            {
+              $inc: { buyTotalOrders: 1 },
             }
           );
 

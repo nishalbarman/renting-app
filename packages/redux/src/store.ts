@@ -27,7 +27,7 @@ import { cartApi } from "./apis/cartApi";
 import { centerAddressSlice } from "./slices/centerAddressSlice";
 import { centerAddressApi } from "./apis/centerAddresApi";
 import { orderSlice } from "./slices/orderSlice";
-import { productListSlice } from "./slices/productListSlice";
+import { productSortingFilteringSlice } from "./slices/productSortingFiltering";
 import { authSlice } from "./slices/authSlice";
 
 const rootReducer = combineReducers({
@@ -37,7 +37,7 @@ const rootReducer = combineReducers({
   [addressSlice.name]: addressSlice.reducer,
   [addressApi.reducerPath]: addressApi.reducer,
   // [productsApi.reducerPath]: productsApi.reducer,
-  [productListSlice.name]: productListSlice.reducer,
+  [productSortingFilteringSlice.name]: productSortingFilteringSlice.reducer,
   [cartApi.reducerPath]: cartApi.reducer,
   [wishlistApi.reducerPath]: wishlistApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,

@@ -2,6 +2,18 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const SERVER_URL = `${process.env.EXPO_PUBLIC_API_URL}/`;
 
+type Cart = {
+  _id: string;
+  user: string;
+  product: string;
+  variant: string;
+  quantity: number;
+  rentDays: number;
+  productType: string;
+  size: string;
+  color: string;
+};
+
 export const cartApi = createApi({
   reducerPath: "cart",
   baseQuery: fetchBaseQuery({
@@ -16,11 +28,11 @@ export const cartApi = createApi({
   }),
   tagTypes: ["Cart"],
   endpoints: (builder) => ({
-    getCart: builder.query({
+    getCart: builder.query<Cart, string>({
       query: (productType) => `cart?productType=${productType}`,
       providesTags: ["Cart"],
-      transformResponse: (res, meta, arg) => (res as any).data,
-      transformErrorResponse: (res, meta, arg) => (res as any).message,
+      transformResponse: (res: any, meta, arg) => res.data,
+      transformErrorResponse: (res: any, meta, arg) => res.message,
     }),
 
     addOneToCart: builder.mutation({

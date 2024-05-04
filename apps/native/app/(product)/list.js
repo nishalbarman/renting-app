@@ -1,11 +1,18 @@
 import { Stack } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { FlatList, SafeAreaView, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  SafeAreaView,
+  Text,
+  View,
+} from "react-native";
 import Product from "../../components/ProductSection/Product";
 
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useGetWishlistQuery } from "@store/rtk";
+import { useAppSelector, useGetWishlistQuery } from "@store/rtk";
 
 import ProductsListSkeleton from "../../Skeletons/ProductListSkeleton";
 
@@ -18,27 +25,48 @@ function ProductsList() {
   const jwtToken = useSelector((state) => state.auth.jwtToken);
   const { productType } = useSelector((state) => state.product_store);
 
-  const { sort, filter, category, price } = useSelector(
-    (state) => state.product_list
-  );
+  const {
+    sort: { value: sortingValue },
+    filter,
+  } = useSelector((state) => state.sort_filter_products);
 
   const [data, setData] = useState([]);
   const [isProductDataLoading, setIsProductDataLoading] = useState(true);
 
   const [paginationPage, setPaginationPage] = useState(0);
+  const [paginationTotalPages, setPaginationTotalPages] = useState(0);
+  const [paginationLimit, setPaginationLimit] = useState(50);
 
-  const getProductData = async () => {
+  const getProductData = async (sort = undefined, filter = undefined) => {
     try {
       setIsProductDataLoading(true);
-      const res = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/products?productType=${productType}&page=${paginationPage}&limit=50`,
-        {
-          headers: {
-            authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      const url = new URL("/products", process.env.EXPO_PUBLIC_API_URL);
+      url.searchParams.append("productType", productType);
+      url.searchParams.append("page", paginationPage);
+      url.searchParams.append("limit", 50);
+
+      if (!!sort) {
+        url.searchParams.append("sort", sort);
+      }
+
+      if (!!filter) {
+        console.log(filter);
+        url.searchParams.append(
+          "filter",
+          encodeURIComponent(JSON.stringify(filter))
+        );
+      }
+
+      const res = await axios.get(url.href, {
+        headers: {
+          authorization: `Bearer ${jwtToken}`,
+        },
+      });
+
+      console.log(res.data);
+
       setData(res.data.data);
+      setPaginationTotalPages(res.data.totalPages);
     } catch (error) {
       console.error(error);
     } finally {
@@ -48,7 +76,11 @@ function ProductsList() {
 
   useEffect(() => {
     getProductData();
-  }, [productType]);
+  }, [productType, paginationPage]);
+
+  useEffect(() => {
+    getProductData(sortingValue, filter);
+  }, [sortingValue, filter]);
 
   const {
     data: wishlistData,
@@ -70,9 +102,25 @@ function ProductsList() {
     return wishlistObjectWithIDAsKey;
   }, [wishlistData]);
 
-  useEffect(() => {
+  const handleProductSortSheetOpen = () => {
     SheetManager.show("product-sort-sheet");
-  }, []);
+  };
+
+  const handleFetchNextPage = () => {
+    if (paginationPage < paginationTotalPages - 1) {
+      setPaginationPage((prev) => prev + 1);
+    }
+  };
+
+  const ListEndLoader = () => {
+    if (paginationPage < paginationTotalPages - 1) {
+      return (
+        <View className="my-4">
+          <ActivityIndicator size={45} color="black" />
+        </View>
+      );
+    } else return null;
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -85,113 +133,20 @@ function ProductsList() {
       {isProductDataLoading || isWishlistDataLoading ? (
         <ProductsListSkeleton />
       ) : (
-        <View
-          style={{
-            backgroundColor: "rgba(0,0,0,0.1)",
-          }}
-          className={`w-[100%] px-1 py-1 h-[100%] rounded`}>
-          <View
-            contentContainerStyle={{
-              alignItems: "center",
-            }}
-            className="flex-row py-3 h-fit w-full">
-            <FlatList
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              bounces={true}
-              data={[
-                {
-                  icon: () => <AntDesign name="down" size={15} color="black" />,
-                  title: "Sort By",
-                  iconPostion: "right",
-                  style: !sort
-                    ? {
-                        borderWidth: 4,
-                        borderColor: "green",
-                        backgroundColor: "white",
-                      }
-                    : undefined,
-                },
-                {
-                  icon: () => (
-                    <FontAwesome name="sliders" size={15} color="black" />
-                  ),
-                  title: "Filter",
-                  iconPostion: "left",
-                  style: !sort
-                    ? {
-                        borderWidth: 4,
-                        borderColor: "green",
-                        backgroundColor: "white",
-                      }
-                    : undefined,
-                },
-                {
-                  icon: () => (
-                    <FontAwesome name="sliders" size={15} color="black" />
-                  ),
-                  title: "Category",
-                  iconPostion: "left",
-                  style: !sort
-                    ? {
-                        borderWidth: 4,
-                        borderColor: "green",
-                        backgroundColor: "white",
-                      }
-                    : undefined,
-                },
-                {
-                  icon: () => (
-                    <FontAwesome name="sliders" size={15} color="black" />
-                  ),
-                  title: "Price",
-                  iconPostion: "left",
-                  style: !sort
-                    ? {
-                        borderWidth: 4,
-                        borderColor: "green",
-                        backgroundColor: "white",
-                      }
-                    : undefined,
-                },
-                {
-                  icon: () => (
-                    <FontAwesome name="sliders" size={15} color="black" />
-                  ),
-                  title: "Price",
-                  iconPostion: "left",
-                  style: !sort
-                    ? {
-                        borderWidth: 4,
-                        borderColor: "green",
-                        backgroundColor: "white",
-                      }
-                    : undefined,
-                },
-                {
-                  icon: () => (
-                    <FontAwesome name="sliders" size={15} color="black" />
-                  ),
-                  title: "Price",
-                  iconPostion: "left",
-                  style: !sort
-                    ? {
-                        borderWidth: 4,
-                        borderColor: "green",
-                        backgroundColor: "white",
-                      }
-                    : undefined,
-                },
-              ]}
-              renderItem={({ item }) => (
-                <ListFilter
-                  style={item?.style}
-                  icon={item.icon}
-                  iconPostion={item.iconPostion}
-                  title={item.title}
-                />
-              )}
-            />
+        <View className={`w-full h-full rounded bg-[rgba(0,0,0,0.1)]`}>
+          <View className="flex-row h-fit w-full border-b border-10 border-gray-200">
+            <View className="flex flex-row justify-between items-center w-full bg-gray-20 mb-1 border-t border-gray-200">
+              <Pressable
+                onPress={handleProductSortSheetOpen}
+                className="h-12 bg-white flex-1 flex-row gap-x-2 items-center justify-center border-l border-gray-200">
+                <FontAwesome name="sliders" size={15} color="black" />
+                <Text>Sort</Text>
+              </Pressable>
+              <Pressable className="h-12 bg-white flex-1 flex-row gap-x-1 items-center justify-center">
+                <AntDesign name="down" size={15} color="black" />
+                <Text>Filter</Text>
+              </Pressable>
+            </View>
           </View>
 
           <FlatList
@@ -205,6 +160,9 @@ function ProductsList() {
             )}
             numColumns={2}
             keyExtractor={(item, index) => index.toString()}
+            onEndReached={handleFetchNextPage}
+            onEndReachedThreshold={0.8}
+            ListFooterComponent={ListEndLoader} // Loader when loading next page.
           />
         </View>
       )}

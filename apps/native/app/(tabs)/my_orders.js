@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { View, SafeAreaView, RefreshControl, FlatList } from "react-native";
+import {
+  View,
+  SafeAreaView,
+  RefreshControl,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import OrderItem from "../../components/OrderScreen/OrderItem";
 import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
 import axios from "axios";
@@ -11,33 +17,49 @@ const OrderScreen = () => {
   const { productType } = useSelector((state) => state.product_store);
   const { jwtToken } = useSelector((state) => state.auth);
 
-  const [isOrderFetching, setOrderFetching] = useState(true);
+  const [isOrderLoading, setIsOrderLoading] = useState(true);
+  const [isOrderFetching, setIsOrderFetching] = useState(false);
   const [paginationPage, setPaginationPage] = useState(0);
   const [orders, setOrders] = useState([]);
-  const [totalPage, setTotalPage] = useState(0);
+
+  const [paginationTotalPages, setPaginationTotalPages] = useState(0);
+  const [paginationLimit, setPaginationLimit] = useState(5);
 
   const getOrders = useCallback(
     async ({ productType, paginationPage, clearAll = false }) => {
+      console.log("fetching orders ", paginationPage);
       try {
-        setOrderFetching(true);
-        console.log(productType);
-        const response = await axios.get(
-          `${process.env.EXPO_PUBLIC_API_URL}/orders/l/${productType}?page=${paginationPage}&limit=20`,
-          {
-            headers: {
-              authorization: `Bearer ${jwtToken}`,
-            },
-          }
+        if (paginationPage === 0) {
+          setIsOrderLoading(true);
+        } else {
+          setIsOrderFetching(true);
+        }
+
+        const url = new URL(
+          `/orders/l/${productType}`,
+          process.env.EXPO_PUBLIC_API_URL
         );
+        url.searchParams.append("page", paginationPage);
+        url.searchParams.append("limit", paginationLimit);
+
+        const response = await axios.get(url.href, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
 
         if (!!response.data?.data && !clearAll) {
           setOrders([...orders, ...response.data?.data]);
         } else setOrders(response.data?.data);
-        setTotalPage(response.data?.totalPage || 0);
+        setPaginationTotalPages(response.data?.totalPage || 0);
       } catch (error) {
         console.error(error);
       } finally {
-        setOrderFetching(false);
+        if (paginationPage === 0) {
+          setIsOrderLoading(false);
+        } else {
+          setIsOrderFetching(false);
+        }
       }
     },
     []
@@ -57,13 +79,31 @@ const OrderScreen = () => {
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
+    setPaginationPage(0);
     await getOrders({ productType, paginationPage, clearAll: true });
     setRefreshing(false);
   }, [productType, paginationPage]);
 
+  const handleFetchNextPage = () => {
+    if (paginationPage < paginationTotalPages - 1) {
+      console.log("Updating pagination for orders");
+      setPaginationPage((prev) => prev + 1);
+    }
+  };
+
+  const ListEndLoader = () => {
+    if (paginationPage < paginationTotalPages - 1) {
+      return (
+        <View className="my-4">
+          <ActivityIndicator size={45} color="black" />
+        </View>
+      );
+    } else return null;
+  };
+
   return (
     <SafeAreaView className={`flex-1 bg-white px-2`}>
-      {isOrderFetching ? (
+      {isOrderLoading ? (
         <AddressCardSkeletop />
       ) : (
         <>
@@ -89,6 +129,9 @@ const OrderScreen = () => {
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
+              onEndReached={handleFetchNextPage}
+              onEndReachedThreshold={0.8}
+              ListFooterComponent={ListEndLoader} // Loader when loading next page.
             />
           )}
         </>

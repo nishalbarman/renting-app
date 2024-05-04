@@ -296,6 +296,9 @@ router.get("/", async (req, res) => {
     const LIMIT = searchParams.limit || 50;
     const SKIP = PAGE * LIMIT;
 
+    const SORT = searchParams["sort"];
+    const FILTER = searchParams["filter"];
+
     // filter result by query params
     const TYPE = searchParams?.productType;
     const CATEGORY = searchParams?.category;
@@ -315,21 +318,62 @@ router.get("/", async (req, res) => {
       filter.category = CATEGORY;
     }
 
+    if (!!FILTER) {
+      const parsedFilter = JSON.parse(decodeURIComponent(FILTER));
+      console.log(parsedFilter);
+      Object.entries(parsedFilter).map(([key, value]) => {
+        if (!!key && !!value) filter[key] = value;
+      });
+    }
+
+    const sortObject = { createdAt: "desc" };
+
+    if (!!QUERY) {
+      delete sortObject.createdAt;
+      sortObject.score = { $meta: "textScore" };
+    }
+
+    if (!!SORT) {
+      delete sortObject.createdAt;
+      switch (SORT) {
+        case "popularity":
+          sortObject[
+            filter.productType === "rent" ? "rentTotalOrders" : "buyTotalOrders"
+          ] = "desc";
+          break;
+        case "low-to-hight-price":
+          sortObject[
+            filter.productType === "rent" ? "rentingPrice" : "discountedPrice"
+          ] = "asc";
+          break;
+        case "hight-to-low-price":
+          sortObject[
+            filter.productType === "rent" ? "rentingPrice" : "discountedPrice"
+          ] = "desc";
+          break;
+        case "newest":
+          sortObject.createdAt = "desc";
+          break;
+        default:
+          sortObject = {};
+      }
+    }
+
     const totalProductsCount = await Product.countDocuments(
       filter,
-      !!QUERY ? { score: { $meta: "textScore" } } : undefined
+      sortObject || undefined
     );
 
     const products = await Product.find(filter)
       .populate(["category", "productVariant"])
-      .sort(!!QUERY ? { score: { $meta: "textScore" } } : { createdAt: "desc" })
+      .sort(sortObject)
       .skip(SKIP)
       .limit(LIMIT);
 
-    const toalPages = Math.ceil(totalProductsCount / LIMIT);
+    const totalPages = Math.ceil(totalProductsCount / LIMIT);
 
     return res.status(200).json({
-      toalPages,
+      totalPages,
       data: products,
       totalProductCount: totalProductsCount,
     });

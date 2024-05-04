@@ -41,18 +41,18 @@ function OrderItem({
     const returnDate = new Date("2024-04-30T13:41:55.646+00:00");
     const today = new Date();
 
-    console.log(returnDate.getTime(), today.getTime());
+    // console.log(returnDate.getTime(), today.getTime());
     // Calculating the time difference
     // of two dates
     let Difference_In_Time = returnDate.getTime() - today.getTime();
-    console.log(Difference_In_Time);
+    // console.log(Difference_In_Time);
     // // Calculating the no. of days between
     // // two dates
     let totalTimeRemaining = Math.round(
       Difference_In_Time / (1000 * 3600 * 24)
     );
 
-    console.log(totalTimeRemaining);
+    // console.log(totalTimeRemaining);
     return totalTimeRemaining;
   }, [rentReturnDueDate]);
 
@@ -78,7 +78,7 @@ function OrderItem({
           },
         }
       );
-      console.log("Order cancelation log --> ", response.data);
+      // console.log("Order cancelation log --> ", response.data);
       dispatch(orderRefetch());
     } catch (error) {
       console.error(error);

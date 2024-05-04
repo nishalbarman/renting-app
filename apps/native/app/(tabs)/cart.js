@@ -97,9 +97,9 @@ const CartPage = () => {
           }
 
           return {
-            originalTotalAmount: pay.originalTotalAmount + totalOriginalPrice,
+            originalTotalAmount: pay?.originalTotalAmount + totalOriginalPrice,
             discountedTotalAmount:
-              pay.discountedTotalAmount + discountedTotalPrice,
+              pay?.discountedTotalAmount + discountedTotalPrice,
           };
         },
         { originalTotalAmount: 0, discountedTotalAmount: 0 }
@@ -107,7 +107,7 @@ const CartPage = () => {
 
       console.log("Cart Payment Object -> ", paymentObject);
 
-      const discountedTotalAmount = paymentObject.discountedTotalAmount;
+      const discountedTotalAmount = paymentObject?.discountedTotalAmount;
 
       const freeDeliveryAboveMinimumPurchase = false; // TODO: Need to get it from server.
       const freeDeliveryMinimumAmount = 500;
@@ -115,17 +115,17 @@ const CartPage = () => {
       if (
         !(
           freeDeliveryAboveMinimumPurchase &&
-          paymentObject.discountedTotalAmount >= freeDeliveryMinimumAmount
+          paymentObject?.discountedTotalAmount >= freeDeliveryMinimumAmount
         )
       ) {
         paymentObject.discountedTotalAmount += shippingPrice;
       }
 
       setAmountDetails({
-        finalAmount: paymentObject.discountedTotalAmount,
+        finalAmount: paymentObject?.discountedTotalAmount,
         discountedAmount: discountedTotalAmount,
         shippingAmount: shippingPrice,
-        originalAmount: paymentObject.originalPrice,
+        originalAmount: paymentObject?.originalPrice,
       });
     })();
   }, [cartItems]);
@@ -139,8 +139,6 @@ const CartPage = () => {
   const selectedCenterAddress = useSelector(
     (state) => state.selectedCenterDetails
   );
-
-  console.log("Cart Address", selectedCenterAddress);
 
   useEffect(() => {
     setIsCenterSelected(
@@ -157,8 +155,6 @@ const CartPage = () => {
 
   const [orderPlaceStatus, setOrderPlaceStatus] = useState("pending");
   const [orderPlaceModalVisible, setOrderPlaceModalVisible] = useState(false);
-
-  const [isPending, startTransition] = useTransition();
 
   const handleContinueClick = async () => {
     // product type is buy then goto select delivery address screen
@@ -187,9 +183,7 @@ const CartPage = () => {
       if (response.status == 200) {
         // router.replace("/(tabs)/my_orders");
         setOrderPlaceStatus("success");
-        startTransition(() => {
-          refetch();
-        });
+        refetch();
       }
     } catch (error) {
       console.error(error);

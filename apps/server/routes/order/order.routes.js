@@ -13,7 +13,7 @@ router.get("/list", checkRole(1, 2), async (req, res) => {
     const searchQuery = req.query;
 
     const PAGE = +searchQuery.page || 0;
-    const LIMIT = +searchQuery.limit || 10;
+    const LIMIT = +searchQuery.limit || 20;
     const SKIP = +PAGE * LIMIT;
 
     const orderStatus = searchQuery?.orderStatus;

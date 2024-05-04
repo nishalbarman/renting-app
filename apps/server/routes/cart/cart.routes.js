@@ -255,7 +255,7 @@ router.delete("/:cart_item_id", async (req, res) => {
     });
 
     if (!cartDetails) {
-      return res.status(400).json({
+      return res.status(200).json({
         status: false,
         message: "No items found!",
       });

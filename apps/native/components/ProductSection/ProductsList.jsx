@@ -81,7 +81,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
             <Link
               className="text-[15px] text-purple font-[poppins-bold] underline"
               href={`/list`}>
-              See All
+              More {">>"}
             </Link>
           </View>
 
@@ -95,7 +95,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
                   wishlistIdMap={wishlistIdMap}
                 />
               )}
-              numColumns={2}
+              numColumns={3}
               keyExtractor={(item, index) => index.toString()}
             />
           </View>
