@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -16,12 +16,16 @@ import { useAppSelector, useGetWishlistQuery } from "@store/rtk";
 
 import ProductsListSkeleton from "../../Skeletons/ProductListSkeleton";
 
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, EvilIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import ListFilter from "../../components/ProductList/ListFilter";
+// import ListFilter from "../../components/ProductList/ListFilter";
 import { SheetManager } from "react-native-actions-sheet";
 
 function ProductsList() {
+  const searchParams = useLocalSearchParams();
+
+  console.log(searchParams);
+
   const jwtToken = useSelector((state) => state.auth.jwtToken);
   const { productType } = useSelector((state) => state.product_store);
 
@@ -44,6 +48,14 @@ function ProductsList() {
       url.searchParams.append("productType", productType);
       url.searchParams.append("page", paginationPage);
       url.searchParams.append("limit", 50);
+
+      if (!!searchParams.category) {
+        url.searchParams.append("category", searchParams.category);
+      }
+
+      if (!!searchParams.searchValue) {
+        url.searchParams.append("query", searchParams.searchValue);
+      }
 
       if (!!sort) {
         url.searchParams.append("sort", sort);
@@ -122,12 +134,34 @@ function ProductsList() {
     } else return null;
   };
 
+  const router = useRouter();
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <Stack.Screen
         options={{
-          title: "Product Listing",
+          title:
+            searchParams.categoryName ||
+            searchParams.searchValue ||
+            "Product Listing",
           headerShadowVisible: false,
+          headerRight: () => {
+            return (
+              <Pressable
+                onPress={() => {
+                  if (!searchParams.searchValue) return;
+                  router.navigate({
+                    pathname: "/search-page",
+                    params: {
+                      searchValue: searchParams.searchValue,
+                    },
+                  });
+                }}
+                className="h-8 w-12 flex items-center justify-center rounded-md">
+                <EvilIcons name="search" size={27} color="black" />
+              </Pressable>
+            );
+          },
         }}
       />
       {isProductDataLoading || isWishlistDataLoading ? (

@@ -5,10 +5,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ProductsList from "../../components/ProductSection/ProductsList";
 import Categories from "../../components/CategoryList/Categories";
 import { setProductType } from "@store/rtk";
+import { Stack, useRouter } from "expo-router";
+import EvilIcons from "@expo/vector-icons/EvilIcons";
 
 export default function Tab() {
   const { productType } = useSelector((state) => state.product_store);
 
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const handleProductTypeRent = () => {
@@ -21,6 +24,9 @@ export default function Tab() {
 
   return (
     <SafeAreaView className="bg-white flex-1">
+      {/* <Stack.Screen options={{
+        head
+      }}/> */}
       <FlatList
         className="w-screen"
         contentContainerStyle={{
@@ -33,7 +39,7 @@ export default function Tab() {
         renderItem={() => (
           <>
             <View className="w-screen flex items-center">
-              <View className="flex flex-row h-9 rounded-md w-[40%] bg-[#ebebeb] border border-gray-300">
+              <View className="flex flex-row h-8 rounded-md w-[40%] bg-[#ebebeb] border border-gray-300">
                 <Pressable
                   onPress={handleProductTypeRent}
                   className={`${productType === "rent" ? "bg-white" : ""} rounded-md w-[50%] flex items-center justify-center`}>
@@ -43,6 +49,18 @@ export default function Tab() {
                   onPress={handleProductTypePurchase}
                   className={`${productType === "buy" ? "bg-white" : ""} rounded-md w-[50%] bg-none flex items-center justify-center`}>
                   <Text>Purchase</Text>
+                </Pressable>
+              </View>
+              <View className="h-fit w-full px-3 mt-3">
+                <Pressable
+                  onPress={() => {
+                    router.navigate("/search-page");
+                  }}
+                  className="w-full h-12 rounded-md border border-gray-200 flex-row items-center justify-between px-3 shadow-sm">
+                  <Text className="text-gray-500 font-semibold">
+                    Seach Products
+                  </Text>
+                  <EvilIcons name="search" size={24} color="black" />
                 </Pressable>
               </View>
             </View>

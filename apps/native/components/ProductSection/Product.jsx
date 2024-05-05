@@ -108,7 +108,8 @@ function Product({
       <TouchableOpacity
         onPress={handleProductClick}
         activeOpacity={0.6}
-        className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-white rounded-md shadow-sm pb-[1%]`}>
+        className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-white rounded-md shadow-sm pb-[1%]`}
+        >
         <View className="w-[100%] h-[200px] p-[3%] ">
           {typeOfProduct === "both" || (
             <Text

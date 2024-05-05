@@ -22,6 +22,8 @@ const OrderScreen = () => {
   const [paginationPage, setPaginationPage] = useState(0);
   const [orders, setOrders] = useState([]);
 
+  // console.log("Order list length -->", orders.length);
+
   const [paginationTotalPages, setPaginationTotalPages] = useState(0);
   const [paginationLimit, setPaginationLimit] = useState(5);
 
@@ -84,14 +86,14 @@ const OrderScreen = () => {
     setRefreshing(false);
   }, [productType, paginationPage]);
 
-  const handleFetchNextPage = () => {
+  const handleFetchNextPage = React.useCallback(() => {
     if (paginationPage < paginationTotalPages - 1) {
       console.log("Updating pagination for orders");
       setPaginationPage((prev) => prev + 1);
     }
-  };
+  }, [paginationPage, paginationTotalPages]);
 
-  const ListEndLoader = () => {
+  const ListEndLoader = React.useCallback(() => {
     if (paginationPage < paginationTotalPages - 1) {
       return (
         <View className="my-4">
@@ -99,7 +101,7 @@ const OrderScreen = () => {
         </View>
       );
     } else return null;
-  };
+  }, [paginationPage, paginationTotalPages]);
 
   return (
     <SafeAreaView className={`flex-1 bg-white px-2`}>

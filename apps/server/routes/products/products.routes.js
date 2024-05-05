@@ -306,13 +306,15 @@ router.get("/", async (req, res) => {
 
     const filter = {}; // blank filter object
 
-    if (QUERY) {
+    if (!!QUERY) {
       filter["$text"] = { $search: QUERY };
     }
 
     if (TYPE) {
       filter.productType = { $in: [TYPE, "both"] };
     }
+
+    console.log(filter);
 
     if (CATEGORY) {
       filter.category = CATEGORY;
@@ -326,7 +328,7 @@ router.get("/", async (req, res) => {
       });
     }
 
-    const sortObject = { createdAt: "desc" };
+    let sortObject = { createdAt: "desc" };
 
     if (!!QUERY) {
       delete sortObject.createdAt;

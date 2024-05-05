@@ -21,11 +21,6 @@ function Categories() {
   const [totalPages, setTotalPages] = useState(0);
   const [categoryList, setCategoryList] = useState([]);
 
-  console.log(
-    "Categories List",
-    categoryList.map((item) => item.categoryImageUrl)
-  );
-
   const getCategories = async () => {
     try {
       setIsLoading(true);
@@ -99,6 +94,7 @@ function Categories() {
             renderItem={({ item }) => (
               <CategoryItem
                 key={item?._id}
+                categoryId={item?._id}
                 categoryImageUrl={item?.categoryImageUrl}
                 categoryName={item?.categoryName}
                 categoryKey={item?.categoryKey}

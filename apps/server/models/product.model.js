@@ -60,12 +60,14 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-productSchema.index({
-  title: "text",
-  description: "text",
-  shippingPrice: "text",
-  rentingPrice: "text",
-});
+// productSchema.index({
+//   title: "text",
+//   description: "text",
+//   shippingPrice: "text",
+//   rentingPrice: "text",
+// });
+
+productSchema.index({ "$**": "text" });
 
 const productVariantSchema = new mongoose.Schema(
   {

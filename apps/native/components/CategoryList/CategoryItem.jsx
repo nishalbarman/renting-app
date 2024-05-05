@@ -3,14 +3,21 @@ import { Text, TouchableHighlight, View } from "react-native";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 
-function CategoryItem({ categoryImageUrl, categoryName, categoryKey }) {
+function CategoryItem({
+  categoryId,
+  categoryImageUrl,
+  categoryName,
+  categoryKey,
+}) {
   const router = useRouter();
   return (
     <TouchableHighlight
       underlayColor={"white"}
       onPress={() => {
         console.log(categoryImageUrl);
-        router.navigate(`/products?category=${categoryKey}`);
+        router.navigate(
+          `/list?category=${categoryId}&categoryName=${categoryName}`
+        );
       }}>
       <View className="w-fit h-fit flex flex-col align-center justify-center gap-y-2 m-2">
         <View className="h-[70px] w-[70px] bg-white w-fit h-fit rounded-full flex justify-center align-center shadow-sm border border-gray-300 self-center">
