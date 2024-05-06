@@ -24,9 +24,6 @@ export default function Tab() {
 
   return (
     <SafeAreaView className="bg-white flex-1">
-      {/* <Stack.Screen options={{
-        head
-      }}/> */}
       <FlatList
         className="w-screen"
         contentContainerStyle={{
@@ -39,7 +36,7 @@ export default function Tab() {
         renderItem={() => (
           <>
             <View className="w-screen flex items-center">
-              <View className="flex flex-row h-8 rounded-md w-[40%] bg-[#ebebeb] border border-gray-300 mt-1">
+              <View className="flex flex-row h-8 rounded-md w-[40%] w-[95%] bg-[#ebebeb] border border-gray-300 mt-1">
                 <Pressable
                   onPress={handleProductTypeRent}
                   className={`${productType === "rent" ? "bg-white" : ""} rounded-md w-[50%] flex items-center justify-center`}>

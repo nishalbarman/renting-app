@@ -1,5 +1,5 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -12,7 +12,7 @@ import Product from "../../components/ProductSection/Product";
 
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { useAppSelector, useGetWishlistQuery } from "@store/rtk";
+import { useGetWishlistQuery } from "@store/rtk";
 
 import ProductsListSkeleton from "../../Skeletons/ProductListSkeleton";
 
@@ -39,66 +39,115 @@ function ProductsList() {
 
   const [paginationPage, setPaginationPage] = useState(0);
   const [paginationTotalPages, setPaginationTotalPages] = useState(0);
-  const [paginationLimit, setPaginationLimit] = useState(50);
+  // const [paginationLimit, setPaginationLimit] = useState(50);
 
-  const getProductData = async (sort = undefined, filter = undefined) => {
-    try {
-      setIsProductDataLoading(true);
-      const url = new URL("/products", process.env.EXPO_PUBLIC_API_URL);
-      url.searchParams.append("productType", productType);
-      url.searchParams.append("page", paginationPage);
-      url.searchParams.append("limit", 50);
+  const getIntitalProductData = useCallback(
+    async (sort = undefined, filter = undefined) => {
+      try {
+        setIsProductDataLoading(true);
+        const url = new URL("/products", process.env.EXPO_PUBLIC_API_URL);
+        url.searchParams.append("productType", productType);
+        url.searchParams.append("page", paginationPage);
+        url.searchParams.append("limit", 50);
 
-      if (!!searchParams.category) {
-        url.searchParams.append("category", searchParams.category);
+        if (!!searchParams.category) {
+          url.searchParams.append("category", searchParams.category);
+        }
+
+        if (!!searchParams.searchValue) {
+          url.searchParams.append("query", searchParams.searchValue);
+        }
+
+        if (!!sort) {
+          url.searchParams.append("sort", sort);
+        }
+
+        if (!!filter) {
+          console.log(filter);
+          url.searchParams.append(
+            "filter",
+            encodeURIComponent(JSON.stringify(filter))
+          );
+        }
+
+        const res = await axios.get(url.href, {
+          headers: {
+            authorization: `Bearer ${jwtToken}`,
+          },
+        });
+
+        setData(res.data.data);
+        setPaginationTotalPages(res.data.totalPages);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsProductDataLoading(false);
       }
+    },
+    [productType, paginationPage, searchParams]
+  );
 
-      if (!!searchParams.searchValue) {
-        url.searchParams.append("query", searchParams.searchValue);
+  const fetchMoreProductData = useCallback(
+    async (sort = undefined, filter = undefined) => {
+      try {
+        // setIsProductDataLoading(true);
+        const url = new URL("/products", process.env.EXPO_PUBLIC_API_URL);
+        url.searchParams.append("productType", productType);
+        url.searchParams.append("page", paginationPage);
+        url.searchParams.append("limit", 50);
+
+        if (!!searchParams.category) {
+          url.searchParams.append("category", searchParams.category);
+        }
+
+        if (!!searchParams.searchValue) {
+          url.searchParams.append("query", searchParams.searchValue);
+        }
+
+        if (!!sort) {
+          url.searchParams.append("sort", sort);
+        }
+
+        if (!!filter) {
+          console.log(filter);
+          url.searchParams.append(
+            "filter",
+            encodeURIComponent(JSON.stringify(filter))
+          );
+        }
+
+        const res = await axios.get(url.href, {
+          headers: {
+            authorization: `Bearer ${jwtToken}`,
+          },
+        });
+
+        if (res?.data?.data) {
+          setData((prev) => [...prev, ...res?.data?.data]);
+          setPaginationTotalPages(res.data.totalPages);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        // setIsProductDataLoading(false);
       }
-
-      if (!!sort) {
-        url.searchParams.append("sort", sort);
-      }
-
-      if (!!filter) {
-        console.log(filter);
-        url.searchParams.append(
-          "filter",
-          encodeURIComponent(JSON.stringify(filter))
-        );
-      }
-
-      const res = await axios.get(url.href, {
-        headers: {
-          authorization: `Bearer ${jwtToken}`,
-        },
-      });
-
-      console.log(res.data);
-
-      setData(res.data.data);
-      setPaginationTotalPages(res.data.totalPages);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsProductDataLoading(false);
-    }
-  };
+    },
+    [productType, paginationPage, searchParams]
+  );
 
   useEffect(() => {
-    getProductData();
-  }, [productType, paginationPage]);
+    fetchMoreProductData(sortingValue, filter);
+  }, [paginationPage]);
 
   useEffect(() => {
-    getProductData(sortingValue, filter);
-  }, [sortingValue, filter]);
+    getIntitalProductData(sortingValue, filter);
+  }, [productType, sortingValue, filter]);
 
   const {
     data: wishlistData,
     isLoading: isWishlistDataLoading,
-    isError: isWishlistDataError,
-    error: wishlistDataError,
+    // isError: isWishlistDataError,
+    // error: wishlistDataError,
     refetch,
   } = useGetWishlistQuery();
 

@@ -25,7 +25,7 @@ const OrderScreen = () => {
   // console.log("Order list length -->", orders.length);
 
   const [paginationTotalPages, setPaginationTotalPages] = useState(0);
-  const [paginationLimit, setPaginationLimit] = useState(5);
+  const [paginationLimit, setPaginationLimit] = useState(15);
 
   const getInitialOrder = useCallback(
     async ({ productType, paginationPage }) => {
