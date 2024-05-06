@@ -22,6 +22,7 @@ import axios from "axios";
 
 import { useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Image } from "expo-image";
 
 function searchPage() {
   const { productType } = useSelector((state) => state.product_store);
@@ -99,11 +100,6 @@ function searchPage() {
         const oldSearchData =
           JSON.parse(await AsyncStorage.getItem("searchHistory")) || [];
 
-        await AsyncStorage.setItem(
-          "searchHistory",
-          JSON.stringify([searchValue, ...oldSearchData])
-        );
-        setSearchHistory([searchValue, ...oldSearchData]);
         getProductData();
       }, 500);
     })();
@@ -115,19 +111,29 @@ function searchPage() {
 
   const [searchHistory, setSearchHistory] = useState([]);
 
-  const handleOnKeyPress = (event) => {
+  const setHistory = async (value) => {
+    const oldSearchData =
+      JSON.parse(await AsyncStorage.getItem("searchHistory")) || [];
+
+    setSearchHistory([value, ...oldSearchData]);
+
+    AsyncStorage.setItem(
+      "searchHistory",
+      JSON.stringify([value, ...oldSearchData])
+    );
+  };
+
+  const handleOnKeyPress = async (event) => {
     const key = event.nativeEvent.key;
     // As I remember key for enter button is "Enter", but if not you can console.log(key) and hit enter to check the value
-    // if (key === "Enter") {
     if (!searchValue) return;
-    console.log("Keycliekd", searchValue);
+    await setHistory(searchValue);
     router.navigate({
       pathname: "/list",
       params: {
         searchValue: searchValue,
       },
     });
-    // }
   };
 
   useEffect(() => {
@@ -149,26 +155,12 @@ function searchPage() {
           headerTitle: () => {
             return (
               <View className="h-12 w-full border-none outline-none bg-white flex flex-row rounded-lg items-center">
-                {/* <View>
-                  <Pressable
-                    onPress={() => {
-                      if (!searchValue) return;
-                      router.navigate({
-                        pathname: "/list",
-                        params: {
-                          searchValue: searchValue,
-                        },
-                      });
-                    }}
-                    className="h-full w-12 bg-gray-200 flex items-center justify-center">
-                    <EvilIcons name="search" size={24} color="black" />
-                  </Pressable>
-                </View> */}
                 <TextInput
-                  className="h-full w-full inline-block font-[poppins-mid] placeholder:text-[16px] items-center"
+                  className="h-full w-full flex font-[poppins-mid] placeholder:text-[16px] items-center"
                   editable={true}
                   multiline={false}
                   inputMode="text"
+                  autoFocus={true}
                   placeholder="Search for products"
                   onSubmitEditing={handleOnKeyPress}
                   onChangeText={(text) => {
@@ -196,35 +188,57 @@ function searchPage() {
         }}
       />
 
-      <View className="w-full h-full"></View>
-      <ScrollView>
-        {productData.length > 0 ? (
-          <View>
-            {productData.map((item) => {
-              return (
-                <View className="w-full border-b border-gray-200">
-                  <View>
-                    <Octicons name="history" size={24} color="black" />
-                    <Text>{item.title}</Text>
-                  </View>
-                </View>
-              );
-            })}
-          </View>
-        ) : (
-          <View>
-            {searchHistory.map((item) => {
-              return (
-                <View className="w-full border-b border-gray-200">
-                  <View>
-                    <Octicons name="history" size={24} color="black" />
-                    <Text>{item}</Text>
-                  </View>
-                </View>
-              );
-            })}
-          </View>
+      <ScrollView className="">
+        {productData.length > 0 &&
+          productData.map((item, index) => {
+            return (
+              <Pressable
+                key={index}
+                className="px-3 py-3 w-full flex-row items-center border-b border-[1px] border-gray-200 bg-white"
+                onPress={async () => {
+                  setHistory(item.title);
+                  router.navigate({
+                    pathname: "/list",
+                    params: {
+                      searchValue: item.title,
+                    },
+                  });
+                }}>
+                <Image
+                  source={{
+                    uri: item.previewImage,
+                  }}
+                  className="w-10 h-10"
+                  contentPosition={"center"}
+                />
+                <Text className="ml-3 text-md">{item.title}</Text>
+              </Pressable>
+            );
+          })}
+
+        {productData.length > 0 && (
+          <View className="my-2 border border-b border-gray-200"></View>
         )}
+
+        {searchHistory.length > 0 &&
+          searchHistory.map((item, index) => {
+            return (
+              <Pressable
+                key={index}
+                className="px-3 py-3 w-full flex-row items-center border-b border-[1px] border-gray-200 bg-white"
+                onPress={async () => {
+                  router.navigate({
+                    pathname: "/list",
+                    params: {
+                      searchValue: item,
+                    },
+                  });
+                }}>
+                <Octicons name="history" size={24} color="black" />
+                <Text className="ml-3 text-md">{item}</Text>
+              </Pressable>
+            );
+          })}
       </ScrollView>
     </SafeAreaView>
   );

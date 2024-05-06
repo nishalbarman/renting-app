@@ -1,39 +1,31 @@
-import {
-  View,
-  FlatList,
-  SafeAreaView,
-  Text,
-  RefreshControl,
-} from "react-native";
+import { View, FlatList, SafeAreaView, RefreshControl } from "react-native";
 
 import { useGetWishlistQuery } from "@store/rtk";
 import WishlistCard from "../../components/Wishlist/WishlistCard";
 
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import EmptyBag from "../../components/EmptyBag/EmptyBag";
 import ProductListSkeleton from "../../Skeletons/ProductListSkeleton";
 
-export default function Tab() {
+export default memo(function Tab() {
   const { productType } = useSelector((state) => state.product_store);
 
   const {
     data: wishlistData,
     isLoading: isWishlistDataLoading,
     isFetching: isWishlistDataFetching,
-    isError: isWishlistDataError,
-    error: wishlistDataError,
+    // isError: isWishlistDataError,
+    // error: wishlistDataError,
     refetch,
   } = useGetWishlistQuery(productType);
-
-  console.log("Wishlist items -->", wishlistData);
 
   useEffect(() => {
     refetch();
   }, [productType]);
 
   return (
-    <SafeAreaView className="flex-1 bg-white p-3">
+    <SafeAreaView className="flex-1 bg-white">
       {isWishlistDataLoading || isWishlistDataFetching ? (
         <ProductListSkeleton />
       ) : (
@@ -63,4 +55,4 @@ export default function Tab() {
       )}
     </SafeAreaView>
   );
-}
+});

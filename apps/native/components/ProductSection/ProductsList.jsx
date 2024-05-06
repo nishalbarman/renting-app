@@ -95,7 +95,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
                   wishlistIdMap={wishlistIdMap}
                 />
               )}
-              numColumns={3}
+              numColumns={2}
               keyExtractor={(item, index) => index.toString()}
             />
           </View>

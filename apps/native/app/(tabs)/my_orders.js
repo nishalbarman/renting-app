@@ -27,15 +27,10 @@ const OrderScreen = () => {
   const [paginationTotalPages, setPaginationTotalPages] = useState(0);
   const [paginationLimit, setPaginationLimit] = useState(5);
 
-  const getOrders = useCallback(
-    async ({ productType, paginationPage, clearAll = false }) => {
-      console.log("fetching orders ", paginationPage);
+  const getInitialOrder = useCallback(
+    async ({ productType, paginationPage }) => {
       try {
-        if (paginationPage === 0) {
-          setIsOrderLoading(true);
-        } else {
-          setIsOrderFetching(true);
-        }
+        setIsOrderLoading(true);
 
         const url = new URL(
           `/orders/l/${productType}`,
@@ -50,31 +45,61 @@ const OrderScreen = () => {
           },
         });
 
-        if (!!response.data?.data && !clearAll) {
-          setOrders([...orders, ...response.data?.data]);
-        } else setOrders(response.data?.data);
+        setOrders(response.data?.data);
         setPaginationTotalPages(response.data?.totalPage || 0);
       } catch (error) {
         console.error(error);
       } finally {
-        if (paginationPage === 0) {
-          setIsOrderLoading(false);
-        } else {
-          setIsOrderFetching(false);
+        setIsOrderLoading(false);
+      }
+    },
+    []
+  );
+
+  const fetchMoreOrders = useCallback(
+    async ({ productType, paginationPage }) => {
+      try {
+        // If paginationPage is 0 then inititalOrder function will be called not this one.
+        if (paginationPage === 0) return;
+
+        setIsOrderFetching(true);
+
+        const url = new URL(
+          `/orders/l/${productType}`,
+          process.env.EXPO_PUBLIC_API_URL
+        );
+        url.searchParams.append("page", paginationPage);
+        url.searchParams.append("limit", paginationLimit);
+
+        const response = await axios.get(url.href, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
+
+        if (!!response.data?.data) {
+          setOrders((prev) => {
+            return [...prev, ...response.data?.data];
+          });
+          setPaginationTotalPages(response.data?.totalPage || 0);
         }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsOrderFetching(false);
       }
     },
     []
   );
 
   useEffect(() => {
-    getOrders({ productType, paginationPage, clearAll: false });
+    fetchMoreOrders({ productType, paginationPage });
   }, [paginationPage]);
 
   const orderRefetch = useSelector((state) => state.order.orderRefetch);
 
   useEffect(() => {
-    getOrders({ productType, paginationPage, clearAll: true });
+    getInitialOrder({ productType, paginationPage });
   }, [orderRefetch, productType]);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -82,7 +107,7 @@ const OrderScreen = () => {
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     setPaginationPage(0);
-    await getOrders({ productType, paginationPage, clearAll: true });
+    await getInitialOrder({ productType, paginationPage });
     setRefreshing(false);
   }, [productType, paginationPage]);
 
@@ -96,8 +121,8 @@ const OrderScreen = () => {
   const ListEndLoader = React.useCallback(() => {
     if (paginationPage < paginationTotalPages - 1) {
       return (
-        <View className="my-4">
-          <ActivityIndicator size={45} color="black" />
+        <View className="my-2">
+          <ActivityIndicator size={30} color="black" />
         </View>
       );
     } else return null;

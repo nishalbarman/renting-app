@@ -127,8 +127,8 @@ function ProductsList() {
   const ListEndLoader = () => {
     if (paginationPage < paginationTotalPages - 1) {
       return (
-        <View className="my-4">
-          <ActivityIndicator size={45} color="black" />
+        <View className="my-2">
+          <ActivityIndicator size={30} color="black" />
         </View>
       );
     } else return null;

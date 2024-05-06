@@ -13,6 +13,25 @@ export default function TabLayout() {
           fontWeight: "bold",
           fontSize: 20,
         },
+
+        tabBarActiveTintColor: "green",
+        tabBarStyle: {
+          height: 70,
+          borderWidth: 1,
+          // borderTopLeftRadius: 20,
+          // borderTopRightRadius: 20,
+          borderRadius: 20,
+          borderColor: "transparent",
+          borderTopColor: "transparent",
+          marginBottom: 10,
+          marginLeft: 5,
+          marginRight: 5,
+          marginTop: 10,
+        },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          marginBottom: 10,
+        },
       }}>
       <Tabs.Screen
         name="index"

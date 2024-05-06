@@ -13,6 +13,7 @@ import { SheetManager } from "react-native-actions-sheet";
 import { useDispatch, useSelector } from "react-redux";
 import { clearLoginSession } from "@store/rtk";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AccountScreen = () => {
   const { name } = useSelector((state) => state.auth);
@@ -26,6 +27,7 @@ const AccountScreen = () => {
 
   const handleLogout = () => {
     dispatch(clearLoginSession());
+    AsyncStorage.clear();
     router.dismissAll();
     router.replace("/auth/login");
   };
@@ -36,47 +38,7 @@ const AccountScreen = () => {
         <View className="px-4 py-2">
           <View className="flex h-14 flex-row items-center justify-between bg-yellow-200 p-3 rounded-md mb-4">
             <Text className="font-semibold">Hello! {name}</Text>
-            {/* <View
-              className="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80 bg-white"
-              style={styles.customBadge}>
-              <Text>813</Text>
-            </View> */}
           </View>
-
-          {/* GRID LAYOUT FOUR ITEMS */}
-          {/* <View className="flex flex-wrap flex-row justify-center mb-4">
-            <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4 flex-grow">
-              <FontAwesome
-                name="envelope"
-                size={24}
-                color="gray"
-                className="mb-2"
-              />
-              <Text className="mt-2">Orders</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
-              <FontAwesome
-                name="heart"
-                size={24}
-                color="gray"
-                className="mb-2"
-              />
-              <Text className="mt-2">Wishlist</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
-              <FontAwesome name="tag" size={24} color="gray" className="mb-2" />
-              <Text className="mt-2">Coupons</Text>
-            </TouchableOpacity>
-            <TouchableOpacity className="rounded-lg shadow-sm bg-card text-card-foreground shadow-sm flex flex-col items-center justify-center p-4">
-              <FontAwesome
-                name="question-circle"
-                size={24}
-                color="gray"
-                className="mb-2"
-              />
-              <Text className="mt-2">Help Center</Text>
-            </TouchableOpacity>
-          </View> */}
 
           <View className="mt-1">
             <Text className="font-semibold text-lg mb-2">Account Settings</Text>
@@ -97,12 +59,12 @@ const AccountScreen = () => {
               <Feather name="chevron-right" size={24} color="#787878" />
             </TouchableOpacity>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={handleAddressSheetOpen}
               className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center px-4 h-14 mb-2">
               <Text className="text-md">Become a Center</Text>
               <Feather name="chevron-right" size={24} color="#787878" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity
               onPress={handleLogout}

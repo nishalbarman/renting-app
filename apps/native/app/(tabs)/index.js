@@ -39,7 +39,7 @@ export default function Tab() {
         renderItem={() => (
           <>
             <View className="w-screen flex items-center">
-              <View className="flex flex-row h-8 rounded-md w-[40%] bg-[#ebebeb] border border-gray-300">
+              <View className="flex flex-row h-8 rounded-md w-[40%] bg-[#ebebeb] border border-gray-300 mt-1">
                 <Pressable
                   onPress={handleProductTypeRent}
                   className={`${productType === "rent" ? "bg-white" : ""} rounded-md w-[50%] flex items-center justify-center`}>
