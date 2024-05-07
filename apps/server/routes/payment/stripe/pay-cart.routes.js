@@ -338,6 +338,7 @@ router.post("/:productType", async (req, res) => {
     });
 
     res.json({
+      paymentTxnId: paymentIntent.id,
       paymentIntent: paymentIntent.client_secret,
       ephemeralKey: ephemeralKey.secret,
       customer: user.stripeCustomer.id,

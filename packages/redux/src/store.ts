@@ -26,9 +26,11 @@ import { storeTypeSlice } from "./slices/storeTypeSlice";
 import { cartApi } from "./apis/cartApi";
 import { centerAddressSlice } from "./slices/centerAddressSlice";
 import { centerAddressApi } from "./apis/centerAddresApi";
-import { orderSlice } from "./slices/orderSlice";
+// import { orderSlice } from "./slices/orderSlice";
 import { productSortingFilteringSlice } from "./slices/productSortingFiltering";
 import { authSlice } from "./slices/authSlice";
+import { refetchSlice } from "./slices/refetchSlice";
+import { globalMessage } from "./slices/messageSlice";
 
 const rootReducer = combineReducers({
   [userAPI.reducerPath]: userAPI.reducer,
@@ -42,9 +44,15 @@ const rootReducer = combineReducers({
   [wishlistApi.reducerPath]: wishlistApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
   [storeTypeSlice.name]: storeTypeSlice.reducer,
-  [orderSlice.name]: orderSlice.reducer,
+  // [orderSlice.name]: orderSlice.reducer,
   [centerAddressApi.reducerPath]: centerAddressApi.reducer,
   [centerAddressSlice.name]: centerAddressSlice.reducer,
+
+  // refetch slice
+  [refetchSlice.name]: refetchSlice.reducer,
+
+  // global error
+  [globalMessage.name]: globalMessage.reducer,
 });
 
 const persistConfig: PersistConfig<ReturnType<typeof rootReducer>> = {

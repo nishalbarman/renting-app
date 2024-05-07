@@ -42,8 +42,6 @@ function searchPage() {
   const [paginatinLimit, setPaginationLimit] = useState(10);
   const [productData, setProductData] = useState([]);
 
-  console.log(productData);
-
   const handleError = (err) => {
     console.error(err);
     setError(err);
@@ -73,8 +71,6 @@ function searchPage() {
           authorization: `Bearer ${jwtToken}`,
         },
       });
-
-      console.log(res.data.data);
 
       setProductData(res.data.data);
       setPaginationPage(res.data.totalPages);

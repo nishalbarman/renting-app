@@ -7,6 +7,7 @@ import Categories from "../../components/CategoryList/Categories";
 import { setProductType } from "@store/rtk";
 import { Stack, useRouter } from "expo-router";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
+import SnackBar from "../../components/SnackBar";
 
 export default function Tab() {
   const { productType } = useSelector((state) => state.product_store);

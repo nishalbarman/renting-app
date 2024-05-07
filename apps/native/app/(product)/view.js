@@ -346,11 +346,11 @@ function product() {
       const response = await addToCart(cartObject).unwrap();
       // if (response.status) {
       setInCart(true);
-      Toast.success("Added to cart", 'top');
+      Toast.success("Added to cart", "top");
       console.log(response);
       // }
     } catch (error) {
-      Toast.error("Added to cart failed", 'top');
+      Toast.error("Added to cart failed", "top");
       console.error(error);
     }
   };

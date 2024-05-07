@@ -24,8 +24,6 @@ import { SheetManager } from "react-native-actions-sheet";
 function ProductsList() {
   const searchParams = useLocalSearchParams();
 
-  console.log(searchParams);
-
   const jwtToken = useSelector((state) => state.auth.jwtToken);
   const { productType } = useSelector((state) => state.product_store);
 
@@ -63,7 +61,6 @@ function ProductsList() {
         }
 
         if (!!filter) {
-          console.log(filter);
           url.searchParams.append(
             "filter",
             encodeURIComponent(JSON.stringify(filter))
@@ -109,7 +106,6 @@ function ProductsList() {
         }
 
         if (!!filter) {
-          console.log(filter);
           url.searchParams.append(
             "filter",
             encodeURIComponent(JSON.stringify(filter))
@@ -184,8 +180,6 @@ function ProductsList() {
   };
 
   const router = useRouter();
-
-  console.log(data);
 
   return (
     <SafeAreaView className="flex-1 bg-white">

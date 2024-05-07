@@ -108,8 +108,7 @@ function Product({
       <TouchableOpacity
         onPress={handleProductClick}
         activeOpacity={0.6}
-        className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-white rounded-md shadow-sm pb-[1%]`}
-        >
+        className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-white rounded-md shadow-sm pb-[1%]`}>
         <View className="w-[100%] h-[200px] p-[3%] ">
           {typeOfProduct === "both" || (
             <Text
@@ -159,9 +158,9 @@ function Product({
                 return (
                   <AntDesign
                     key={index}
-                    onPress={() => {
-                      setCurrentUserReview(index + 1);
-                    }}
+                    // onPress={() => {
+                    //   setCurrentUserReview(index + 1);
+                    // }}
                     name={index + 1 <= Math.round(stars) ? "star" : "staro"}
                     size={18}
                     color={index + 1 <= Math.round(stars) ? "orange" : "black"}

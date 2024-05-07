@@ -15,6 +15,7 @@ import * as Linking from "expo-linking";
 import Constants from "expo-constants";
 import { useCallback, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Snackbar from "../components/SnackBar";
 
 // Use imperatively
 
@@ -68,6 +69,7 @@ export default function RootLayout() {
           <SheetProvider>
             <SafeAreaProvider>
               <ToastManager />
+
               <Stack
                 screenOptions={{
                   headerShown: false,

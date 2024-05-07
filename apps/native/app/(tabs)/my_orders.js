@@ -96,7 +96,7 @@ const OrderScreen = () => {
     fetchMoreOrders({ productType, paginationPage });
   }, [paginationPage]);
 
-  const orderRefetch = useSelector((state) => state.order.orderRefetch);
+  const orderRefetch = useSelector((state) => state.refetch.orderRefetch);
 
   useEffect(() => {
     getInitialOrder({ productType, paginationPage });

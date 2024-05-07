@@ -128,8 +128,6 @@ export default function Page() {
 
       const data = response?.data;
 
-      console.log(data);
-
       try {
         dispatch(setUserAuthData({ ...data.user }));
       } catch (error) {

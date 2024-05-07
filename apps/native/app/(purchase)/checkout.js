@@ -1,6 +1,12 @@
 import { AntDesign } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, SafeAreaView, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  SafeAreaView,
+  Text,
+  View,
+} from "react-native";
 
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 
@@ -21,7 +27,7 @@ export default function AddressList() {
   );
   const { productType } = useSelector((state) => state.product_store);
 
-  selectedAddress = searchParams?.address;
+  let selectedAddress = searchParams?.address;
 
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [paymentLoading, setPaymentLoading] = useState(true);
@@ -40,23 +46,35 @@ export default function AddressList() {
         },
       }
     );
-    const { paymentIntent, ephemeralKey, customer, publishableKey } =
-      response.data;
+
+    const {
+      paymentIntent,
+      ephemeralKey,
+      customer,
+      publishableKey,
+      paymentTxnId,
+    } = response.data;
 
     return {
       paymentIntent,
       ephemeralKey,
       customer,
       publishableKey,
+      paymentTxnId,
     };
   };
 
   const initializePaymentSheet = async () => {
-    const { paymentIntent, ephemeralKey, customer, publishableKey } =
-      await fetchPaymentSheetParams();
+    const {
+      paymentIntent,
+      ephemeralKey,
+      customer,
+      publishableKey,
+      paymentTxnId,
+    } = await fetchPaymentSheetParams();
 
     const { error } = await initPaymentSheet({
-      merchantDisplayName: process.env.EXPO_MERCHENT_DISPLAY_NAME,
+      merchantDisplayName: process.env.EXPO_MERCHANT_DISPLAY_NAME || "Savero",
       customerId: customer,
       customerEphemeralKeySecret: ephemeralKey,
       paymentIntentClientSecret: paymentIntent,
@@ -77,10 +95,10 @@ export default function AddressList() {
 
     if (error) {
       console.error("Error ->", error);
-      // Alert.alert(`Transaction Failed`, error.message);
+      return Alert.alert(`Transaction Failed`, error.message);
     }
 
-    return paymentIntent.id;
+    return paymentTxnId;
   };
 
   const openPaymentSheet = async () => {
@@ -97,6 +115,7 @@ export default function AddressList() {
         setOrderStatus("failed");
         setOrderError(error);
       } else {
+        console.log("TXN OD--.", paymentTransactionId);
         router.replace({
           pathname: "/order-placed",
           params: {
