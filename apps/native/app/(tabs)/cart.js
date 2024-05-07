@@ -237,7 +237,7 @@ const CartPage = () => {
               <FlatList
                 data={[""]}
                 renderItem={() => (
-                  <View className="pb-2">
+                  <View className="pb-2 mb-20">
                     {productType === "rent" && (
                       <View className="border border-gray-300 rounded-md p-3">
                         <Text className="text-lg font-bold">

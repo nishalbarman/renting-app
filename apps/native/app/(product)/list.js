@@ -185,6 +185,8 @@ function ProductsList() {
 
   const router = useRouter();
 
+  console.log(data);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <Stack.Screen
@@ -192,7 +194,7 @@ function ProductsList() {
           title:
             searchParams.categoryName ||
             searchParams.searchValue ||
-            "Product Listing",
+            "Our Products",
           headerShadowVisible: false,
           headerRight: () => {
             return (
@@ -217,23 +219,32 @@ function ProductsList() {
         <ProductsListSkeleton />
       ) : (
         <View className={`w-full h-full rounded bg-[rgba(0,0,0,0.1)]`}>
-          <View className="flex-row h-fit w-full border-b border-10 border-gray-200">
-            <View className="flex flex-row justify-between items-center w-full bg-gray-20 mb-1 border-t border-gray-200">
-              <Pressable
-                onPress={handleProductSortSheetOpen}
-                className="h-12 bg-white flex-1 flex-row gap-x-2 items-center justify-center border-l border-gray-200">
-                <FontAwesome name="sliders" size={15} color="black" />
-                <Text>Sort</Text>
-              </Pressable>
-              <Pressable className="h-12 bg-white flex-1 flex-row gap-x-1 items-center justify-center">
-                <AntDesign name="down" size={15} color="black" />
-                <Text>Filter</Text>
-              </Pressable>
+          {data.length > 0 && (
+            <View className="flex-row h-fit w-full border-b border-10 border-gray-200">
+              <View className="flex flex-row justify-between items-center w-full bg-gray-20 mb-1 border-t border-gray-200">
+                <Pressable
+                  onPress={handleProductSortSheetOpen}
+                  className="h-12 bg-white flex-1 flex-row gap-x-2 items-center justify-center border-l border-gray-200">
+                  <FontAwesome name="sliders" size={15} color="black" />
+                  <Text>Sort</Text>
+                </Pressable>
+                <Pressable className="h-12 bg-white flex-1 flex-row gap-x-1 items-center justify-center">
+                  <AntDesign name="down" size={15} color="black" />
+                  <Text>Filter</Text>
+                </Pressable>
+              </View>
             </View>
-          </View>
+          )}
 
           <FlatList
             data={data}
+            ListEmptyComponent={() => {
+              return (
+                <View className="h-screen w-full items-center justify-center">
+                  <Text>No products found</Text>
+                </View>
+              );
+            }}
             renderItem={({ item }) => (
               <Product
                 details={item}

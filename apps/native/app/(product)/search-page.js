@@ -123,8 +123,8 @@ function searchPage() {
     );
   };
 
-  const handleOnKeyPress = async (event) => {
-    const key = event.nativeEvent.key;
+  const handleOnKeyPress = async () => {
+    // const key = event.nativeEvent.key;
     // As I remember key for enter button is "Enter", but if not you can console.log(key) and hit enter to check the value
     if (!searchValue) return;
     await setHistory(searchValue);
@@ -145,101 +145,128 @@ function searchPage() {
     })();
   }, []);
 
+  const [searchBarFocus, setSearchBarFocus] = useState();
+
   return (
     <SafeAreaView>
       <Stack.Screen
         options={{
           headerShown: true,
           headerShadowVisible: false,
-          // headerBackVisible: false,
-          headerTitle: () => {
-            return (
-              <View className="h-12 w-full border-none outline-none bg-white flex flex-row rounded-lg items-center">
-                <TextInput
-                  className="h-full w-full flex font-[poppins-mid] placeholder:text-[16px] items-center"
-                  editable={true}
-                  multiline={false}
-                  inputMode="text"
-                  autoFocus={true}
-                  placeholder="Search for products"
-                  onSubmitEditing={handleOnKeyPress}
-                  onChangeText={(text) => {
-                    setSearchValue(text);
-                  }}
-                />
-                {/* <View className="px-6">
-                  <Pressable
-                    onPress={() => {
-                      if (!searchValue) return;
-                      router.navigate({
-                        pathname: "/list",
-                        params: {
-                          searchValue: searchValue,
-                        },
-                      });
-                    }}
-                    className="h-8 w-12 bg-indigo-500 flex items-center justify-center rounded-md">
-                    <EvilIcons name="search" size={24} color="white" />
-                  </Pressable>
-                </View> */}
-              </View>
-            );
+          title: "Seach",
+          headerBackVisible: false,
+          headerSearchBarOptions: {
+            // value: searchValue,
+            placeholder: "Search",
+            autoFocus: true,
+            onFocus: () => {
+              setSearchBarFocus(true);
+            },
+            onBlur: () => {
+              setSearchBarFocus(false);
+            },
+            onChangeText: (e) => {
+              setSearchValue(e.nativeEvent.text);
+            },
+            onSearchButtonPress: (e) => {
+              handleOnKeyPress();
+            },
           },
+          headerBackVisible: true,
+          // headerTitle: () => {
+          //   return (
+          //     // <View className="h-12 border w-full border-none outline-none bg-white rounded-lg items-center">
+          //     <TextInput
+          //       className="h-full w-full font-[poppins-mid] placeholder:text-[16px] items-center"
+          //       editable={true}
+          //       multiline={false}
+          //       inputMode="text"
+          //       autoFocus={true}
+          //       placeholder="Search for products"
+          //       onSubmitEditing={handleOnKeyPress}
+          //       onChangeText={(text) => {
+          //         setSearchValue(text);
+          //       }}
+          //     />
+          //     /* <View className="px-6">
+          //         <Pressable
+          //           onPress={() => {
+          //             if (!searchValue) return;
+          //             router.navigate({
+          //               pathname: "/list",
+          //               params: {
+          //                 searchValue: searchValue,
+          //               },
+          //             });
+          //           }}
+          //           className="h-8 w-12 bg-indigo-500 flex items-center justify-center rounded-md">
+          //           <EvilIcons name="search" size={24} color="white" />
+          //         </Pressable>
+          //       </View> */
+          //     // </View>
+          //   );
+          // },
         }}
       />
 
-      <ScrollView className="">
-        {productData.length > 0 &&
-          productData.map((item, index) => {
-            return (
-              <Pressable
-                key={index}
-                className="px-3 py-3 w-full flex-row items-center border-b border-[1px] border-gray-200 bg-white"
-                onPress={async () => {
-                  setHistory(item.title);
-                  router.navigate({
-                    pathname: "/list",
-                    params: {
-                      searchValue: item.title,
-                    },
-                  });
-                }}>
-                <Image
-                  source={{
-                    uri: item.previewImage,
-                  }}
-                  className="w-10 h-10"
-                  contentPosition={"center"}
-                />
-                <Text className="ml-3 text-md">{item.title}</Text>
-              </Pressable>
-            );
-          })}
+      {searchBarFocus ? (
+        <ScrollView className="">
+          {productData.length > 0 &&
+            productData.map((item, index) => {
+              return (
+                <Pressable
+                  key={index}
+                  className="px-3 py-3 w-full flex-row items-center border-b border-[1px] border-gray-200 bg-white"
+                  onPress={async () => {
+                    setHistory(item.title);
+                    router.navigate({
+                      pathname: "/list",
+                      params: {
+                        searchValue: item.title,
+                      },
+                    });
+                  }}>
+                  <Image
+                    source={{
+                      uri: item.previewImage,
+                    }}
+                    className="w-10 h-10"
+                    contentPosition={"center"}
+                  />
+                  <Text className="ml-3 text-md">{item.title}</Text>
+                </Pressable>
+              );
+            })}
 
-        {productData.length > 0 && (
-          <View className="my-2 border border-b border-gray-200"></View>
-        )}
+          {productData.length > 0 && (
+            <View className="my-2 border border-b border-gray-200"></View>
+          )}
 
-        {searchHistory.length > 0 &&
-          searchHistory.map((item, index) => {
-            return (
-              <Pressable
-                key={index}
-                className="px-3 py-3 w-full flex-row items-center border-b border-[1px] border-gray-200 bg-white"
-                onPress={async () => {
-                  router.navigate({
-                    pathname: "/list",
-                    params: {
-                      searchValue: item,
-                    },
-                  });
-                }}>
-                <Octicons name="history" size={24} color="black" />
-                <Text className="ml-3 text-md">{item}</Text>
-              </Pressable>
-            );
-          })}
-      </ScrollView>
+          {searchHistory.length > 0 &&
+            searchHistory.map((item, index) => {
+              return (
+                <Pressable
+                  key={index}
+                  className="px-3 py-3 w-full flex-row items-center border-b border-[1px] border-gray-200 bg-white"
+                  onPress={async () => {
+                    router.navigate({
+                      pathname: "/list",
+                      params: {
+                        searchValue: item,
+                      },
+                    });
+                  }}>
+                  <Octicons name="history" size={24} color="black" />
+                  <Text className="ml-3 text-md">{item}</Text>
+                </Pressable>
+              );
+            })}
+        </ScrollView>
+      ) : (
+        <View className="w-full h-full bg-white items-center justify-center">
+          <Text>Click on the search icon to search something</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }

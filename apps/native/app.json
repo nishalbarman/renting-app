@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "infoPlist": {
         "NSAppTransportSecurity": {
@@ -25,7 +27,8 @@
         "googleMapsApiKey": "AIzaSyAVBtu9gFRzmHnlMnZl_sqZGY3mXRPV3so",
         "usesNonExemptEncryption": false,
         "usesCleartextTraffic": true
-      }
+      },
+      "bundleIdentifier": "com.ebrsavero.pro"
     },
     "android": {
       "adaptiveIcon": {
@@ -33,7 +36,9 @@
         "backgroundColor": "#ffffff"
       },
       "userInterfaceStyle": "light",
-      "permissions": ["INTERNET"],
+      "permissions": [
+        "INTERNET"
+      ],
       "package": "com.nishalbarman.renting_app",
       "config": {
         "googleMaps": {
@@ -42,13 +47,11 @@
         "networkSecurityConfig": "./network_security_config.xml"
       }
     },
-
     "extra": {
       "eas": {
         "projectId": "8550e956-fda9-4373-bea2-4b847e0d02bb"
       }
     },
-
     "web": {
       "favicon": "./assets/appIcons/favicon.png",
       "bundler": "metro"

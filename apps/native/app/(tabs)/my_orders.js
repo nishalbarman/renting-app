@@ -140,7 +140,7 @@ const OrderScreen = () => {
             <FlatList
               data={[""]}
               renderItem={() => (
-                <View className={`mb-4 p-2`}>
+                <View className={`mb-4 p-2 mb-20`}>
                   {orders?.map((item, index) => (
                     <OrderItem
                       key={index}

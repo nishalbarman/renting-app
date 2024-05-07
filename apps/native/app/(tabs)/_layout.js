@@ -16,10 +16,9 @@ export default function TabLayout() {
 
         tabBarActiveTintColor: "green",
         tabBarStyle: {
+          position: "absolute",
           height: 70,
           borderWidth: 1,
-          // borderTopLeftRadius: 20,
-          // borderTopRightRadius: 20,
           borderRadius: 20,
           borderColor: "transparent",
           borderTopColor: "transparent",

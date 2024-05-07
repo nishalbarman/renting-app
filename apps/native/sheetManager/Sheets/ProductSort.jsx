@@ -1,9 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import ActionSheet, { useScrollHandlers } from "react-native-actions-sheet";
-import { NativeViewGestureHandler } from "react-native-gesture-handler";
-
-import { useRouter } from "expo-router";
+import React, { useMemo } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import ActionSheet, { ScrollView } from "react-native-actions-sheet";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -11,8 +8,6 @@ import RadioGroup from "react-native-radio-buttons-group";
 import { setSort } from "@store/rtk";
 
 export default function ProductSort() {
-  const handlers = useScrollHandlers();
-
   const radiogroupContents = useMemo(
     () => [
       {
@@ -63,23 +58,20 @@ export default function ProductSort() {
 
   return (
     <ActionSheet closeOnPressBack={true} gestureEnabled={true}>
-      <NativeViewGestureHandler
-        simultaneousHandlers={handlers.simultaneousHandlers}>
-        <ScrollView {...handlers}>
-          <View className="pt-3 flex flex-col items-center pb-10">
-            <Text className="font-[poppins-bold] text-[14px]">SORT BY</Text>
+      <ScrollView>
+        <View className="pt-3 flex flex-col items-center pb-10">
+          <Text className="font-[poppins-bold] text-[14px]">SORT BY</Text>
 
-            <View className="w-full px-4">
-              <RadioGroup
-                containerStyle={radiogroupStyle}
-                radioButtons={radiogroupContents}
-                onPress={handleSetSelectedSortMethod}
-                selectedId={selectedSortMethod}
-              />
-            </View>
+          <View className="w-full px-4">
+            <RadioGroup
+              containerStyle={radiogroupStyle}
+              radioButtons={radiogroupContents}
+              onPress={handleSetSelectedSortMethod}
+              selectedId={selectedSortMethod}
+            />
           </View>
-        </ScrollView>
-      </NativeViewGestureHandler>
+        </View>
+      </ScrollView>
     </ActionSheet>
   );
 }

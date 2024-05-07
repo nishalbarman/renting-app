@@ -25,7 +25,7 @@ export default function Tab() {
   return (
     <SafeAreaView className="bg-white flex-1">
       <FlatList
-        className="w-screen"
+        className="w-full"
         contentContainerStyle={{
           display: "flex",
           flexDirection: "column",
@@ -36,7 +36,7 @@ export default function Tab() {
         renderItem={() => (
           <>
             <View className="w-screen flex items-center">
-              <View className="flex flex-row h-8 rounded-md w-[40%] w-[95%] bg-[#ebebeb] border border-gray-300 mt-1">
+              <View className="flex flex-row h-8 rounded-md w-[40%] bg-[#ebebeb] border border-gray-300 mt-1">
                 <Pressable
                   onPress={handleProductTypeRent}
                   className={`${productType === "rent" ? "bg-white" : ""} rounded-md w-[50%] flex items-center justify-center`}>
@@ -53,7 +53,7 @@ export default function Tab() {
                   onPress={() => {
                     router.navigate("/search-page");
                   }}
-                  className="w-full h-12 rounded-md border border-gray-200 flex-row items-center justify-between px-3 shadow-sm">
+                  className="w-full h-12 rounded-md border border-gray-300 flex-row items-center justify-between px-3 ">
                   <Text className="text-gray-500 font-semibold">
                     Seach Products
                   </Text>
@@ -64,7 +64,7 @@ export default function Tab() {
 
             <Categories />
 
-            <View className="flex-1 w-screen min-h-screen">
+            <View className="flex-1 w-screen min-h-screen mb-20">
               <ProductsList
                 title={`✌️ Our Products`}
                 viewAllPath={productType}
