@@ -23,8 +23,8 @@ export default function TabLayout() {
           borderColor: "transparent",
           borderTopColor: "transparent",
           marginBottom: 10,
-          marginLeft: 5,
-          marginRight: 5,
+          marginLeft: 10,
+          marginRight: 10,
           marginTop: 10,
         },
         tabBarLabelStyle: {

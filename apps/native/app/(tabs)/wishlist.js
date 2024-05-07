@@ -24,6 +24,10 @@ export default memo(function Tab() {
     refetch();
   }, [productType]);
 
+  useEffect(() => {
+    refetch();
+  }, []);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       {isWishlistDataLoading || isWishlistDataFetching ? (

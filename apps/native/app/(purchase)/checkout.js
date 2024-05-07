@@ -12,6 +12,7 @@ import { useGetCartQuery } from "@store/rtk";
 
 export default function AddressList() {
   const searchParams = useLocalSearchParams();
+  const router = useRouter();
 
   const { refetch: refetchCart } = useGetCartQuery();
 
@@ -55,7 +56,7 @@ export default function AddressList() {
       await fetchPaymentSheetParams();
 
     const { error } = await initPaymentSheet({
-      merchantDisplayName: "RentKaro",
+      merchantDisplayName: process.env.EXPO_MERCHENT_DISPLAY_NAME,
       customerId: customer,
       customerEphemeralKeySecret: ephemeralKey,
       paymentIntentClientSecret: paymentIntent,
@@ -74,19 +75,19 @@ export default function AddressList() {
       returnURL: "native://stripe-redirect",
     });
 
-    console.log("Error ->", error);
-
     if (error) {
       console.error("Error ->", error);
-      Alert.alert(`Transaction Failed`, error.message);
+      // Alert.alert(`Transaction Failed`, error.message);
     }
+
+    return paymentIntent.id;
   };
 
   const openPaymentSheet = async () => {
     try {
       setOrderStatus("pending");
       setPaymentLoading(true);
-      await initializePaymentSheet();
+      const paymentTransactionId = await initializePaymentSheet();
       const { error } = await presentPaymentSheet();
 
       setIsModalVisible(true);
@@ -96,7 +97,13 @@ export default function AddressList() {
         setOrderStatus("failed");
         setOrderError(error);
       } else {
-        setOrderStatus("success");
+        router.replace({
+          pathname: "/order-placed",
+          params: {
+            paymentTransactionId: paymentTransactionId,
+          },
+        });
+        // setOrderStatus("success");
       }
     } catch (error) {
       console.error(error);
@@ -120,7 +127,7 @@ export default function AddressList() {
           }}
         />
         <View className="min-h-screen flex-1 items-center justify-center">
-          <ActivityIndicator size={35} />
+          <ActivityIndicator color={"green"} size={35} />
           <Text className="mt-4">
             Please do not close or do not press back button..
           </Text>

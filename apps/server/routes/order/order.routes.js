@@ -6,6 +6,7 @@ const Center = require("../../models/center.model");
 const { default: mongoose } = require("mongoose");
 const checkRole = require("../../middlewares");
 const shipRocketLogin = require("../../helpter/shipRocketLogin");
+const PaymentTransModel = require("../../models/transaction.model");
 
 //! ORDER LISTING ROUTE FOR ADMIN AND CENTER
 router.get("/list", checkRole(1, 2), async (req, res) => {
@@ -233,6 +234,25 @@ router.get("/details/:orderGroupID", checkRole(1, 2), async (req, res) => {
     console.log("Order Details --> ", orderDetails);
 
     return res.json(orderDetails[0].groupedOrders[0]);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error!",
+    });
+  }
+});
+
+//! Order details for normal user, orders can be viewed with the transaction id
+router.get("/view/:paymentTransactionId", checkRole(0), async (req, res) => {
+  try {
+    const paymentTransactionId = req.params?.paymentTransactionId;
+
+    const orderDetails = await PaymentTransModel.findOne({
+      paymentTransactionID: paymentTransactionId,
+    }).populate("order");
+
+    return res.json({ orderDetails });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

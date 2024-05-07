@@ -1,5 +1,11 @@
 import React, { useMemo, useState } from "react";
-import { View, Text, TouchableHighlight } from "react-native";
+import {
+  View,
+  Text,
+  TouchableHighlight,
+  Linking,
+  Pressable,
+} from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
 
@@ -8,11 +14,14 @@ import { SheetManager } from "react-native-actions-sheet";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { orderRefetch } from "@store/rtk";
+import OrderStatus from "./OrderStatus";
+import { useRouter } from "expo-router";
 
 function OrderItem({
   order: {
     _id,
-    txnid,
+    orderGroupID,
+    paymentTxnId,
     user,
     previewImage,
     title,
@@ -33,6 +42,8 @@ function OrderItem({
   jwtToken,
 }) {
   const dispatch = useDispatch();
+
+  console.log(paymentTxnId);
 
   const [cancelLoading, setCancelLoading] = useState();
   const [trackLoading, setTrackLoading] = useState();
@@ -58,11 +69,18 @@ function OrderItem({
 
   const handleTrackOrder = () => {
     setTrackLoading(true);
-    SheetManager.show("track-order", {
-      payload: {
-        orderId: "iamorderid",
-      },
+    Linking.canOpenURL(trackingLink).then((supported) => {
+      if (supported) {
+        Linking.openURL(trackingLink);
+      } else {
+        console.log("Some error occured");
+      }
     });
+    // SheetManager.show("track-order", {
+    //   payload: {
+    //     orderId: "iamorderid",
+    //   },
+    // });
     setTrackLoading(false);
   };
 
@@ -87,8 +105,17 @@ function OrderItem({
     }
   };
 
+  const router = useRouter();
+
   return (
-    <View className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px] border border-gray-300">
+    <Pressable
+      onPress={() => {
+        router.navigate({
+          pathname: "order-view",
+          params: { paymentTransactionId: paymentTxnId },
+        });
+      }}
+      className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px] border border-gray-300">
       {(orderStatus === "On Hold" || orderStatus === "On Progress") && (
         <View className="bg-orange-100 px-3 py-2 mt-[-5px] rounded-md mb-3 border border-orange-200">
           <Text className="text-[#e86813]">
@@ -167,84 +194,9 @@ function OrderItem({
             )}
           </View>
         </View>
-        <View className={`flex-col justify-between pb-2`}>
-          {orderStatus === "On Progress" ? (
-            <View
-              className={`flex-row justify-center p-2 border border-[#2AAABF] rounded-md bg-[#f0ffff]`}>
-              <Text className={`text-[#2AAABF] text-[10px] font-bold`}>
-                On Progress
-              </Text>
-            </View>
-          ) : orderStatus === "Accepted" ? (
-            <View
-              className={`flex-row justify-center p-2 border border-[#79E7A8] rounded-md bg-[#f5fff6]`}>
-              <Text className={`text-[#36664c] text-[10px] font-bold`}>
-                Accepted
-              </Text>
-            </View>
-          ) : orderStatus === "Delivered" ? (
-            <View
-              className={`flex-row justify-center p-2 border border-[#754db0] rounded-md bg-[#f0e6ff]`}>
-              <Text className={`text-[#754db0] text-[10px] font-bold`}>
-                Delivered
-              </Text>
-            </View>
-          ) : orderStatus === "On Hold" ? (
-            <View
-              className={`flex-row justify-center p-2 border border-[#ebb434] rounded-md bg-[#fff6c7]`}>
-              <Text className={`text-[#7a5c14] text-[10px] font-bold`}>
-                On Hold
-              </Text>
-            </View>
-          ) : orderStatus === "Cancelled" ? (
-            <View
-              className={`flex-row justify-center p-2 border border-[#db3125] rounded-md bg-[#f7eae9]`}>
-              <Text className={`text-[#a11b12] text-[10px] font-bold`}>
-                Cancelled
-              </Text>
-            </View>
-          ) : orderStatus === "On The Way" ? (
-            <View
-              className={`flex-row justify-center p-2 border border-[#2e7e85] rounded-md bg-[#b1ebf0]`}>
-              <Text className={`text-[#2e7e85] text-[10px] font-bold`}>
-                On The Way
-              </Text>
-            </View>
-          ) : orderStatus === "PickUp Ready" ? (
-            <View
-              className={`flex-row justify-center p-2 border border-[#754db0] rounded-md bg-[#f0e6ff]`}>
-              <Text className={`text-[#754db0]  text-[10px] font-bold`}>
-                PickUp Ready
-              </Text>
-            </View>
-          ) : orderStatus === "Pending" ? (
-            <View
-              className={`flex-row justify-center p-2 border border-[#2c5778] rounded-md bg-[#a1c8e6]`}>
-              <Text className={`text-[#2c5778]  text-[10px] font-bold`}>
-                Pending
-              </Text>
-            </View>
-          ) : (
-            <View
-              className={`flex-row justify-center p-2 border border-[#db3125] rounded-md bg-[#f7eae9]`}>
-              <Text className={`text-[#a11b12] text-[10px] font-bold`}>
-                Rejected
-              </Text>
-            </View>
-          )}
-          <View className={`flex-col mt-3`}>
-            {orderType === "buy" ? (
-              <Text className={`text-black font-bold text-xl`}>₹{price}</Text>
-            ) : (
-              <Text className={`text-black font-bold text-xl`}>
-                ₹{price} / Day
-              </Text>
-            )}
-          </View>
-        </View>
       </View>
       {orderType === "rent" && !!rentReturnDueDate && (
-        <View className="flex-row items-center justify-start mt-4 mb-1">
+        <View className="flex-row items-center justify-start mt-2 mb-1">
           <AntDesign name="infocirlce" size={22} color="#349fd9" />
 
           <Text className="text-[15px] text-[#349fd9] leading-[20px] text-wrap pl-2 pr-4">
@@ -257,11 +209,42 @@ function OrderItem({
         </View>
       )}
 
-      {/* <Text className="bg-[#ffe9d6] text-[#bf6415] border border-[#bf6415] rounded-md text-[10px] pt-[7px] pb-[7px] pl-[2px] pr-[2px] text-center align-middle mt-5 ml-2 mr-2 mb-1 uppercase font-extrabold">
-        {orderType === "rent" ? "Rented" : "Bought"}
-      </Text> */}
+      <View className={`h-fit justify-between px-2`}>
+        <View className={`flex-col`}>
+          {orderType === "buy" ? (
+            <Text className={`text-black font-bold text-xl`}>₹{price}</Text>
+          ) : (
+            <Text className={`text-black font-bold text-xl`}>
+              ₹{price} / Day
+            </Text>
+          )}
+        </View>
+        <View className="flex-row mt-1">
+          <Text className="font-bold text-md">Status: </Text>
+          <Text className="text-md">{orderStatus}</Text>
+        </View>
+      </View>
+      {/* <View className={`flex-row items-center h-fit justify-between px-2`}>
+        <View className={`flex-col`}>
+          {orderType === "buy" ? (
+            <Text className={`text-black font-bold text-xl`}>₹{price}</Text>
+          ) : (
+            <Text className={`text-black font-bold text-xl`}>
+              ₹{price} / Day
+            </Text>
+          )}
+        </View>
+        <OrderStatus orderStatus={orderStatus} />
+      </View> */}
 
-      <View className="flex-row mt-3 justify-between flex-1">
+      <View
+        className={`flex-row mt-5 justify-between flex-1 pt-3 ${
+          (orderStatus === "On Hold" ||
+            orderStatus === "On Progress" ||
+            orderStatus === "On The Way" ||
+            orderStatus === "Accepted") &&
+          "border-t border-gray-200"
+        }`}>
         {(orderStatus === "On Hold" ||
           orderStatus === "On Progress" ||
           orderStatus === "Accepted") && (
@@ -283,30 +266,37 @@ function OrderItem({
             )}
           </TouchableHighlight>
         )}
-        {orderType === "buy" && <View className="w-[4%]"></View>}
+        {orderType === "buy" &&
+          orderStatus === "On The Way" &&
+          !!trackingLink &&
+          (orderStatus === "On Hold" ||
+            orderStatus === "On Progress" ||
+            orderStatus === "Accepted") && <View className="w-[4%]"></View>}
         {orderType === "buy" &&
           orderStatus === "On The Way" &&
           !!trackingLink && (
             <TouchableHighlight
               onPress={handleTrackOrder}
-              underlayColor={"#514FB6"}
+              underlayColor={"orange"}
               style={{
                 flexBasis: "auto",
                 flexShrink: 0,
                 flexGrow: 1,
               }}
-              className="bg-[#514FB6] border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg">
+              className="bg-orange-600 pl-2 pr-2 h-11 flex items-center justify-center rounded-lg">
               {trackLoading ? (
                 <AnimateSpin>
                   <EvilIcons name="spinner" size={24} color="white" />
                 </AnimateSpin>
               ) : (
-                <Text className="font-semibold text-lg text-white">Track</Text>
+                <Text className="font-semibold text-lg text-white font-bold">
+                  Track
+                </Text>
               )}
             </TouchableHighlight>
           )}
       </View>
-    </View>
+    </Pressable>
   );
 }
 

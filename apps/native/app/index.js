@@ -53,6 +53,8 @@ export default function Page() {
   }
 
   // return <Redirect href={"/view?id=662ba219c3ecbd98499c9e2b"} />;
-  // return <Redirect href={"/search-page"} />;
-  return <Redirect href={"/(tabs)"} />;
+  return <Redirect href={"/order-placed"} />;
+  // return <Redirect href={"/order-track"} />;
+  // return <Redirect href={"/order-view"} />;
+  // return <Redirect href={"/(tabs)"} />;
 }

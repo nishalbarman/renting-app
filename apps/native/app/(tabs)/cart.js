@@ -47,8 +47,6 @@ const CartPage = () => {
         return;
       }
 
-      console.log("Cart items -->", cartItems);
-
       let shippingPrice = 0;
 
       const paymentObject = cartItems?.reduce(
@@ -222,6 +220,10 @@ const CartPage = () => {
     };
   }, [ordreRefetch]);
 
+  useEffect(() => {
+    refetch();
+  }, []);
+
   return (
     <SafeAreaView className={`flex-1 bg-white px-2`}>
       {isCartLoading ? (
@@ -230,134 +232,123 @@ const CartPage = () => {
         </>
       ) : (
         <>
-          {!cartItems || cartItems.length === 0 ? (
-            <EmptyBag message={"Your cart is empty"} />
-          ) : (
-            <>
-              <FlatList
-                data={[""]}
-                renderItem={() => (
-                  <View className="pb-2 mb-20">
-                    {productType === "rent" && (
-                      <View className="border border-gray-300 rounded-md p-3">
-                        <Text className="text-lg font-bold">
-                          Selected Center
-                        </Text>
-                        <View>
-                          {isCenterSelected ? (
-                            <>
-                              <Text className="text-[17px] mt-1">
-                                {selectedCenterAddress?.centerName}
-                              </Text>
-
-                              <Text className="text-[16px] font-[poppins] my-1">{`${selectedCenterAddress?.address?.name}, ${selectedCenterAddress?.address?.streetName}, ${selectedCenterAddress?.address?.locality}, ${selectedCenterAddress?.address?.postalCode}, ${selectedCenterAddress?.address?.country}`}</Text>
-
-                              <Text className="text-[17px] mb-1 font-semibold">
-                                +91-{selectedCenterAddress?.user?.mobileNo}
-                              </Text>
-                            </>
-                          ) : (
-                            <Text className="text-[16px] font-[poppins]">
-                              No Center Selected
+          <>
+            <FlatList
+              data={[""]}
+              ListEmptyComponent={<EmptyBag message={"Your cart is empty"} />}
+              renderItem={() => (
+                <View className="pb-2 mb-20">
+                  {productType === "rent" && (
+                    <View className="border border-gray-300 rounded-md p-3">
+                      <Text className="text-lg font-bold">Selected Center</Text>
+                      <View>
+                        {isCenterSelected ? (
+                          <>
+                            <Text className="text-[17px] mt-1">
+                              {selectedCenterAddress?.centerName}
                             </Text>
-                          )}
-                        </View>
-                        <View className="mt-3">
-                          <TouchableOpacity
-                            onPress={handleChangeCenter}
-                            disabled={isGlobalButtonDisabled}
-                            className="flex items-center justify-center h-12 w-full bg-white border-orange-500 border-[2px] rounded-md">
-                            <Text className="text-orange-500 font-bold text-md">
-                              {isCenterSelected
-                                ? "Change Center"
-                                : "Select Center"}
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    )}
 
-                    <View className="flex-col mt-1 p-[13px] bg-white w-full border border-gray-300 rounded-md mb-3 gap-y-1 mt-1">
-                      {amountDetails?.originalAmount && (
-                        <View className="flex-row justify-between w-full">
-                          <Text className="text-[18px]">Original Price: </Text>
-                          <Text className="text-[18px]">
-                            ₹{amountDetails.originalAmount}
-                          </Text>
-                        </View>
-                      )}
-                      {amountDetails?.discountedAmount && (
-                        <View className="flex-row justify-between w-full">
-                          <Text className="text-[18px]">Subtotal:</Text>
-                          <Text className="text-[18px]">
-                            ₹{amountDetails.discountedAmount}
-                          </Text>
-                        </View>
-                      )}
-                      {amountDetails?.shippingAmount && (
-                        <View className="flex-row justify-between w-full">
-                          <Text className="text-[18px]">Shpping Price:</Text>
-                          <Text className="text-[18px]">
-                            ₹{amountDetails.shippingAmount}
-                          </Text>
-                        </View>
-                      )}
-                      {amountDetails?.finalAmount && (
-                        <View className="flex-row justify-between w-full">
-                          <Text className="text-[18px] font-bold">
-                            Total Price
-                          </Text>
-                          <Text className="text-[18px] font-bold">
-                            ₹{amountDetails.finalAmount}
-                          </Text>
-                        </View>
-                      )}
-                    </View>
-                    <View
-                      className={
-                        "flex-row justify-center items-center mt-1 p-[13px] bg-white w-full border border-gray-300 rounded-md mb-3"
-                      }>
-                      <TouchableOpacity
-                        onPress={handleContinueClick}
-                        disabled={productType === "rent" && !isCenterSelected}
-                        style={{
-                          opacity:
-                            productType === "rent" && !isCenterSelected
-                              ? 0.3
-                              : 1,
-                        }}
-                        className="h-12 rounded-md w-full items-center justify-center bg-green-600">
-                        {isPlacingOrder ? (
-                          <ActivityIndicator size={23} color="white" />
+                            <Text className="text-[16px] font-[poppins] my-1">{`${selectedCenterAddress?.address?.name}, ${selectedCenterAddress?.address?.streetName}, ${selectedCenterAddress?.address?.locality}, ${selectedCenterAddress?.address?.postalCode}, ${selectedCenterAddress?.address?.country}`}</Text>
+
+                            <Text className="text-[17px] mb-1 font-semibold">
+                              +91-{selectedCenterAddress?.user?.mobileNo}
+                            </Text>
+                          </>
                         ) : (
-                          <Text className="text-white text-md font-bold">
-                            Place {productType === "rent" ? "Rent" : "Buy"}{" "}
-                            Order
+                          <Text className="text-[16px] font-[poppins]">
+                            No Center Selected
                           </Text>
                         )}
-                      </TouchableOpacity>
+                      </View>
+                      <View className="mt-3">
+                        <TouchableOpacity
+                          onPress={handleChangeCenter}
+                          disabled={isGlobalButtonDisabled}
+                          className="flex items-center justify-center h-12 w-full bg-white border-orange-500 border-[2px] rounded-md">
+                          <Text className="text-orange-500 font-bold text-md">
+                            {isCenterSelected
+                              ? "Change Center"
+                              : "Select Center"}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
+                  )}
 
-                    <FlatList
-                      data={cartItems}
-                      renderItem={({ item }) => {
-                        return <CartCard cart={item} />;
-                      }}
-                      numColumns={1}
-                      keyExtractor={(item, index) => index.toString()}
-                    />
+                  <View className="flex-col mt-1 p-[13px] bg-white w-full border border-gray-300 rounded-md mb-3 gap-y-1 mt-1">
+                    {amountDetails?.originalAmount && (
+                      <View className="flex-row justify-between w-full">
+                        <Text className="text-[18px]">Original Price: </Text>
+                        <Text className="text-[18px]">
+                          ₹{amountDetails.originalAmount}
+                        </Text>
+                      </View>
+                    )}
+                    {amountDetails?.discountedAmount && (
+                      <View className="flex-row justify-between w-full">
+                        <Text className="text-[18px]">Subtotal:</Text>
+                        <Text className="text-[18px]">
+                          ₹{amountDetails.discountedAmount}
+                        </Text>
+                      </View>
+                    )}
+                    {amountDetails?.shippingAmount && (
+                      <View className="flex-row justify-between w-full">
+                        <Text className="text-[18px]">Shpping Price:</Text>
+                        <Text className="text-[18px]">
+                          ₹{amountDetails.shippingAmount}
+                        </Text>
+                      </View>
+                    )}
+                    {amountDetails?.finalAmount && (
+                      <View className="flex-row justify-between w-full">
+                        <Text className="text-[18px] font-bold">
+                          Total Price
+                        </Text>
+                        <Text className="text-[18px] font-bold">
+                          ₹{amountDetails.finalAmount}
+                        </Text>
+                      </View>
+                    )}
                   </View>
-                )}
-                showsHorizontalScrollIndicator={false}
-                className={`flex-1 bg-white p-2`}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
+                  <View
+                    className={
+                      "flex-row justify-center items-center mt-1 p-[13px] bg-white w-full border border-gray-300 rounded-md mb-3"
+                    }>
+                    <TouchableOpacity
+                      onPress={handleContinueClick}
+                      disabled={productType === "rent" && !isCenterSelected}
+                      style={{
+                        opacity:
+                          productType === "rent" && !isCenterSelected ? 0.3 : 1,
+                      }}
+                      className="h-12 rounded-md w-full items-center justify-center bg-green-600">
+                      {isPlacingOrder ? (
+                        <ActivityIndicator size={23} color="white" />
+                      ) : (
+                        <Text className="text-white text-md font-bold">
+                          Place {productType === "rent" ? "Rent" : "Buy"} Order
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+
+                  <FlatList
+                    data={cartItems}
+                    renderItem={({ item }) => {
+                      return <CartCard cart={item} />;
+                    }}
+                    numColumns={1}
+                    keyExtractor={(item, index) => index.toString()}
                   />
-                }></FlatList>
-            </>
-          )}
+                </View>
+              )}
+              showsHorizontalScrollIndicator={false}
+              className={`flex-1 bg-white p-2`}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }></FlatList>
+          </>
         </>
       )}
 
