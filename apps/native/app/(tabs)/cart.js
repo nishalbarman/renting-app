@@ -113,6 +113,7 @@ const CartPage = () => {
       if (
         !(
           freeDeliveryAboveMinimumPurchase &&
+          !!paymentObject?.discountedTotalAmount &&
           paymentObject?.discountedTotalAmount >= freeDeliveryMinimumAmount
         )
       ) {
@@ -158,38 +159,13 @@ const CartPage = () => {
     // product type is buy then goto select delivery address screen
     if (productType === "buy") return router.push("/select-address");
 
-    // TODO: Place Order FOR the center
-    setIsPlacingOrder(true);
-    setIsGlobalButtonDisabled(true);
-
-    // proccessing modal related
-    setOrderPlaceStatus("pending");
-    setOrderPlaceModalVisible(true);
-    try {
-      const response = await axios.post(
-        `${process.env.EXPO_PUBLIC_API_URL}/orders/renting/rent?centerId=${selectedCenterAddress._id}`,
-        {},
-        {
-          headers: {
-            authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
-
-      console.log("What the response-->", response);
-
-      if (response.status == 200) {
-        // router.replace("/(tabs)/my_orders");
-        setOrderPlaceStatus("success");
-        refetch();
-      }
-    } catch (error) {
-      console.error(error);
-      setOrderPlaceStatus("failed");
-    } finally {
-      setIsGlobalButtonDisabled(false);
-      setIsPlacingOrder(false);
-    }
+    router.navigate({
+      pathname: "checkout",
+      params: {
+        checkoutType: "rent",
+        centerAddressId: selectedCenterAddress._id,
+      },
+    });
   };
 
   const [refreshing, setRefreshing] = useState(false);

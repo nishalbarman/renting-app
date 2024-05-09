@@ -16,11 +16,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAddAddressMutation } from "@store/rtk";
 import { setAddressDataFromMap } from "@store/rtk";
 import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
-import { Toast } from "toastify-react-native";
 
 import { useRouter } from "expo-router";
 
 import { Stack } from "expo-router";
+import Toast from "react-native-toast-message";
 
 const LogoTitle = (props) => {
   return (
@@ -162,10 +162,17 @@ export default function AddAddress() {
         dispatch(setAddressDataFromMap({ address: null, coordinates: null }));
       }
 
-      Toast.success(response.data?.message, "top");
+      Toast.show({
+        type: "sc",
+        text1: response.data?.message,
+      });
       router.dismiss();
     } catch (error) {
-      Toast.error(error?.data?.message || "Address add failed!", "top");
+      Toast.show({
+        type: "err",
+        text1: error?.data?.message || "Address add failed!",
+      });
+     
       console.error(error);
     }
   };

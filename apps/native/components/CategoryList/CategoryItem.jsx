@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TouchableHighlight, View } from "react-native";
+import { Pressable, Text, TouchableHighlight, View } from "react-native";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 
@@ -11,9 +11,12 @@ function CategoryItem({
 }) {
   const router = useRouter();
   return (
-    <TouchableHighlight
+    <Pressable
       underlayColor={"white"}
       onPress={() => {
+        if (categoryId === "cate_id_unique") {
+          return router.push(`/more-category`);
+        }
         console.log(categoryImageUrl);
         router.navigate(
           `/list?category=${categoryId}&categoryName=${categoryName}`
@@ -34,7 +37,7 @@ function CategoryItem({
           {categoryName}
         </Text>
       </View>
-    </TouchableHighlight>
+    </Pressable>
   );
 }
 

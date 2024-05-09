@@ -13,21 +13,22 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useStripe } from "@stripe/stripe-react-native";
-import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";
+import handleGlobalError from "../../lib/handleError";
 import { useGetCartQuery } from "@store/rtk";
+// import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";
+// import { useGetCartQuery } from "@store/rtk";
 
 export default function AddressList() {
   const searchParams = useLocalSearchParams();
   const router = useRouter();
 
-  const { refetch: refetchCart } = useGetCartQuery();
-
   const { name, mobileNo, email, jwtToken } = useSelector(
     (state) => state.auth
   );
+
   const { productType } = useSelector((state) => state.product_store);
 
-  let selectedAddress = searchParams?.address;
+  let selectedUserAddress = searchParams?.address;
 
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [paymentLoading, setPaymentLoading] = useState(true);
@@ -36,10 +37,12 @@ export default function AddressList() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [orderError, setOrderError] = useState("");
 
+  const { refetch: refetchCart } = useGetCartQuery(productType);
+
   const fetchPaymentSheetParams = async () => {
     const response = await axios.post(
       `${process.env.EXPO_PUBLIC_API_URL}/stripe/cart/${productType}`,
-      { address: selectedAddress },
+      { address: selectedUserAddress },
       {
         headers: {
           authorization: `Bearer ${jwtToken}`,
@@ -91,11 +94,28 @@ export default function AddressList() {
         mobile: mobileNo,
       },
       returnURL: "native://stripe-redirect",
+
+      // theming related code
+
+      appearance: {
+        colors: {
+          light: { primary: "#2b8038" },
+          dark: { primary: "#2b8038" },
+        },
+        primaryButton: {
+          colors: {
+            light: { background: "#2b8038" },
+            dark: { background: "#2b8038" },
+          },
+        },
+      },
     });
 
     if (error) {
       console.error("Error ->", error);
-      return Alert.alert(`Transaction Failed`, error.message);
+      handleGlobalError(error);
+      return router.dismiss();
+      // return Alert.alert(`Transaction Failed`, error.message);
     }
 
     return paymentTxnId;
@@ -112,8 +132,10 @@ export default function AddressList() {
 
       if (error) {
         console.error("Error ->", error);
-        setOrderStatus("failed");
-        setOrderError(error);
+        // setOrderStatus("failed");
+        handleGlobalError(error);
+        return router.dismiss();
+        // setOrderError(error);
       } else {
         console.log("TXN OD--.", paymentTransactionId);
         router.replace({
@@ -126,15 +148,50 @@ export default function AddressList() {
       }
     } catch (error) {
       console.error(error);
+      handleGlobalError(error);
+      return router.dismiss();
     }
-    // finally {
-    //   setPaymentLoading(false);
-    // }
+  };
+
+  const placeRentOrder = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/orders/renting/rent?centerId=${searchParams?.centerAddressId}`,
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+
+      console.log("What the response-->", response);
+
+      if (response.status == 200) {
+        router.replace({
+          pathname: "order-placed",
+          params: {
+            paymentTransactionId: response.data.paymentTransactionId,
+          },
+        });
+        // setOrderPlaceStatus("success");
+        refetchCart();
+      }
+    } catch (error) {
+      console.error(error);
+      handleGlobalError(error);
+    }
   };
 
   useEffect(() => {
-    openPaymentSheet();
-  }, []);
+    if (!searchParams?.checkoutType) return;
+
+    if (searchParams?.checkoutType === "buy") {
+      openPaymentSheet();
+    } else {
+      placeRentOrder();
+    }
+  }, [searchParams.checkoutType]);
 
   return (
     <>
@@ -147,19 +204,11 @@ export default function AddressList() {
         />
         <View className="min-h-screen flex-1 items-center justify-center">
           <ActivityIndicator color={"green"} size={35} />
-          <Text className="mt-4">
+          <Text className="mt-4 text-center">
             Please do not close or do not press back button..
           </Text>
         </View>
       </SafeAreaView>
-      {paymentLoading && (
-        <PlaceOrderModal
-          modalVisible={isModalVisible}
-          setModalVisible={setIsModalVisible}
-          orderPlaceStatus={orderStatus}
-          errorMsg={orderError?.message}
-        />
-      )}
     </>
   );
 }

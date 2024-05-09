@@ -1,5 +1,6 @@
+import { Entypo } from "@expo/vector-icons";
 import { Stack } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -79,6 +80,8 @@ function FilterScreen() {
     []
   );
 
+  const [selectedFilter, setSelectedFilter] = useState("Category");
+
   return (
     <SafeAreaView className="px-3 bg-white min-h-screen">
       <Stack.Screen
@@ -87,6 +90,18 @@ function FilterScreen() {
           headerShown: true,
           headerShadowVisible: true,
           headerTitle: "Select Filter",
+          headerLeft: () => {
+            return (
+              <Entypo
+                style={{
+                  marginRight: 10,
+                }}
+                name="cross"
+                size={24}
+                color="black"
+              />
+            );
+          },
         }}
       />
       <View className="flex-row w-full mt-6">
@@ -95,8 +110,13 @@ function FilterScreen() {
             data={filterOptions}
             keyExtractor={(item, index) => index}
             renderItem={({ item }) => (
-              <Pressable className="w-[110px] h-11 mb-2 rounded-2xl items-center justify-center bg-[#BB0101]">
-                <Text className="text-gray-700 text-white font-bold">
+              <Pressable
+                onPress={() => {
+                  setSelectedFilter(item.label);
+                }}
+                className={`w-[110px] h-11 mb-2 rounded-2xl items-center justify-center ${selectedFilter === item.label ? "bg-[#BB0101]" : "bg-white border border-[#BB010]"}`}>
+                <Text
+                  className={`text-gray-700 font-bold ${selectedFilter === item.label ? "text-white" : "text-black"}`}>
                   {item.label}
                 </Text>
               </Pressable>

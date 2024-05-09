@@ -6,7 +6,8 @@ import { useRouter } from "expo-router";
 import { useDeleteWishlistMutation } from "@store/rtk";
 import AnimateSpin from "../AnimateSpin/AnimateSpin";
 
-import { Toast } from "toastify-react-native";
+import Toast from "react-native-toast-message";
+import handleGlobalError from "../../lib/handleError";
 
 function Product({ wishlistId, details, width, productType }) {
   const router = useRouter();
@@ -26,11 +27,19 @@ function Product({ wishlistId, details, width, productType }) {
       const resPayload = await removeFromWishlist({
         _id: wishlistId,
       }).unwrap();
-      Toast.success("Wishlist removed", "top");
+
+      Toast.show({
+        type: "sc",
+        text1: "Wishlist removed",
+      });
+      // Toast.success("Wishlist removed", "top");
       // console.log("Remove from wishlist response -->", resPayload);
     } catch (error) {
-      Toast.success("Wishlist remove failed", "top");
-      console.error(error);
+      Toast.show({
+        type: "err",
+        text1: "Wishlist removed failed",
+      });
+      handleGlobalError(error);
     }
   };
 

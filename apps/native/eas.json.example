@@ -18,20 +18,24 @@
       },
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://example.com",
+        "EXPO_PUBLIC_API_URL": "http://localhost:8000",
         "EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY": "",
         "EXPO_PUBLIC_RAZORPAY_KEY": ""
       }
     },
     "production": {
+      "android": {
+        "buildType": "app-bundle",
+        "gradleCommand": ":app:bundleRelease",
+        "image": "default",
+        "node": "16",
+        "yarn": "classic"
+      },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://example.com",
+        "EXPO_PUBLIC_API_URL": "http://localhost:8000",
         "EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY": "",
         "EXPO_PUBLIC_RAZORPAY_KEY": ""
       }
     }
-  },
-  "submit": {
-    "production": {}
   }
 }

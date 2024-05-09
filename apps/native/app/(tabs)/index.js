@@ -7,20 +7,23 @@ import Categories from "../../components/CategoryList/Categories";
 import { setProductType } from "@store/rtk";
 import { Stack, useRouter } from "expo-router";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
-import SnackBar from "../../components/SnackBar";
+import { useState, useTransition } from "react";
 
 export default function Tab() {
+  const [isLoading, startTransition] = useTransition();
+
   const { productType } = useSelector((state) => state.product_store);
+
+  const [locProductType, setProductLocType] = useState(productType);
 
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const handleProductTypeRent = () => {
-    dispatch(setProductType("rent"));
-  };
-
-  const handleProductTypePurchase = () => {
-    dispatch(setProductType("buy"));
+  const handleChangeProductType = (type) => {
+    setProductLocType(type);
+    startTransition(() => {
+      dispatch(setProductType(type));
+    });
   };
 
   return (
@@ -37,15 +40,19 @@ export default function Tab() {
         renderItem={() => (
           <>
             <View className="w-screen flex items-center">
-              <View className="flex flex-row h-8 rounded-md w-[40%] bg-[#ebebeb] border border-gray-300 mt-1">
+              <View className="flex flex-row h-8 rounded-md w-[40%] bg-gray-300 border border-gray-300 mt-1">
                 <Pressable
-                  onPress={handleProductTypeRent}
-                  className={`${productType === "rent" ? "bg-white" : ""} rounded-md w-[50%] flex items-center justify-center`}>
+                  onPress={() => {
+                    handleChangeProductType("rent");
+                  }}
+                  className={`${locProductType === "rent" ? "bg-white" : ""} rounded-md w-[50%] flex items-center justify-center`}>
                   <Text>Rent</Text>
                 </Pressable>
                 <Pressable
-                  onPress={handleProductTypePurchase}
-                  className={`${productType === "buy" ? "bg-white" : ""} rounded-md w-[50%] bg-none flex items-center justify-center`}>
+                  onPress={() => {
+                    handleChangeProductType("buy");
+                  }}
+                  className={`${locProductType === "buy" ? "bg-white" : ""} rounded-md w-[50%] bg-none flex items-center justify-center`}>
                   <Text>Purchase</Text>
                 </Pressable>
               </View>
@@ -67,10 +74,17 @@ export default function Tab() {
 
             <View className="flex-1 w-screen min-h-screen mb-20">
               <ProductsList
+                title={`🔥 Popular`}
+                viewAllPath={productType}
+                bgColor="#def9ff"
+                titleColor="black"
+                sort={"popular"}
+              />
+              <ProductsList
                 title={`✌️ Our Products`}
                 viewAllPath={productType}
-                // bgColor="#fff9f2"
-                bgColor="#f2f2f2"
+                bgColor="#fff9f2"
+                // bgColor="#f2f2f2"
                 titleColor="black"
               />
             </View>

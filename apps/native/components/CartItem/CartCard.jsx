@@ -175,7 +175,7 @@ function CartCard({
 
           <Text className="text-[13px] leading-2 font-[poppins]">
             Shipping price: ₹{variant?.shippingPrice || product?.shippingPrice}
-            {!freeDelivery && "FREE shipping above 500"}
+            {!freeDelivery && "\nFREE shipping above 500"}
           </Text>
         </View>
 
@@ -250,14 +250,14 @@ function CartCard({
       <View className="flex-row mt-3 justify-between">
         <TouchableHighlight
           onPress={handleMoveWishlist}
-          underlayColor={"transparent"}
-          className="bg-transparent pl-2 pr-2 h-[45px] border border-red-700 flex items-center justify-center rounded-lg w-[48%]">
+          underlayColor={"#b83a21"}
+          className="bg-red-700 px-2 h-11 border border-red-700 flex items-center justify-center rounded-lg w-[48%]">
           {isWishlistAddLoading ? (
             <AnimateSpin>
-              <EvilIcons name="spinner" size={24} color="#b83a21" />
+              <EvilIcons name="spinner" size={24} color="white" />
             </AnimateSpin>
           ) : (
-            <Text className="font-semibold text-lg text-red-700">
+            <Text className="font-semibold text-lg text-red-700 text-white">
               Move Wishlist
             </Text>
           )}
@@ -266,7 +266,7 @@ function CartCard({
         <TouchableHighlight
           underlayColor={"white"}
           onPress={handleRemoveFromCart}
-          className="bg-white border border-gray-400 pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg w-[48%]">
+          className="bg-white border border-gray-400 px-2 h-11 flex items-center justify-center rounded-lg w-[48%]">
           {cartRemoveLoading ? (
             <AnimateSpin>
               <EvilIcons name="spinner" size={24} color="black" />

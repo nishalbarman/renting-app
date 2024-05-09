@@ -53,6 +53,7 @@ export default function AddressList() {
       router.replace({
         pathname: "checkout",
         params: {
+          checkoutType: "buy",
           address: selectedAddress,
         },
       });
@@ -67,7 +68,7 @@ export default function AddressList() {
   });
 
   return (
-    <SafeAreaView className="bg-white">
+    <SafeAreaView className="bg-white px-2 w-full">
       <Stack.Screen
         options={{
           title: "Select Your Address",
@@ -76,7 +77,7 @@ export default function AddressList() {
         }}
       />
 
-      <View className="pt-1 px-2 flex flex-col items-center w-screen min-h-screen">
+      <View className="pt-1 items-center w-full min-h-screen">
         {isAddressLoading ? (
           <AddressCardSkeleton />
         ) : (
@@ -87,37 +88,37 @@ export default function AddressList() {
                 data={address}
                 ItemSeparatorComponent={() => <View className="my-1"></View>}
                 ListHeaderComponent={() => (
-                  <View>
-                    <Pressable
+                  <>
+                    <TouchableOpacity
                       disabled={!selectedAddress}
                       onPress={handleContinueClick}
-                      className="rounded-md h-12 mb-3 w-full bg-green-600 flex items-center justify-center">
+                      className="rounded-md h-12 mb-3 w-full bg-green-600 flex items-center justify-center ">
                       {nextScreenClicked ? (
                         <ActivityIndicator size={25} color={"white"} />
                       ) : (
                         <Text className="text-white text-lg">Continue</Text>
                       )}
-                    </Pressable>
-                  </View>
+                    </TouchableOpacity>
+                  </>
                 )}
                 renderItem={({ item }) => (
                   <>
-                    <TouchableOpacity
+                    <Pressable
                       onPress={() => {
                         setSelectedAddress(item._id);
                       }}
                       style={{
                         position: "relative",
                       }}
-                      className={`bg-light-blue-200 p-4 rounded-md w-[100%] border ${selectedAddress === item._id ? "border-green-600 border-[2px]" : "border-gray-300"}`}>
+                      className={`bg-light-blue-200 p-2 rounded-md w-full border ${selectedAddress === item._id ? "border-green-600 border-[2px]" : "border-gray-300"}`}>
                       <View>
                         {selectedAddress === item._id && (
                           <>
                             <View
                               style={{
                                 position: "absolute",
-                                bottom: -10,
-                                right: -8,
+                                bottom: 0,
+                                right: 0,
                                 backgroundColor: "white",
                               }}
                               className="border border-[2px] border-green-600 rounded-md p-1">
@@ -130,7 +131,7 @@ export default function AddressList() {
                           </>
                         )}
 
-                        <View>
+                        <View className="w-full">
                           <Text className="text-black font-medium mb-2">
                             {name}
                           </Text>
@@ -156,7 +157,7 @@ export default function AddressList() {
                           <Text className="text-gray-700">{mobileNo}</Text>
                         </View>
                       </View>
-                    </TouchableOpacity>
+                    </Pressable>
                   </>
                 )}
               />

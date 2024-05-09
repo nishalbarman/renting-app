@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 import { useAddWishlistMutation, useDeleteWishlistMutation } from "@store/rtk";
 
 import { useSelector } from "react-redux";
-import { Toast } from "toastify-react-native";
+import Toast from "react-native-toast-message";
 
 function Product({
   details: {
@@ -31,6 +31,7 @@ function Product({
   },
   width,
   wishlistIdMap,
+  feedbackVisible = true,
 }) {
   const router = useRouter();
 
@@ -62,11 +63,17 @@ function Product({
         _id: wishlistItemID,
       }).unwrap();
 
-      Toast.success("Wishlist removed", "top");
+      Toast.show({
+        type: "sc",
+        text1: "Wishlist removed",
+      });
 
       console.log("Remove from wishlist response -->", resPayload);
     } catch (error) {
-      Toast.success("Wishlist remove failed", "top");
+      Toast.show({
+        type: "err",
+        text1: "Wishlist remove failed",
+      });
       setOnWishlist(true);
       console.error(error);
     }
@@ -77,9 +84,15 @@ function Product({
       setOnWishlist((prev) => !prev);
       const resPayload = await addWishlist({ id: _id, productType }).unwrap();
       console.log("Add to Wishlist response -->", resPayload);
-      Toast.success("Wishlist added", "top");
+      Toast.show({
+        type: "sc",
+        text1: "Wishlist added",
+      });
     } catch (error) {
-      Toast.success("Wishlist add failed", "top");
+      Toast.show({
+        type: "err",
+        text1: "Wishlist add failed",
+      });
       console.error(error);
     }
   };
@@ -108,7 +121,7 @@ function Product({
       <TouchableOpacity
         onPress={handleProductClick}
         activeOpacity={0.6}
-        className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-white rounded-md shadow-sm pb-[1%]`}>
+        className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-transparent rounded-md shadow-sm pb-[1%]`}>
         <View className="w-[100%] h-[200px] p-[3%] ">
           {typeOfProduct === "both" || (
             <Text
@@ -136,7 +149,7 @@ function Product({
 
           <Image
             style={{ height: 200 }}
-            className="w-[100%] h-[200px] bg-[transparent] rounded-lg flex-1 bg-white"
+            className="w-[100%] h-[200px] bg-transparent rounded-lg flex-1 bg-white"
             source={{ uri: previewImage }}
             contentFit="contain"
             contentPosition={"center"}
@@ -148,30 +161,31 @@ function Product({
         <View className="flex flex-col gap-y-1 w-[100%] mt-[5px] pl-2 pr-2 pb-2">
           <Text
             numberOfLines={2}
-            className="text-[14px] font-[poppins-mid] leading-[22px] w-[100%]">
+            className="text-[14px] text-gray-800 font-[poppins-mid] leading-[22px] w-[100%]">
             {title}
           </Text>
 
-          <View className="flex flex-row items-center">
-            <View className="flex flex-row items-center justify-center h-fill">
-              {starsArray.map((item, index) => {
-                return (
-                  <AntDesign
-                    key={index}
-                    // onPress={() => {
-                    //   setCurrentUserReview(index + 1);
-                    // }}
-                    name={index + 1 <= Math.round(stars) ? "star" : "staro"}
-                    size={18}
-                    color={index + 1 <= Math.round(stars) ? "orange" : "black"}
-                  />
-                );
-              })}
+          {!!feedbackVisible && (
+            <View className="flex flex-row items-center">
+              <View className="flex flex-row items-center justify-center h-fill">
+                {starsArray.map((item, index) => {
+                  return (
+                    <AntDesign
+                      key={index}
+                      name={index + 1 <= Math.round(stars) ? "star" : "staro"}
+                      size={18}
+                      color={
+                        index + 1 <= Math.round(stars) ? "orange" : "black"
+                      }
+                    />
+                  );
+                })}
+              </View>
+              <Text className="ml-1 text-[#A7A6A7] text-[13px] align-middle">
+                ({totalFeedbacks})
+              </Text>
             </View>
-            <Text className="ml-1 text-[#A7A6A7] text-[13px] align-middle">
-              ({totalFeedbacks})
-            </Text>
-          </View>
+          )}
 
           {typeOfProduct === "both" ? (
             <>

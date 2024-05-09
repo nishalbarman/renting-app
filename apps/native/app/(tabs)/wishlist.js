@@ -18,15 +18,11 @@ export default memo(function Tab() {
     // isError: isWishlistDataError,
     // error: wishlistDataError,
     refetch,
-  } = useGetWishlistQuery(productType);
+  } = useGetWishlistQuery();
 
   useEffect(() => {
     refetch();
   }, [productType]);
-
-  useEffect(() => {
-    refetch();
-  }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-white">

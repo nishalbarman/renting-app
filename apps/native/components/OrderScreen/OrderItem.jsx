@@ -115,6 +115,9 @@ function OrderItem({
           params: { paymentTransactionId: paymentTxnId },
         });
       }}
+      style={{
+        backgroundColor: orderStatus === "Cancelled" ? "#ffdad9" : "white",
+      }}
       className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px] border border-gray-300">
       {(orderStatus === "On Hold" || orderStatus === "On Progress") && (
         <View className="bg-orange-100 px-3 py-2 mt-[-5px] rounded-md mb-3 border border-orange-200">
@@ -248,7 +251,7 @@ function OrderItem({
         {(orderStatus === "On Hold" ||
           orderStatus === "On Progress" ||
           orderStatus === "Accepted") && (
-          <TouchableHighlight
+          <Pressable
             underlayColor={"white"}
             onPress={handleCancelOrder}
             style={{
@@ -256,15 +259,17 @@ function OrderItem({
               flexShrink: 0,
               flexGrow: 1,
             }}
-            className="bg-white border pl-2 pr-2 h-[45px] flex items-center justify-center rounded-lg">
+            className="bg-black border pl-2 pr-2 h-11 flex items-center justify-center rounded-lg">
             {cancelLoading ? (
               <AnimateSpin>
                 <EvilIcons name="spinner" size={24} color="black" />
               </AnimateSpin>
             ) : (
-              <Text className="font-semibold text-lg">Cancel</Text>
+              <Text className="font-semibold text-lg text-white font-bold">
+                Cancel
+              </Text>
             )}
-          </TouchableHighlight>
+          </Pressable>
         )}
         {orderType === "buy" &&
           orderStatus === "On The Way" &&
@@ -275,7 +280,7 @@ function OrderItem({
         {orderType === "buy" &&
           orderStatus === "On The Way" &&
           !!trackingLink && (
-            <TouchableHighlight
+            <Pressable
               onPress={handleTrackOrder}
               underlayColor={"orange"}
               style={{
@@ -293,7 +298,7 @@ function OrderItem({
                   Track
                 </Text>
               )}
-            </TouchableHighlight>
+            </Pressable>
           )}
       </View>
     </Pressable>

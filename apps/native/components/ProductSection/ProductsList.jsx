@@ -1,6 +1,6 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 import Product from "./Product";
 
 import ProductsListSkeleton from "../../Skeletons/ProductListSkeleton";
@@ -8,7 +8,14 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useGetWishlistQuery } from "@store/rtk";
 
-function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
+function ProductsList({
+  title,
+  bgColor,
+  titleColor,
+  viewAllPath,
+  sort = undefined,
+}) {
+  const router = useRouter();
   const jwtToken = useSelector((state) => state.auth.jwtToken);
   const { productType } = useSelector((state) => state.product_store);
 
@@ -18,15 +25,21 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
   const getProductData = async () => {
     try {
       setIsProductDataLoading(true);
-      const res = await axios.get(
-        `${process.env.EXPO_PUBLIC_API_URL}/products?productType=${viewAllPath}&limit=10`,
-        // `${process.env.EXPO_PUBLIC_API_URL}/products?productType=${productType}&limit=10`,
-        {
-          headers: {
-            authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+
+      const url = new URL(`${process.env.EXPO_PUBLIC_API_URL}/products`);
+
+      url.searchParams.append("productType", viewAllPath);
+      url.searchParams.append("limit", 10);
+
+      if (!!sort) {
+        url.searchParams.append("sort", sort);
+      }
+
+      const res = await axios.get(url.href, {
+        headers: {
+          authorization: `Bearer ${jwtToken}`,
+        },
+      });
       // console.log(res.data.data);
       setData(res.data.data);
     } catch (error) {
@@ -69,20 +82,28 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
           style={{
             backgroundColor: bgColor,
           }}
-          className={`w-screen p-[20px_10px] h-[100%] rounded`}>
+          className={`w-full px-2 py-4`}>
           <View className="flex flex-row justify-between p-[0px_1px] items-center mb-[16px]">
             <Text
               style={{
                 color: titleColor,
               }}
-              className="font-[poppins-xbold] text-[22px]">
+              className="font-[poppins-xbold] font-[poppins-bold] text-xl">
               {title}
             </Text>
-            <Link
-              className="text-[15px] text-purple font-[poppins-bold] underline"
-              href={`/list`}>
-              More {">>"}
-            </Link>
+            <Pressable
+              onPress={() => {
+                router.navigate({
+                  pathname: "/list",
+                  params: {
+                    defaultSort: sort,
+                  },
+                });
+              }}>
+              <Text className="text-[15px] text-purple font-[poppins-bold] underline">
+                More {">>"}
+              </Text>
+            </Pressable>
           </View>
 
           <View>
@@ -90,6 +111,7 @@ function ProductsList({ title, bgColor, titleColor, viewAllPath }) {
               data={data}
               renderItem={({ item }) => (
                 <Product
+                  feedbackVisible={false}
                   details={item}
                   wishlistData={wishlistData}
                   wishlistIdMap={wishlistIdMap}

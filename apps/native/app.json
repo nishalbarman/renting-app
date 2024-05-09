@@ -5,16 +5,14 @@
     "slug": "renting_app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/appIcons/icon.png",
+    "icon": "./assets/appIcons/app_launcher.webp",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/appIcons/splash1.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "infoPlist": {
         "NSAppTransportSecurity": {
@@ -28,17 +26,17 @@
         "usesNonExemptEncryption": false,
         "usesCleartextTraffic": true
       },
+      "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.ebrsavero.pro"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/appIcons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "userInterfaceStyle": "light",
-      "permissions": [
-        "INTERNET"
-      ],
+      "permissions": ["INTERNET"],
       "package": "com.nishalbarman.renting_app",
       "config": {
         "googleMaps": {
@@ -64,6 +62,22 @@
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
+      "@react-native-firebase/messaging",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "proguardRules": "./proguard-rules.pro",
+            "enableHermes": true
+          },
+          "ios": {
+            "useFrameworks": "static"
+          }
         }
       ]
     ]

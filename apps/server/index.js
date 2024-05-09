@@ -117,6 +117,9 @@ app.use("/payment/summary", require("./routes/payment/summary.routes"));
 //shiprocket
 app.use("/shiprocket/track", require("./routes/shiprocket/track.routes"));
 
+//firebase
+app.use("/firebase", require("./routes/firebase/firebase.routes"));
+
 app.use(
   "/image-bg-color",
   require("./routes/image-bg-color/imageColor.routes")

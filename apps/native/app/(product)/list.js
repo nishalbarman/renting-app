@@ -56,7 +56,9 @@ function ProductsList() {
           url.searchParams.append("query", searchParams.searchValue);
         }
 
-        if (!!sort) {
+        if (!!searchParams.defaultSort) {
+          url.searchParams.append("sort", searchParams.defaultSort);
+        } else if (!!sort) {
           url.searchParams.append("sort", sort);
         }
 

@@ -8,6 +8,10 @@ import * as SplashScreen from "expo-splash-screen";
 import AnimateSpin from "../components/AnimateSpin/AnimateSpin";
 import { EvilIcons } from "@expo/vector-icons";
 
+import messaging from "@react-native-firebase/messaging";
+import axios from "axios";
+import handleGlobalError from "../lib/handleError";
+
 SplashScreen.preventAutoHideAsync(); // disable auto hide of splash screen
 
 export default function Page() {
@@ -36,6 +40,50 @@ export default function Page() {
     }
   }, [isFontLoaded]);
 
+  const saveTokenToDatabase = async (token, userToken) => {
+    try {
+      const respo = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/firebase/save-messaging-token`,
+        {
+          firebaseMessagingToken: token,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Firebase Messaging Token Failed -->", error);
+      handleGlobalError(error);
+    }
+  };
+
+  useEffect(() => {
+    const requestUserPermission = async () => {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      if (enabled) {
+        console.log("Authorization status:", authStatus);
+
+        messaging()
+          .getToken()
+          .then((token) => {
+            return saveTokenToDatabase(token, userToken);
+          });
+
+        // Listen to whether the token changes
+        return messaging().onTokenRefresh((token) => {
+          saveTokenToDatabase(token, userToken);
+        });
+      }
+    };
+    requestUserPermission();
+  }, []);
+
   if (!isFontLoaded) {
     return (
       <SafeAreaView>
@@ -53,8 +101,9 @@ export default function Page() {
   }
 
   // return <Redirect href={"/view?id=662ba219c3ecbd98499c9e2b"} />;
-  return <Redirect href={"/order-placed"} />;
+  // return <Redirect href={"/order-placed"} />;
   // return <Redirect href={"/order-track"} />;
   // return <Redirect href={"/order-view"} />;
+  return <Redirect href={"/filter-screen"} />;
   // return <Redirect href={"/(tabs)"} />;
 }

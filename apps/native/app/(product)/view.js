@@ -35,8 +35,7 @@ import FeedbackCardSkeleton from "../../Skeletons/FeedbackCardSkeleton";
 import ProductPageSkeleton from "../../Skeletons/ProductPageSkeleton";
 
 import { useAddOneToCartMutation } from "@store/rtk";
-
-import { Toast } from "toastify-react-native";
+import Toast from "react-native-toast-message";
 
 function product() {
   const { width } = useMemo(() => {
@@ -346,11 +345,17 @@ function product() {
       const response = await addToCart(cartObject).unwrap();
       // if (response.status) {
       setInCart(true);
-      Toast.success("Added to cart", "top");
+      Toast.show({
+        type: "sc",
+        text1: "Added to cart",
+      });
       console.log(response);
       // }
     } catch (error) {
-      Toast.error("Added to cart failed", "top");
+      Toast.show({
+        type: "err",
+        text1: "Added to cart failed",
+      });
       console.error(error);
     }
   };

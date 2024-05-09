@@ -63,18 +63,6 @@ router.get("/", async (req, res) => {
 
 router.post("/:productType", checkRole(0), async (req, res) => {
   try {
-    // const token = req?.jwt?.token;
-
-    // if (!token) {
-    //   return res.status(401).json({ message: "No auth token provided" });
-    // }
-
-    // const userDetails = getTokenDetails(token);
-
-    // if (!userDetails) {
-    //   return res.status(401).json({ message: "Authorization failed" });
-    // }
-
     const productType = req.params?.productType;
 
     if (!productType) {
@@ -195,7 +183,7 @@ router.post("/:productType", checkRole(0), async (req, res) => {
       shippingApplied = true;
     }
 
-    const paymentTransactionID = "RNT-" + uuidv4();
+    const paymentTransactionID = "R_" + uuidv4();
 
     const orderGroupID = uuidv4();
 
@@ -303,7 +291,10 @@ router.post("/:productType", checkRole(0), async (req, res) => {
         }
       );
 
-      return res.status(200).json({ message: "Order Placed!" });
+      return res.status(200).json({
+        paymentTransactionId: paymentTransactionID,
+        message: "Order Placed!",
+      });
     }
 
     return res.status(200).json({ message: "Order Could Not Be Placed!" });

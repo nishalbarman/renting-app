@@ -41,8 +41,8 @@ yarn-error.*
 .expo/
 dist/
 web-build/
-android
-ios
+# android
+# ios
 eas.json
 
 # Native
