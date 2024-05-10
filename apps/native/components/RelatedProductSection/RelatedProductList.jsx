@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Product from "../ProductSection/Product";
 import { FlatList } from "react-native";
 import { useGetWishlistQuery } from "@store/rtk";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useSelector } from "react-redux";
+import handleGlobalError from "../../lib/handleError";
+import axios from "axios";
 
-function RelatedProduct() {
+function RelatedProduct({ query }) {
   const router = useRouter();
   const jwtToken = useSelector((state) => state.auth.jwtToken);
-  const { productType } = useSelector((state) => state.product_store);
+  const productType = useSelector((state) => state.product_store.productType);
 
   const [data, setData] = useState([]);
   const [isProductDataLoading, setIsProductDataLoading] = useState(true);
@@ -17,12 +21,13 @@ function RelatedProduct() {
 
       const url = new URL(`${process.env.EXPO_PUBLIC_API_URL}/products`);
 
-      url.searchParams.append("productType", viewAllPath);
+      url.searchParams.append("productType", productType);
       url.searchParams.append("limit", 10);
+      url.searchParams.append("query", query);
 
-      if (!!sort) {
-        url.searchParams.append("sort", sort);
-      }
+      // if (!!sort) {
+      //   // url.searchParams.append("sort", sort);
+      // }
 
       const res = await axios.get(url.href, {
         headers: {
@@ -33,6 +38,7 @@ function RelatedProduct() {
       setData(res.data.data);
     } catch (error) {
       console.error(error);
+      handleGlobalError(error);
     } finally {
       setIsProductDataLoading(false);
     }

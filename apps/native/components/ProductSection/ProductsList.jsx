@@ -92,7 +92,7 @@ function ProductsList({
               {title}
             </Text>
             <Pressable
-              className={`h-7 px-2 bg-black rounded-md items-center justify-center`}
+              className={`h-7 px-2 bg-green-600 rounded-md items-center justify-center`}
               onPress={() => {
                 router.navigate({
                   pathname: "/list",
@@ -101,7 +101,7 @@ function ProductsList({
                   },
                 });
               }}>
-              <Text className="text-[12px] tracking-wider text-white font-[poppins-bold]">
+              <Text className="text-[10px] tracking-wider text-white font-[poppins-bold]">
                 Explore
               </Text>
             </Pressable>

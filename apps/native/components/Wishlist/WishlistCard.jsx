@@ -1,5 +1,11 @@
 import React, { useMemo } from "react";
-import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, EvilIcons, MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -86,11 +92,17 @@ function Product({ wishlistId, details, width, productType }) {
           onPress={handleRemoveFromWishlist}
           className="absolute top-2 right-3 h-10 w-10 rounded-full items-center justify-center z-[1]">
           {isLoading ? (
-            <AnimateSpin>
-              <EvilIcons name="spinner" size={24} color="white" />
-            </AnimateSpin>
+            <ActivityIndicator size={15} color={"white"} />
           ) : (
-            <MaterialIcons name="delete-outline" size={23} color="white" />
+            <EvilIcons
+              name="trash"
+              size={24}
+              color="white"
+              style={{
+                marginBottom: 3,
+                marginLeft: 0.5,
+              }}
+            />
           )}
         </TouchableHighlight>
 

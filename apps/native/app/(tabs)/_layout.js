@@ -2,6 +2,7 @@ import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { View } from "react-native";
 
 export default function TabLayout() {
   return (
@@ -17,13 +18,21 @@ export default function TabLayout() {
         },
 
         headerTitleAlign: "center",
-        tabBarActiveTintColor: "green",
+        tabBarActiveTintColor: "#e0570d",
+        // tabBarActiveTintColor: "green",
+
+        // tabBarActiveBackgroundColor: "white",
+
+        tabBarItemStyle: {
+          borderRadius: 22,
+        },
 
         tabBarStyle: {
+          overflow: "hidden",
           position: "absolute",
           height: 70,
           borderWidth: 1,
-          borderRadius: 30,
+          borderRadius: 25,
           borderColor: "transparent",
           borderTopColor: "transparent",
           backgroundColor: "rgba(0,0,0,0.9)",
@@ -31,17 +40,20 @@ export default function TabLayout() {
           marginBottom: 10,
           marginLeft: 5,
           marginRight: 5,
-          marginTop: 10,
+          // marginTop: 10,
+          paddingTop: 5,
+          paddingBottom: 5,
           paddingLeft: 5,
           paddingRight: 5,
         },
 
         tabBarIconStyle: {
-          marginBottom: -8,
+          // marginBottom: -8,
         },
         tabBarLabelStyle: {
           fontSize: 11,
           marginBottom: 10,
+          display: "none",
         },
       }}>
       <Tabs.Screen
@@ -68,8 +80,7 @@ export default function TabLayout() {
         options={{
           title: "Cart",
           tabBarIcon: ({ color }) => (
-            // <FontAwesome size={26} name="shopping-cart" color={color} />
-            <Ionicons name="bag-handle-outline" size={26} color={color} />
+            <FontAwesome size={26} name="shopping-cart" color={color} />
           ),
           headerTitleStyle: {
             fontWeight: "bold",

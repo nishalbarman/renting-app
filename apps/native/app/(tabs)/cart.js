@@ -203,7 +203,7 @@ const CartPage = () => {
   }, []);
 
   return (
-    <SafeAreaView className={`flex-1 bg-white px-2`}>
+    <SafeAreaView className={`flex-1 bg-white`}>
       {isCartLoading ? (
         <>
           <AddressCardSkeletop />
@@ -295,8 +295,31 @@ const CartPage = () => {
                       </Text>
                     </View>
                   )}
+
+                  <View
+                    className={
+                      "flex-row justify-center items-center mt-1 pt-5 bg-white w-full rounded-md"
+                    }>
+                    <TouchableOpacity
+                      onPress={handleContinueClick}
+                      disabled={productType === "rent" && !isCenterSelected}
+                      style={{
+                        opacity:
+                          productType === "rent" && !isCenterSelected ? 0.3 : 1,
+                      }}
+                      className="h-11 rounded-md w-full items-center justify-center bg-black">
+                      {isPlacingOrder ? (
+                        <ActivityIndicator size={23} color="white" />
+                      ) : (
+                        <Text className="text-white font-[poppins-mid] tracking-wider text-md">
+                          Checkout
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  </View>
                 </View>
-                <View
+
+                {/* <View
                   className={
                     "flex-row justify-center items-center mt-1 p-[13px] bg-white w-full border border-gray-300 rounded-md mb-3"
                   }>
@@ -307,16 +330,18 @@ const CartPage = () => {
                       opacity:
                         productType === "rent" && !isCenterSelected ? 0.3 : 1,
                     }}
-                    className="h-10 rounded-md w-full items-center justify-center bg-green-600">
+                    className="h-10 rounded-md w-full items-center justify-center bg-black">
                     {isPlacingOrder ? (
                       <ActivityIndicator size={23} color="white" />
                     ) : (
-                      <Text className="text-white text-md font-bold">
-                        Place {productType === "rent" ? "Rent" : "Buy"} Order
-                      </Text>
+                      <>
+                        <Text className="text-white text-md font-bold">
+                          Checkout
+                        </Text>
+                      </>
                     )}
                   </TouchableOpacity>
-                </View>
+                </View> */}
 
                 <FlatList
                   data={cartItems}

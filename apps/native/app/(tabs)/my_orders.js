@@ -5,6 +5,7 @@ import {
   RefreshControl,
   FlatList,
   ActivityIndicator,
+  Text,
 } from "react-native";
 import OrderItem from "../../components/OrderScreen/OrderItem";
 import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
@@ -121,15 +122,16 @@ const OrderScreen = () => {
   const ListEndLoader = React.useCallback(() => {
     if (paginationPage < paginationTotalPages - 1) {
       return (
-        <View className="my-2">
+        <View className="py-2 items-center justify-center">
           <ActivityIndicator size={30} color="black" />
+          <Text className="text-center">Please wait while loading...</Text>
         </View>
       );
     } else return null;
   }, [paginationPage, paginationTotalPages]);
 
   return (
-    <SafeAreaView className={`flex-1 bg-white px-2`}>
+    <SafeAreaView className={`flex-1 bg-white`}>
       {isOrderLoading ? (
         <AddressCardSkeletop />
       ) : (
@@ -140,7 +142,7 @@ const OrderScreen = () => {
             <FlatList
               data={[""]}
               renderItem={() => (
-                <View className={`mb-4 p-2 mb-20`}>
+                <View className={`p-2`}>
                   {orders?.map((item, index) => (
                     <OrderItem
                       key={index}

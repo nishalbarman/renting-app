@@ -23,6 +23,7 @@
     "axios": "^1.6.7",
     "custom-validator-renting": "*",
     "expo": "^50.0.15",
+    "expo-blur": "~12.9.2",
     "expo-build-properties": "~0.11.1",
     "expo-constants": "~15.4.5",
     "expo-image": "~1.10.6",

@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableHighlight, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  ActivityIndicator,
+  Pressable,
+} from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
 
@@ -254,34 +261,44 @@ function CartCard({
         </View>
       </View>
 
-      <View className="flex-row mt-3 justify-between">
-        <TouchableHighlight
+      <View className="flex-row mt-4 justify-between">
+        <Pressable
           onPress={handleMoveWishlist}
-          underlayColor={"#b83a21"}
-          className="bg-red-700 px-2 h-10 border border-red-700 flex items-center justify-center rounded-lg w-[48%]">
+          // underlayColor={"#b83a21"}
+          className="px-2 pb-1 h-10 border border-gray-300 items-center justify-center rounded-lg w-[48%]">
           {isWishlistAddLoading ? (
-            <AnimateSpin>
-              <EvilIcons name="spinner" size={24} color="white" />
-            </AnimateSpin>
+            <ActivityIndicator
+              style={{
+                marginTop: 4,
+              }}
+              size={15}
+              color={"black"}
+            />
           ) : (
-            <Text className="font-semibold text-md text-red-700 text-white font-[poppins]">
-              Move Wishlist
-            </Text>
+            <>
+              <EvilIcons name="heart" size={24} color="black" />
+            </>
           )}
-        </TouchableHighlight>
+        </Pressable>
         <View className="w-[4%]"></View>
-        <TouchableHighlight
-          underlayColor={"white"}
+        <Pressable
+          // underlayColor={"white"}
           onPress={handleRemoveFromCart}
-          className="bg-white border border-gray-400 px-2 h-10 flex items-center justify-center rounded-lg w-[48%]">
+          className="px-2 pb-1 h-10 border border-gray-300 items-center justify-center rounded-lg w-[48%]">
           {cartRemoveLoading ? (
-            <AnimateSpin>
-              <EvilIcons name="spinner" size={24} color="black" />
-            </AnimateSpin>
+            <ActivityIndicator
+              style={{
+                marginTop: 4,
+              }}
+              size={15}
+              color={"black"}
+            />
           ) : (
-            <Text className="font-semibold text-md">Remove</Text>
+            <>
+              <EvilIcons name="trash" size={24} color="black" />
+            </>
           )}
-        </TouchableHighlight>
+        </Pressable>
       </View>
     </View>
   );

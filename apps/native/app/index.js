@@ -64,30 +64,30 @@ export default function Page() {
     }
   };
 
-  useEffect(() => {
-    const requestUserPermission = async () => {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  // useEffect(() => {
+  //   const requestUserPermission = async () => {
+  //     const authStatus = await messaging().requestPermission();
+  //     const enabled =
+  //       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+  //       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-      if (enabled) {
-        console.log("Authorization status:", authStatus);
+  //     if (enabled) {
+  //       console.log("Authorization status:", authStatus);
 
-        messaging()
-          .getToken()
-          .then((token) => {
-            return saveTokenToDatabase(token, userToken);
-          });
+  //       messaging()
+  //         .getToken()
+  //         .then((token) => {
+  //           return saveTokenToDatabase(token, userToken);
+  //         });
 
-        // Listen to whether the token changes
-        return messaging().onTokenRefresh((token) => {
-          saveTokenToDatabase(token, userToken);
-        });
-      }
-    };
-    requestUserPermission();
-  }, []);
+  //       // Listen to whether the token changes
+  //       return messaging().onTokenRefresh((token) => {
+  //         saveTokenToDatabase(token, userToken);
+  //       });
+  //     }
+  //   };
+  //   requestUserPermission();
+  // }, []);
 
   if (!isFontLoaded) {
     return (

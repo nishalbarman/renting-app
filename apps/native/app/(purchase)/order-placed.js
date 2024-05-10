@@ -116,8 +116,8 @@ const OrderResult = () => {
                     />
                   </View>
 
-                  <View className="flex-1 justify-center items-center my-10">
-                    <View className="bg-white p-2 rounded-lg shadow-lg w-11/12 max-w-md">
+                  <View className="flex-1 justify-center items-center my-5">
+                    <View className="bg-white p-2 rounded-lg w-11/12 max-w-md py-4 border px-3 border-gray-300">
                       <View className="items-center mb-4">
                         <View className="bg-green-500 rounded-full p-2">
                           <AntDesign
@@ -146,7 +146,7 @@ const OrderResult = () => {
                       <Text className="text-gray-500">Request Amount</Text>
                       <View className="mt-3">
                         <View className="flex-row flex-wrap justify-between items-center text-gray-700">
-                          <Text>Txn ID</Text>
+                          <Text>Txn ID : </Text>
                           <Text className="font-semibold">
                             {orderDetails?.order[0]?.paymentTxnId}
                           </Text>

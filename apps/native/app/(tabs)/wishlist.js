@@ -32,7 +32,7 @@ export default memo(function Tab() {
         <View>
           {!!wishlistData && wishlistData.length > 0 ? (
             <FlatList
-              className="mb-20"
+              className="mb-20 px-2"
               refreshControl={<RefreshControl onRefresh={refetch} />}
               data={wishlistData}
               renderItem={({ item }) => {
@@ -50,7 +50,7 @@ export default memo(function Tab() {
               keyExtractor={(item, index) => index.toString()}
             />
           ) : (
-            <EmptyBag message={"Your wishlist is empty"} />
+            <EmptyBag message="Your wishlist is empty" />
           )}
         </View>
       )}

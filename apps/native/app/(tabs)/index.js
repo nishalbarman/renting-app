@@ -4,11 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProductsList from "../../components/ProductSection/ProductsList";
 import Categories from "../../components/CategoryList/Categories";
-import { setProductType } from "@store/rtk";
+import { setProductType, useGetCartQuery } from "@store/rtk";
 import { Stack, useRouter } from "expo-router";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { useState, useTransition } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 
 export default function Tab() {
   const [isLoading, startTransition] = useTransition();
@@ -26,6 +26,8 @@ export default function Tab() {
       dispatch(setProductType(type));
     });
   };
+
+  const { data: cartItems } = useGetCartQuery(productType);
 
   return (
     <SafeAreaView className="bg-white flex-1">
@@ -51,14 +53,29 @@ export default function Tab() {
                 </Text>
                 <EvilIcons name="search" size={24} color="black" />
               </Pressable>
-              <Pressable className="ml-2 items-center justify-center h-12 w-12 rounded-md border border-gray-300">
+              {/* <Pressable className="ml-2 items-center justify-center h-12 w-12 rounded-md border border-gray-300">
                 <Ionicons
                   name="notifications-outline"
                   size={24}
                   color="black"
                 />
-              </Pressable>
-              <Pressable className="ml-2 items-center justify-center h-12 w-12 rounded-md border border-gray-300">
+              </Pressable> */}
+              <Pressable
+                onPress={() => {
+                  router.navigate({
+                    pathname: "cart",
+                  });
+                }}
+                className="ml-2 items-center justify-center h-12 w-12 rounded-md border border-gray-300">
+                <View
+                  className={
+                    "w-6 h-6 items-center justify-center z-[999] rounded-full bg-red-500 absolute right-0 top-0"
+                  }>
+                  <Text className="text-[12px] text-white">
+                    {cartItems?.length || 0}
+                  </Text>
+                </View>
+                {/* <FontAwesome size={24} name="shopping-cart" color={"black"} /> */}
                 <Ionicons name="bag-handle-outline" size={24} color="black" />
               </Pressable>
             </View>
