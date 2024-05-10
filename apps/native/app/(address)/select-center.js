@@ -115,12 +115,13 @@ function LocationMap() {
     <View className="bg-white relative h-full w-full">
       <Stack.Screen
         options={{
-          title: "Select Center Location",
+          title: "Choose Pickup Center",
           headerShown: true,
           headerShadowVisible: false,
           headerTitleStyle: {
             fontSize: 18,
           },
+          headerTitleAlign: "center",
         }}
       />
 

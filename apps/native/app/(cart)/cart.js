@@ -14,7 +14,7 @@ import CartCard from "../../components/CartItem/CartCard";
 import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
 
 import axios from "axios";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";
 
 import EmptyBag from "../../components/EmptyBag/EmptyBag";
@@ -204,6 +204,14 @@ const CartPage = () => {
 
   return (
     <SafeAreaView className={`flex-1 bg-white`}>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerShadowVisible: false,
+          headerTitleAlign: "center",
+          title: "Cart",
+        }}
+      />
       {isCartLoading ? (
         <>
           <AddressCardSkeletop />
@@ -220,24 +228,28 @@ const CartPage = () => {
                 {productType === "rent" && (
                   <View className="border border-gray-300 rounded-md p-3">
                     <Text className="text-lg font-[poppins-bold]">
-                      Selected Center
+                      Pickup Center
                     </Text>
                     <View>
                       {isCenterSelected ? (
                         <>
                           <Text className="text-[17px] mt-1">
-                            {selectedCenterAddress?.centerName}
+                            Center Name: {selectedCenterAddress?.centerName}
                           </Text>
 
-                          <Text className="text-[16px] font-[poppins] my-1">{`${selectedCenterAddress?.address?.name}, ${selectedCenterAddress?.address?.streetName}, ${selectedCenterAddress?.address?.locality}, ${selectedCenterAddress?.address?.postalCode}, ${selectedCenterAddress?.address?.country}`}</Text>
+                          <Text className="text-[16px] font-[poppins] my-1">
+                            Address:{" "}
+                            {`${selectedCenterAddress?.address?.name}, ${selectedCenterAddress?.address?.streetName}, ${selectedCenterAddress?.address?.locality}, ${selectedCenterAddress?.address?.postalCode}, ${selectedCenterAddress?.address?.country}`}
+                          </Text>
 
                           <Text className="text-[17px] mb-1 font-semibold">
-                            +91-{selectedCenterAddress?.user?.mobileNo}
+                            <Text className="font-normal">Mobile:</Text> +91-
+                            {selectedCenterAddress?.user?.mobileNo}
                           </Text>
                         </>
                       ) : (
                         <Text className="text-[16px] font-[poppins]">
-                          No Center Selected
+                          No Pickup Center Selected, Order can not be placed.
                         </Text>
                       )}
                     </View>

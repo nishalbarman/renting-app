@@ -7,7 +7,11 @@ import {
   Pressable,
 } from "react-native";
 import { Image } from "expo-image";
-import { AntDesign, EvilIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  EvilIcons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 
 import AnimateSpin from "../AnimateSpin/AnimateSpin";
 import { SheetManager } from "react-native-actions-sheet";
@@ -264,15 +268,18 @@ function OrderItem({
               flexShrink: 0,
               flexGrow: 1,
             }}
-            className="bg-black border pl-2 pr-2 h-11 flex items-center justify-center rounded-lg">
+            className="bg-white border border-gray-400 pl-2 pr-2 h-11 flex items-center justify-center rounded-lg">
             {cancelLoading ? (
               <AnimateSpin>
                 <EvilIcons name="spinner" size={24} color="black" />
               </AnimateSpin>
             ) : (
-              <Text className="font-semibold text-md text-white font-bold">
-                Cancel
-              </Text>
+              <>
+                {/* <MaterialCommunityIcons name="cancel" size={24} color="black" /> */}
+                <Text className="font-semibold text-md text-black font-bold">
+                  Cancel
+                </Text>
+              </>
             )}
           </Pressable>
         )}

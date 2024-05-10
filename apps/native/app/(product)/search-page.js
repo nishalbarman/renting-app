@@ -1,22 +1,8 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import {
-  FlatList,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
 
-import { EvilIcons, Octicons } from "@expo/vector-icons";
+import { Octicons } from "@expo/vector-icons";
 
 import axios from "axios";
 
@@ -153,8 +139,8 @@ function searchPage() {
           headerShadowVisible: false,
           title: "Seach",
           headerBackVisible: false,
+          headerTitleAlign: "center",
           headerSearchBarOptions: {
-            // value: searchValue,
             placeholder: "Search",
             autoFocus: true,
             onFocus: () => {
@@ -170,7 +156,7 @@ function searchPage() {
               handleOnKeyPress();
             },
           },
-          headerBackVisible: true,
+          // headerBackVisible: true,
           // headerTitle: () => {
           //   return (
           //     // <View className="h-12 border w-full border-none outline-none bg-white rounded-lg items-center">
@@ -207,7 +193,7 @@ function searchPage() {
         }}
       />
 
-      {true ? (
+      {searchBarFocus ? (
         <ScrollView className="">
           {productData.length > 0 &&
             productData.map((item, index) => {
@@ -217,6 +203,7 @@ function searchPage() {
                   className="px-3 py-3 w-full flex-row items-center border-b border-[1px] border-gray-200 bg-white"
                   onPress={async () => {
                     setHistory(item.title);
+                    setSearchValue(item.title);
                     router.navigate({
                       pathname: "/list",
                       params: {
@@ -247,6 +234,7 @@ function searchPage() {
                   key={index}
                   className="px-3 py-3 w-full flex-row items-center border-b border-[1px] border-gray-200 bg-white"
                   onPress={async () => {
+                    setSearchValue(item);
                     router.navigate({
                       pathname: "/list",
                       params: {

@@ -42,6 +42,30 @@ export default function Tab() {
         data={[""]}
         renderItem={() => (
           <>
+            <View className="h-fit px-3 mt-3 flex-row justify-between items-center">
+              <View>
+                <Text className="font-[poppins-bold] text-2xl">Discover</Text>
+              </View>
+              <Pressable
+                onPress={() => {
+                  router.navigate({
+                    pathname: "cart",
+                  });
+                }}
+                className="ml-2 items-center justify-center h-12 w-12 rounded-md">
+                <View
+                  className={
+                    "w-6 h-6 items-center justify-center z-[999] rounded-full bg-green-600 absolute right-0 top-0"
+                  }>
+                  <Text className="text-[12px] text-white">
+                    {cartItems?.length || 0}
+                  </Text>
+                </View>
+                {/* <FontAwesome size={24} name="shopping-cart" color={"black"} /> */}
+                <Ionicons name="bag-handle-outline" size={24} color="black" />
+              </Pressable>
+            </View>
+
             <View className="h-fit px-3 mt-3 flex-row items-center">
               <Pressable
                 onPress={() => {
@@ -60,29 +84,11 @@ export default function Tab() {
                   color="black"
                 />
               </Pressable> */}
-              <Pressable
-                onPress={() => {
-                  router.navigate({
-                    pathname: "cart",
-                  });
-                }}
-                className="ml-2 items-center justify-center h-12 w-12 rounded-md border border-gray-300">
-                <View
-                  className={
-                    "w-6 h-6 items-center justify-center z-[999] rounded-full bg-red-500 absolute right-0 top-0"
-                  }>
-                  <Text className="text-[12px] text-white">
-                    {cartItems?.length || 0}
-                  </Text>
-                </View>
-                {/* <FontAwesome size={24} name="shopping-cart" color={"black"} /> */}
-                <Ionicons name="bag-handle-outline" size={24} color="black" />
-              </Pressable>
             </View>
 
             <Categories />
 
-            <View className="flex-1 mt-3 w-screen min-h-screen mb-20">
+            <View className="flex-1 mt-3 w-screen min-h-screen">
               <ProductsList
                 title={`🔥 Popular`}
                 viewAllPath={productType}

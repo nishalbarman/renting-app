@@ -2,26 +2,17 @@ import React, { useEffect, useRef, useState, useTransition } from "react";
 import {
   ActivityIndicator,
   Dimensions,
-  ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
-import { NativeViewGestureHandler } from "react-native-gesture-handler";
-import MapView, {
-  Marker,
-  PROVIDER_GOOGLE,
-  addressForCoordinate,
-} from "react-native-maps";
+
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
 
 import * as Location from "expo-location";
 import { setAddressDataFromMap } from "@store/rtk";
 import { useDispatch } from "react-redux";
-import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
-import { EvilIcons } from "@expo/vector-icons";
 
 import { Stack, useRouter } from "expo-router";
 
@@ -119,7 +110,7 @@ function LocationMap() {
       />
 
       {isLocationNotEnabledModalOpen && (
-        <View className="h-[90%] w-full flex justify-center items-center">
+        <View className="min-h-screen absolute w-full justify-center items-center">
           <Text className="text-lg tex-bold text-center mb-3">
             You need to allow permission to be able to select location!. If you
             are seeing this message even after allowing the permission try to
@@ -127,16 +118,16 @@ function LocationMap() {
             would be appriciated.
           </Text>
           <TouchableOpacity
-            className="h-10 px-4 bg-purple flex items-center justify-center rounded-md"
+            className="h-10 px-4 bg-green-600 flex items-center justify-center rounded-md"
             onPress={handleTryPermissionAgain}>
-            <Text className="text-lg text-bold text-white">Ask Again</Text>
+            <Text className="text-md text-bold text-white">Ask Again</Text>
           </TouchableOpacity>
         </View>
       )}
 
       {isIntitalUILoading ? (
         <View className="min-h-screen w-full flex items-center justify-center">
-          <ActivityIndicator size={40} />
+          <ActivityIndicator size={40} color={"green"} />
         </View>
       ) : (
         <>
@@ -149,12 +140,15 @@ function LocationMap() {
             followsUserLocation={true}
             showsMyLocationButton={true}
             loadingEnabled={true}
+            loadingIndicatorColor="green"
+            userLocationUpdateInterval={2000}
+            userLocationFastestInterval={2000}
             onPress={(location) => {
               handleOnRegionChange(location.nativeEvent.coordinate);
             }}>
             {!!selectedLocation && (
               <Marker
-                pinColor={"#d59ded"}
+                pinColor={"#c45041"}
                 coordinate={{
                   latitude: selectedLocation?.latitude,
                   longitude: selectedLocation?.longitude,
@@ -183,12 +177,12 @@ function LocationMap() {
                 }}
                 onPress={handleSelectAddress}
                 disabled={!address}
-                className="flex-row items-center border border-dark-purple justify-start p-1 pl-3 pr-3 rounded-md mt-2 disabled:bg-light-purple">
+                className="flex-row items-center border border-dark-purple border-green-600 justify-start p-1 pl-3 pr-3 rounded-md mt-2 disabled:bg-light-purple">
                 {loading || isPending ? (
                   <ActivityIndicator size={10} color={"purple"} />
                 ) : (
                   <>
-                    <View className="h-[20px] w-[20px] rounded-full bg-dark-purple items-center justify-center">
+                    <View className="h-[20px] w-[20px] rounded-full bg-green-600 items-center justify-center">
                       <MaterialIcons name="done" size={10} color="white" />
                     </View>
                     <Text className="ml-1 align-middle font-[poppins] text-[12px]">

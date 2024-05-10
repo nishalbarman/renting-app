@@ -1,4 +1,4 @@
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { Provider } from "react-redux";
 import { persistor, store } from "@store/rtk";
 import { PersistGate } from "redux-persist/integration/react";
@@ -15,8 +15,8 @@ import Constants from "expo-constants";
 import { useCallback, useEffect, useMemo } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
-import { Text, View } from "react-native";
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { Pressable, Text, View } from "react-native";
+import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 
 export default function RootLayout() {
   useEffect(() => {
@@ -117,6 +117,8 @@ export default function RootLayout() {
     };
   }, []);
 
+  const router = useRouter();
+
   return (
     <>
       <Provider store={store}>
@@ -134,6 +136,17 @@ export default function RootLayout() {
                 <Stack
                   screenOptions={{
                     headerShown: false,
+                    headerBackTitle: false,
+                    headerBackVisible: false,
+                    headerLeft: (props) => (
+                      <Pressable
+                        onPress={() => {
+                          if (props.canGoBack) router.dismiss();
+                        }}
+                        className="p-2 mr-3 border border-gray-200 rounded-full">
+                        <Ionicons name="chevron-back" size={24} color="black" />
+                      </Pressable>
+                    ),
                   }}
                 />
               </SafeAreaProvider>

@@ -195,6 +195,10 @@ function ProductsList() {
     <SafeAreaView className="flex-1 bg-white">
       <Stack.Screen
         options={{
+          headerTitleStyle: {
+            fontSize: 18,
+            fontFamily: "poppins",
+          },
           title:
             searchParams.categoryName ||
             searchParams.searchValue ||

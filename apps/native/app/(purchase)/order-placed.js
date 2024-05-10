@@ -19,6 +19,7 @@ import axios from "axios";
 
 import LottieView from "lottie-react-native";
 import { useGetCartQuery } from "@store/rtk";
+import { Ionicons } from "@expo/vector-icons";
 
 const OrderResult = () => {
   const router = useRouter();
@@ -84,9 +85,21 @@ const OrderResult = () => {
           headerShown: true,
           headerShadowVisible: false,
           title: "Order Placed",
-          // headerTitleAlign: "center",
+          headerTitleAlign: "center",
           headerBackVisible: false,
           headerBackTitleVisible: false,
+          headerLeft: (props) => (
+            <Pressable
+              onPress={() => {
+                if (props.canGoBack) {
+                  router.dismiss();
+                }
+                router.replace("/my_orders");
+              }}
+              className="p-2 mr-3 border border-gray-200 rounded-full">
+              <Ionicons name="chevron-back" size={24} color="black" />
+            </Pressable>
+          ),
         }}
       />
       <FlatList
@@ -105,7 +118,10 @@ const OrderResult = () => {
                 </View>
               ) : (
                 <>
-                  <View style={styles.lottie} pointerEvents="box-none">
+                  <View
+                    className="top-0 absolute"
+                    style={styles.lottie}
+                    pointerEvents="box-none">
                     <AnimatedLottieView
                       ref={lottieViewRef}
                       source={require("../../assets/lottie/celebration.json")}
@@ -186,7 +202,7 @@ const OrderResult = () => {
                         onPress={() => {
                           router.replace("/my_orders");
                         }}
-                        className="mt-6 bg-blue-600 py-3 rounded-full">
+                        className="mt-6 bg-green-600 py-3 rounded-full">
                         <Text className="text-center text-white font-semibold">
                           My Order
                         </Text>

@@ -75,8 +75,6 @@ function Categories() {
           <CategorySkeleton />
           <CategorySkeleton />
           <CategorySkeleton />
-          <CategorySkeleton />
-          <CategorySkeleton />
         </View>
       ) : (
         <>

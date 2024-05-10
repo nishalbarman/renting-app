@@ -32,7 +32,7 @@ export default memo(function Tab() {
         <View>
           {!!wishlistData && wishlistData.length > 0 ? (
             <FlatList
-              className="mb-20 px-2"
+              className="px-2"
               refreshControl={<RefreshControl onRefresh={refetch} />}
               data={wishlistData}
               renderItem={({ item }) => {

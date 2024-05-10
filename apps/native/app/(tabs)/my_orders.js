@@ -122,7 +122,7 @@ const OrderScreen = () => {
   const ListEndLoader = React.useCallback(() => {
     if (paginationPage < paginationTotalPages - 1) {
       return (
-        <View className="py-2 items-center justify-center">
+        <View className="py-3 items-center justify-center">
           <ActivityIndicator size={30} color="black" />
           <Text className="text-center">Please wait while loading...</Text>
         </View>
@@ -140,6 +140,7 @@ const OrderScreen = () => {
             <EmptyBag message={"Your order list is empty"} />
           ) : (
             <FlatList
+              className={`bg-white`}
               data={[""]}
               renderItem={() => (
                 <View className={`p-2`}>
@@ -154,7 +155,6 @@ const OrderScreen = () => {
                 </View>
               )}
               showsHorizontalScrollIndicator={false}
-              className={`flex-1 bg-white`}
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }

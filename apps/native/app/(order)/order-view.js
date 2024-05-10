@@ -69,10 +69,11 @@ const OrderView = () => {
     <SafeAreaView className={"bg-white min-h-full"}>
       <Stack.Screen
         options={{
-          headerBackVisible: true,
+          headerBackVisible: false,
           headerShadowVisible: false,
-          title: "",
           headerShown: true,
+          title: "Status",
+          headerTitleAlign: "center",
         }}
       />
       {isLoading ? (
@@ -81,7 +82,7 @@ const OrderView = () => {
         </View>
       ) : (
         <FlatList
-          className="px-4 bg-white"
+          className="px-4 bg-white mt-2"
           data={[""]}
           renderItem={() => {
             return (

@@ -1,6 +1,6 @@
-import { Feather } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   SafeAreaView,
   ScrollView,
   Text,
@@ -13,9 +13,7 @@ import {
 import { FontAwesome6 } from "@expo/vector-icons";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useAddAddressMutation } from "@store/rtk";
-import { setAddressDataFromMap } from "@store/rtk";
-import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
+import { useAddAddressMutation, clearAddressData } from "@store/rtk";
 
 import { useRouter } from "expo-router";
 
@@ -158,13 +156,12 @@ export default function AddAddress() {
       const response = await addNewAddress({
         address: extractedFormData,
       }).unwrap();
-      if (response.status == 200) {
-        dispatch(setAddressDataFromMap({ address: null, coordinates: null }));
-      }
+
+      dispatch(clearAddressData());
 
       Toast.show({
         type: "sc",
-        text1: response.data?.message,
+        text1: response.data?.message || "New Address Added",
       });
       router.dismiss();
     } catch (error) {
@@ -172,7 +169,7 @@ export default function AddAddress() {
         type: "err",
         text1: error?.data?.message || "Address add failed!",
       });
-     
+
       console.error(error);
     }
   };
@@ -182,11 +179,13 @@ export default function AddAddress() {
       <Stack.Screen
         options={{
           headerShown: true,
+          headerBackVisible: false,
+          headerTitleAlign: "center",
           headerTitle: (props) => <LogoTitle {...props} />,
         }}
       />
       <ScrollView className="bg-white">
-        <View className="flex flex-col items-start gap-y-2 pb-10 px-5 min-h-screen">
+        <View className="flex flex-col items-start gap-y-2 pb-10 px-5 min-h-screen mt-1">
           {/* <Text className="font-[poppins-xbold] text-[18px]">
             Choose your location
           </Text> */}
@@ -195,25 +194,31 @@ export default function AddAddress() {
           </Text>
 
           <View className="w-full flex flex-col gap-y-[13px] items-center mt-1">
+            <Text className="self-start font-[poppins-bold] text-md">
+              Select Location
+            </Text>
             <TouchableOpacity
               onPress={handleChooseLocationOnMap}
-              className="flex items-center justify-center h-[60px] w-full px-7 border outline-none bg-white border-gray-300 flex flex-row rounded-lg">
+              className="flex items-center justify-center h-[60px] w-full px-8 border outline-none bg-white border-gray-300 flex flex-row rounded-lg mb-2">
               <TextInput
-                className="mr-2 rounded-lg font-[poppins-mid] placeholder:text-[16px] placeholder:text-black text-#8a8a8a w-full"
+                className="mr-2 rounded-lg font-[poppins-mid] placeholder:text-[16px] placeholder:text-gray-600 w-full"
                 editable={false}
                 multiline={false}
                 placeholder="Choose your location"
-                value={`${formData.prefix.value || "Select from map"} ${formData.streetName.value}`}
+                value={`${formData.prefix.value || "Choose from map"} ${formData.streetName.value}`}
               />
               <FontAwesome6
                 name="location-crosshairs"
                 size={24}
-                color="black"
+                color="#8a8a8a"
               />
             </TouchableOpacity>
 
             <View className="bg-[#D1D3D7] w-[100%] h-[1px] mb-2"></View>
 
+            <Text className="self-start font-[poppins-bold] text-md">
+              Fill Address
+            </Text>
             <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-white border border-gray-300 flex flex-row justify-around items-center rounded-lg">
               <TextInput
                 className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
@@ -391,18 +396,14 @@ export default function AddAddress() {
               underlayColor={"[#6C63FF"}
               onPress={handleAddNewAddress}
               disabled={isLoading}
-              className={`flex justify-center items-center h-[55px] w-[90%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}>
+              className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-200" : "bg-green-600"} border-none outline-none rounded-lg`}>
               <>
                 {isLoading || (
-                  <Text className="text-[20px] text-white font-[poppins-bold]">
+                  <Text className="text-lg text-white font-[poppins-bold]">
                     Save
                   </Text>
                 )}
-                {isLoading && (
-                  <AnimateSpin>
-                    <Feather name="loader" size={24} color="white" />
-                  </AnimateSpin>
-                )}
+                {isLoading && <ActivityIndicator size={25} color={"white"} />}
               </>
             </TouchableHighlight>
           </View>

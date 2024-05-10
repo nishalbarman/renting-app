@@ -74,6 +74,7 @@ export default function AddressList() {
           title: "Shipping Address",
           headerShown: true,
           headerShadowVisible: false,
+          headerTitleAlign: "center",
         }}
       />
 

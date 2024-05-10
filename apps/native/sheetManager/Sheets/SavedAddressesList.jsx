@@ -11,11 +11,11 @@ import { useSelector } from "react-redux";
 import AddressCardSkeleton from "../../Skeletons/AddressCardSkeleton";
 
 import { MaterialIcons } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
+import handleGlobalError from "../../lib/handleError";
 
 export default function AddressList() {
   const { name, mobileNo } = useSelector((state) => state.auth);
-
-  console.log(mobileNo);
 
   const router = useRouter();
   const handleAddAddressClick = () => {
@@ -40,10 +40,15 @@ export default function AddressList() {
     console.log(id);
     try {
       const response = await deleteOneAddress(id).unwrap();
+      Toast.show({
+        type: "sc",
+        text1: "Address Deleted",
+      });
 
       console.log("Address Deleted");
     } catch (error) {
       console.error(error);
+      handleGlobalError(error);
     } finally {
       refetch();
     }
@@ -97,28 +102,22 @@ export default function AddressList() {
                           <Text className="text-gray-700">{mobileNo}</Text>
                         </View>
                         <View className="w-full flex items-end">
-                          {isAddressDeleteLoading ? (
-                            <>
-                              <ActivityIndicator
-                                size={15}
-                                color={"dark-purple"}
+                          <TouchableOpacity
+                            disabled={isAddressDeleteLoading}
+                            onPress={() => {
+                              handleDeleteAddress(item._id);
+                            }}
+                            className="flex items-center justify-center flex-0 p-1 rounded-full bg-dark-purple bg-green-600 w-10 h-10 mt-4">
+                            {isAddressDeleteLoading ? (
+                              <ActivityIndicator size={20} color={"white"} />
+                            ) : (
+                              <MaterialIcons
+                                name="delete"
+                                size={24}
+                                color="white"
                               />
-                            </>
-                          ) : (
-                            <>
-                              <TouchableOpacity
-                                onPress={() => {
-                                  handleDeleteAddress(item._id);
-                                }}
-                                className="flex items-center justify-center flex-0 p-1 rounded-full bg-dark-purple w-10 h-10 mt-4">
-                                <MaterialIcons
-                                  name="delete"
-                                  size={24}
-                                  color="white"
-                                />
-                              </TouchableOpacity>
-                            </>
-                          )}
+                            )}
+                          </TouchableOpacity>
                         </View>
                       </View>
                     );
@@ -137,7 +136,7 @@ export default function AddressList() {
               {(!address || address.length < 5) && (
                 <TouchableOpacity
                   onPress={handleAddAddressClick}
-                  className="mt-6 flex items-center justify-center self-center w-64 h-11 p-[0px_20px] bg-dark-purple rounded-lg">
+                  className="mt-6 flex items-center justify-center self-center w-64 h-11 p-[0px_20px] bg-dark-purple bg-green-600 rounded-lg">
                   <Text className="text-white font-bold">Add One</Text>
                 </TouchableOpacity>
               )}

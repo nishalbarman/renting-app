@@ -92,20 +92,26 @@ const AccountScreen = () => {
             <Text className="font-semibold text-lg mb-1">Product Mode</Text>
 
             <View className="w-full flex-row">
-              <View className="flex flex-row h-8 rounded-md w-[40%] w-full bg-gray-300 border border-gray-300 mt-1">
+              <View className="flex flex-row h-10 rounded-md w-[40%] w-full bg-white border border-green-700 mt-1">
                 <Pressable
                   onPress={() => {
                     handleChangeProductType("rent");
                   }}
-                  className={`${locProductType === "rent" ? "bg-white" : ""} rounded-md w-[50%] flex items-center justify-center`}>
-                  <Text className="font-[poppins]">Rent</Text>
+                  className={`${locProductType === "rent" && "bg-green-600 text-white"} rounded-md w-[50%] flex items-center justify-center`}>
+                  <Text
+                    className={`font-[poppins-bold] tracking-wide ${locProductType !== "rent" ? "text-green-800" : "text-white"}`}>
+                    Rent
+                  </Text>
                 </Pressable>
                 <Pressable
                   onPress={() => {
                     handleChangeProductType("buy");
                   }}
-                  className={`${locProductType === "buy" ? "bg-white" : ""} rounded-md w-[50%] bg-none flex items-center justify-center`}>
-                  <Text className="font-[poppins]">Purchase</Text>
+                  className={`${locProductType === "buy" && "bg-green-600 text-white"} rounded-md w-[50%] bg-none flex items-center justify-center`}>
+                  <Text
+                    className={`font-[poppins-bold] tracking-wide ${locProductType === "rent" ? "text-green-800" : "text-white"}`}>
+                    Purchase
+                  </Text>
                 </Pressable>
               </View>
             </View>

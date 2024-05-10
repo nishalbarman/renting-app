@@ -18,8 +18,8 @@ export default function TabLayout() {
         },
 
         headerTitleAlign: "center",
-        tabBarActiveTintColor: "#e0570d",
-        // tabBarActiveTintColor: "green",
+        // tabBarActiveTintColor: "#e0570d",
+        tabBarActiveTintColor: "green",
 
         // tabBarActiveBackgroundColor: "white",
 
@@ -29,18 +29,18 @@ export default function TabLayout() {
 
         tabBarStyle: {
           overflow: "hidden",
-          position: "absolute",
+          // position: "absolute",
           height: 70,
           borderWidth: 1,
-          borderRadius: 25,
+          // borderRadius: 25,
           borderColor: "transparent",
           borderTopColor: "transparent",
-          backgroundColor: "rgba(0,0,0,0.9)",
+          // backgroundColor: "rgba(255,254,254,0.95)",
+          // backgroundColor: "rgba(0,0,0,0.9)",
 
-          marginBottom: 10,
-          marginLeft: 5,
-          marginRight: 5,
-          // marginTop: 10,
+          // marginBottom: 10,
+          // marginLeft: 5,
+          // marginRight: 5,
           paddingTop: 5,
           paddingBottom: 5,
           paddingLeft: 5,
@@ -48,12 +48,12 @@ export default function TabLayout() {
         },
 
         tabBarIconStyle: {
-          // marginBottom: -8,
+          marginBottom: -5,
         },
         tabBarLabelStyle: {
           fontSize: 11,
           marginBottom: 10,
-          display: "none",
+          // display: "none",
         },
       }}>
       <Tabs.Screen
@@ -75,7 +75,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="cart"
         options={{
           title: "Cart",
@@ -87,7 +87,7 @@ export default function TabLayout() {
             fontSize: 20,
           },
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="my_orders"
         options={{
