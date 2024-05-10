@@ -14,10 +14,10 @@ function FeedbackCard({
   }, []);
 
   return (
-    <View className="p-[0_0_0_10px] mt-[5px] mb-[18px] w-[100%]">
+    <View className="pl-2 mt-1 mb-[18px] w-full border border-gray-300 rounded-md">
       <View className="relative w-[100%] h-fit p-1 w-full">
         <Image
-          className="h-[45px] w-[45px] rounded-full absolute top-[-15px] left-[-15px] z-[999] border"
+          className="h-[45px] w-[45px] rounded-full absolute top-[-15px] left-[-15px] z-[999]"
           source={{
             uri: userIcon,
           }}
@@ -47,7 +47,7 @@ function FeedbackCard({
             </View>
             <Text>{new Date(feedBackDate).toDateString()}</Text>
           </View>
-          <Text className="leading-[22px] font-[poppins] text-[16px] mt-1">
+          <Text className="leading-[22px] font-[poppins] text-[16px] mt-2">
             {feedbackText}
           </Text>
         </View>

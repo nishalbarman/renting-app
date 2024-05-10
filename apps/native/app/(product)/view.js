@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  Pressable,
   SafeAreaView,
   ScrollView,
   Text,
@@ -376,7 +377,7 @@ function product() {
           },
         }}
       />
-      <ScrollView>
+      <ScrollView stickyHeaderIndices={[[4]]}>
         {isProductFetching ? (
           <ProductPageSkeleton />
         ) : (
@@ -488,7 +489,6 @@ function product() {
                   ({productDetails.totalFeedbacks})
                 </Text>
               </View>
-
               {/* size and color section */}
               {!!productDetails?.isVariantAvailable &&
                 !!productDetails?.productVariant && (
@@ -509,7 +509,7 @@ function product() {
                         showsHorizontalScrollIndicator={false}
                         renderItem={({ item }) => {
                           return (
-                            <TouchableOpacity
+                            <Pressable
                               onPress={() => {
                                 setSelectedProductSize(item);
                               }}
@@ -519,7 +519,7 @@ function product() {
                                     ? "#9470B5"
                                     : "white",
                               }}
-                              className="w-[50px] h-[45px] rounded-lg mx-2 flex items-center justify-center shadow-sm border  text-white">
+                              className="h-9 w-14 rounded-lg mx-2 flex items-center justify-center shadow-sm border  text-white">
                               <Text
                                 style={{
                                   color:
@@ -530,7 +530,7 @@ function product() {
                                 className="text-[15px] font-[poppins-bold]">
                                 {item}
                               </Text>
-                            </TouchableOpacity>
+                            </Pressable>
                           );
                         }}
                         keyExtractor={(item, index) => index.toString()}
@@ -553,7 +553,7 @@ function product() {
                         showsHorizontalScrollIndicator={false}
                         renderItem={({ item }) => {
                           return (
-                            <TouchableOpacity
+                            <Pressable
                               onPress={() => {
                                 setSelectedProductColor(item);
                               }}
@@ -563,7 +563,7 @@ function product() {
                                     ? "#9470B5"
                                     : "white",
                               }}
-                              className="flex items-center justify-center w-fit px-3 h-[45px] rounded-lg mx-2 shadow-sm border">
+                              className="flex items-center justify-center h-10 w-fit px-5 rounded-lg mx-2 shadow-sm border">
                               <Text
                                 style={{
                                   color:
@@ -574,7 +574,7 @@ function product() {
                                 className="text-md font-bold">
                                 {item}
                               </Text>
-                            </TouchableOpacity>
+                            </Pressable>
                           );
                         }}
                         keyExtractor={(item, index) => index.toString()}
@@ -582,10 +582,9 @@ function product() {
                     </View>
                   </View>
                 )}
-
               {/* //!price and quantity section */}
               <View className="bg-[#e3eeff] rounded-md mt-2">
-                <View className="flex flex-row justify-between items-center p-3 ">
+                <View className="flex flex-row flex-wrap justify-between items-center p-3 ">
                   {/* price */}
                   <View className="flex gap-y-2">
                     {productType === "rent" ? (
@@ -609,23 +608,29 @@ function product() {
                         </Text>
                       </Text>
                     )}
-                    <Text className="text-[15px] font-[poppins]">
-                      Shipping: ₹
-                      {productDetails?.variant?.shippingPrice ||
-                        productDetails?.shippingPrice}{" "}
-                      {!freeDelivery && "\nFREE shipping above 500"}
-                    </Text>
+                    <View>
+                      <Text className="text-[15px] font-[poppins]">
+                        Shipping: ₹
+                        {productDetails?.variant?.shippingPrice ||
+                          productDetails?.shippingPrice}{" "}
+                      </Text>
+                      {!freeDelivery && (
+                        <Text className="text-[15px] font-[poppins]">
+                          FREE shipping above 500
+                        </Text>
+                      )}
+                    </View>
                   </View>
 
                   {/* quantity section */}
                   <View className="flex flex-col gap-y-2">
-                    <View className="flex flex-row bg-[#F2F3F2] bg-white justify-center items-center rounded-[30px] self-start">
+                    <View className="flex flex-row justify-center items-center rounded-[30px] self-start">
                       <TouchableOpacity
                         onPress={() => {
                           setQuantity((prev) => (prev == 1 ? 1 : prev - 1));
                         }}
-                        className="rounded-full w-10 h-10 flex flex items-center justify-center bg-white border border-gray-500">
-                        <AntDesign name="minus" size={29} color="black" />
+                        className="rounded-full w-10 h-10 flex flex items-center justify-center bg-white border border-gray-500 bg-black">
+                        <AntDesign name="minus" size={29} color="white" />
                       </TouchableOpacity>
                       <Text className="font-[poppins-xbold] text-[18px] mr-4 ml-4">
                         {quantity}
@@ -634,21 +639,21 @@ function product() {
                         onPress={() => {
                           setQuantity((prev) => (prev >= 50 ? 50 : prev + 1));
                         }}
-                        className="rounded-full w-10 h-10 flex flex items-center justify-center bg-white border border-gray-500">
-                        <AntDesign name="plus" size={24} color="black" />
+                        className="rounded-full w-10 h-10 flex flex items-center justify-center bg-white border border-gray-500 bg-black">
+                        <AntDesign name="plus" size={24} color="white" />
                       </TouchableOpacity>
                     </View>
 
                     {productType == "rent" && (
-                      <View className="flex flex-row bg-[#F2F3F2] bg-white justify-center items-center rounded-[30px] self-start">
+                      <View className="flex flex-row  justify-center items-center rounded-[30px] self-start">
+                        {/* bg-[#F2F3F2] bg-white */}
                         <TouchableOpacity
                           onPress={() => {
                             setRentDays((prev) => (prev == 1 ? 1 : prev - 1));
                           }}
-                          className="rounded-full w-10 h-10 flex flex items-center justify-center bg-white border border-gray-500">
-                          <AntDesign name="minus" size={29} color="black" />
+                          className="rounded-full w-10 h-10 flex flex items-center justify-center bg-white border border-gray-500 bg-black">
+                          <AntDesign name="minus" size={29} color="white" />
                         </TouchableOpacity>
-
                         <Text className="font-[poppins-xbold] text-[18px] mr-4 ml-4">
                           {rentDays}
                           {"  "}
@@ -656,13 +661,12 @@ function product() {
                             Day
                           </Text>
                         </Text>
-
                         <TouchableOpacity
                           onPress={() => {
                             setRentDays((prev) => (prev >= 50 ? 50 : prev + 1));
                           }}
-                          className="rounded-full w-10 h-10 flex flex items-center justify-center bg-white border border-gray-500">
-                          <AntDesign name="plus" size={24} color="black" />
+                          className="rounded-full w-10 h-10 flex flex items-center justify-center bg-white border border-gray-500 bg-black">
+                          <AntDesign name="plus" size={24} color="white" />
                         </TouchableOpacity>
                       </View>
                     )}
@@ -736,10 +740,9 @@ function product() {
                   )} */}
                 </View>
               </View>
-
               {/* //! product description */}
               <View className="my-7">
-                <Text className="text-2xl font-bold text-orange mb-2">
+                <Text className="text-xl tracking-wider font-[poppins-bold] mb-2">
                   💁‍♂️ Product Details
                 </Text>
                 <View className="mt-2 pt-4 pb-6 bg-[#f2f2f2] rounded-md p-3">
@@ -754,17 +757,16 @@ function product() {
                   />
                 </View>
               </View>
-
               {/* //! rating and reviews */}
-              <View className="my-3 pb-6 flex flex-col gap-y-2 bg-[#f2f2f2] rounded-md px-2 py-2">
+              <View className="my-3 pb-6 flex flex-col gap-y-2 rounded-md px-2 py-2">
                 <View className="relative flex flex-row justify-between items-center w-full">
-                  <View className="flex flex-col items-center gap-y-2 w-full">
-                    <View className="bg-white h-10 rounded-md mb-1 px-5 flex justify-center">
-                      <Text className="text-xl font-[poppins-bold]">
-                        Feedbacks
+                  <View className="flex flex-row items-center gap-y-2 w-full">
+                    <View className="h-10 rounded-md mb-1 lex justify-center">
+                      <Text className="text-xl tracking-wider font-[poppins-bold]">
+                        💬 Feedbacks
                       </Text>
                     </View>
-                    <View className="flex flex-row items-center gap-x-1">
+                    <View className="flex flex-row items-center gap-x-1 ml-2">
                       <AntDesign name={"star"} size={20} color={"black"} />
                       <Text className="text-[18px] align-middle">
                         {productDetails.stars}{" "}
@@ -822,16 +824,17 @@ function product() {
                     )}
                 </View>
               </View>
-              {/* related products */}
-              {/* <View className="pt-4 pb-6 flex flex-col gap-y-2 pl-1 pr-1">
-            <Text className="text-[17px] font-[poppins-bold]">
-              Related Products
-            </Text>
 
-            <View className="flex flex-col pt-5">
-              <RelatedProductList />
-            </View>
-          </View> */}
+              {/* related products */}
+              <View className="pt-4 pb-6 flex flex-col gap-y-2 pl-1 pr-1">
+                <Text className="text-[17px] font-[poppins-bold]">
+                  Related Products
+                </Text>
+
+                <View className="flex flex-col pt-5">
+                  <RelatedProductList />
+                </View>
+              </View>
             </View>
           </>
         )}

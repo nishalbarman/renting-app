@@ -143,6 +143,8 @@ function searchPage() {
 
   const [searchBarFocus, setSearchBarFocus] = useState();
 
+  console.log(searchValue);
+
   return (
     <SafeAreaView>
       <Stack.Screen
@@ -205,7 +207,7 @@ function searchPage() {
         }}
       />
 
-      {searchBarFocus ? (
+      {true ? (
         <ScrollView className="">
           {productData.length > 0 &&
             productData.map((item, index) => {

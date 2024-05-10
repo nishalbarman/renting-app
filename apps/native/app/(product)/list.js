@@ -21,6 +21,8 @@ import { FontAwesome } from "@expo/vector-icons";
 // import ListFilter from "../../components/ProductList/ListFilter";
 import { SheetManager } from "react-native-actions-sheet";
 
+import EmptyBag from "../../components/EmptyBag/EmptyBag";
+
 function ProductsList() {
   const searchParams = useLocalSearchParams();
 
@@ -165,6 +167,12 @@ function ProductsList() {
     SheetManager.show("product-sort-sheet");
   };
 
+  const handleProductFilter = () => {
+    router.navigate({
+      pathname: "filter-screen",
+    });
+  };
+
   const handleFetchNextPage = () => {
     if (paginationPage < paginationTotalPages - 1) {
       setPaginationPage((prev) => prev + 1);
@@ -196,7 +204,6 @@ function ProductsList() {
             return (
               <Pressable
                 onPress={() => {
-                  if (!searchParams.searchValue) return;
                   router.navigate({
                     pathname: "/search-page",
                     params: {
@@ -224,7 +231,9 @@ function ProductsList() {
                   <FontAwesome name="sliders" size={15} color="black" />
                   <Text>Sort</Text>
                 </Pressable>
-                <Pressable className="h-12 bg-white flex-1 flex-row gap-x-1 items-center justify-center">
+                <Pressable
+                  onPress={handleProductFilter}
+                  className="h-12 bg-white flex-1 flex-row gap-x-1 items-center justify-center">
                   <AntDesign name="down" size={15} color="black" />
                   <Text>Filter</Text>
                 </Pressable>
@@ -235,11 +244,7 @@ function ProductsList() {
           <FlatList
             data={data}
             ListEmptyComponent={() => {
-              return (
-                <View className="h-screen w-full items-center justify-center">
-                  <Text>No products found</Text>
-                </View>
-              );
+              return <EmptyBag message={"No products found"} />;
             }}
             renderItem={({ item }) => (
               <Product

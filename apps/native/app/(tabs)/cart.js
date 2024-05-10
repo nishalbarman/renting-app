@@ -105,6 +105,8 @@ const CartPage = () => {
 
       console.log("Cart Payment Object -> ", paymentObject);
 
+      if (!paymentObject) return;
+
       const discountedTotalAmount = paymentObject?.discountedTotalAmount;
 
       const freeDeliveryAboveMinimumPurchase = false; // TODO: Need to get it from server.
@@ -124,7 +126,7 @@ const CartPage = () => {
         finalAmount: paymentObject?.discountedTotalAmount,
         discountedAmount: discountedTotalAmount,
         shippingAmount: shippingPrice,
-        originalAmount: paymentObject?.originalPrice,
+        originalAmount: paymentObject?.originalTotalAmount,
       });
     })();
   }, [cartItems]);
@@ -217,7 +219,9 @@ const CartPage = () => {
               <View className="pb-2 mb-20">
                 {productType === "rent" && (
                   <View className="border border-gray-300 rounded-md p-3">
-                    <Text className="text-lg font-bold">Selected Center</Text>
+                    <Text className="text-lg font-[poppins-bold]">
+                      Selected Center
+                    </Text>
                     <View>
                       {isCenterSelected ? (
                         <>
@@ -241,8 +245,8 @@ const CartPage = () => {
                       <TouchableOpacity
                         onPress={handleChangeCenter}
                         disabled={isGlobalButtonDisabled}
-                        className="flex items-center justify-center h-12 w-full bg-white border-orange-500 border-[2px] rounded-md">
-                        <Text className="text-orange-500 font-bold text-md">
+                        className="flex items-center justify-center h-10 w-full bg-white border-orange-500 border-[1px] rounded-md">
+                        <Text className="text-orange-500 font-[poppins-mid] text-md">
                           {isCenterSelected ? "Change Center" : "Select Center"}
                         </Text>
                       </TouchableOpacity>
@@ -253,7 +257,9 @@ const CartPage = () => {
                 <View className="flex-col mt-1 p-[13px] bg-white w-full border border-gray-300 rounded-md mb-3 gap-y-1 mt-1">
                   {amountDetails?.originalAmount && (
                     <View className="flex-row justify-between w-full">
-                      <Text className="text-[18px]">Original Price: </Text>
+                      <Text className="text-[18px] font-[poppins]">
+                        Original Price:{" "}
+                      </Text>
                       <Text className="text-[18px]">
                         ₹{amountDetails.originalAmount}
                       </Text>
@@ -261,7 +267,9 @@ const CartPage = () => {
                   )}
                   {amountDetails?.discountedAmount && (
                     <View className="flex-row justify-between w-full">
-                      <Text className="text-[18px]">Subtotal:</Text>
+                      <Text className="text-[18px] font-[poppins]">
+                        Subtotal:
+                      </Text>
                       <Text className="text-[18px]">
                         ₹{amountDetails.discountedAmount}
                       </Text>
@@ -269,7 +277,9 @@ const CartPage = () => {
                   )}
                   {amountDetails?.shippingAmount && (
                     <View className="flex-row justify-between w-full">
-                      <Text className="text-[18px]">Shpping Price:</Text>
+                      <Text className="text-[18px] font-[poppins]">
+                        Shpping Price:
+                      </Text>
                       <Text className="text-[18px]">
                         ₹{amountDetails.shippingAmount}
                       </Text>
@@ -277,8 +287,10 @@ const CartPage = () => {
                   )}
                   {amountDetails?.finalAmount && (
                     <View className="flex-row justify-between w-full">
-                      <Text className="text-[18px] font-bold">Total Price</Text>
-                      <Text className="text-[18px] font-bold">
+                      <Text className="text-[18px] font-[poppins-bold]">
+                        Total Price
+                      </Text>
+                      <Text className="text-[18px] font-[poppins-bold]">
                         ₹{amountDetails.finalAmount}
                       </Text>
                     </View>
@@ -295,7 +307,7 @@ const CartPage = () => {
                       opacity:
                         productType === "rent" && !isCenterSelected ? 0.3 : 1,
                     }}
-                    className="h-12 rounded-md w-full items-center justify-center bg-green-600">
+                    className="h-10 rounded-md w-full items-center justify-center bg-green-600">
                     {isPlacingOrder ? (
                       <ActivityIndicator size={23} color="white" />
                     ) : (

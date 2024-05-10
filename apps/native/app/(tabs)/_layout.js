@@ -1,6 +1,7 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   return (
@@ -12,20 +13,31 @@ export default function TabLayout() {
         headerTitleStyle: {
           fontWeight: "bold",
           fontSize: 20,
+          marginTop: 3,
         },
 
+        headerTitleAlign: "center",
         tabBarActiveTintColor: "green",
+
         tabBarStyle: {
           position: "absolute",
           height: 70,
           borderWidth: 1,
-          borderRadius: 20,
+          borderRadius: 30,
           borderColor: "transparent",
           borderTopColor: "transparent",
+          backgroundColor: "rgba(0,0,0,0.9)",
+
           marginBottom: 10,
-          marginLeft: 10,
-          marginRight: 10,
+          marginLeft: 5,
+          marginRight: 5,
           marginTop: 10,
+          paddingLeft: 5,
+          paddingRight: 5,
+        },
+
+        tabBarIconStyle: {
+          marginBottom: -8,
         },
         tabBarLabelStyle: {
           fontSize: 11,
@@ -56,7 +68,8 @@ export default function TabLayout() {
         options={{
           title: "Cart",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={26} name="shopping-cart" color={color} />
+            // <FontAwesome size={26} name="shopping-cart" color={color} />
+            <Ionicons name="bag-handle-outline" size={26} color={color} />
           ),
           headerTitleStyle: {
             fontWeight: "bold",

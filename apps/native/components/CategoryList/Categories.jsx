@@ -80,7 +80,7 @@ function Categories() {
         </View>
       ) : (
         <>
-          <Text className="font-[poppins-xbold] font-[poppins-bold] text-xl text-black mt-4 mb-1 ml-2">
+          <Text className="font-[poppins-xbold] tracking-wider text-lg text-black mt-4 mb-1 ml-2">
             Categories
           </Text>
           <FlatList

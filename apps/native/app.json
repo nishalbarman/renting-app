@@ -32,7 +32,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/appIcons/adaptive-icon.png",
+        "foregroundImage": "./assets/appIcons/app_launcher.webp",
         "backgroundColor": "#ffffff"
       },
       "userInterfaceStyle": "light",
@@ -73,7 +73,10 @@
           "android": {
             "enableProguardInReleaseBuilds": true,
             "proguardRules": "./proguard-rules.pro",
-            "enableHermes": true
+            "enableHermes": true,
+            "splits": {
+              "abi": true
+            }
           },
           "ios": {
             "useFrameworks": "static"

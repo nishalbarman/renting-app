@@ -6,9 +6,10 @@ type stateProps = {
     value: string;
   };
   filter: {
-    color: null | string;
-    category: null | string;
+    color: string[];
+    category: string[];
     price: null | number;
+    rating: null | number;
   };
 };
 
@@ -18,9 +19,10 @@ const initialState: stateProps = {
     value: "",
   },
   filter: {
-    color: "",
-    category: "",
+    color: [],
+    category: [],
     price: null,
+    rating: null,
   },
 };
 
@@ -40,18 +42,25 @@ export const productSortingFilteringSlice = createSlice({
     setFilter: (
       state,
       action: PayloadAction<{
-        color: null | string;
-        category: null | string;
+        color: string[];
+        category: string[];
         price: null | number;
+        rating: null | number;
       }>
     ) => {
       state.filter = action.payload;
     },
-    setCategory: (state, action: PayloadAction<string>) => {
+    setColor: (state, action: PayloadAction<string[]>) => {
+      state.filter.color = action.payload;
+    },
+    setCategory: (state, action: PayloadAction<string[]>) => {
       state.filter.category = action.payload;
     },
     setPrice: (state, action: PayloadAction<number>) => {
       state.filter.price = action.payload;
+    },
+    setRating: (state, action: PayloadAction<number>) => {
+      state.filter.rating = action.payload;
     },
     clearAll: () => {
       return initialState;

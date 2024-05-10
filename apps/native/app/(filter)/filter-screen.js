@@ -86,7 +86,7 @@ function FilterScreen() {
     <SafeAreaView className="px-3 bg-white min-h-screen">
       <Stack.Screen
         options={{
-          headerBackVisible: true,
+          headerBackVisible: false,
           headerShown: true,
           headerShadowVisible: true,
           headerTitle: "Select Filter",
@@ -95,15 +95,17 @@ function FilterScreen() {
               <Entypo
                 style={{
                   marginRight: 10,
+                  marginTop: 3,
                 }}
                 name="cross"
-                size={24}
+                size={30}
                 color="black"
               />
             );
           },
         }}
       />
+
       <View className="flex-row w-full mt-6">
         <View className="w-[140px]">
           <FlatList

@@ -83,15 +83,16 @@ function ProductsList({
             backgroundColor: bgColor,
           }}
           className={`w-full px-2 py-4`}>
-          <View className="flex flex-row justify-between p-[0px_1px] items-center mb-[16px]">
+          <View className="flex flex-row justify-between px-1 pr-3 items-center mb-4">
             <Text
               style={{
                 color: titleColor,
               }}
-              className="font-[poppins-xbold] font-[poppins-bold] text-xl">
+              className="font-[poppins-xbold] tracking-wider text-lg">
               {title}
             </Text>
             <Pressable
+              className={`h-7 px-2 bg-black rounded-md items-center justify-center`}
               onPress={() => {
                 router.navigate({
                   pathname: "/list",
@@ -100,13 +101,13 @@ function ProductsList({
                   },
                 });
               }}>
-              <Text className="text-[15px] text-purple font-[poppins-bold] underline">
-                More {">>"}
+              <Text className="text-[12px] tracking-wider text-white font-[poppins-bold]">
+                Explore
               </Text>
             </Pressable>
           </View>
 
-          <View>
+          <View className="bg-white rounded-md">
             <FlatList
               data={data}
               renderItem={({ item }) => (

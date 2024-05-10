@@ -115,22 +115,27 @@ function OrderItem({
           params: { paymentTransactionId: paymentTxnId },
         });
       }}
-      style={{
-        backgroundColor: orderStatus === "Cancelled" ? "#ffdad9" : "white",
-      }}
       className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px] border border-gray-300">
       {(orderStatus === "On Hold" || orderStatus === "On Progress") && (
         <View className="bg-orange-100 px-3 py-2 mt-[-5px] rounded-md mb-3 border border-orange-200">
-          <Text className="text-[#e86813]">
+          <Text className="text-[#e86813] font-[poppins-mid] tracking-wide">
             We are proccessing your order. You will recieve a confirmation call
             from us.
           </Text>
         </View>
       )}
 
+      {orderStatus === "Cancelled" && (
+        <View className="bg-red-200 border border-red-500 px-3 py-2 mt-[-5px] rounded-md mb-3">
+          <Text className="text-red-900 font-[poppins-mid] tracking-wide">
+            You cancelled the order, further proccessing stopped
+          </Text>
+        </View>
+      )}
+
       {orderStatus === "Accepted" && (
         <View className="border border-[#79E7A8] bg-[#f5fff6] px-3 py-2 mt-[-5px] rounded-md mb-3">
-          <Text className="text-[#36664c]">
+          <Text className="text-[#36664c] font-[poppins-mid] tracking-wide">
             Your order has been accepted and is now being moved for further
             processing.
           </Text>
@@ -139,7 +144,7 @@ function OrderItem({
 
       {orderStatus === "Pending" && (
         <View className="bg-[#a1c6e3] border border-blue-400 px-3 py-2 mt-[-5px] rounded-md mb-3">
-          <Text className="text-[#1d3345]">
+          <Text className="text-[#1d3345] font-[poppins-mid] tracking-wide">
             Your order is in pending state, and will be procced automatically
             once confirmed.
           </Text>
@@ -148,7 +153,7 @@ function OrderItem({
 
       {orderType === "rent" && orderStatus === "PickUp Ready" && (
         <View className="bg-orange-100 px-3 py-2 mt-[-5px] rounded-md mb-3">
-          <Text className="text-[#e86813]">
+          <Text className="text-[#e86813] font-[poppins-mid] tracking-wide">
             Your product is ready and waiting for you!
           </Text>
         </View>
@@ -166,7 +171,7 @@ function OrderItem({
         <View className={`ml-3 flex-1`}>
           <Text
             numberOfLines={3}
-            className={`text-lg font-semibold flex-wrap leading-[25px]`}>
+            className={`text-lg font-[poppins-mid] flex-wrap leading-[25px]`}>
             {title}
           </Text>
           <View className="mt-2">
@@ -265,7 +270,7 @@ function OrderItem({
                 <EvilIcons name="spinner" size={24} color="black" />
               </AnimateSpin>
             ) : (
-              <Text className="font-semibold text-lg text-white font-bold">
+              <Text className="font-semibold text-md text-white font-bold">
                 Cancel
               </Text>
             )}

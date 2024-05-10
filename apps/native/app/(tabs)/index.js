@@ -8,6 +8,7 @@ import { setProductType } from "@store/rtk";
 import { Stack, useRouter } from "expo-router";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { useState, useTransition } from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Tab() {
   const [isLoading, startTransition] = useTransition();
@@ -39,40 +40,32 @@ export default function Tab() {
         data={[""]}
         renderItem={() => (
           <>
-            <View className="w-screen flex items-center">
-              <View className="flex flex-row h-8 rounded-md w-[40%] bg-gray-300 border border-gray-300 mt-1">
-                <Pressable
-                  onPress={() => {
-                    handleChangeProductType("rent");
-                  }}
-                  className={`${locProductType === "rent" ? "bg-white" : ""} rounded-md w-[50%] flex items-center justify-center`}>
-                  <Text>Rent</Text>
-                </Pressable>
-                <Pressable
-                  onPress={() => {
-                    handleChangeProductType("buy");
-                  }}
-                  className={`${locProductType === "buy" ? "bg-white" : ""} rounded-md w-[50%] bg-none flex items-center justify-center`}>
-                  <Text>Purchase</Text>
-                </Pressable>
-              </View>
-              <View className="h-fit w-full px-3 mt-3">
-                <Pressable
-                  onPress={() => {
-                    router.navigate("/search-page");
-                  }}
-                  className="w-full h-12 rounded-md border border-gray-300 flex-row items-center justify-between px-3 ">
-                  <Text className="text-gray-500 font-semibold">
-                    Seach Products
-                  </Text>
-                  <EvilIcons name="search" size={24} color="black" />
-                </Pressable>
-              </View>
+            <View className="h-fit px-3 mt-3 flex-row items-center">
+              <Pressable
+                onPress={() => {
+                  router.navigate("/search-page");
+                }}
+                className="h-12 flex-grow rounded-md border border-gray-300 flex-row items-center justify-between px-3 ">
+                <Text className="text-gray-500 font-[poppins]">
+                  Seach Products
+                </Text>
+                <EvilIcons name="search" size={24} color="black" />
+              </Pressable>
+              <Pressable className="ml-2 items-center justify-center h-12 w-12 rounded-md border border-gray-300">
+                <Ionicons
+                  name="notifications-outline"
+                  size={24}
+                  color="black"
+                />
+              </Pressable>
+              <Pressable className="ml-2 items-center justify-center h-12 w-12 rounded-md border border-gray-300">
+                <Ionicons name="bag-handle-outline" size={24} color="black" />
+              </Pressable>
             </View>
 
             <Categories />
 
-            <View className="flex-1 w-screen min-h-screen mb-20">
+            <View className="flex-1 mt-3 w-screen min-h-screen mb-20">
               <ProductsList
                 title={`🔥 Popular`}
                 viewAllPath={productType}

@@ -21,11 +21,16 @@ export default function Page() {
     "mrt-mid": require("../assets/fonts/montserrat/static/Montserrat-Medium.ttf"),
     "mrt-bold": require("../assets/fonts/montserrat/static/Montserrat-Bold.ttf"),
     "mrt-xbold": require("../assets/fonts/montserrat/static/Montserrat-ExtraBold.ttf"),
-    poppins: require("../assets/fonts/Poppins/Poppins-Regular.ttf"),
-    "poppins-light": require("../assets/fonts/Poppins/Poppins-Light.ttf"),
-    "poppins-mid": require("../assets/fonts/Poppins/Poppins-Medium.ttf"),
-    "poppins-bold": require("../assets/fonts/Poppins/Poppins-Bold.ttf"),
-    "poppins-xbold": require("../assets/fonts/Poppins/Poppins-ExtraBold.ttf"),
+    // poppins: require("../assets/fonts/Poppins/Poppins-Regular.ttf"),
+    // "poppins-light": require("../assets/fonts/Poppins/Poppins-Light.ttf"),
+    // "poppins-mid": require("../assets/fonts/Poppins/Poppins-Medium.ttf"),
+    // "poppins-bold": require("../assets/fonts/Poppins/Poppins-Bold.ttf"),
+    // "poppins-xbold": require("../assets/fonts/Poppins/Poppins-ExtraBold.ttf"),
+    poppins: require("../assets/fonts/Roboto/Roboto-Regular.ttf"),
+    "poppins-light": require("../assets/fonts/Roboto/Roboto-Light.ttf"),
+    "poppins-mid": require("../assets/fonts/Roboto/Roboto-Medium.ttf"),
+    "poppins-bold": require("../assets/fonts/Roboto/Roboto-Bold.ttf"),
+    "poppins-xbold": require("../assets/fonts/Roboto/Roboto-Bold.ttf"),
   }); // load the fonts
 
   const userToken = useSelector((state) => state.auth.jwtToken);
@@ -100,10 +105,10 @@ export default function Page() {
     return <Redirect href={"/auth/login"} />;
   }
 
-  // return <Redirect href={"/view?id=662ba219c3ecbd98499c9e2b"} />;
+  // return <Redirect href={"/view?id=663140bc7b100fff4b8c9f69"} />;
   // return <Redirect href={"/order-placed"} />;
   // return <Redirect href={"/order-track"} />;
   // return <Redirect href={"/order-view"} />;
-  return <Redirect href={"/filter-screen"} />;
-  // return <Redirect href={"/(tabs)"} />;
+  // return <Redirect href={"/filter-screen"} />;
+  return <Redirect href={"/(tabs)"} />;
 }

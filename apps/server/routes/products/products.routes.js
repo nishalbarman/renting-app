@@ -578,9 +578,15 @@ router.post("/", async (req, res) => {
       productType: productData.productType,
       shippingPrice: +productData.shippingPrice,
       availableStocks: +productData.availableStocks,
-      rentingPrice: +productData.rentingPrice,
-      discountedPrice: +productData.discountedPrice,
-      originalPrice: +productData.originalPrice,
+      rentingPrice: !!productData.variant
+        ? +productData.variant[0].rentingPrice
+        : +productData.rentingPrice,
+      discountedPrice: !!productData.variant
+        ? +productData.variant[0].discountedPrice
+        : +productData.discountedPrice,
+      originalPrice: !!productData.variant
+        ? +productData.variant[0].originalPrice
+        : +productData.originalPrice,
       isVariantAvailable: !!productData.isVariantAvailable,
     });
 

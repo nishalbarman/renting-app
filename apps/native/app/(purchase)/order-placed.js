@@ -79,18 +79,28 @@ const OrderResult = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerShadowVisible: false,
+          title: "Order Placed",
+          // headerTitleAlign: "center",
+          headerBackVisible: false,
+          headerBackTitleVisible: false,
+        }}
+      />
       <FlatList
         contentContainerStyle={{
-          alignItems: "center",
+          // alignItems: "center",
           justifyContent: "center",
-          minHeight: "100%",
+          // minHeight: "100%",
         }}
         data={[""]}
         renderItem={() => {
           return (
             <>
               {isLoading ? (
-                <View className="w-full h-full items-center justify-center">
+                <View className="w-full h-screen items-center justify-center">
                   <ActivityIndicator size={40} color={"green"} />
                 </View>
               ) : (
@@ -107,7 +117,7 @@ const OrderResult = () => {
                   </View>
 
                   <View className="flex-1 justify-center items-center my-10">
-                    <View className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md">
+                    <View className="bg-white p-2 rounded-lg shadow-lg w-11/12 max-w-md">
                       <View className="items-center mb-4">
                         <View className="bg-green-500 rounded-full p-2">
                           <AntDesign
@@ -135,7 +145,7 @@ const OrderResult = () => {
                       </View>
                       <Text className="text-gray-500">Request Amount</Text>
                       <View className="mt-3">
-                        <View className="flex-row justify-between items-center text-gray-700">
+                        <View className="flex-row flex-wrap justify-between items-center text-gray-700">
                           <Text>Txn ID</Text>
                           <Text className="font-semibold">
                             {orderDetails?.order[0]?.paymentTxnId}
@@ -169,7 +179,7 @@ const OrderResult = () => {
                       <Text className="font-semibold my-1">
                         {new Date(
                           orderDetails?.order[0]?.createdAt
-                        ).toLocaleDateString()}
+                        ).toDateString()}
                       </Text>
 
                       <TouchableOpacity

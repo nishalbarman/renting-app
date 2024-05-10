@@ -121,7 +121,9 @@ function Product({
       <TouchableOpacity
         onPress={handleProductClick}
         activeOpacity={0.6}
-        className={`relative border-[1px] border-[#F0F3F4] flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-transparent rounded-md shadow-sm pb-[1%]`}>
+        className={`relative border border-gray-100 flex flex-col h-fit ${width ? `w-[${width}]` : "w-[150px]"} flex-1 mb-[0.5px] bg-transparent rounded-md pb-[1%]`}>
+        {/* border-[#F0F3F4] */}
+        {/* shadow-sm  */}
         <View className="w-[100%] h-[200px] p-[3%] ">
           {typeOfProduct === "both" || (
             <Text
@@ -161,7 +163,7 @@ function Product({
         <View className="flex flex-col gap-y-1 w-[100%] mt-[5px] pl-2 pr-2 pb-2">
           <Text
             numberOfLines={2}
-            className="text-[14px] text-gray-800 font-[poppins-mid] leading-[22px] w-[100%]">
+            className="text-[13px] leading-[18px] tracking-wider text-gray-800 font-[poppins-bold] w-[100%]">
             {title}
           </Text>
 
@@ -181,7 +183,7 @@ function Product({
                   );
                 })}
               </View>
-              <Text className="ml-1 text-[#A7A6A7] text-[13px] align-middle">
+              <Text className="ml-1 text-[#A7A6A7] text-[13px]">
                 ({totalFeedbacks})
               </Text>
             </View>
@@ -190,37 +192,46 @@ function Product({
           {typeOfProduct === "both" ? (
             <>
               {productType === "rent" ? (
-                <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
-                  ₹{rentingPrice}{" "}
-                  <Text className="text-[13px] align-middle">/ Day</Text>
-                </Text>
+                <View className="flex-row items-center flex-wrap justify-start my-1">
+                  <Text className="font-[poppins-mid] text-[16px] text-black">
+                    ₹{rentingPrice}
+                  </Text>
+                  <Text className="text-[12px] tracking-[0.1px] font-[poppins]">
+                    {" "}
+                    / Day
+                  </Text>
+                </View>
               ) : (
-                <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
-                  ₹{discountedPrice}
-                  {"  "}
+                <View className="flex-row items-center flex-wrap justify-start my-1">
+                  <Text className="font-[poppins-mid] text-[16px] text-black">
+                    ₹{discountedPrice}
+                    {"  "}
+                  </Text>
                   {originalPrice && (
-                    <Text className="text-[13px] text-[#727273] line-through line-offset-[2px]">
+                    <Text className="text-[13px] font-mid text-[#727273] line-through line-offset-[2px]">
                       ₹{originalPrice}
                     </Text>
                   )}
-                </Text>
+                </View>
               )}
             </>
           ) : typeOfProduct === "rent" ? (
-            <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
-              ₹{rentingPrice}{" "}
-              <Text className="text-[13px] align-middle">/ Day</Text>
+            <Text className="font-[poppins-mid] text-[16px] leading-[30px] text-black">
+              ₹{rentingPrice}
+              <Text className="text-[12px] font-[poppins-light]">/ Day</Text>
             </Text>
           ) : (
-            <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
-              ₹{discountedPrice}
-              {"  "}
+            <View className="flex-row items-center flex-wrap justify-start my-1">
+              <Text className="font-[poppins-mid] text-[16px] text-black">
+                ₹{discountedPrice}
+                {"  "}
+              </Text>
               {originalPrice && (
-                <Text className="text-[13px] text-[#727273] line-through line-offset-[2px]">
+                <Text className="text-[13px] font-mid text-[#727273] line-through line-offset-[2px]">
                   ₹{originalPrice}
                 </Text>
               )}
-            </Text>
+            </View>
           )}
         </View>
       </TouchableOpacity>

@@ -119,7 +119,7 @@ function CartCard({
         <View className={`ml-3 flex-1`}>
           <Text
             numberOfLines={2}
-            className={`text-lg font-semibold flex-wrap leading-[25px]`}>
+            className={`text-lg font-[poppins-mid] flex-wrap leading-[25px]`}>
             {product?.title}
           </Text>
           <View className="mt-2">
@@ -173,10 +173,17 @@ function CartCard({
             </>
           )}
 
-          <Text className="text-[13px] leading-2 font-[poppins]">
-            Shipping price: ₹{variant?.shippingPrice || product?.shippingPrice}
-            {!freeDelivery && "\nFREE shipping above 500"}
-          </Text>
+          <View>
+            <Text className="text-[13px] leading-2 font-[poppins]">
+              Shipping price: ₹
+              {variant?.shippingPrice || product?.shippingPrice}
+            </Text>
+            {!freeDelivery && (
+              <Text className="text-[13px] leading-2 font-[poppins]">
+                FREE shipping above 500
+              </Text>
+            )}
+          </View>
         </View>
 
         {/* quantity section */}
@@ -251,13 +258,13 @@ function CartCard({
         <TouchableHighlight
           onPress={handleMoveWishlist}
           underlayColor={"#b83a21"}
-          className="bg-red-700 px-2 h-11 border border-red-700 flex items-center justify-center rounded-lg w-[48%]">
+          className="bg-red-700 px-2 h-10 border border-red-700 flex items-center justify-center rounded-lg w-[48%]">
           {isWishlistAddLoading ? (
             <AnimateSpin>
               <EvilIcons name="spinner" size={24} color="white" />
             </AnimateSpin>
           ) : (
-            <Text className="font-semibold text-lg text-red-700 text-white">
+            <Text className="font-semibold text-md text-red-700 text-white font-[poppins]">
               Move Wishlist
             </Text>
           )}
@@ -266,13 +273,13 @@ function CartCard({
         <TouchableHighlight
           underlayColor={"white"}
           onPress={handleRemoveFromCart}
-          className="bg-white border border-gray-400 px-2 h-11 flex items-center justify-center rounded-lg w-[48%]">
+          className="bg-white border border-gray-400 px-2 h-10 flex items-center justify-center rounded-lg w-[48%]">
           {cartRemoveLoading ? (
             <AnimateSpin>
               <EvilIcons name="spinner" size={24} color="black" />
             </AnimateSpin>
           ) : (
-            <Text className="font-semibold text-lg">Remove</Text>
+            <Text className="font-semibold text-md">Remove</Text>
           )}
         </TouchableHighlight>
       </View>

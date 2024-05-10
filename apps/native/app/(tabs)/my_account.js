@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useState, useTransition } from "react";
 import {
   View,
   Text,
@@ -6,12 +6,13 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
+  Pressable,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 import { SheetManager } from "react-native-actions-sheet";
 import { useDispatch, useSelector } from "react-redux";
-import { clearLoginSession } from "@store/rtk";
+import { clearLoginSession, setProductType } from "@store/rtk";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -30,6 +31,19 @@ const AccountScreen = () => {
     AsyncStorage.clear();
     router.dismissAll();
     router.replace("/auth/login");
+  };
+
+  const [isLoading, startTransition] = useTransition();
+
+  const { productType } = useSelector((state) => state.product_store);
+
+  const [locProductType, setProductLocType] = useState(productType);
+
+  const handleChangeProductType = (type) => {
+    setProductLocType(type);
+    startTransition(() => {
+      dispatch(setProductType(type));
+    });
   };
 
   return (
@@ -72,6 +86,29 @@ const AccountScreen = () => {
               <Text className="text-md">Logout</Text>
               <Feather name="chevron-right" size={24} color="#787878" />
             </TouchableOpacity>
+          </View>
+
+          <View className="mt-2">
+            <Text className="font-semibold text-lg mb-1">Product Mode</Text>
+
+            <View className="w-full flex-row">
+              <View className="flex flex-row h-8 rounded-md w-[40%] w-full bg-gray-300 border border-gray-300 mt-1">
+                <Pressable
+                  onPress={() => {
+                    handleChangeProductType("rent");
+                  }}
+                  className={`${locProductType === "rent" ? "bg-white" : ""} rounded-md w-[50%] flex items-center justify-center`}>
+                  <Text className="font-[poppins]">Rent</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    handleChangeProductType("buy");
+                  }}
+                  className={`${locProductType === "buy" ? "bg-white" : ""} rounded-md w-[50%] bg-none flex items-center justify-center`}>
+                  <Text className="font-[poppins]">Purchase</Text>
+                </Pressable>
+              </View>
+            </View>
           </View>
         </View>
       </ScrollView>
