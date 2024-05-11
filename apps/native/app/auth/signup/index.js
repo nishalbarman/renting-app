@@ -97,10 +97,10 @@ export default function Page() {
       <ScrollView
         className="p-[15px] h-[100%] pt-[5%]"
         contentContainerStyle={{
-          display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          minHeight: "100%",
         }}>
         <View className="w-[100%] flex flex-col items-center gap-y-3">
           {/* <Image
@@ -274,7 +274,7 @@ export default function Page() {
           <View className="h-[60px] w-[100%] pr-[6%] border-none outline-none flex flex-row justify-start items-center">
             <BouncyCheckbox
               size={25}
-              fillColor="#6C63FF"
+              fillColor="green"
               unfillColor="#FFFFFF"
               iconStyle={{ borderColor: "red" }}
               innerIconStyle={{ borderWidth: 2 }}
@@ -295,14 +295,14 @@ export default function Page() {
               By continuing you are agree to our{" "}
               <Link
                 push
-                className="underline text-[#6C63FF] font-[poppins-bold]"
+                className="underline text-green-800 font-[poppins-bold]"
                 href={"/terms-&-conditions"}>
                 Terms & Conditions
               </Link>{" "}
               and{" "}
               <Link
                 push
-                className="underline text-[#6C63FF] font-[poppins-bold]"
+                className="underline text-green-800 font-[poppins-bold]"
                 href={"/privacy-policy"}>
                 Privacy Policy
               </Link>
@@ -313,12 +313,12 @@ export default function Page() {
         <View className="w-[100%] flex flex-col gap-y-6 items-center mt-[-1px]">
           <TouchableOpacity
             disabled={isSubmitDisabled || isPending}
-            className={`flex justify-center items-center h-[55px] w-[90%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
+            className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-300" : "bg-green-600"} border-none outline-none rounded-lg`}
             onPress={handleSignup}>
             {isPending ? (
               <ActivityIndicator size={30} color={"white"} />
             ) : (
-              <Text className="text-[20px] text-white font-[poppins-bold]">
+              <Text className="text-lg text-white font-[poppins-mid]">
                 Create account
               </Text>
             )}

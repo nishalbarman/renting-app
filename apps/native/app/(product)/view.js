@@ -126,7 +126,6 @@ function product() {
         }
       );
 
-      console.log(res);
       setProductDetails(res.data?.product || {});
       console.log(
         "Is order placed already -->",

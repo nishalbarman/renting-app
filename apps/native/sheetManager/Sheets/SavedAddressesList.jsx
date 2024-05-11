@@ -140,6 +140,12 @@ export default function AddressList() {
                   <Text className="text-white font-bold">Add One</Text>
                 </TouchableOpacity>
               )}
+              {address.length >= 5 && (
+                <Text className="mt-1 text-red-600 font-[poppins-bold]">
+                  * Maximum allowed address limit reached (5), delete already
+                  available address to add a new address.
+                </Text>
+              )}
             </View>
           );
         }}></FlatList>

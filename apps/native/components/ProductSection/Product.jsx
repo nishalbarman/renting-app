@@ -3,7 +3,11 @@ import { Text, TouchableHighlight, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useAddWishlistMutation, useDeleteWishlistMutation } from "@store/rtk";
+import {
+  useAddWishlistMutation,
+  useDeleteWishlistMutation,
+  useGetWishlistQuery,
+} from "@store/rtk";
 
 import { useSelector } from "react-redux";
 import Toast from "react-native-toast-message";
@@ -53,6 +57,7 @@ function Product({
     return Array.from({ length: 5 });
   }, []);
 
+  const { refetch } = useGetWishlistQuery();
   const [removeFromWishlist] = useDeleteWishlistMutation();
 
   const handleRemoveFromWishlist = async () => {
@@ -67,8 +72,6 @@ function Product({
         type: "sc",
         text1: "Wishlist removed",
       });
-
-      console.log("Remove from wishlist response -->", resPayload);
     } catch (error) {
       Toast.show({
         type: "err",
@@ -83,7 +86,7 @@ function Product({
     try {
       setOnWishlist((prev) => !prev);
       const resPayload = await addWishlist({ id: _id, productType }).unwrap();
-      console.log("Add to Wishlist response -->", resPayload);
+
       Toast.show({
         type: "sc",
         text1: "Wishlist added",
@@ -105,6 +108,8 @@ function Product({
     } else {
       handleAddToWishlist();
     }
+
+    refetch();
   };
 
   const handleProductClick = () => {
@@ -137,13 +142,13 @@ function Product({
 
           <TouchableHighlight
             underlayColor={"rgba(0,0,0,0.1)"}
-            style={{
-              backgroundColor: "rgba(0,0,0,0.1)",
-            }}
+            // style={{
+            //   backgroundColor: "rgba(0,0,0,0.1)",
+            // }}
             onPress={handleLoveIconClick}
-            className="absolute top-2 right-3 h-10 w-10 rounded-full items-center justify-center z-[1]">
+            className="absolute top-2 items-center justify-center right-3 h-10 w-10 rounded-full z-[1]">
             {onWishlist ? (
-              <FontAwesome name="heart" size={19} color={"red"} />
+              <FontAwesome name="heart" size={19} color={"green"} />
             ) : (
               <FontAwesome name="heart-o" size={19} color={"black"} />
             )}

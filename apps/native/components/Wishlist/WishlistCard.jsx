@@ -7,10 +7,9 @@ import {
   View,
 } from "react-native";
 import { Image } from "expo-image";
-import { AntDesign, EvilIcons, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, EvilIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useDeleteWishlistMutation } from "@store/rtk";
-import AnimateSpin from "../AnimateSpin/AnimateSpin";
+import { useDeleteWishlistMutation, useGetWishlistQuery } from "@store/rtk";
 
 import Toast from "react-native-toast-message";
 import handleGlobalError from "../../lib/handleError";
@@ -18,6 +17,7 @@ import handleGlobalError from "../../lib/handleError";
 function Product({ wishlistId, details, width, productType }) {
   const router = useRouter();
 
+  const { refetch } = useGetWishlistQuery();
   const [removeFromWishlist, { isLoading }] = useDeleteWishlistMutation();
 
   const loadingBlurHash = useMemo(() => {
@@ -33,6 +33,8 @@ function Product({ wishlistId, details, width, productType }) {
       const resPayload = await removeFromWishlist({
         _id: wishlistId,
       }).unwrap();
+
+      refetch();
 
       Toast.show({
         type: "sc",

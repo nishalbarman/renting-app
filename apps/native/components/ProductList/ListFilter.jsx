@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { View, Text } from "react-native";
 
 function ListFilter({ icon, iconPostion, title, style }) {
@@ -15,4 +15,4 @@ function ListFilter({ icon, iconPostion, title, style }) {
   );
 }
 
-export default ListFilter;
+export default memo(ListFilter);

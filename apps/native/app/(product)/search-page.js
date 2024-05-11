@@ -132,7 +132,7 @@ function searchPage() {
   console.log(searchValue);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="bg-white min-h-screen">
       <Stack.Screen
         options={{
           headerShown: true,
@@ -201,7 +201,7 @@ function searchPage() {
                 <Pressable
                   key={index}
                   className="px-3 py-3 w-full flex-row items-center border-b border-[1px] border-gray-200 bg-white"
-                  onPress={async () => {
+                  onPress={() => {
                     setHistory(item.title);
                     setSearchValue(item.title);
                     router.navigate({

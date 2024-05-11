@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Link, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Foundation } from "@expo/vector-icons";
@@ -72,28 +72,47 @@ export default function Page() {
 
   return (
     <SafeAreaView className="bg-white">
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          title: "",
+          headerStyle: {
+            backgroundColor: "green",
+            margin: 0,
+            padding: 0,
+          },
+        }}
+      />
       <ScrollView
-        className="p-[15px] h-[100%] pt-10 bg-white"
+        className="bg-white"
         contentContainerStyle={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
           alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100%",
+          width: "100%",
         }}>
-        <View className="w-[100%] flex flex-col items-center gap-y-3">
-          {/* <Image
-            className="w-[200px] h-[200px]"
-            source={require("../../../assets/illustrations/shopp_man.gif")}
-          /> */}
-          <Text className="text-[30px] font-[poppins-mid]">Welcome back</Text>
-          <Text className="text-[18px] font-[poppins-light]">
-            sign in to access your account
+        {/* <View className="w-full items-center bg-green-600 py-12">
+          <Text className="text-[30px] font-[poppins-bold] tracking-widest text-white">
+            Savero
           </Text>
-        </View>
-        <View className="w-[100%] flex flex-col gap-y-[13px] items-center mt-4">
-          <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
+        </View> */}
+        <Image
+          source={require("../../../assets/appIcons/app_launcher.webp")}
+          className="w-20 h-20 rounded-full"
+        />
+        <View className="w-full flex flex-col items-center px-4">
+          <View className="w-full flex-col items-center py-6 z-[999]">
+            <Text className="text-[30px] font-[poppins-mid] mb-2">
+              Welcome back
+            </Text>
+            <Text className="text-[18px] font-[poppins-light]">
+              sign in to access your account
+            </Text>
+          </View>
+
+          <View className="h-[60px] w-full p-[0px_6%] border-none outline-none bg-white bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg mb-3">
             <TextInput
-              className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+              className="h-full w-full inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="numeric"
@@ -125,9 +144,9 @@ export default function Page() {
             </>
           )}
 
-          <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
+          <View className="h-[60px] w-full p-[0px_6%] border-none outline-none bg-white bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg mb-3">
             <TextInput
-              className="h-[100%] w-[100%] rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+              className="h-full w-full rounded-lg font-[poppins-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="text"
@@ -180,19 +199,19 @@ export default function Page() {
           <Link
             push
             href="/resetpass"
-            className="text-[15px] text-[#6C63FF] self-end underline underline-offset-[5px] font-[poppins-mid]">
+            className="text-[15px] text-green-800 self-end underline underline-offset-[5px] font-[poppins-mid]">
             Forgot password?
           </Link>
         </View>
-        <View className="w-[100%] flex flex-col gap-y-7 items-center mt-[-1px]">
+        <View className="w-full flex flex-col gap-y-7 items-center mt-[-1px]">
           <TouchableOpacity
             disabled={isSubmitDisabled || isPending}
-            className={`flex justify-center items-center h-[55px] w-[90%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg disabled:bg-[rgba(40,40,41,0.8)]`}
+            className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-300" : "bg-green-600"} rounded-lg`}
             onPress={handleLogin}>
             {isPending ? (
               <ActivityIndicator size={30} color={"white"} />
             ) : (
-              <Text className="text-[20px] text-white font-[poppins-bold]">
+              <Text className="text-lg text-white font-[poppins-mid]">
                 Login
               </Text>
             )}
