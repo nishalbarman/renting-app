@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Size = require("../../models/size.model");
 
+const checkRole = require("../../middlewares");
+
 router.get("/", checkRole(0, 1), async (req, res) => {
   try {
     const sizes = await Size.find();
