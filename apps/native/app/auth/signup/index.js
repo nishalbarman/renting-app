@@ -25,6 +25,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import axios from "axios";
+import handleGlobalError from "../../../lib/handleError";
 
 export default function Page() {
   // const [formData, setFormData] = useState({
@@ -71,8 +72,8 @@ export default function Page() {
         params: extractedData,
       });
     } catch (error) {
+      handleGlobalError(error);
       console.error("signup->index.js ==>", error);
-      console.error("signup->index.js ==>", error?.response);
     } finally {
       setIsPending(false);
     }

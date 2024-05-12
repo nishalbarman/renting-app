@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, {
   useCallback,
   useEffect,
@@ -19,6 +19,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { isValid4DigitOtp } from "custom-validator-renting";
 import { setUserAuthData } from "@store/rtk";
 import { useDispatch } from "react-redux";
+import handleGlobalError from "../../../lib/handleError";
 
 export default function Page() {
   const searchParams = useLocalSearchParams();
@@ -54,7 +55,7 @@ export default function Page() {
       if (isResendOTPEnabled) {
         delete searchParams.otp;
         const response = await axios.post(
-          `http://192.168.118.210:8000/auth/sendOtp`,
+          `${process.env.EXPO_PUBLIC_API_URL}/auth/sendOtp`,
           searchParams
         );
         setIsResendOTPEnabled(false);
@@ -70,6 +71,7 @@ export default function Page() {
       }
     } catch (error) {
       console.error("Resend OTP error => ", error.response.data.message);
+      handleGlobalError(error);
     }
   };
 
@@ -132,6 +134,7 @@ export default function Page() {
         dispatch(setUserAuthData({ ...data.user }));
       } catch (error) {
         console.error("Dispatch Error -->", error);
+        handleGlobalError(error);
       } finally {
         setIsPending(false);
       }
@@ -144,6 +147,7 @@ export default function Page() {
       //   message: response?.data?.message,
       // });
     } catch (error) {
+      handleGlobalError(error);
       console.error("OTP verfication page: -->", error);
       setFormSubmitError({
         isError: true,
@@ -154,7 +158,7 @@ export default function Page() {
 
   useEffect(() => {
     let resendTimer;
-    console.log(isResendOTPEnabled);
+    // console.log(isResendOTPEnabled);
     if (!isResendOTPEnabled) {
       resendTimer = setInterval(() => {
         setResendOTPTimeout((prev) => {
@@ -186,8 +190,14 @@ export default function Page() {
 
   return (
     <SafeAreaView className="bg-white">
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerBackVisible: false,
+        }}
+      />
       <ScrollView
-        className="p-[15px] h-[100%] pt-[10%] w-[100%]"
+        className="px-4 h-full w-full"
         contentContainerStyle={{
           display: "flex",
           flexDirection: "column",
@@ -195,17 +205,17 @@ export default function Page() {
           alignItems: "center",
           rowGap: 40,
         }}>
-        <View className="flex flex-col gap-y-10 items-center w-[100%]">
-          <Text className="self-start w-[100%] text-[28px] font-[poppins-mid]">
+        <View className="flex flex-col gap-y-5 items-center w-full">
+          <Text className="self-start w-full text-[28px] font-[poppins-mid]">
             Almost there
           </Text>
-          <Text className="font-[poppins-light] text-[18px] self-start">
+          <Text className="font-[poppins-light] text-[18px] self-start mb-5">
             Hi <Text className="font-[poppins-mid]">{name}</Text>, Please enter
             4-digit code sent to your mobile no{" "}
             <Text className="font-[poppins-mid]">{mobileNo}</Text> for
             verification
           </Text>
-          <View className="flex flex-row items-center justify-center gap-x-4 w-[100%]">
+          <View className="flex flex-row items-center justify-center gap-x-4 w-full">
             <TextInput
               style={
                 formSubmitError?.isError
@@ -309,7 +319,7 @@ export default function Page() {
           )}
           <TouchableOpacity
             disabled={formSubmitError.isError || !isFinalOTPValid}
-            className={`flex justify-center items-center h-[55px] w-[90%] ${!isFinalOTPValid ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg`}
+            className={`flex justify-center items-center h-[55px] w-[90%] ${!isFinalOTPValid ? "bg-green-200" : "bg-green-500"} border-none outline-none rounded-lg`}
             onPress={handleOTPSubmit}>
             {isPending ? (
               <ActivityIndicator size={30} color={"white"} />
@@ -330,7 +340,7 @@ export default function Page() {
                     handleResendOTP();
                   }
                 }}
-                className={`underline text-[#6C63FF]`}>
+                className={`underline text-green-900`}>
                 Resend Again
               </Text>
             )}

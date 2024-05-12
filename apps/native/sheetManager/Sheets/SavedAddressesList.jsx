@@ -31,23 +31,18 @@ export default function AddressList() {
     refetch,
   } = useGetAddressQuery();
 
-  console.log(address);
-
   const [deleteOneAddress, { isLoading: isAddressDeleteLoading }] =
     useDeleteAddressMutation();
 
   const handleDeleteAddress = async (id) => {
-    console.log(id);
     try {
       const response = await deleteOneAddress(id).unwrap();
       Toast.show({
         type: "sc",
         text1: "Address Deleted",
       });
-
-      console.log("Address Deleted");
     } catch (error) {
-      console.error(error);
+      console.error("SavedAddressesList Sheet -->");
       handleGlobalError(error);
     } finally {
       refetch();

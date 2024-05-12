@@ -37,6 +37,7 @@ import ProductPageSkeleton from "../../Skeletons/ProductPageSkeleton";
 
 import { useAddOneToCartMutation } from "@store/rtk";
 import Toast from "react-native-toast-message";
+import handleGlobalError from "../../lib/handleError";
 
 function product() {
   const { width } = useMemo(() => {
@@ -127,10 +128,10 @@ function product() {
       );
 
       setProductDetails(res.data?.product || {});
-      console.log(
-        "Is order placed already -->",
-        res.data?.hasUserBoughtThisProduct
-      );
+      // console.log(
+      //   "Is order placed already -->",
+      //   res.data?.hasUserBoughtThisProduct
+      // );
       setHasUserBoughtThisProduct(res.data?.hasUserBoughtThisProduct);
     } catch (error) {
       handleError(error);
@@ -183,7 +184,7 @@ function product() {
       if (!productDetails) return;
 
       // product details doesnot contain any variant
-      console.log("Product variant -->", productDetails?.productVariant);
+      // console.log("Product variant -->", productDetails?.productVariant);
       if (
         !productDetails?.productVariant ||
         productDetails.productVariant <= 0
@@ -242,10 +243,11 @@ function product() {
           },
         }
       );
-      console.log("Variant In Cart --> ", response);
+      // console.log("Variant In Cart --> ", response);
       setInCart(!!response?.data?.incart);
     } catch (error) {
       console.error(error);
+      handleGlobalError(error);
     }
   };
 
@@ -267,7 +269,7 @@ function product() {
         }
       );
 
-      console.log("Variant In Stock --> ", response);
+      // console.log("Variant In Stock --> ", response);
 
       setInStock(!!response?.data?.inStock);
     } catch (error) {
@@ -298,10 +300,10 @@ function product() {
       checkVariantInCart(matchedVariant);
       checkVariantInStock(matchedVariant);
 
-      console.log(
-        "What is matched Variant with selected Size and Color -->",
-        matchedVariant
-      );
+      // console.log(
+      //   "What is matched Variant with selected Size and Color -->",
+      //   matchedVariant
+      // );
 
       // matchedVariant will be an array - if match found length will be greater than 0 otherwise it will be 0
       if (matchedVariant.length !== 0) {
@@ -355,7 +357,7 @@ function product() {
         type: "sc",
         text1: "Added to cart",
       });
-      console.log(response);
+      // console.log(response);
       // }
     } catch (error) {
       Toast.show({
@@ -401,7 +403,7 @@ function product() {
                   []
                 }
                 scrollAnimationDuration={1000}
-                onSnapToItem={(index) => console.log("current index:", index)}
+                // onSnapToItem={(index) => console.log("current index:", index)}
                 onProgressChange={(_, progress) => {
                   setCarouselCurrentIndex(Math.ceil(progress));
                 }}

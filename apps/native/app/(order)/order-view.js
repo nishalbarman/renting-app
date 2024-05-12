@@ -13,6 +13,7 @@ import {
   Linking,
 } from "react-native";
 import { useSelector } from "react-redux";
+import handleGlobalError from "../../lib/handleError";
 
 const OrderView = () => {
   const params = useLocalSearchParams();
@@ -36,11 +37,12 @@ const OrderView = () => {
       );
       const orderDetails = response.data.orderDetails;
 
-      console.log(response.data);
+      // console.log(response.data);
 
       setOrderDetails(orderDetails);
     } catch (error) {
       console.log(error);
+      handleGlobalError(error);
     } finally {
       setIsLoading(false);
     }

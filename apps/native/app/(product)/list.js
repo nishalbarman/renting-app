@@ -191,6 +191,8 @@ function ProductsList() {
 
   const router = useRouter();
 
+  // console.log(data);
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <Stack.Screen

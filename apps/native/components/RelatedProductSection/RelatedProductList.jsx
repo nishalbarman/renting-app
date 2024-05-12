@@ -34,7 +34,6 @@ function RelatedProduct({ query }) {
           authorization: `Bearer ${jwtToken}`,
         },
       });
-      // console.log(res.data.data);
       setData(res.data.data);
     } catch (error) {
       console.error(error);

@@ -43,7 +43,6 @@ function LocationMap() {
         longitude: selectedLocation?.longitude,
         latitude: selectedLocation?.latitude,
       });
-      console.log(resAddress);
       setAddress(resAddress);
     })();
   }, [selectedLocation]);
@@ -58,7 +57,7 @@ function LocationMap() {
       }
       console.log("Location permission granted");
       let location = await Location.getCurrentPositionAsync({});
-      console.log("Local location -->", location.coords);
+
       mapViewRef?.current?.animateToRegion(location.coords, 100);
       setSelectedLocation(location.coords);
       setUserLocationEnabled(true);
@@ -68,7 +67,7 @@ function LocationMap() {
   const handleSelectAddress = () => {
     if (!address) return;
     setLoading(true);
-    console.log("Location map before dispatching -->", selectedLocation);
+    
     dispatch(
       setAddressDataFromMap({ coordinates: selectedLocation, address: address })
     );

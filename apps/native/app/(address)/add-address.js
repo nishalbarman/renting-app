@@ -91,7 +91,6 @@ export default function AddAddress() {
   }, [formData]);
 
   useEffect(() => {
-    console.log(address);
     setFormData({
       prefix: { value: address?.name || "", isTouched: true, isError: false },
       streetName: {

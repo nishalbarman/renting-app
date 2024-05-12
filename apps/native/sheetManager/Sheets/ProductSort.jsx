@@ -52,7 +52,6 @@ export default function ProductSort() {
   );
 
   const handleSetSelectedSortMethod = (id, other) => {
-    console.log(id, other);
     dispatch(setSort({ id: id, value: radiogroupContents[id].value }));
   };
 

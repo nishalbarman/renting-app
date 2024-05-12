@@ -129,7 +129,7 @@ function searchPage() {
 
   const [searchBarFocus, setSearchBarFocus] = useState();
 
-  console.log(searchValue);
+  // console.log(searchValue);
 
   return (
     <SafeAreaView className="bg-white min-h-screen">

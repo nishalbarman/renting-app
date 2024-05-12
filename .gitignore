@@ -65,3 +65,5 @@ eas.json
 
 # firebase
 service-account-key.json
+google-services.json
+GoogleService-Info.plist

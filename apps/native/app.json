@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "RentKaro",
-    "scheme": "native",
-    "slug": "renting_app",
+    "name": "Savero",
+    "scheme": "savero",
+    "slug": "savero",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/appIcons/app_launcher.webp",
@@ -36,7 +36,7 @@
         "backgroundColor": "#ffffff"
       },
       "userInterfaceStyle": "light",
-      "permissions": ["INTERNET"],
+      "permissions": ["INTERNET", "ACCESS_NETWORK_STATE"],
       "package": "com.nishalbarman.renting_app",
       "config": {
         "googleMaps": {

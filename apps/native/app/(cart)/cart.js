@@ -54,7 +54,7 @@ const CartPage = () => {
           let totalOriginalPrice = 0; // price for one cart item
           let discountedTotalPrice = 0; // price for one cart item
 
-          console.log("Cart Item -->", cartItem);
+          // console.log("Cart Item -->", cartItem);
 
           // if type is buy and product have variants (diffent color different size etc etc)
           if (productType === "buy" && !!cartItem?.variant) {
@@ -103,7 +103,7 @@ const CartPage = () => {
         { originalTotalAmount: 0, discountedTotalAmount: 0 }
       );
 
-      console.log("Cart Payment Object -> ", paymentObject);
+      // console.log("Cart Payment Object -> ", paymentObject);
 
       if (!paymentObject) return;
 
@@ -181,10 +181,10 @@ const CartPage = () => {
   const { orderRefetch } = useSelector((state) => state.refetch);
 
   useEffect(() => {
-    console.log("Hook is getting called~");
+    // console.log("Hook is getting called~");
     let timer;
     (() => {
-      console.log("cart status", isCartLoading, isCartFetching);
+      // console.log("cart status", isCartLoading, isCartFetching);
       if (isCartLoading) return;
       if (!cartItems || cartItems.length <= 0) return clearInterval(timer);
       timer = setInterval(() => {

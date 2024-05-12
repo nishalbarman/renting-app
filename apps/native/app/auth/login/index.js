@@ -21,6 +21,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUserAuthData } from "@store/rtk";
+import handleGlobalError from "../../../lib/handleError";
 
 export default function Page() {
   const [formData, setFormData] = useState({
@@ -55,6 +56,7 @@ export default function Page() {
 
       router.replace("/(tabs)");
     } catch (error) {
+      handleGlobalError(error);
       console.log(error);
     } finally {
       setIsPending(false);
@@ -226,7 +228,7 @@ export default function Page() {
             </Link>
           </Text>
         </View>
-        <View className="min-h-[100px]"></View>
+        <View className="min-h-[100px] bg-white"></View>
       </ScrollView>
     </SafeAreaView>
   );

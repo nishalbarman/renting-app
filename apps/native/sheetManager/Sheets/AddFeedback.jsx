@@ -11,7 +11,9 @@ import {
 } from "react-native";
 import ActionSheet, { useScrollHandlers } from "react-native-actions-sheet";
 import { NativeViewGestureHandler } from "react-native-gesture-handler";
+import Toast from "react-native-toast-message";
 import { useSelector } from "react-redux";
+import handleGlobalError from "../../lib/handleError";
 
 export default function AddFeedback({ payload }) {
   const handlers = useScrollHandlers();
@@ -28,8 +30,6 @@ export default function AddFeedback({ payload }) {
   const [reviewDescription, setReviewDescription] = useState("");
 
   const [alreadyGivenFeedback, setAlreadyGivenFeedback] = useState({});
-
-  console.log(alreadyGivenFeedback);
 
   useEffect(() => {
     setCurrentUserReviewStar(alreadyGivenFeedback?.starsGiven || 1);
@@ -80,10 +80,14 @@ export default function AddFeedback({ payload }) {
         }
       );
       if (response.status === 200) {
-        console.log("Ok: Review Added!");
+        Toast.show({
+          type: "sc",
+          message: "Review Added!",
+        });
       }
     } catch (error) {
-      console.error("Add Feedback Sheet ->", error);
+      console.error("Add Feedback Sheet ->");
+      handleGlobalError(error);
     } finally {
       setIsReviewSubmitting(false);
     }

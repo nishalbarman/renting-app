@@ -33,7 +33,7 @@ function Categories() {
         }
       );
 
-      console.log(response.data);
+      // console.log(response.data);
       setCategoryList(response.data.categories);
       setTotalPages(response.data.totalPages);
     } catch (error) {

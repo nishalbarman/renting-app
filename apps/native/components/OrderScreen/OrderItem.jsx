@@ -20,6 +20,7 @@ import axios from "axios";
 import { orderRefetch } from "@store/rtk";
 import OrderStatus from "./OrderStatus";
 import { useRouter } from "expo-router";
+import handleGlobalError from "../../lib/handleError";
 
 function OrderItem({
   order: {
@@ -47,8 +48,6 @@ function OrderItem({
 }) {
   const dispatch = useDispatch();
 
-  console.log(paymentTxnId);
-
   const [cancelLoading, setCancelLoading] = useState();
   const [trackLoading, setTrackLoading] = useState();
 
@@ -56,18 +55,12 @@ function OrderItem({
     const returnDate = new Date("2024-04-30T13:41:55.646+00:00");
     const today = new Date();
 
-    // console.log(returnDate.getTime(), today.getTime());
-    // Calculating the time difference
-    // of two dates
     let Difference_In_Time = returnDate.getTime() - today.getTime();
-    // console.log(Difference_In_Time);
-    // // Calculating the no. of days between
-    // // two dates
+
     let totalTimeRemaining = Math.round(
       Difference_In_Time / (1000 * 3600 * 24)
     );
 
-    // console.log(totalTimeRemaining);
     return totalTimeRemaining;
   }, [rentReturnDueDate]);
 
@@ -77,14 +70,10 @@ function OrderItem({
       if (supported) {
         Linking.openURL(trackingLink);
       } else {
-        console.log("Some error occured");
+        handleGlobalError(new Error("Link cannot be opened"));
       }
     });
-    // SheetManager.show("track-order", {
-    //   payload: {
-    //     orderId: "iamorderid",
-    //   },
-    // });
+
     setTrackLoading(false);
   };
 
@@ -100,7 +89,6 @@ function OrderItem({
           },
         }
       );
-      // console.log("Order cancelation log --> ", response.data);
       dispatch(orderRefetch());
     } catch (error) {
       console.error(error);

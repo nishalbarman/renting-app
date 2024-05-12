@@ -101,8 +101,6 @@ function Product({
   };
 
   const handleLoveIconClick = () => {
-    console.log(!!wishlistIdMap?.hasOwnProperty(_id));
-
     if (!!wishlistIdMap?.hasOwnProperty(_id)) {
       handleRemoveFromWishlist();
     } else {

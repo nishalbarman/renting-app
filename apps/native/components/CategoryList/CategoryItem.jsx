@@ -17,7 +17,7 @@ function CategoryItem({
         if (categoryId === "cate_id_unique") {
           return router.push(`/more-category`);
         }
-        console.log(categoryImageUrl);
+        // console.log(categoryImageUrl);
         router.navigate(
           `/list?category=${categoryId}&categoryName=${categoryName}`
         );

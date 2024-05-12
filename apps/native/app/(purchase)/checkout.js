@@ -137,7 +137,7 @@ export default function AddressList() {
         return router.dismiss();
         // setOrderError(error);
       } else {
-        console.log("TXN OD--.", paymentTransactionId);
+        // console.log("TXN OD--.", paymentTransactionId);
         router.replace({
           pathname: "/order-placed",
           params: {
@@ -165,7 +165,7 @@ export default function AddressList() {
         }
       );
 
-      console.log("What the response-->", response);
+      // console.log("What the response-->", response);
 
       if (response.status == 200) {
         router.replace({

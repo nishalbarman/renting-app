@@ -52,7 +52,7 @@ function LocationMap() {
         latitude: selectedLocation?.latitude,
       });
 
-      console.log(resAddress);
+      // console.log(resAddress);
 
       setAddress(resAddress);
     })();
@@ -65,7 +65,7 @@ function LocationMap() {
       setIsLocationNotEnabledModalOpen(true);
       return;
     }
-    console.log("Location permission granted");
+    // console.log("Location permission granted");
     let location = await Location.getCurrentPositionAsync({});
     mapViewRef?.current?.animateToRegion(location.coords, 100);
     setSelectedLocation(location.coords);

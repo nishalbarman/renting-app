@@ -18,6 +18,7 @@ import {
   useAddWishlistMutation,
 } from "@store/rtk";
 import { useRouter } from "expo-router";
+import handleGlobalError from "../../lib/handleError";
 
 function CartCard({
   cart: {
@@ -46,9 +47,10 @@ function CartCard({
   const handleRemoveFromCart = async () => {
     try {
       const response = await removeFromCart(_id).unwrap();
-      console.log(response);
+      // console.log(response);
     } catch (error) {
       console.error(error);
+      handleGlobalError(error);
     }
   };
 
@@ -62,9 +64,12 @@ function CartCard({
       const resPayload = await Promise.all([
         addWishlist({ id: product._id }).unwrap(),
         handleRemoveFromCart(),
-      ]).then((res) => console.log(res));
+      ]).then((res) => {
+        // console.log(res);
+      });
     } catch (error) {
       console.error(error);
+      handleGlobalError(error);
     }
   };
 
@@ -78,7 +83,7 @@ function CartCard({
 
   useEffect(() => {
     (async () => {
-      console.log(quantity, changedQuantity);
+      // console.log(quantity, changedQuantity);
       if (changedQuantity === -1 || changedRentDays === -1) return;
       if (changedQuantity !== quantity) {
         updateQuantityCart({

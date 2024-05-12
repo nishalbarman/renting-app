@@ -73,7 +73,7 @@ function LocationMap() {
 
   const getCenterLocations = async () => {
     try {
-      console.log(searchParams?.address);
+      // console.log(searchParams?.address);
       const response = await axios.get(
         `${process.env.EXPO_PUBLIC_API_URL}/center/addresses/${searchParams?.address}`,
         {
@@ -82,7 +82,7 @@ function LocationMap() {
           },
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
       setUserCloseCenterList(response.data.availableCenters);
       setClosestCenter(response.data.availableCenters[0]);
     } catch (error) {

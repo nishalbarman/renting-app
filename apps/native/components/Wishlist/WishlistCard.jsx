@@ -40,8 +40,6 @@ function Product({ wishlistId, details, width, productType }) {
         type: "sc",
         text1: "Wishlist removed",
       });
-      // Toast.success("Wishlist removed", "top");
-      // console.log("Remove from wishlist response -->", resPayload);
     } catch (error) {
       Toast.show({
         type: "err",
