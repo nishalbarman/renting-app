@@ -103,6 +103,9 @@ app.use("/address", require("./routes/address/address.routes"));
 app.use("/feedbacks", require("./routes/feedbacks/feedbacks.routes"));
 app.use("/orders", require("./routes/order/order.routes"));
 
+app.use("/colors", require("./routes/colors/color.routes"));
+app.use("/size", require("./routes/sizes/sizes.routes"));
+
 // center related routes
 app.use("/center", require("./routes/centers/center.routes"));
 

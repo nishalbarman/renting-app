@@ -304,6 +304,8 @@ router.get("/", async (req, res) => {
     const CATEGORY = searchParams?.category;
     const QUERY = searchParams?.query;
 
+    console.log(CATEGORY);
+
     const filter = {}; // blank filter object
 
     if (!!QUERY) {
@@ -314,19 +316,44 @@ router.get("/", async (req, res) => {
       filter.productType = { $in: [TYPE, "both"] };
     }
 
-    console.log(filter);
-
     if (CATEGORY) {
       filter.category = CATEGORY;
     }
 
     if (!!FILTER) {
       const parsedFilter = JSON.parse(decodeURIComponent(FILTER));
-      console.log(parsedFilter);
-      Object.entries(parsedFilter).map(([key, value]) => {
-        if (!!key && !!value) filter[key] = value;
-      });
+
+      if (parsedFilter.color && parsedFilter.color.length > 0) {
+        filter.color = { $in: parsedFilter.color };
+      }
+
+      if (parsedFilter.category && parsedFilter.category.length > 0) {
+        filter.category = { $in: parsedFilter.category };
+      }
+
+      if (parsedFilter.price && parsedFilter.price.length > 0) {
+        filter.price = {
+          $gt: parsedFilter.price[0],
+          $lt: parsedFilter.price[1],
+        };
+      }
+
+      if (parsedFilter.rating) {
+        filter.rating = {
+          $gt: parsedFilter.rating,
+        };
+      }
+
+      // Object.entries(parsedFilter).map(([key, value]) => {
+      //   if (!!key && !!value && Array.isArray(value)) {
+      //     filter[key] = { $in: value };
+      //   } else if (!!key && !!value) {
+      //     filter[key] = value;
+      //   }
+      // });
     }
+
+    console.log("FILTER", filter);
 
     let sortObject = { createdAt: "desc" };
 
@@ -357,7 +384,7 @@ router.get("/", async (req, res) => {
           sortObject.createdAt = "desc";
           break;
         default:
-          sortObject = {};
+          sortObject = undefined;
       }
     }
 
@@ -365,6 +392,8 @@ router.get("/", async (req, res) => {
       filter,
       sortObject || undefined
     );
+
+    console.log("Product filter --->", filter);
 
     const products = await Product.find(filter)
       .populate(["category", "productVariant"])
@@ -501,27 +530,13 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ message: "Product Data Not Found" });
     }
 
-    // // if the key products in request object is missing or it is not an array then return false
-    // if (!reqBody?.products || !Array.isArray(reqBody?.products)) {
-    //   return res.status(400).json({ message: "Expected an array!" });
-    // }
-
-    // validate recieved products and filter out valid products and insert them on database
-    // const errorProductList = [];
-    // const validProducts = reqBody.productList.filter((singleProduct, index) => {
-    //   const errorObject = {};
-    //   const error = isProductHasError(singleProduct); // validate the product
-    //   if (error.length > 0) {
-    //     errorObject.message = error.join(", ");
-    //     errorObject.index = index;
-    //     errorProductList.push(errorObject);
-    //     return false; // false as product does not has valid data
-    //   } else {
-    //     return true; // true as product has valid data
-    //   }
-    // });
-
     productData.productVariant = Object.values(productData.productVariant);
+
+    if(Array.isArray(productData?.productVariant)) {
+      productData.productVariant.map(variant=>{
+        const sizes = variant.
+      })
+    }
 
     const error = checkProductHasError(productData);
 
@@ -763,18 +778,6 @@ router.post(
   checkRole(0, 1),
   async (req, res) => {
     try {
-      // const token = req?.jwt?.token;
-
-      // if (!token) {
-      //   return res.status(400).json({ message: "No token provided." });
-      // }
-
-      // const userDetails = getTokenDetails(token);
-
-      // if (!userDetails) {
-      //   return res.status(400).json({ message: "Authorization failed" });
-      // }
-
       const productId = req.params?.productId;
       const variant = req.body?.variant;
       const productType = req.body?.productType;
@@ -792,11 +795,6 @@ router.post(
           inStock,
         });
       }
-      // else {
-      //   return res.json({
-      //     inStock: false,
-      //   });
-      // }
 
       const filterObject = {
         _id: productId,

@@ -5,6 +5,6 @@ const sizeSchema = new mongoose.Schema({
 });
 
 const Size =
-  mongoose.models.product_sizes || mongoose.model("product_sizes", sizeSchema);
+  mongoose.models.product_sizes || mongoose.model("sizes", sizeSchema);
 
 module.exports = Size;
