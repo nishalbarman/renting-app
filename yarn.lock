@@ -3530,6 +3530,11 @@
     prompts "^2.4.2"
     semver "^7.5.2"
 
+"@react-native-community/slider@^4.5.2":
+  version "4.5.2"
+  resolved "https://registry.yarnpkg.com/@react-native-community/slider/-/slider-4.5.2.tgz#c3835788dbc1bd83d3778b83ca15533c805db149"
+  integrity sha512-DbFyCyI7rwl0FkBkp0lzEVp+5mNfS5qU/nM2sK2aSguWhj0Odkt1aKHP2iW/ljruOhgS/O4dEixXlne4OdZJDQ==
+
 "@react-native-firebase/analytics@^20.0.0":
   version "20.0.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-20.0.0.tgz#162ec36b758f664ff56725f6943bdb08150381e7"

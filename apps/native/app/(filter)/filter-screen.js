@@ -114,6 +114,14 @@ function FilterScreen() {
         <View className="w-full h-full">
           <View>
             <Text className="text-lg font-[poppins]">Price</Text>
+            <Slider
+              className="w-full h-fit"
+              // style={{ width: 200, height: 40 }}
+              minimumValue={0}
+              maximumValue={100000}
+              minimumTrackTintColor="#FFFFFF"
+              maximumTrackTintColor="#000000"
+            />
           </View>
           <FlatList
             data={allFilter[choosedFilterType] || []}

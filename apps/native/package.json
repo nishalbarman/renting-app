@@ -13,6 +13,7 @@
     "@expo/vector-icons": "14",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@react-native-community/checkbox": "^0.5.17",
+    "@react-native-community/slider": "^4.5.2",
     "@react-native-firebase/analytics": "^20.0.0",
     "@react-native-firebase/app": "^20.0.0",
     "@react-native-firebase/crashlytics": "^20.0.0",

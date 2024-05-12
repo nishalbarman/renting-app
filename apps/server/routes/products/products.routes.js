@@ -543,15 +543,15 @@ router.post("/", async (req, res) => {
           });
         }
 
-        const colors = variant?.color?.replace(/ /g, "");
-        if (!!colors) {
-          colors.split(",")?.forEach((eachColor) => {
-            new_Variant_With_Size_Included.push({
-              ...variant,
-              color: eachColor,
-            });
-          });
-        }
+        // const colors = variant?.color?.replace(/ /g, "");
+        // if (!!colors) {
+        //   colors.split(",")?.forEach((eachColor) => {
+        //     new_Variant_With_Size_Included.push({
+        //       ...variant,
+        //       color: eachColor,
+        //     });
+        //   });
+        // }
       });
 
       productData.productVariant = new_Variant_With_Size_Included;
