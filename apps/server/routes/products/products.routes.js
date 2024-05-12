@@ -548,7 +548,7 @@ router.post("/", async (req, res) => {
           colors.split(",")?.forEach((eachColor) => {
             new_Variant_With_Size_Included.push({
               ...variant,
-              size: eachColor,
+              color: eachColor,
             });
           });
         }
@@ -605,8 +605,8 @@ router.post("/", async (req, res) => {
     const newProduct = new Product({
       previewImage: productData.previewImage[0],
       title: productData.title,
-      // category: productData.category,
-      category: "65f6c9f882ba818ab0e43d64",
+      category: productData.category,
+      // category: "65f6c9f882ba818ab0e43d64",
       slideImages: productData.slideImages,
       description: productData.description,
       productType: productData.productType,

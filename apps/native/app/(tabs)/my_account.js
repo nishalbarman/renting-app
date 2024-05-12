@@ -92,7 +92,7 @@ const AccountScreen = () => {
             <Text className="font-semibold text-lg mb-1">Product Mode</Text>
 
             <View className="w-full flex-row">
-              <View className="flex flex-row h-10 rounded-md w-[40%] w-full bg-white border border-green-700 mt-1">
+              <View className="flex flex-row h-9 p-1 rounded-md w-[40%] w-full bg-white border border-green-700 mt-1">
                 <Pressable
                   onPress={() => {
                     handleChangeProductType("rent");
@@ -121,14 +121,5 @@ const AccountScreen = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  customBadge: {
-    width: "auto",
-  },
-  bottomNavIcon: {
-    color: "#6b7280",
-  },
-});
 
 export default memo(AccountScreen);

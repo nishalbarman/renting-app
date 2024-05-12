@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
 
     let categories;
 
-    if (LIMIT === 0 || page === 0) {
+    if (LIMIT === 0 || PAGE === 0) {
       categories = await Category.find({}).sort({ createdAt: "desc" });
     } else {
       categories = await Category.find({})

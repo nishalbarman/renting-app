@@ -92,17 +92,13 @@ export default function Page() {
           justifyContent: "center",
           minHeight: "100%",
           width: "100%",
+          backgroundColor: "white",
         }}>
-        {/* <View className="w-full items-center bg-green-600 py-12">
-          <Text className="text-[30px] font-[poppins-bold] tracking-widest text-white">
-            Savero
-          </Text>
-        </View> */}
         <Image
           source={require("../../../assets/appIcons/app_launcher.webp")}
           className="w-20 h-20 rounded-full"
         />
-        <View className="w-full flex flex-col items-center px-4">
+        <View className="w-full flex flex-col items-center px-4 bg-white">
           <View className="w-full flex-col items-center py-6 z-[999]">
             <Text className="text-[30px] font-[poppins-mid] mb-2">
               Welcome back
@@ -205,7 +201,7 @@ export default function Page() {
             Forgot password?
           </Link>
         </View>
-        <View className="w-full flex flex-col gap-y-7 items-center mt-[-1px]">
+        <View className="w-full flex flex-col gap-y-7 items-center mt-[-1px] bg-white">
           <TouchableOpacity
             disabled={isSubmitDisabled || isPending}
             className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-300" : "bg-green-600"} rounded-lg`}

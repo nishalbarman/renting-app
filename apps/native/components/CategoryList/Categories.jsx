@@ -52,7 +52,7 @@ function Categories() {
   useEffect(() => {
     (() => {
       // if we have less categories then totalPage will be 1
-      if (!(totalPages > 1)) {
+      if (totalPages > 1) {
         setCategoryList([
           ...categoryList,
           {

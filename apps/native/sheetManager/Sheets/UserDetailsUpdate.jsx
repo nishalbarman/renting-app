@@ -226,12 +226,12 @@ export default function Widget() {
 
         <TouchableOpacity
           disabled={isSubmitDisabled || isUpdatationPending}
-          className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-[#CECAFF]" : "bg-[#6C63FF]"} border-none outline-none rounded-lg mt-5`}
+          className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-200" : "bg-green-600"} border-none outline-none rounded-lg mt-5`}
           onPress={handleProfileUpdate}>
           {isUpdatationPending ? (
             <ActivityIndicator size={30} color={"white"} />
           ) : (
-            <Text className="text-[18px] text-white font-[poppins]">
+            <Text className="text-lg text-white font-[poppins]">
               Update Profile
             </Text>
           )}

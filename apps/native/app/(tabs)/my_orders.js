@@ -114,7 +114,6 @@ const OrderScreen = () => {
 
   const handleFetchNextPage = React.useCallback(() => {
     if (paginationPage < paginationTotalPages - 1) {
-      // console.log("Updating pagination for orders");
       setPaginationPage((prev) => prev + 1);
     }
   }, [paginationPage, paginationTotalPages]);

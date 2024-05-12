@@ -163,7 +163,7 @@ function OrderItem({
         <View className={`ml-3 flex-1`}>
           <Text
             numberOfLines={3}
-            className={`text-lg font-[poppins] text-sm flex-wrap leading-[25px]`}>
+            className={`text-md font-[poppins-bold] text-lg flex-wrap leading-[25px]`}>
             {title}
           </Text>
           <View className="mt-2">
@@ -209,7 +209,7 @@ function OrderItem({
         </View>
       )}
 
-      <View className={`h-fit justify-between px-2`}>
+      <View className={`h-fit justify-between px-2 mt-2`}>
         <View className={`flex-col`}>
           {orderType === "buy" ? (
             <Text className={`text-black font-bold text-xl`}>₹{price}</Text>

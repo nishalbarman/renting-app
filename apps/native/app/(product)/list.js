@@ -65,6 +65,7 @@ function ProductsList() {
         }
 
         if (!!filter) {
+          console.log("Filter -->", filter);
           url.searchParams.append(
             "filter",
             encodeURIComponent(JSON.stringify(filter))
@@ -85,7 +86,13 @@ function ProductsList() {
         setIsProductDataLoading(false);
       }
     },
-    [productType, paginationPage, searchParams]
+    [
+      productType,
+      paginationPage,
+      filter,
+      searchParams.categoryName,
+      searchParams.searchValue,
+    ]
   );
 
   const fetchMoreProductData = useCallback(
@@ -132,7 +139,13 @@ function ProductsList() {
         // setIsProductDataLoading(false);
       }
     },
-    [productType, paginationPage, searchParams]
+    [
+      productType,
+      paginationPage,
+      filter,
+      searchParams.categoryName,
+      searchParams.searchValue,
+    ]
   );
 
   useEffect(() => {
@@ -141,7 +154,13 @@ function ProductsList() {
 
   useEffect(() => {
     getIntitalProductData(sortingValue, filter);
-  }, [productType, sortingValue, filter]);
+  }, [
+    productType,
+    sortingValue,
+    filter,
+    searchParams.categoryName,
+    searchParams.searchValue,
+  ]);
 
   const {
     data: wishlistData,
@@ -202,9 +221,7 @@ function ProductsList() {
             fontFamily: "poppins",
           },
           title:
-            searchParams.categoryName ||
-            searchParams.searchValue ||
-            "Our Products",
+            searchParams.categoryName || searchParams.searchValue || "Explore",
           headerShadowVisible: false,
           headerRight: () => {
             return (
@@ -228,7 +245,7 @@ function ProductsList() {
         <ProductsListSkeleton />
       ) : (
         <View className={`w-full h-full rounded bg-[rgba(0,0,0,0.1)]`}>
-          {data.length > 0 && (
+          {(data.length > 0 || !!sortingValue || !!filter) && (
             <View className="flex-row h-fit w-full border-b border-10 border-gray-200">
               <View className="flex flex-row justify-between items-center w-full bg-gray-20 mb-1 border-t border-gray-200">
                 <Pressable

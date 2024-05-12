@@ -12,31 +12,31 @@ export default function ProductSort() {
     () => [
       {
         id: 0,
-        label: <Text className="font-bold">None</Text>,
+        label: <Text className="font-[poppins-mid]">None</Text>,
         value: "",
         containerStyle: radiobuttonStyle,
       },
       {
         id: 1,
-        label: <Text className="font-bold">Popularity</Text>,
+        label: <Text className="font-[poppins-mid]">Popularity</Text>,
         value: "popularity",
         containerStyle: radiobuttonStyle,
       },
       {
         id: 2,
-        label: <Text className="font-bold">Price -- Low to High</Text>,
+        label: <Text className="font-[poppins-mid]">Price -- Low to High</Text>,
         value: "low-to-hight-price",
         containerStyle: radiobuttonStyle,
       },
       {
         id: 3,
-        label: <Text className="font-bold">Price -- High to Low</Text>,
+        label: <Text className="font-[poppins-mid]">Price -- High to Low</Text>,
         value: "hight-to-low-price",
         containerStyle: radiobuttonStyle,
       },
       {
         id: 4,
-        label: <Text className="font-bold">Newest First</Text>,
+        label: <Text className="font-[poppins-mid]">Newest First</Text>,
         value: "newest",
         containerStyle: radiobuttonStyle,
       },

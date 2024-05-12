@@ -747,7 +747,7 @@ function product() {
                 <View className="mt-2 pt-4 pb-6 bg-[#f2f2f2] rounded-md p-3">
                   <RenderHTML
                     systemFonts={["poppins", "poppins-mid", "poppins-bold"]}
-                    contentWidth={width}
+                    // contentWidth={width}
                     source={{
                       html:
                         `<html style="font-size: 13px">${productDetails.description}</html>` ||
