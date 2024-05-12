@@ -14,8 +14,10 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
+const storageBucketName = "renting-app-86d7d.appspot.com";
+
 const storage = getStorage();
-const bucket = storage.bucket("renting-app-86d7d.appspot.com");
+const bucket = storage.bucket(storageBucketName);
 const db = admin.firestore();
 const messaging = admin.messaging();
 
@@ -38,7 +40,7 @@ class FirebaseUtils {
 
       blobStream.on("finish", async () => {
         await fileReference.makePublic();
-        const publicUrl = `https://storage.googleapis.com/crafter-ecommerce.appspot.com/${fileReference.name}`;
+        const publicUrl = `https://storage.googleapis.com/${storageBucketName}/${fileReference.name}`;
         resolve(publicUrl);
       });
 
