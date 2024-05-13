@@ -25,10 +25,6 @@ function RelatedProduct({ query }) {
       url.searchParams.append("limit", 10);
       url.searchParams.append("query", query);
 
-      // if (!!sort) {
-      //   // url.searchParams.append("sort", sort);
-      // }
-
       const res = await axios.get(url.href, {
         headers: {
           authorization: `Bearer ${jwtToken}`,
@@ -60,7 +56,7 @@ function RelatedProduct({ query }) {
       showsHorizontalScrollIndicator={false}
       data={data}
       renderItem={({ item }) => (
-        <Product width={"205px"} details={item} wishlistData={wishlistData} />
+        <Product width={205} details={item} wishlistData={wishlistData} />
       )}
       numColumns={1}
       keyExtractor={(item, index) => index.toString()}

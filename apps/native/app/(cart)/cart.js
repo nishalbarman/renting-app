@@ -58,40 +58,40 @@ const CartPage = () => {
 
           // if type is buy and product have variants (diffent color different size etc etc)
           if (productType === "buy" && !!cartItem?.variant) {
-            const OriginalPrice = cartItem.variant.originalPrice;
-            const Price = cartItem.variant.discountedPrice;
+            const OriginalPrice = cartItem.variant?.originalPrice;
+            const Price = cartItem.variant?.discountedPrice;
             const Quantity = cartItem.quantity;
             totalOriginalPrice = OriginalPrice * Quantity;
             discountedTotalPrice = Price * Quantity;
 
-            shippingPrice += cartItem.variant.shippingPrice;
+            shippingPrice += cartItem.variant?.shippingPrice;
           }
           // else if type is buy and product does not have variants (diffent color different size etc etc)
           else if (productType === "buy" && !cartItem?.variant) {
-            const OriginalPrice = cartItem.product.originalPrice;
-            const Price = cartItem.product.discountedPrice;
+            const OriginalPrice = cartItem.product?.originalPrice;
+            const Price = cartItem.product?.discountedPrice;
             const Quantity = cartItem.quantity;
             totalOriginalPrice = OriginalPrice * Quantity;
             discountedTotalPrice = Price * Quantity;
 
-            shippingPrice += cartItem.product.shippingPrice;
+            shippingPrice += cartItem.product?.shippingPrice;
           }
           // else if type is rent and product does not have variants (diffent color different size etc etc)
           else if (productType === "rent" && !!cartItem?.variant) {
-            const Price = cartItem.variant.rentingPrice;
+            const Price = cartItem.variant?.rentingPrice;
             const Quantity = cartItem.quantity;
             const RentDays = cartItem.rentDays;
             discountedTotalPrice = Price * Quantity * RentDays;
 
-            shippingPrice += cartItem.variant.shippingPrice;
+            shippingPrice += cartItem.variant?.shippingPrice;
           }
           // else if type is rent and product does not have variants (diffent color different size etc etc)
           else if (productType === "rent" && !cartItem?.variant) {
-            const Price = cartItem.product.rentingPrice;
+            const Price = cartItem.product?.rentingPrice;
             const Quantity = cartItem.quantity;
             const RentDays = cartItem.rentDays;
             discountedTotalPrice = Price * Quantity * RentDays;
-            shippingPrice += cartItem.product.shippingPrice;
+            shippingPrice += cartItem.product?.shippingPrice;
           }
 
           return {

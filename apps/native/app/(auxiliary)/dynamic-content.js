@@ -17,6 +17,10 @@ import handleGlobalError from "../../lib/handleError";
 import RenderHTML from "react-native-render-html";
 
 const DynamicContent = () => {
+  const { width } = useMemo(() => {
+    return Dimensions.get("window");
+  }, []);
+
   const params = useLocalSearchParams();
 
   const jwtToken = useSelector((state) => state.auth.jwtToken);
@@ -74,7 +78,7 @@ const DynamicContent = () => {
           </Text>
           <RenderHTML
             systemFonts={["poppins", "poppins-mid", "poppins-bold"]}
-            // contentWidth={width}
+            contentWidth={width}
             source={{
               html:
                 `<html style="font-size: 13px">${dynamicContent.content}</html>` ||

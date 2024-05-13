@@ -2,7 +2,7 @@
   "expo": {
     "name": "Savero",
     "scheme": "savero",
-    "slug": "savero",
+    "slug": "renting_app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/appIcons/app_launcher.webp",

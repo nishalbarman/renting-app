@@ -522,13 +522,7 @@ function product() {
                               onPress={() => {
                                 setSelectedProductSize(item);
                               }}
-                              style={{
-                                backgroundColor:
-                                  selectedProductSize === item
-                                    ? "#9470B5"
-                                    : "white",
-                              }}
-                              className={`h-9 w-14 rounded-lg mx-2 flex items-center justify-center shadow-sm text-white ${selectedProductSize !== item && "border border-gray-300"}`}>
+                              className={`h-9 w-14 rounded-lg mx-2 flex items-center justify-center shadow-sm text-white ${selectedProductSize !== item ? "bg-white border border-gray-300" : "bg-black"}`}>
                               <Text
                                 style={{
                                   color:
@@ -566,13 +560,7 @@ function product() {
                               onPress={() => {
                                 setSelectedProductColor(item);
                               }}
-                              style={{
-                                backgroundColor:
-                                  selectedProductColor === item
-                                    ? "#9470B5"
-                                    : "white",
-                              }}
-                              className={`flex items-center justify-center h-10 w-fit px-5 rounded-lg mx-2 shadow-sm border ${selectedProductSize !== item && "border border-gray-300"}`}>
+                              className={`flex items-center justify-center h-10 w-fit px-5 rounded-lg mx-2 shadow-sm border ${selectedProductColor !== item ? "bg-white border border-gray-300" : "bg-black"}`}>
                               <Text
                                 style={{
                                   color:
@@ -747,7 +735,7 @@ function product() {
                 <View className="mt-2 pt-4 pb-6 bg-[#f2f2f2] rounded-md p-3">
                   <RenderHTML
                     systemFonts={["poppins", "poppins-mid", "poppins-bold"]}
-                    // contentWidth={width}
+                    contentWidth={width}
                     source={{
                       html:
                         `<html style="font-size: 13px">${productDetails.description}</html>` ||
