@@ -37,16 +37,16 @@ const checkProductHasError = ({
     error.push("Title should be of minimum 5 characters");
   }
 
-  // const ObjectId = mongoose.Types.ObjectId;
-  // if (
-  //   !category ||
-  //   !(ObjectId.isValid(category) && String(new ObjectId(category)) === category)
-  // ) {
-  //   error.push("Category is not valid");
-  // }
+  const ObjectId = mongoose.Types.ObjectId;
+  if (
+    !category ||
+    !(ObjectId.isValid(category) && String(new ObjectId(category)) === category)
+  ) {
+    error.push("Category is not valid");
+  }
 
-  if (!discountedPrice && !originalPrice && !rentingPrice) {
-    error.push("Original price and Discounted price needs to be given");
+  if (!discountedPrice && !rentingPrice) {
+    error.push("Discounted price and Renting Price needs to be given");
   }
 
   if (
@@ -62,9 +62,11 @@ const checkProductHasError = ({
   if (
     !!discountedPrice &&
     !!originalPrice &&
-    +originalPrice <= +discountedPrice
+    +originalPrice < +discountedPrice
   ) {
-    error.push("Discounted price should be lesser than Original price");
+    error.push(
+      "Discounted price should be lesser than Original price if given"
+    );
   }
 
   // if (!Array.isArray(slideImages)) {
@@ -88,7 +90,12 @@ const checkProductHasError = ({
   if (!!isVariantAvailable) {
     productVariant.forEach((variant, index) => {
       if (Object.keys(variant).length !== 9) {
-        return error.push("Variant does not contain all the required keys");
+        return error.push(
+          "Variant +" +
+            (index + 1) +
+            ": " +
+            "Does not contain all the required keys"
+        );
       }
 
       const localError = [];
@@ -97,6 +104,17 @@ const checkProductHasError = ({
       //   localError.push("Preview Image is not valid");
       // }
 
+      if (
+        !variant?.previewImage ||
+        !Array.isArray(variant.previewImage) ||
+        !variant.previewImage[0]?.base64String ||
+        !variant.previewImage[0]?.type
+      ) {
+        localError.push(
+          "Variant +" + (index + 1) + ": " + "Preview Image is not valid"
+        );
+      }
+
       if (!variant?.discountedPrice && !variant?.originalPrice) {
         localError.push(
           "Original price and Discounted price needs to be given"
@@ -104,12 +122,22 @@ const checkProductHasError = ({
       }
 
       if (
+        isNaN(Number(rentingPrice)) ||
+        isNaN(Number(discountedPrice)) ||
+        isNaN(Number(originalPrice))
+      ) {
+        error.push(
+          "Original price, Discounted price and Renting price should be numbers"
+        );
+      }
+
+      if (
         !!variant?.discountedPrice &&
         !!variant?.originalPrice &&
-        variant?.originalPrice <= variant?.discountedPrice
+        variant?.originalPrice < variant?.discountedPrice
       ) {
         localError.push(
-          "Discounted price should be lesser than Original price"
+          "Discounted price should be lesser than original price"
         );
       }
 
@@ -129,20 +157,16 @@ const checkProductHasError = ({
       }
 
       if (!variant?.color) {
-        localError.push(
-          "Variant +" + (index + 1) + ": " + "Color is not vallid"
-        );
+        localError.push("Color is not vallid");
       }
 
       if (!variant?.size) {
-        localError.push(
-          "Variant +" + (index + 1) + ": " + "Size is not vallid"
-        );
+        localError.push("Size is not vallid");
       }
 
       if (localError.length > 0) {
         error.push(
-          `Variant: ${index + 1}, has errors. Message: ${localError.join(", ")}`
+          `Variant: ${index + 1}, has errors. Message: ${localError.join(",\n")}`
         );
       }
     });
