@@ -11245,6 +11245,11 @@ react-native-screens@~3.29.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-simple-radio-button@^2.7.4:
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/react-native-simple-radio-button/-/react-native-simple-radio-button-2.7.4.tgz#86e2dbe8af9e6bf60eee088f60466f7a975e7758"
+  integrity sha512-QOZNmJUn0ViBGU+at7wAG/uGzd5PfXi0kMHr9lfTCLXknW/f9f2fOVjxjdHvOCdf/zA/eMJBjGjtusSDzQf1+w==
+
 react-native-snackbar@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/react-native-snackbar/-/react-native-snackbar-2.6.2.tgz#7c0d0d93bfb5822fb1f41f00d29383f522c02185"

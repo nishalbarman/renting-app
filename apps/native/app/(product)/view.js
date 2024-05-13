@@ -464,7 +464,7 @@ function product() {
 
             {/* product body */}
             <View className="flex flex-1 p-[12px] flex-col">
-              <Text className="font-[poppins-mid] leading-[103%] text-grey text-[16px]">
+              <Text className="font-[roboto-mid] leading-[103%] text-grey text-[16px]">
                 {productDetails.title}
               </Text>
 
@@ -504,9 +504,9 @@ function product() {
                   <View className="bg-white rounded-[10px] px-3 py-3 rounded-[10px] shadow-sm border border-gray-300 mb-2 mt-2">
                     {/* // size section */}
                     <View className="flex flex-col pb-4">
-                      <Text className="text-[17px] font-[poppins] mb-3">
+                      <Text className="text-[17px] font-[roboto] mb-3">
                         Size:{" "}
-                        <Text className="uppercase font-[poppins-bold] text-[16px]">
+                        <Text className="uppercase font-[roboto-bold] text-[16px]">
                           {!!selectedProductSize
                             ? selectedProductSize
                             : "Not selected"}
@@ -530,7 +530,7 @@ function product() {
                                       ? "white"
                                       : "black",
                                 }}
-                                className="text-[15px] font-[poppins-bold]">
+                                className="text-[15px] font-[roboto-bold]">
                                 {item}
                               </Text>
                             </Pressable>
@@ -542,9 +542,9 @@ function product() {
 
                     {/* // Colors section */}
                     <View className="flex flex-col pb-2 mt-2">
-                      <Text className="text-[17px] font-[poppins] mb-3">
+                      <Text className="text-[17px] font-[roboto] mb-3">
                         Color:{" "}
-                        <Text className="uppercase font-[poppins-bold] text-[16px]">
+                        <Text className="uppercase font-[roboto-bold] text-[16px]">
                           {!!selectedProductColor
                             ? selectedProductColor
                             : "Not Selected"}
@@ -586,21 +586,21 @@ function product() {
                   <View className="flex gap-y-2">
                     {productType === "rent" ? (
                       <View className="flex-row items-center">
-                        <Text className="text-[30px] font-[poppins-bold]">
+                        <Text className="text-[30px] font-[roboto-bold]">
                           {filteredVariant?.rentingPrice ||
                             productDetails.rentingPrice}
                         </Text>
-                        <Text className="text-[15px] font-[poppins-bold]">
+                        <Text className="text-[15px] font-[roboto-bold]">
                           {" "}
                           / Day
                         </Text>
                       </View>
                     ) : (
-                      <Text className="text-[30px] font-[poppins-bold]">
+                      <Text className="text-[30px] font-[roboto-bold]">
                         ₹
                         {filteredVariant?.discountedPrice ||
                           productDetails.discountedPrice}{" "}
-                        <Text className="text-[15px] text-[#787878] font-[poppins] line-through">
+                        <Text className="text-[15px] text-[#787878] font-[roboto] line-through">
                           ₹
                           {filteredVariant?.originalPrice ||
                             productDetails.originalPrice}
@@ -608,13 +608,13 @@ function product() {
                       </Text>
                     )}
                     <View className="mb-2">
-                      <Text className="text-[15px] font-[poppins]">
+                      <Text className="text-[15px] font-[roboto]">
                         Shipping: ₹
                         {productDetails?.variant?.shippingPrice ||
                           productDetails?.shippingPrice}{" "}
                       </Text>
                       {!freeDelivery && (
-                        <Text className="text-[15px] font-[poppins]">
+                        <Text className="text-[15px] font-[roboto]">
                           FREE shipping above 500
                         </Text>
                       )}
@@ -631,7 +631,7 @@ function product() {
                         className="rounded-full w-6 h-6 flex flex items-center justify-center bg-black">
                         <AntDesign name="minus" size={19} color="white" />
                       </TouchableOpacity>
-                      <Text className="font-[poppins-xbold] text-[18px] mr-4 ml-4">
+                      <Text className="font-[roboto-xbold] text-[18px] mr-4 ml-4">
                         {quantity}
                       </Text>
                       <TouchableOpacity
@@ -654,10 +654,10 @@ function product() {
                             className="rounded-full w-6 h-6 flex flex items-center justify-center bg-white bg-black">
                             <AntDesign name="minus" size={19} color="white" />
                           </TouchableOpacity>
-                          <Text className="font-[poppins-xbold] text-[18px] mr-4 ml-4">
+                          <Text className="font-[roboto-xbold] text-[18px] mr-4 ml-4">
                             {rentDays}
                             {"  "}
-                            <Text className="font-[poppins-bold] text-[15px]">
+                            <Text className="font-[roboto-bold] text-[15px]">
                               Day
                             </Text>
                           </Text>
@@ -676,11 +676,11 @@ function product() {
 
                     <View className="mt-5">
                       {!inStock ? (
-                        <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
+                        <Text className="text-[13px] text-[#d12626] font-[roboto-bold]">
                           Not in stock
                         </Text>
                       ) : (
-                        <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
+                        <Text className="text-[13px] text-[#32a852] font-[roboto-bold]">
                           {/* ({productDetails.availableStocks} items) */}
                           In stock
                         </Text>
@@ -709,7 +709,7 @@ function product() {
                         {isAddToCartLoading ? (
                           <ActivityIndicator size={20} color={"white"} />
                         ) : (
-                          <Text className="text-white text-md font-[poppins-bold]">
+                          <Text className="text-white text-md font-[roboto-bold]">
                             Add To Cart
                           </Text>
                         )}
@@ -719,7 +719,7 @@ function product() {
                     <Pressable
                       onPress={handleGoToCart}
                       className="ml-2 bg-black h-12 w-14 justify-center items-center rounded-md flex-grow">
-                      <Text className="text-white text-md font-[poppins-bold]">
+                      <Text className="text-white text-md font-[roboto-bold]">
                         Go To Cart
                       </Text>
                     </Pressable>
@@ -729,12 +729,12 @@ function product() {
 
               {/* //! product description */}
               <View className="my-7">
-                <Text className="text-xl tracking-wider font-[poppins-bold] mb-2">
+                <Text className="text-xl tracking-wider font-[roboto-bold] mb-2">
                   💁‍♂️ Product Details
                 </Text>
                 <View className="mt-2 pt-4 pb-6 bg-[#f2f2f2] rounded-md p-3">
                   <RenderHTML
-                    systemFonts={["poppins", "poppins-mid", "poppins-bold"]}
+                    systemFonts={["roboto", "roboto-mid", "roboto-bold"]}
                     contentWidth={width}
                     source={{
                       html:
@@ -750,7 +750,7 @@ function product() {
                 <View className="relative flex flex-row justify-between items-center w-full">
                   <View className="flex flex-row items-center gap-y-2 w-full">
                     <View className="h-10 rounded-md mb-1 lex justify-center">
-                      <Text className="text-xl tracking-wider font-[poppins-bold]">
+                      <Text className="text-xl tracking-wider font-[roboto-bold]">
                         💬 Feedbacks
                       </Text>
                     </View>
@@ -815,7 +815,7 @@ function product() {
 
               {/* related products */}
               <View className="pt-4 pb-6 flex flex-col gap-y-2 pl-1 pr-1">
-                <Text className="text-lg tracking-wider font-[poppins-bold]">
+                <Text className="text-lg tracking-wider font-[roboto-bold]">
                   Related Products
                 </Text>
 

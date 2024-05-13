@@ -120,7 +120,7 @@ function Product({ wishlistId, details, width, productType }) {
       <View className="flex flex-col gap-y-1 w-[100%] mt-[5px] pl-2 pr-2 pb-2">
         <Text
           numberOfLines={2}
-          className="text-[14px] font-[poppins-mid] leading-[22px] w-[100%]">
+          className="text-[14px] font-[roboto-mid] leading-[22px] w-[100%]">
           {details.title}
         </Text>
 
@@ -152,12 +152,12 @@ function Product({ wishlistId, details, width, productType }) {
         {details.productType === "both" ? (
           <>
             {productType === "rent" ? (
-              <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
+              <Text className="font-[roboto-bold] text-[16px] align-middle leading-[30px] text-black">
                 ₹{details.rentingPrice}{" "}
                 <Text className="text-[13px] align-middle">/ Day</Text>
               </Text>
             ) : (
-              <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
+              <Text className="font-[roboto-bold] text-[16px] align-middle leading-[30px] text-black">
                 ₹{details.discountedPrice}
                 {"  "}
                 {details.originalPrice && (
@@ -169,12 +169,12 @@ function Product({ wishlistId, details, width, productType }) {
             )}
           </>
         ) : details.productType === "rent" ? (
-          <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
+          <Text className="font-[roboto-bold] text-[16px] align-middle leading-[30px] text-black">
             ₹{details.rentingPrice}{" "}
             <Text className="text-[13px] align-middle">/ Day</Text>
           </Text>
         ) : (
-          <Text className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black">
+          <Text className="font-[roboto-bold] text-[16px] align-middle leading-[30px] text-black">
             ₹{details.discountedPrice}
             {"  "}
             {details.originalPrice && (

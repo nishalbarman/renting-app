@@ -52,9 +52,10 @@ function Categories() {
   useEffect(() => {
     (() => {
       // if we have less categories then totalPage will be 1
+      console.log(totalPages > 1);
       if (totalPages > 1) {
-        setCategoryList([
-          ...categoryList,
+        setCategoryList((prevCategoryList) => [
+          ...prevCategoryList,
           {
             _id: "cate_id_unique",
             categoryName: "See More",
@@ -78,7 +79,7 @@ function Categories() {
         </View>
       ) : (
         <>
-          <Text className="font-[poppins-xbold] tracking-wider text-lg text-black mt-4 mb-1 ml-2">
+          <Text className="font-[roboto-xbold] tracking-wider text-lg text-black mt-4 mb-1 ml-2">
             Categories
           </Text>
           <FlatList

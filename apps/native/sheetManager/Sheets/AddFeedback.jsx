@@ -99,7 +99,7 @@ export default function AddFeedback({ payload }) {
         simultaneousHandlers={handlers.simultaneousHandlers}>
         <ScrollView {...handlers}>
           <View className="pt-8 flex flex-col items-center gap-y-5 pb-10">
-            <Text className="font-[poppins-bold] text-[21px]">
+            <Text className="font-[roboto-bold] text-[21px]">
               Share your experience with this product?
             </Text>
             <View className="flex flex-row items-center justify-center gap-x-3">
@@ -128,7 +128,7 @@ export default function AddFeedback({ payload }) {
               })}
             </View>
             <View className="pl-10 pr-10 pt-4">
-              <Text className="font-[poppins-mid] text-[18px] text-center">
+              <Text className="font-[roboto-mid] text-[18px] text-center">
                 Please share your opinion about the product
               </Text>
             </View>
@@ -139,7 +139,7 @@ export default function AddFeedback({ payload }) {
                   setReviewDescription(text);
                 }}
                 multiline={true}
-                className={`h-[250px] shadow-lg text-black p-4 placeholder:text-[18px] text-[18px] font-[poppins-mid]`}
+                className={`h-[250px] shadow-lg text-black p-4 placeholder:text-[18px] text-[18px] font-[roboto-mid]`}
                 placeholder="Your review"
                 placeholderTextColor={"grey"}
               />

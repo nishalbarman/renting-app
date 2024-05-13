@@ -100,17 +100,17 @@ export default function Page() {
         />
         <View className="w-full flex flex-col items-center px-4 bg-white">
           <View className="w-full flex-col items-center py-6 z-[999]">
-            <Text className="text-[30px] font-[poppins-mid] mb-2">
+            <Text className="text-[30px] font-[roboto-mid] mb-2">
               Welcome back
             </Text>
-            <Text className="text-[18px] font-[poppins-light]">
+            <Text className="text-[18px] font-[roboto-light]">
               sign in to access your account
             </Text>
           </View>
 
           <View className="h-[60px] w-full p-[0px_6%] border-none outline-none bg-white bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg mb-3">
             <TextInput
-              className="h-full w-full inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+              className="h-full w-full inline-block rounded-lg font-[roboto-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="numeric"
@@ -132,19 +132,19 @@ export default function Page() {
           </View>
 
           {formData.mobileNo.isError ? (
-            <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+            <Text className="self-start text-[14px] font-[roboto-bold] text-[#EA1E24] mb-1">
               * Not a valid indian mobile number
             </Text>
           ) : (
             <>
               {/* formData.password.isTouched && (
-              <Text className="self-start text-[14px] font-[poppins]">✔️</Text>) */}
+              <Text className="self-start text-[14px] font-[roboto]">✔️</Text>) */}
             </>
           )}
 
           <View className="h-[60px] w-full p-[0px_6%] border-none outline-none bg-white bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg mb-3">
             <TextInput
-              className="h-full w-full rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+              className="h-full w-full rounded-lg font-[roboto-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="text"
@@ -182,14 +182,14 @@ export default function Page() {
           </View>
 
           {formData.password.isError ? (
-            <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+            <Text className="self-start text-[14px] font-[roboto-bold] text-[#EA1E24] mb-1">
               * Password should be of atleast 8 digits and should contain one
               uppercase letter, and one special character.
             </Text>
           ) : (
             <>
               {/* ( formData.password.isTouched && (
-              <Text className="self-start text-[14px] font-[poppins]">✔️</Text>)
+              <Text className="self-start text-[14px] font-[roboto]">✔️</Text>)
               ) */}
             </>
           )}
@@ -197,7 +197,7 @@ export default function Page() {
           <Link
             push
             href="/resetpass"
-            className="text-[15px] text-green-800 self-end underline underline-offset-[5px] font-[poppins-mid]">
+            className="text-[15px] text-green-800 self-end underline underline-offset-[5px] font-[roboto-mid]">
             Forgot password?
           </Link>
         </View>
@@ -209,16 +209,16 @@ export default function Page() {
             {isPending ? (
               <ActivityIndicator size={30} color={"white"} />
             ) : (
-              <Text className="text-lg text-white font-[poppins-mid]">
+              <Text className="text-lg text-white font-[roboto-mid]">
                 Login
               </Text>
             )}
           </TouchableOpacity>
-          <Text className="text-center font-[poppins-mid] text-[16px]">
+          <Text className="text-center font-[roboto-mid] text-[16px]">
             New here?{" "}
             <Link
               replace
-              className="underline font-[poppins-bold]"
+              className="underline font-[roboto-bold]"
               href={"/auth/signup"}>
               Create an account
             </Link>

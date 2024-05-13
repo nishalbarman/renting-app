@@ -73,11 +73,11 @@ const DynamicContent = () => {
         </View>
       ) : (
         <View className="mt-2 pt-4 pb-6 bg-white rounded-md p-3">
-          <Text className="text-lg font-[poppins-xbold]">
+          <Text className="text-lg font-[roboto-xbold]">
             {dynamicContent.title}
           </Text>
           <RenderHTML
-            systemFonts={["poppins", "poppins-mid", "poppins-bold"]}
+            systemFonts={["roboto", "roboto-mid", "roboto-bold"]}
             contentWidth={width}
             source={{
               html:

@@ -26,6 +26,8 @@ import EmptyBag from "../../components/EmptyBag/EmptyBag";
 function ProductsList() {
   const searchParams = useLocalSearchParams();
 
+  console.log("Search Params -->", searchParams);
+
   const jwtToken = useSelector((state) => state.auth.jwtToken);
   const { productType } = useSelector((state) => state.product_store);
 
@@ -72,6 +74,8 @@ function ProductsList() {
           );
         }
 
+        console.log(url.href);
+
         const res = await axios.get(url.href, {
           headers: {
             authorization: `Bearer ${jwtToken}`,
@@ -98,6 +102,8 @@ function ProductsList() {
   const fetchMoreProductData = useCallback(
     async (sort = undefined, filter = undefined) => {
       try {
+        if (paginationPage === 0) return;
+
         // setIsProductDataLoading(true);
         const url = new URL("/products", process.env.EXPO_PUBLIC_API_URL);
         url.searchParams.append("productType", productType);
@@ -218,8 +224,9 @@ function ProductsList() {
         options={{
           headerTitleStyle: {
             fontSize: 18,
-            fontFamily: "poppins",
+            fontFamily: "roboto",
           },
+          headerTitleAlign: "center",
           title:
             searchParams.categoryName || searchParams.searchValue || "Explore",
           headerShadowVisible: false,

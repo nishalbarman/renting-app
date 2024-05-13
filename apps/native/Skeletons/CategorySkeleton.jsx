@@ -35,7 +35,7 @@ const CategoryItemSkeleton = () => {
       </Animated.View>
       <Animated.View
         style={{ opacity: opacityAnimation }}
-        className="font-[poppins-mid] self-center text-[12px] text-nowrap bg-gray-300 rounded h-4 w-20"
+        className="font-[roboto-mid] self-center text-[12px] text-nowrap bg-gray-300 rounded h-4 w-20"
       />
     </View>
   );

@@ -177,7 +177,7 @@ export default function AddressList() {
               </>
             ) : (
               <View className="w-full h-full flex-col items-center justify-center">
-                <Text className="font-[poppins-mid] text-[18px] text-center">
+                <Text className="font-[roboto-mid] text-[18px] text-center">
                   No address found
                 </Text>
                 {(!address || address.length < 5) && (

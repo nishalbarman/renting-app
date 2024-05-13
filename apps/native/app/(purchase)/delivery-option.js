@@ -180,7 +180,7 @@ export default function AddressList() {
 
               {(!address || address.length <= 0) && (
                 <>
-                  <Text className="font-[poppins-mid] text-[18px] text-center">
+                  <Text className="font-[roboto-mid] text-[18px] text-center">
                     No address found
                   </Text>
                   {(!address || address.length < 5) && (

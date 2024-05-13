@@ -87,7 +87,7 @@ function ProductsList({
               style={{
                 color: titleColor,
               }}
-              className="font-[poppins-xbold] tracking-wider text-lg">
+              className="font-[roboto-xbold] tracking-wider text-lg">
               {title}
             </Text>
             <Pressable
@@ -100,7 +100,7 @@ function ProductsList({
                   },
                 });
               }}>
-              <Text className="text-[10px] tracking-wider text-white font-[poppins-bold]">
+              <Text className="text-[10px] tracking-wider text-white font-[roboto-bold]">
                 Explore
               </Text>
             </Pressable>

@@ -32,7 +32,7 @@ export default function OrderTrack() {
           <OrderTrackSkeleton />
         ) : (
           <View className="flex flex-col items-center gap-y-5 pb-10">
-            <Text className="font-[poppins-bold] text-[21px] mb-3">
+            <Text className="font-[roboto-bold] text-[21px] mb-3">
               Progress of your Order
             </Text>
 

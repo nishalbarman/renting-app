@@ -44,7 +44,7 @@ export default function Tab() {
           <>
             <View className="h-fit px-3 mt-3 flex-row justify-between items-center">
               <View>
-                <Text className="font-[poppins-bold] text-2xl">Discover</Text>
+                <Text className="font-[roboto-bold] text-2xl">Discover</Text>
               </View>
               <Pressable
                 onPress={() => {
@@ -72,7 +72,7 @@ export default function Tab() {
                   router.navigate("/search-page");
                 }}
                 className="h-12 flex-grow rounded-md border border-gray-300 flex-row items-center justify-between px-3 ">
-                <Text className="text-gray-500 font-[poppins]">
+                <Text className="text-gray-500 font-[roboto]">
                   Seach Products
                 </Text>
                 <EvilIcons name="search" size={24} color="black" />

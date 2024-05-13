@@ -22,7 +22,7 @@ import Toast from "react-native-toast-message";
 
 const LogoTitle = (props) => {
   return (
-    <Text className="font-[poppins-xbold] text-[18px]">
+    <Text className="font-[roboto-xbold] text-[18px]">
       Choose your location
     </Text>
   );
@@ -185,22 +185,22 @@ export default function AddAddress() {
       />
       <ScrollView className="bg-white">
         <View className="flex flex-col items-start gap-y-2 pb-10 px-5 min-h-screen mt-1">
-          {/* <Text className="font-[poppins-xbold] text-[18px]">
+          {/* <Text className="font-[roboto-xbold] text-[18px]">
             Choose your location
           </Text> */}
-          <Text className="font-[poppins] text-[15px] text-gray">
+          <Text className="font-[roboto] text-[15px] text-gray">
             Choose your location to get started adding your address
           </Text>
 
           <View className="w-full flex flex-col gap-y-[13px] items-center mt-1">
-            <Text className="self-start font-[poppins-bold] text-md">
+            <Text className="self-start font-[roboto-bold] text-md">
               Select Location
             </Text>
             <TouchableOpacity
               onPress={handleChooseLocationOnMap}
               className="flex items-center justify-center h-[60px] w-full px-8 border outline-none bg-white border-gray-300 flex flex-row rounded-lg mb-2">
               <TextInput
-                className="mr-2 rounded-lg font-[poppins-mid] placeholder:text-[16px] placeholder:text-gray-600 w-full"
+                className="mr-2 rounded-lg font-[roboto-mid] placeholder:text-[16px] placeholder:text-gray-600 w-full"
                 editable={false}
                 multiline={false}
                 placeholder="Choose your location"
@@ -215,12 +215,12 @@ export default function AddAddress() {
 
             <View className="bg-[#D1D3D7] w-[100%] h-[1px] mb-2"></View>
 
-            <Text className="self-start font-[poppins-bold] text-md">
+            <Text className="self-start font-[roboto-bold] text-md">
               Fill Address
             </Text>
             <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-white border border-gray-300 flex flex-row justify-around items-center rounded-lg">
               <TextInput
-                className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+                className="h-[100%] w-[100%] inline-block rounded-lg font-[roboto-mid] placeholder:text-[16px]"
                 editable={true}
                 multiline={false}
                 placeholder="Street Name"
@@ -241,14 +241,14 @@ export default function AddAddress() {
             </View>
 
             {formData.streetName.isError && (
-              <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+              <Text className="self-start text-[14px] font-[roboto-bold] text-[#EA1E24] mb-1">
                 * Minimum 5 characters
               </Text>
             )}
 
             <View className="h-[60px] w-[100%] p-[0px_6%] border outline-none bg-white border-gray-300 flex flex-row justify-around items-center rounded-lg">
               <TextInput
-                className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+                className="h-[100%] w-[100%] inline-block rounded-lg font-[roboto-mid] placeholder:text-[16px]"
                 editable={true}
                 multiline={false}
                 inputMode="text"
@@ -270,14 +270,14 @@ export default function AddAddress() {
             </View>
 
             {formData.locality.isError && (
-              <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+              <Text className="self-start text-[14px] font-[roboto-bold] text-[#EA1E24] mb-1">
                 * Minimum 2 characters
               </Text>
             )}
 
             <View className="h-[60px] w-[100%] p-[0px_6%] border outline-none bg-white border-gray-300 flex flex-row justify-around items-center rounded-lg">
               <TextInput
-                className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+                className="h-[100%] w-[100%] inline-block rounded-lg font-[roboto-mid] placeholder:text-[16px]"
                 editable={true}
                 multiline={false}
                 inputMode="text"
@@ -299,14 +299,14 @@ export default function AddAddress() {
             </View>
 
             {formData.locality.isError && (
-              <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+              <Text className="self-start text-[14px] font-[roboto-bold] text-[#EA1E24] mb-1">
                 * City required
               </Text>
             )}
 
             <View className="h-[60px] w-[100%] p-[0px_6%] border outline-none bg-white border-gray-300 flex flex-row justify-around items-center rounded-lg">
               <TextInput
-                className="h-[100%] w-[100%] rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+                className="h-[100%] w-[100%] rounded-lg font-[roboto-mid] placeholder:text-[16px]"
                 editable={true}
                 multiline={false}
                 inputMode="numeric"
@@ -327,14 +327,14 @@ export default function AddAddress() {
             </View>
 
             {formData.postalCode.isError && (
-              <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+              <Text className="self-start text-[14px] font-[roboto-bold] text-[#EA1E24] mb-1">
                 * Invalid postal code
               </Text>
             )}
 
             <View className="h-[60px] w-[100%] p-[0px_6%]  border outline-none bg-white border-gray-300 flex flex-row justify-around items-center rounded-lg">
               <TextInput
-                className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+                className="h-[100%] w-[100%] inline-block rounded-lg font-[roboto-mid] placeholder:text-[16px]"
                 editable={true}
                 multiline={false}
                 inputMode="text"
@@ -356,14 +356,14 @@ export default function AddAddress() {
             </View>
 
             {formData.state.isError && (
-              <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+              <Text className="self-start text-[14px] font-[roboto-bold] text-[#EA1E24] mb-1">
                 * State required
               </Text>
             )}
 
             <View className="h-[60px] w-[100%] p-[0px_6%] border outline-none bg-white border-gray-300 flex flex-row justify-around items-center rounded-lg">
               <TextInput
-                className="h-[100%] w-[100%] rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+                className="h-[100%] w-[100%] rounded-lg font-[roboto-mid] placeholder:text-[16px]"
                 editable={true}
                 multiline={false}
                 inputMode="text"
@@ -384,7 +384,7 @@ export default function AddAddress() {
             </View>
 
             {formData.country.isError && (
-              <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+              <Text className="self-start text-[14px] font-[roboto-bold] text-[#EA1E24] mb-1">
                 * Minimum 2 digits
               </Text>
             )}
@@ -398,7 +398,7 @@ export default function AddAddress() {
               className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-200" : "bg-green-600"} border-none outline-none rounded-lg`}>
               <>
                 {isLoading || (
-                  <Text className="text-lg text-white font-[poppins-bold]">
+                  <Text className="text-lg text-white font-[roboto-bold]">
                     Save
                   </Text>
                 )}

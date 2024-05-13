@@ -8,11 +8,18 @@ function CategoryItem({
   categoryImageUrl,
   categoryName,
   categoryKey,
+
+  grow = 0,
+  mt = "auto",
 }) {
   const router = useRouter();
   return (
     <Pressable
-      className="w-[90px]"
+      style={{
+        flexGrow: grow,
+        marginTop: mt,
+      }}
+      className="w-[90px] h-36 pb-2 border border-gray-300 rounded-md mx-1"
       onPress={() => {
         if (categoryId === "cate_id_unique") {
           return router.push(`/more-category`);
@@ -33,7 +40,7 @@ function CategoryItem({
             contentPosition={"center"}
           />
         </View>
-        <Text className="font-[poppins-mid] self-center text-[12px] text-center">
+        <Text className="font-[roboto-mid] self-center text-[12px] text-center">
           {categoryName}
         </Text>
       </View>

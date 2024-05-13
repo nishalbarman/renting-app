@@ -28,7 +28,7 @@ function OrderTrackSkeleton() {
     <View className="p-4">
       <View className="flex flex-col items-center gap-y-5 pb-10">
         <Animated.View
-          className="font-[poppins-bold] text-[21px] mb-3 bg-gray-300 rounded h-6 w-48"
+          className="font-[roboto-bold] text-[21px] mb-3 bg-gray-300 rounded h-6 w-48"
           style={{ opacity: opacityAnimation }}
         />
 

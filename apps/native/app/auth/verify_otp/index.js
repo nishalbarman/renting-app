@@ -206,13 +206,13 @@ export default function Page() {
           rowGap: 40,
         }}>
         <View className="flex flex-col gap-y-5 items-center w-full">
-          <Text className="self-start w-full text-[28px] font-[poppins-mid]">
+          <Text className="self-start w-full text-[28px] font-[roboto-mid]">
             Almost there
           </Text>
-          <Text className="font-[poppins-light] text-[18px] self-start mb-5">
-            Hi <Text className="font-[poppins-mid]">{name}</Text>, Please enter
+          <Text className="font-[roboto-light] text-[18px] self-start mb-5">
+            Hi <Text className="font-[roboto-mid]">{name}</Text>, Please enter
             4-digit code sent to your mobile no{" "}
-            <Text className="font-[poppins-mid]">{mobileNo}</Text> for
+            <Text className="font-[roboto-mid]">{mobileNo}</Text> for
             verification
           </Text>
           <View className="flex flex-row items-center justify-center gap-x-4 w-full">
@@ -228,7 +228,7 @@ export default function Page() {
               }
               ref={otpBoxesRefs[0]}
               inputMode="numeric"
-              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[poppins-mid] text-[16px] text-center text-[black]"
+              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[roboto-mid] text-[16px] text-center text-[black]"
               maxLength={1}
               minLength={1}
               onKeyPress={handleOTPkeyPress}
@@ -249,7 +249,7 @@ export default function Page() {
               }
               ref={otpBoxesRefs[1]}
               inputMode="numeric"
-              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[poppins-mid] text-[16px] text-center text-[black]"
+              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[roboto-mid] text-[16px] text-center text-[black]"
               maxLength={1}
               minLength={1}
               placeholder="_"
@@ -270,7 +270,7 @@ export default function Page() {
               }
               ref={otpBoxesRefs[2]}
               inputMode="numeric"
-              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[poppins-mid] text-[16px] text-center text-[black]"
+              className="h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[roboto-mid] text-[16px] text-center text-[black]"
               maxLength={1}
               minLength={1}
               placeholder="_"
@@ -291,7 +291,7 @@ export default function Page() {
               }
               ref={otpBoxesRefs[3]}
               inputMode="numeric"
-              className={`h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[poppins-mid] text-[16px] text-center text-[black]`}
+              className={`h-[54px] w-[54px] rounded-[10px] bg-[#F1F0F0] font-[roboto-mid] text-[16px] text-center text-[black]`}
               maxLength={1}
               minLength={1}
               placeholder="_"
@@ -302,17 +302,15 @@ export default function Page() {
             />
           </View>
           {finalOtp === "____" ? (
-            <Text className="font-[poppins-mid]">Enter 4 digit OTP</Text>
+            <Text className="font-[roboto-mid]">Enter 4 digit OTP</Text>
           ) : !isFinalOTPValid ? (
-            <Text className="font-[poppins-mid] text-[#EA4335]">
+            <Text className="font-[roboto-mid] text-[#EA4335]">
               Enter proper 4 digit OTP
             </Text>
           ) : !formSubmitError?.isError ? (
-            <Text className="font-[poppins-mid]">
-              All set hit verify button
-            </Text>
+            <Text className="font-[roboto-mid]">All set hit verify button</Text>
           ) : (
-            <Text className="animate-pulse font-[poppins-bold] text-[#EA4335]">
+            <Text className="animate-pulse font-[roboto-bold] text-[#EA4335]">
               {formSubmitError?.message ||
                 "Server error, kindly try after some time!"}
             </Text>
@@ -324,14 +322,14 @@ export default function Page() {
             {isPending ? (
               <ActivityIndicator size={30} color={"white"} />
             ) : (
-              <Text className="text-[20px] text-white font-[poppins-bold]">
+              <Text className="text-[20px] text-white font-[roboto-bold]">
                 Verify
               </Text>
             )}
           </TouchableOpacity>
         </View>
         <View className="flex flex-col gap-y-2">
-          <Text className="font-[poppins-bold] text-[15.8px] text-center">
+          <Text className="font-[roboto-bold] text-[15.8px] text-center">
             Didn't recieve any code?{" "}
             {resendOTPTimeout <= 0 && (
               <Text
@@ -345,9 +343,9 @@ export default function Page() {
               </Text>
             )}
           </Text>
-          <Text className="text-center font-[poppins-mid] text-[#7F7E7F] text-[16px]">
+          <Text className="text-center font-[roboto-mid] text-[#7F7E7F] text-[16px]">
             Request new code in{" "}
-            <Text className="font-[poppins-bold]">00:{resendOTPTimeout}s</Text>
+            <Text className="font-[roboto-bold]">00:{resendOTPTimeout}s</Text>
           </Text>
         </View>
       </ScrollView>

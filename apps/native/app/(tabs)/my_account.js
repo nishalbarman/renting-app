@@ -99,7 +99,7 @@ const AccountScreen = () => {
                   }}
                   className={`${locProductType === "rent" && "bg-green-600 text-white"} rounded-md w-[50%] flex items-center justify-center`}>
                   <Text
-                    className={`font-[poppins-bold] tracking-wide ${locProductType !== "rent" ? "text-green-800" : "text-white"}`}>
+                    className={`font-[roboto-bold] tracking-wide ${locProductType !== "rent" ? "text-green-800" : "text-white"}`}>
                     Rent
                   </Text>
                 </Pressable>
@@ -109,7 +109,7 @@ const AccountScreen = () => {
                   }}
                   className={`${locProductType === "buy" && "bg-green-600 text-white"} rounded-md w-[50%] bg-none flex items-center justify-center`}>
                   <Text
-                    className={`font-[poppins-bold] tracking-wide ${locProductType === "rent" ? "text-green-800" : "text-white"}`}>
+                    className={`font-[roboto-bold] tracking-wide ${locProductType === "rent" ? "text-green-800" : "text-white"}`}>
                     Purchase
                   </Text>
                 </Pressable>

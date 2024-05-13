@@ -110,7 +110,7 @@ function OrderItem({
       className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px] border border-gray-300">
       {(orderStatus === "On Hold" || orderStatus === "On Progress") && (
         <View className="bg-orange-100 px-3 py-2 mt-[-5px] rounded-md mb-3 border border-orange-200">
-          <Text className="text-[#e86813] font-[poppins] text-sm tracking-wide">
+          <Text className="text-[#e86813] font-[roboto] text-sm tracking-wide">
             We are proccessing your order. You will recieve a confirmation call
             from us.
           </Text>
@@ -119,7 +119,7 @@ function OrderItem({
 
       {orderStatus === "Cancelled" && (
         <View className="bg-red-200 border border-red-500 px-3 py-2 mt-[-5px] rounded-md mb-3">
-          <Text className="text-red-900 font-[poppins] text-sm tracking-wide">
+          <Text className="text-red-900 font-[roboto] text-sm tracking-wide">
             You cancelled the order, further proccessing stopped
           </Text>
         </View>
@@ -127,7 +127,7 @@ function OrderItem({
 
       {orderStatus === "Accepted" && (
         <View className="border border-[#79E7A8] bg-[#f5fff6] px-3 py-2 mt-[-5px] rounded-md mb-3">
-          <Text className="text-[#36664c] font-[poppins] text-sm tracking-wide">
+          <Text className="text-[#36664c] font-[roboto] text-sm tracking-wide">
             Your order has been accepted and is now being moved for further
             processing.
           </Text>
@@ -136,7 +136,7 @@ function OrderItem({
 
       {orderStatus === "Pending" && (
         <View className="bg-[#a1c6e3] border border-blue-400 px-3 py-2 mt-[-5px] rounded-md mb-3">
-          <Text className="text-[#1d3345] font-[poppins] text-sm tracking-wide">
+          <Text className="text-[#1d3345] font-[roboto] text-sm tracking-wide">
             Your order is in pending state, and will be procced automatically
             once confirmed.
           </Text>
@@ -145,7 +145,7 @@ function OrderItem({
 
       {orderType === "rent" && orderStatus === "PickUp Ready" && (
         <View className="bg-orange-100 px-3 py-2 mt-[-5px] rounded-md mb-3">
-          <Text className="text-[#e86813] font-[poppins] text-sm tracking-wide">
+          <Text className="text-[#e86813] font-[roboto] text-sm tracking-wide">
             Your product is ready and waiting for you!
           </Text>
         </View>
@@ -163,7 +163,7 @@ function OrderItem({
         <View className={`ml-3 flex-1`}>
           <Text
             numberOfLines={3}
-            className={`text-md font-[poppins-bold] text-lg flex-wrap leading-[25px]`}>
+            className={`text-md font-[roboto-bold] text-lg flex-wrap leading-[25px]`}>
             {title}
           </Text>
           <View className="mt-2">

@@ -166,7 +166,7 @@ function Product({
         <View className="flex flex-col gap-y-1 w-[100%] mt-[5px] pl-2 pr-2 pb-2">
           <Text
             numberOfLines={2}
-            className="text-[13px] leading-[18px] tracking-wider text-gray-800 font-[poppins-bold] w-[100%]">
+            className="text-[13px] leading-[18px] tracking-wider text-gray-800 font-[roboto-bold] w-[100%]">
             {title}
           </Text>
 
@@ -196,21 +196,21 @@ function Product({
             <>
               {productType === "rent" ? (
                 <View className="flex-row items-center flex-wrap justify-start my-1">
-                  <Text className="font-[poppins-mid] text-[16px] text-black">
+                  <Text className="font-[roboto-mid] text-[16px] text-black">
                     ₹{rentingPrice}
                   </Text>
-                  <Text className="text-[12px] tracking-[0.1px] font-[poppins]">
+                  <Text className="text-[12px] tracking-[0.1px] font-[roboto]">
                     {" "}
                     / Day
                   </Text>
                 </View>
               ) : (
                 <View className="flex-row items-center flex-wrap justify-start my-1">
-                  <Text className="font-[poppins-mid] text-[16px] text-black">
+                  <Text className="font-[roboto-mid] text-[16px] text-black">
                     ₹{discountedPrice}
                     {"  "}
                   </Text>
-                  {originalPrice && (
+                  {originalPrice && originalPrice !== discountedPrice && (
                     <Text className="text-[13px] font-mid text-[#727273] line-through line-offset-[2px]">
                       ₹{originalPrice}
                     </Text>
@@ -219,13 +219,13 @@ function Product({
               )}
             </>
           ) : typeOfProduct === "rent" ? (
-            <Text className="font-[poppins-mid] text-[16px] leading-[30px] text-black">
+            <Text className="font-[roboto-mid] text-[16px] leading-[30px] text-black">
               ₹{rentingPrice}
-              <Text className="text-[12px] font-[poppins-light]">/ Day</Text>
+              <Text className="text-[12px] font-[roboto-light]">/ Day</Text>
             </Text>
           ) : (
             <View className="flex-row items-center flex-wrap justify-start my-1">
-              <Text className="font-[poppins-mid] text-[16px] text-black">
+              <Text className="font-[roboto-mid] text-[16px] text-black">
                 ₹{discountedPrice}
                 {"  "}
               </Text>

@@ -83,7 +83,7 @@ function searchPage() {
           JSON.parse(await AsyncStorage.getItem("searchHistory")) || [];
 
         getProductData();
-      }, 500);
+      }, 200);
     })();
 
     return () => {
@@ -161,7 +161,7 @@ function searchPage() {
           //   return (
           //     // <View className="h-12 border w-full border-none outline-none bg-white rounded-lg items-center">
           //     <TextInput
-          //       className="h-full w-full font-[poppins-mid] placeholder:text-[16px] items-center"
+          //       className="h-full w-full font-[roboto-mid] placeholder:text-[16px] items-center"
           //       editable={true}
           //       multiline={false}
           //       inputMode="text"
@@ -194,22 +194,36 @@ function searchPage() {
       />
 
       {searchBarFocus ? (
-        <ScrollView className="">
+        <ScrollView className="px-2">
+          {productData.length > 0 && (
+            <View className="my-2">
+              <Text className="text-sm font-[roboto]">Search Result</Text>
+            </View>
+          )}
+
           {productData.length > 0 &&
             productData.map((item, index) => {
+              console.log(item);
               return (
                 <Pressable
                   key={index}
                   className="px-3 py-3 w-full flex-row items-center border-b border-[1px] border-gray-200 bg-white"
                   onPress={() => {
-                    setHistory(item.title);
-                    setSearchValue(item.title);
+                    // setHistory(item.title.substring(5));
+                    // setSearchValue(item.title.substring(5));
+                    console.log(item._id);
                     router.navigate({
-                      pathname: "/list",
+                      pathname: "view",
                       params: {
-                        searchValue: item.title,
+                        id: item._id,
                       },
                     });
+                    // router.navigate({
+                    //   pathname: "list",
+                    //   params: {
+                    //     searchValue: item.title.substring(5),
+                    //   },
+                    // });
                   }}>
                   <Image
                     source={{
@@ -218,13 +232,21 @@ function searchPage() {
                     className="w-10 h-10"
                     contentPosition={"center"}
                   />
-                  <Text className="ml-3 text-md">{item.title}</Text>
+                  <Text numberOfLines={3} className="mx-3 text-md">
+                    {item.title}
+                  </Text>
                 </Pressable>
               );
             })}
 
           {productData.length > 0 && (
             <View className="my-2 border border-b border-gray-200"></View>
+          )}
+
+          {searchHistory.length > 0 && (
+            <View className="my-2">
+              <Text className="text-sm font-[roboto]">History</Text>
+            </View>
           )}
 
           {searchHistory.length > 0 &&
@@ -234,11 +256,11 @@ function searchPage() {
                   key={index}
                   className="px-3 py-3 w-full flex-row items-center border-b border-[1px] border-gray-200 bg-white"
                   onPress={async () => {
-                    setSearchValue(item);
+                    setSearchValue(item.substring(5));
                     router.navigate({
                       pathname: "/list",
                       params: {
-                        searchValue: item,
+                        searchValue: item.substring(5),
                       },
                     });
                   }}>

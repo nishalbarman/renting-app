@@ -227,7 +227,7 @@ const CartPage = () => {
               <View className="pb-2 mb-20">
                 {productType === "rent" && (
                   <View className="border border-gray-300 rounded-md p-3">
-                    <Text className="text-lg font-[poppins-bold]">
+                    <Text className="text-lg font-[roboto-bold]">
                       Pickup Center
                     </Text>
                     <View>
@@ -237,7 +237,7 @@ const CartPage = () => {
                             Center Name: {selectedCenterAddress?.centerName}
                           </Text>
 
-                          <Text className="text-[16px] font-[poppins] my-1">
+                          <Text className="text-[16px] font-[roboto] my-1">
                             Address:{" "}
                             {`${selectedCenterAddress?.address?.name}, ${selectedCenterAddress?.address?.streetName}, ${selectedCenterAddress?.address?.locality}, ${selectedCenterAddress?.address?.postalCode}, ${selectedCenterAddress?.address?.country}`}
                           </Text>
@@ -248,7 +248,7 @@ const CartPage = () => {
                           </Text>
                         </>
                       ) : (
-                        <Text className="text-[16px] font-[poppins]">
+                        <Text className="text-[16px] font-[roboto]">
                           No Pickup Center Selected, Order can not be placed.
                         </Text>
                       )}
@@ -258,7 +258,7 @@ const CartPage = () => {
                         onPress={handleChangeCenter}
                         disabled={isGlobalButtonDisabled}
                         className="flex items-center justify-center h-10 w-full bg-white border-orange-500 border-[1px] rounded-md">
-                        <Text className="text-orange-500 font-[poppins-mid] text-md">
+                        <Text className="text-orange-500 font-[roboto-mid] text-md">
                           {isCenterSelected ? "Change Center" : "Select Center"}
                         </Text>
                       </TouchableOpacity>
@@ -269,7 +269,7 @@ const CartPage = () => {
                 <View className="flex-col mt-1 p-[13px] bg-white w-full border border-gray-300 rounded-md mb-3 gap-y-1 mt-1">
                   {amountDetails?.originalAmount && (
                     <View className="flex-row justify-between w-full">
-                      <Text className="text-[18px] font-[poppins]">
+                      <Text className="text-[18px] font-[roboto]">
                         Original Price:{" "}
                       </Text>
                       <Text className="text-[18px]">
@@ -279,7 +279,7 @@ const CartPage = () => {
                   )}
                   {amountDetails?.discountedAmount && (
                     <View className="flex-row justify-between w-full">
-                      <Text className="text-[18px] font-[poppins]">
+                      <Text className="text-[18px] font-[roboto]">
                         Subtotal:
                       </Text>
                       <Text className="text-[18px]">
@@ -289,7 +289,7 @@ const CartPage = () => {
                   )}
                   {amountDetails?.shippingAmount && (
                     <View className="flex-row justify-between w-full">
-                      <Text className="text-[18px] font-[poppins]">
+                      <Text className="text-[18px] font-[roboto]">
                         Shpping Price:
                       </Text>
                       <Text className="text-[18px]">
@@ -299,10 +299,10 @@ const CartPage = () => {
                   )}
                   {amountDetails?.finalAmount && (
                     <View className="flex-row justify-between w-full">
-                      <Text className="text-[18px] font-[poppins-bold]">
+                      <Text className="text-[18px] font-[roboto-bold]">
                         Total Price
                       </Text>
-                      <Text className="text-[18px] font-[poppins-bold]">
+                      <Text className="text-[18px] font-[roboto-bold]">
                         ₹{amountDetails.finalAmount}
                       </Text>
                     </View>
@@ -323,7 +323,7 @@ const CartPage = () => {
                       {isPlacingOrder ? (
                         <ActivityIndicator size={23} color="white" />
                       ) : (
-                        <Text className="text-white font-[poppins-mid] tracking-wider text-md">
+                        <Text className="text-white font-[roboto-mid] tracking-wider text-md">
                           Checkout
                         </Text>
                       )}

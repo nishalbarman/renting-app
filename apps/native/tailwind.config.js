@@ -7,12 +7,12 @@ module.exports = {
     "./components/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    fontFamily: {
-      sans: ["poppins", "system-ui"],
-      serif: ["poppins", "system-ui"],
-      display: ["poppins", "system-ui"],
-      body: ["poppins", "system-ui"],
-    },
+    // fontFamily: {
+    //   sans: ["roboto", "system-ui"],
+    //   serif: ["roboto", "system-ui"],
+    //   display: ["roboto", "system-ui"],
+    //   body: ["roboto", "system-ui"],
+    // },
     extend: {
       colors: {
         // purple: "#514FB6",

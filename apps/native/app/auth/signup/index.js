@@ -109,15 +109,15 @@ export default function Page() {
             className="w-[90px] h-[90px]"
             source={require("../../../assets/illustrations/shopp_man.gif")}
           /> */}
-          <Text className="text-[30px] font-[poppins-mid]">Get Started</Text>
-          <Text className="text-[18px] font-[poppins-light]">
+          <Text className="text-[30px] font-[roboto-mid]">Get Started</Text>
+          <Text className="text-[18px] font-[roboto-light]">
             by creating a free account.
           </Text>
         </View>
         <View className="w-[100%] flex flex-col gap-y-[13px] items-center mt-4">
           <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
             <TextInput
-              className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+              className="h-[100%] w-[100%] inline-block rounded-lg font-[roboto-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="text"
@@ -139,20 +139,20 @@ export default function Page() {
           </View>
 
           {formData.name.isError ? (
-            <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+            <Text className="self-start text-[14px] font-[roboto-bold] text-[#EA1E24] mb-1">
               * Enter your full name
             </Text>
           ) : (
             formData.name.isTouched && (
               <>
-                {/* <Text className="self-start text-[14px] font-[poppins]">✔️</Text> */}
+                {/* <Text className="self-start text-[14px] font-[roboto]">✔️</Text> */}
               </>
             )
           )}
 
           <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
             <TextInput
-              className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+              className="h-[100%] w-[100%] inline-block rounded-lg font-[roboto-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="numeric"
@@ -174,20 +174,20 @@ export default function Page() {
           </View>
 
           {formData.mobileNo.isError ? (
-            <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+            <Text className="self-start text-[14px] font-[roboto-bold] text-[#EA1E24] mb-1">
               * Not a valid mobile number
             </Text>
           ) : (
             formData.mobileNo.isTouched && (
               <>
-                {/* <Text className="self-start text-[14px] font-[poppins]">✔️</Text> */}
+                {/* <Text className="self-start text-[14px] font-[roboto]">✔️</Text> */}
               </>
             )
           )}
 
           <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
             <TextInput
-              className="h-[100%] w-[100%] inline-block rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+              className="h-[100%] w-[100%] inline-block rounded-lg font-[roboto-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="email"
@@ -209,20 +209,20 @@ export default function Page() {
           </View>
 
           {formData.email.isError ? (
-            <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+            <Text className="self-start text-[14px] font-[roboto-bold] text-[#EA1E24] mb-1">
               * Not a valid email address
             </Text>
           ) : (
             formData.email.isTouched && (
               <>
-                {/* <Text className="self-start text-[14px] font-[poppins]">✔️</Text> */}
+                {/* <Text className="self-start text-[14px] font-[roboto]">✔️</Text> */}
               </>
             )
           )}
 
           <View className="h-[60px] w-[100%] p-[0px_6%] border-none outline-none bg-[#F1F0F0] flex flex-row justify-around items-center rounded-lg">
             <TextInput
-              className="h-[100%] w-[100%] rounded-lg font-[poppins-mid] placeholder:text-[16px]"
+              className="h-[100%] w-[100%] rounded-lg font-[roboto-mid] placeholder:text-[16px]"
               editable={true}
               multiline={false}
               inputMode="text"
@@ -260,14 +260,14 @@ export default function Page() {
           </View>
 
           {formData.password.isError ? (
-            <Text className="self-start text-[14px] font-[poppins-bold] text-[#EA1E24] mb-1">
+            <Text className="self-start text-[14px] font-[roboto-bold] text-[#EA1E24] mb-1">
               * Password should be of atleast 8 digits and should contain one
               uppercase letter, and one special character.
             </Text>
           ) : (
             formData.password.isTouched && (
               <>
-                {/* <Text className="self-start text-[14px] font-[poppins]">✔️</Text> */}
+                {/* <Text className="self-start text-[14px] font-[roboto]">✔️</Text> */}
               </>
             )
           )}
@@ -279,7 +279,7 @@ export default function Page() {
               unfillColor="#FFFFFF"
               iconStyle={{ borderColor: "red" }}
               innerIconStyle={{ borderWidth: 2 }}
-              textStyle={{ fontFamily: "mrt" }}
+              textStyle={{ fontFamily: "roboto" }}
               onPress={(isChecked) => {
                 setFormData((prev) => ({
                   ...prev,
@@ -292,18 +292,18 @@ export default function Page() {
                 }));
               }}
             />
-            <Text className="text-[13px] text-left font-[poppins-mid] leading-[23px]">
+            <Text className="text-[13px] text-left font-[roboto-mid] leading-[23px]">
               By continuing you are agree to our{" "}
               <Link
                 push
-                className="underline text-green-800 font-[poppins-bold]"
+                className="underline text-green-800 font-[roboto-bold]"
                 href={"/terms-&-conditions"}>
                 Terms & Conditions
               </Link>{" "}
               and{" "}
               <Link
                 push
-                className="underline text-green-800 font-[poppins-bold]"
+                className="underline text-green-800 font-[roboto-bold]"
                 href={"/privacy-policy"}>
                 Privacy Policy
               </Link>
@@ -319,16 +319,16 @@ export default function Page() {
             {isPending ? (
               <ActivityIndicator size={30} color={"white"} />
             ) : (
-              <Text className="text-lg text-white font-[poppins-mid]">
+              <Text className="text-lg text-white font-[roboto-mid]">
                 Create account
               </Text>
             )}
           </TouchableOpacity>
-          <Text className="text-center font-[poppins-mid] text-[16px]">
+          <Text className="text-center font-[roboto-mid] text-[16px]">
             Already have an account?{" "}
             <Link
               replace
-              className="underline text-center font-[poppins-bold]"
+              className="underline text-center font-[roboto-bold]"
               href={"/auth/login"}>
               Login Now
             </Link>

@@ -199,10 +199,10 @@ function LocationMap() {
               style={{ position: "absolute", bottom: 50 }}>
               {!!selectedCenterAddress ? (
                 <>
-                  <Text className="text-[14px] font-[poppins-bold]">
+                  <Text className="text-[14px] font-[roboto-bold]">
                     {selectedCenterAddress.centerName}
                   </Text>
-                  <Text className="text-[12px] font-[poppins]">
+                  <Text className="text-[12px] font-[roboto]">
                     {selectedCenterAddress?.address?.name},{" "}
                     {selectedCenterAddress?.address?.streetName}{" "}
                     {selectedCenterAddress?.address?.locality},{" "}
@@ -237,7 +237,7 @@ function LocationMap() {
                     {/* <View className="h-[20px] w-[20px] rounded-full bg-dark-purple items-center justify-center">
                       <MaterialIcons name="done" size={10} color="white" />
                     </View> */}
-                    <Text className="ml-1 align-middle font-[poppins] text-[13px] text-white">
+                    <Text className="ml-1 align-middle font-[roboto] text-[13px] text-white">
                       Confirm Selection
                     </Text>
                   </>

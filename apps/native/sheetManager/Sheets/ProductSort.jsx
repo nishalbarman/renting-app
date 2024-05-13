@@ -12,31 +12,31 @@ export default function ProductSort() {
     () => [
       {
         id: 0,
-        label: <Text className="font-[poppins-mid]">None</Text>,
+        label: <Text className="font-[roboto-mid]">None</Text>,
         value: "",
         containerStyle: radiobuttonStyle,
       },
       {
         id: 1,
-        label: <Text className="font-[poppins-mid]">Popularity</Text>,
+        label: <Text className="font-[roboto-mid]">Popularity</Text>,
         value: "popularity",
         containerStyle: radiobuttonStyle,
       },
       {
         id: 2,
-        label: <Text className="font-[poppins-mid]">Price -- Low to High</Text>,
+        label: <Text className="font-[roboto-mid]">Price -- Low to High</Text>,
         value: "low-to-hight-price",
         containerStyle: radiobuttonStyle,
       },
       {
         id: 3,
-        label: <Text className="font-[poppins-mid]">Price -- High to Low</Text>,
+        label: <Text className="font-[roboto-mid]">Price -- High to Low</Text>,
         value: "hight-to-low-price",
         containerStyle: radiobuttonStyle,
       },
       {
         id: 4,
-        label: <Text className="font-[poppins-mid]">Newest First</Text>,
+        label: <Text className="font-[roboto-mid]">Newest First</Text>,
         value: "newest",
         containerStyle: radiobuttonStyle,
       },
@@ -59,7 +59,7 @@ export default function ProductSort() {
     <ActionSheet closeOnPressBack={true} gestureEnabled={true}>
       <ScrollView>
         <View className="pt-3 flex flex-col items-center pb-10">
-          <Text className="font-[poppins-bold] text-[14px]">SORT BY</Text>
+          <Text className="font-[roboto-bold] text-[14px]">SORT BY</Text>
 
           <View className="w-full px-4">
             <RadioGroup

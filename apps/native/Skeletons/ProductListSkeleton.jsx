@@ -36,12 +36,12 @@ const ProductsListSkeleton = ({ title, bgColor, titleColor, viewAllPath }) => {
       {/* <View className="flex-row justify-between mb-1">
         <Animated.View
           style={{ opacity: opacityAnimation }}
-          className="font-[poppins-xbold] text-[22px] bg-gray-300 rounded h-11 flex-1"
+          className="font-[roboto-xbold] text-[22px] bg-gray-300 rounded h-11 flex-1"
         />
         <View className="w-2 bg-white"></View>
         <Animated.View
           style={{ opacity: opacityAnimation }}
-          className="text-[15px] text-purple font-[poppins-bold] underline bg-gray-300 rounded h-11 flex-1"
+          className="text-[15px] text-purple font-[roboto-bold] underline bg-gray-300 rounded h-11 flex-1"
         />
       </View> */}
 

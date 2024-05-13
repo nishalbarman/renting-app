@@ -25,7 +25,7 @@ function FeedbackCard({
           contentPosition={"center"}
         />
         <View className="bg-white shadow rounded-md p-6 flex flex-col w-full">
-          <Text className="font-[poppins-bold] text-[15px]">
+          <Text className="font-[roboto-bold] text-[15px]">
             {feedbackGivenBy}
           </Text>
           <View className="flex flex-row justify-between items-center flex-wrap">
@@ -47,7 +47,7 @@ function FeedbackCard({
             </View>
             <Text>{new Date(feedBackDate).toDateString()}</Text>
           </View>
-          <Text className="leading-[22px] font-[poppins] text-[16px] mt-2">
+          <Text className="leading-[22px] font-[roboto] text-[16px] mt-2">
             {feedbackText}
           </Text>
         </View>

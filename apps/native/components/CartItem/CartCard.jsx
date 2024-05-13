@@ -131,7 +131,7 @@ function CartCard({
         <View className={`ml-3 flex-1`}>
           <Text
             numberOfLines={2}
-            className={`text-lg font-[poppins-mid] flex-wrap leading-[25px]`}>
+            className={`text-lg font-[roboto-mid] flex-wrap leading-[25px]`}>
             {product?.title}
           </Text>
           <View className="mt-2">
@@ -169,29 +169,29 @@ function CartCard({
         <View className="flex gap-y-2 basis-1/2">
           {productType === "buy" ? (
             <>
-              <Text className="text-[20px] font-[poppins-bold]">
+              <Text className="text-[20px] font-[roboto-bold]">
                 ₹{variant?.discountedPrice || product?.discountedPrice}{" "}
-                <Text className="text-[15px] text-[#787878] font-[poppins] line-through">
+                <Text className="text-[15px] text-[#787878] font-[roboto] line-through">
                   ₹{variant?.originalPrice || product?.originalPrice}
                 </Text>
               </Text>
             </>
           ) : (
             <>
-              <Text className="text-[18px] font-[poppins-bold]">
+              <Text className="text-[18px] font-[roboto-bold]">
                 ₹{variant?.rentingPrice || product?.rentingPrice}
-                <Text className="text-[13px] font-[poppins-bold]"> / Day</Text>
+                <Text className="text-[13px] font-[roboto-bold]"> / Day</Text>
               </Text>
             </>
           )}
 
           <View>
-            <Text className="text-[13px] leading-2 font-[poppins]">
+            <Text className="text-[13px] leading-2 font-[roboto]">
               Shipping price: ₹
               {variant?.shippingPrice || product?.shippingPrice}
             </Text>
             {!freeDelivery && (
-              <Text className="text-[13px] leading-2 font-[poppins]">
+              <Text className="text-[13px] leading-2 font-[roboto]">
                 FREE shipping above 500
               </Text>
             )}
@@ -211,7 +211,7 @@ function CartCard({
               className="rounded-full w-[24px] h-[24px] flex flex items-center justify-center bg-white">
               <AntDesign name="minus" size={15} color="black" />
             </TouchableOpacity>
-            <Text className="font-[poppins-bold] text-[15px] mr-4 ml-4">
+            <Text className="font-[roboto-bold] text-[15px] mr-4 ml-4">
               {changedQuantity}
             </Text>
             <TouchableOpacity
@@ -235,7 +235,7 @@ function CartCard({
                 className="rounded-full w-[24px] h-[24px] flex flex items-center justify-center bg-white">
                 <AntDesign name="minus" size={15} color="black" />
               </TouchableOpacity>
-              <Text className="font-[poppins-bold] text-[15px] mr-4 ml-4">
+              <Text className="font-[roboto-bold] text-[15px] mr-4 ml-4">
                 {changedRentDays} <Text className="text-[12px]">/ Days</Text>
               </Text>
               <TouchableOpacity
@@ -253,11 +253,11 @@ function CartCard({
             product?.availableStocks === 0 ||
             quantity >
               (variant?.availableStocks || product?.availableStocks) ? (
-              <Text className="text-[13px] text-[#d12626] font-[poppins-bold]">
+              <Text className="text-[13px] text-[#d12626] font-[roboto-bold]">
                 Out of stock
               </Text>
             ) : (
-              <Text className="text-[13px] text-[#32a852] font-[poppins-bold]">
+              <Text className="text-[13px] text-[#32a852] font-[roboto-bold]">
                 ({variant?.availableStocks || product?.availableStocks} items)
                 In stock
               </Text>

@@ -59,7 +59,7 @@ export default function AddressList() {
         renderItem={() => {
           return (
             <View className="pt-3 flex flex-col items-center pb-10">
-              <Text className="font-[poppins-bold] text-[15px]">
+              <Text className="font-[roboto-bold] text-[15px]">
                 Your addresses
               </Text>
 
@@ -133,7 +133,7 @@ export default function AddressList() {
                         );
                       }}
                       ListEmptyComponent={
-                        <Text className="font-[poppins] text-[18px] text-center mt-2">
+                        <Text className="font-[roboto] text-[18px] text-center mt-2">
                           No address found
                         </Text>
                       }
@@ -147,7 +147,7 @@ export default function AddressList() {
                     </TouchableOpacity>
                   )}
                   {address.length >= 5 && (
-                    <Text className="mt-1 text-red-600 font-[poppins-bold]">
+                    <Text className="mt-1 text-red-600 font-[roboto-bold]">
                       * Maximum allowed address limit reached (5), delete
                       already available address to add a new address.
                     </Text>

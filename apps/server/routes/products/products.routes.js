@@ -554,12 +554,20 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ message: "Product Data Not Found" });
     }
 
+    if (!productData.originalPrice) {
+      productData.originalPrice = productData.discountedPrice;
+    }
+
     productData.productVariant = Object.values(productData.productVariant);
 
     if (Array.isArray(productData?.productVariant)) {
       const new_Variant_With_Size_Included = [];
 
-      productData.productVariant.map((variant) => {
+      productData.productVariant.forEach((variant) => {
+        if (!variant.originalPrice) {
+          variant.originalPrice = variant.discountedPrice;
+        }
+
         const sizes = variant?.size?.replace(/ /g, "");
         if (!!sizes) {
           sizes.split(",")?.forEach((eachSize) => {

@@ -67,7 +67,7 @@ function LocationMap() {
   const handleSelectAddress = () => {
     if (!address) return;
     setLoading(true);
-    
+
     dispatch(
       setAddressDataFromMap({ coordinates: selectedLocation, address: address })
     );
@@ -100,7 +100,7 @@ function LocationMap() {
           <View
             className="w-fit bg-white h-fit p-4 flex flex-col justify-center items-center rounded-md"
             style={{ position: "absolute", bottom: 50 }}>
-            <Text className="text-[12px] font-[poppins]">
+            <Text className="text-[12px] font-[roboto]">
               {!!address
                 ? `${address?.name}, ${address?.thoroughfare} ${address?.locality}, ${address?.postalCode}, ${address?.country}`
                 : "Not Selected"}
@@ -115,7 +115,7 @@ function LocationMap() {
                   <View className="h-[20px] w-[20px] rounded-full bg-dark-purple items-center justify-center">
                     <MaterialIcons name="done" size={10} color="white" />
                   </View>
-                  <Text className="ml-1 align-middle font-[poppins] text-[12px]">
+                  <Text className="ml-1 align-middle font-[roboto] text-[12px]">
                     Select
                   </Text>
                 </>

@@ -39,7 +39,7 @@ const ProductSkeleton = ({ width }) => {
       <View className="flex flex-col gap-y-1 w-[100%] mt-[5px] pl-2 pr-2 pb-2">
         <Animated.View
           style={{ opacity: opacityAnimation }}
-          className="text-[14px] font-[poppins-mid] leading-[22px] w-[100%] bg-gray-300 rounded h-5 w-32"
+          className="text-[14px] font-[roboto-mid] leading-[22px] w-[100%] bg-gray-300 rounded h-5 w-32"
         />
 
         <View className="flex flex-row items-center">
@@ -54,18 +54,18 @@ const ProductSkeleton = ({ width }) => {
           </View>
           <Animated.View
             style={{ opacity: opacityAnimation }}
-            className="text-[#A7A6A7] text-[13px] font-[poppins-mid] align-middle bg-gray-300 rounded h-4 w-12 ml-2"
+            className="text-[#A7A6A7] text-[13px] font-[roboto-mid] align-middle bg-gray-300 rounded h-4 w-12 ml-2"
           />
         </View>
 
         <View className="flex flex-col">
           <Animated.View
             style={{ opacity: opacityAnimation }}
-            className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black bg-gray-300 rounded h-6 w-24"
+            className="font-[roboto-bold] text-[16px] align-middle leading-[30px] text-black bg-gray-300 rounded h-6 w-24"
           />
           <Animated.View
             style={{ opacity: opacityAnimation }}
-            className="font-[poppins-bold] text-[16px] align-middle leading-[30px] text-black bg-gray-300 rounded h-6 w-32 mt-2"
+            className="font-[roboto-bold] text-[16px] align-middle leading-[30px] text-black bg-gray-300 rounded h-6 w-32 mt-2"
           />
         </View>
       </View>
