@@ -133,7 +133,7 @@ const OrderResult = () => {
                   </View>
 
                   <View className="flex-1 justify-center items-center my-5">
-                    <View className="bg-white p-2 rounded-lg w-11/12 max-w-md py-4 border px-3 border-gray-300">
+                    <View className="bg-white p-2 rounded-lg w-11/12 max-w-md py-4 border-none px-3 border-gray-300">
                       <View className="items-center mb-4">
                         <View className="bg-green-500 rounded-full p-2">
                           <AntDesign

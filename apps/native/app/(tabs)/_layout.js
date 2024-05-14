@@ -19,7 +19,8 @@ export default function TabLayout() {
 
         headerTitleAlign: "center",
         // tabBarActiveTintColor: "#e0570d",
-        tabBarActiveTintColor: "green",
+        // tabBarActiveTintColor: "green",
+        tabBarActiveTintColor: "black",
 
         // tabBarActiveBackgroundColor: "white",
 

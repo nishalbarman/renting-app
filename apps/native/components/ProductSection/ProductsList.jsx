@@ -91,7 +91,7 @@ function ProductsList({
               {title}
             </Text>
             <Pressable
-              className={`h-7 px-2 bg-green-600 rounded-md items-center justify-center`}
+              className={`h-7 px-2 bg-green-600 bg-black rounded-md items-center justify-center`}
               onPress={() => {
                 router.navigate({
                   pathname: "/list",

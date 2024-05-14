@@ -85,37 +85,37 @@ export default function AddressList() {
           <>
             {address && address.length > 0 ? (
               <>
-                <View className="px-3 absolute z-[999] bottom-0 w-full bg-transparent">
-                  <TouchableOpacity
+                <View className="px-3 w-full bg-transparent">
+                  <Pressable
                     disabled={!selectedAddress}
                     onPress={handleContinueClick}
-                    className="rounded-md h-11 mb-3 w-full bg-green-600 flex items-center justify-center">
+                    className="rounded-md h-11 mb-3 w-full bg-green-600 bg-black flex items-center justify-center">
                     {nextScreenClicked ? (
                       <ActivityIndicator size={25} color={"white"} />
                     ) : (
-                      <Text className="text-white text-lg">Select</Text>
+                      <Text className="text-white text-lg">Continue</Text>
                     )}
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
                 <FlatList
-                  className="w-full px-4"
+                  className="w-full px-4 h-full"
                   keyExtractor={(item, index) => index.toString()}
                   data={address}
                   ItemSeparatorComponent={() => <View className="my-1"></View>}
-                  // ListFooterComponent={() => (
-                  //   <>
-                  //     <TouchableOpacity
-                  //       disabled={!selectedAddress}
-                  //       onPress={handleContinueClick}
-                  //       className="rounded-md h-12 mb-3 w-full bg-green-600 flex items-center justify-center absolute">
-                  //       {nextScreenClicked ? (
-                  //         <ActivityIndicator size={25} color={"white"} />
-                  //       ) : (
-                  //         <Text className="text-white text-lg">Continue</Text>
-                  //       )}
-                  //     </TouchableOpacity>
-                  //   </>
-                  // )}
+                  ListHeaderComponent={() => (
+                    <>
+                      <TouchableOpacity
+                        disabled={!selectedAddress}
+                        onPress={handleContinueClick}
+                        className="rounded-md h-12 mb-3 w-full bg-black-600 flex items-center justify-center absolute">
+                        {nextScreenClicked ? (
+                          <ActivityIndicator size={25} color={"white"} />
+                        ) : (
+                          <Text className="text-white text-lg">Continue</Text>
+                        )}
+                      </TouchableOpacity>
+                    </>
+                  )}
                   renderItem={({ item }) => (
                     <>
                       <Pressable
@@ -125,7 +125,7 @@ export default function AddressList() {
                         style={{
                           position: "relative",
                         }}
-                        className={`h-22 bg-light-blue-200 p-4 rounded-md w-full border ${selectedAddress === item._id ? "border-green-600 border-[2px] bg-green-100" : "border-gray-300"}`}>
+                        className={`h-22 bg-light-blue-200 p-4 rounded-md w-full border ${selectedAddress === item._id ? "border-black-600 border-[2px] bg-green-100 bg-white" : "border-gray-300"}`}>
                         <View className="w-full">
                           <Text className="text-black font-medium mb-2">
                             {name}
@@ -153,14 +153,7 @@ export default function AddressList() {
                         </View>
                         {selectedAddress === item._id && (
                           <View className="w-full flex-row justify-end">
-                            <View
-                              // style={{
-                              //   position: "absolute",
-                              //   bottom: 0,
-                              //   right: 0,
-                              //   backgroundColor: "white",
-                              // }}
-                              className="border border-[2px] border-green-600 rounded-md p-1">
+                            <View className="border border-[2px] border-black-600 rounded-md p-1">
                               <AntDesign
                                 name="check"
                                 size={22}

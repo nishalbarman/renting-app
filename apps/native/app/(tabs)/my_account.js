@@ -92,14 +92,23 @@ const AccountScreen = () => {
             <Text className="font-semibold text-lg mb-1">Product Mode</Text>
 
             <View className="w-full flex-row">
-              <View className="flex flex-row h-9 p-1 rounded-md w-[40%] w-full bg-white border border-green-700 mt-1">
+              <View className="flex flex-row h-11 rounded-md w-[40%] w-full bg-gray-100 mt-1 overflow-hidden">
+                {/* border-green-700  */}
                 <Pressable
                   onPress={() => {
                     handleChangeProductType("rent");
                   }}
-                  className={`${locProductType === "rent" && "bg-green-600 text-white"} rounded-md w-[50%] flex items-center justify-center`}>
+                  style={
+                    locProductType === "rent"
+                      ? {
+                          elevation: 3,
+                        }
+                      : {}
+                  }
+                  className={`${locProductType === "rent" && "bg-black text-white rounded-r-full"} w-[50%] flex items-center justify-center`}>
+                  {/* bg-black-600, text-black-800*/}
                   <Text
-                    className={`font-[roboto-bold] tracking-wide ${locProductType !== "rent" ? "text-green-800" : "text-white"}`}>
+                    className={`font-[roboto-bold] tracking-wide ${locProductType !== "rent" ? "text-black" : "text-white"}`}>
                     Rent
                   </Text>
                 </Pressable>
@@ -107,9 +116,17 @@ const AccountScreen = () => {
                   onPress={() => {
                     handleChangeProductType("buy");
                   }}
-                  className={`${locProductType === "buy" && "bg-green-600 text-white"} rounded-md w-[50%] bg-none flex items-center justify-center`}>
+                  style={
+                    locProductType === "buy"
+                      ? {
+                          elevation: 3,
+                        }
+                      : {}
+                  }
+                  className={`${locProductType === "buy" && "bg-black text-white rounded-l-full"} w-[50%] bg-none flex items-center justify-center`}>
+                  {/* bg-black-600, text-black-800*/}
                   <Text
-                    className={`font-[roboto-bold] tracking-wide ${locProductType === "rent" ? "text-green-800" : "text-white"}`}>
+                    className={`font-[roboto-bold] tracking-wide ${locProductType === "rent" ? "text-black" : "text-white"}`}>
                     Purchase
                   </Text>
                 </Pressable>

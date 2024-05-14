@@ -55,7 +55,7 @@ export default function Tab() {
                 className="ml-2 items-center justify-center h-12 w-12 rounded-md">
                 <View
                   className={
-                    "w-6 h-6 items-center justify-center z-[999] rounded-full bg-green-600 absolute right-0 top-0"
+                    "w-6 h-6 items-center justify-center z-[999] rounded-full bg-green-600 bg-black absolute right-0 top-0"
                   }>
                   <Text className="text-[12px] text-white">
                     {cartItems?.length || 0}
@@ -71,7 +71,10 @@ export default function Tab() {
                 onPress={() => {
                   router.navigate("/search-page");
                 }}
-                className="h-12 flex-grow rounded-md border border-gray-300 flex-row items-center justify-between px-3 ">
+                style={{
+                  elevation: 0.7,
+                }}
+                className="h-12 flex-grow rounded-md flex-row items-center justify-between px-3 bg-gray-100">
                 <Text className="text-gray-500 font-[roboto]">
                   Seach Products
                 </Text>

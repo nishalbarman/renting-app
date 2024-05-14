@@ -6,6 +6,7 @@ import {
   FlatList,
   ActivityIndicator,
   Text,
+  Pressable,
 } from "react-native";
 import OrderItem from "../../components/OrderScreen/OrderItem";
 import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
@@ -13,6 +14,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 import EmptyBag from "../../components/EmptyBag/EmptyBag";
+import { EvilIcons } from "@expo/vector-icons";
 
 const OrderScreen = () => {
   const { productType } = useSelector((state) => state.product_store);
@@ -138,29 +140,45 @@ const OrderScreen = () => {
           {!orders || orders.length === 0 ? (
             <EmptyBag message={"Your order list is empty"} />
           ) : (
-            <FlatList
-              className={`bg-white`}
-              data={[""]}
-              renderItem={() => (
-                <View className={`p-2`}>
-                  {orders?.map((item, index) => (
-                    <OrderItem
-                      key={index}
-                      order={item}
-                      productType={productType}
-                      jwtToken={jwtToken}
-                    />
-                  ))}
-                </View>
-              )}
-              showsHorizontalScrollIndicator={false}
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }
-              onEndReached={handleFetchNextPage}
-              onEndReachedThreshold={0.8}
-              ListFooterComponent={ListEndLoader} // Loader when loading next page.
-            />
+            <>
+              <Pressable
+                onPress={() => {
+                  // router.navigate("/search-page");
+                }}
+                style={{
+                  elevation: 0.7,
+                }}
+                className="h-12 flex-grow rounded-md flex-row items-center justify-between px-3 bg-gray-100 mb-1 mx-2">
+                <Text className="text-gray-500 font-[roboto]">Seach Order</Text>
+                <EvilIcons name="search" size={24} color="black" />
+              </Pressable>
+              <FlatList
+                className={`bg-white`}
+                data={[""]}
+                renderItem={() => (
+                  <View className={`p-2`}>
+                    {orders?.map((item, index) => (
+                      <OrderItem
+                        key={index}
+                        order={item}
+                        productType={productType}
+                        jwtToken={jwtToken}
+                      />
+                    ))}
+                  </View>
+                )}
+                showsHorizontalScrollIndicator={false}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                onEndReached={handleFetchNextPage}
+                onEndReachedThreshold={0.8}
+                ListFooterComponent={ListEndLoader} // Loader when loading next page.
+              />
+            </>
           )}
         </>
       )}
