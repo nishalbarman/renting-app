@@ -464,7 +464,9 @@ function product() {
 
             {/* product body */}
             <View className="flex flex-1 p-[12px] flex-col">
-              <Text className="font-[roboto-mid] leading-[103%] text-grey text-[16px]">
+              <Text
+                numberOfLines={3}
+                className="font-[roboto-mid] leading-[103%] text-black text-[16px]">
                 {productDetails.title}
               </Text>
 
@@ -475,9 +477,6 @@ function product() {
                     return (
                       <AntDesign
                         key={index}
-                        onPress={() => {
-                          setCurrentUserReviewStar(index + 1);
-                        }}
                         name={
                           index + 1 <= Math.round(productDetails.stars)
                             ? "star"
@@ -493,7 +492,7 @@ function product() {
                     );
                   })}
                 </View>
-                <Text className="text-[#787878]">
+                <Text className="text-[#787878] text-sm">
                   ({productDetails.totalFeedbacks})
                 </Text>
               </View>
@@ -568,7 +567,7 @@ function product() {
                                       ? "white"
                                       : "black",
                                 }}
-                                className="text-md font-bold">
+                                className="text-[15px] font-[roboto-bold]">
                                 {item}
                               </Text>
                             </Pressable>
@@ -709,7 +708,11 @@ function product() {
                         {isAddToCartLoading ? (
                           <ActivityIndicator size={20} color={"white"} />
                         ) : (
-                          <Text className="text-white text-md font-[roboto-bold]">
+                          <Text
+                            style={{
+                              color: "white",
+                            }}
+                            className="text-white text-[15px] font-[roboto-bold]">
                             Add To Cart
                           </Text>
                         )}
@@ -719,7 +722,7 @@ function product() {
                     <Pressable
                       onPress={handleGoToCart}
                       className="ml-2 bg-black h-12 w-14 justify-center items-center rounded-md flex-grow">
-                      <Text className="text-white text-md font-[roboto-bold]">
+                      <Text className="text-white text-[15px] font-[roboto-bold]">
                         Go To Cart
                       </Text>
                     </Pressable>

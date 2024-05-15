@@ -26,14 +26,15 @@ export default {
         usesNonExemptEncryption: false,
         usesCleartextTraffic: true,
       },
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON_IOS,
+      // googleServicesFile: process.env.GOOGLE_SERVICES_JSON_IOS,
+      googleServicesFile: "./google-services-file/GoogleService-Info.plist",
       bundleIdentifier: "com.crafter.shop",
     },
     android: {
       versionCode: 1,
       versionName: "1.0.0",
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
-      // googleServicesFile: "./google-services-file/google-services.json",
+      // googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
+      googleServicesFile: "./google-services-file/google-services.json",
       adaptiveIcon: {
         foregroundImage: "./assets/appIcons/app_launcher.png",
         backgroundColor: "#ffffff",

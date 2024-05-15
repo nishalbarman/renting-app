@@ -148,8 +148,10 @@ const OrderScreen = () => {
                 style={{
                   elevation: 0.7,
                 }}
-                className="h-12 flex-grow rounded-md flex-row items-center justify-between px-3 bg-gray-100 mb-1 mx-2">
-                <Text className="text-gray-500 font-[roboto]">Seach Order</Text>
+                className="h-12 flex-row rounded-md flex-row items-center justify-between px-3 bg-gray-100 mb-1 mx-2">
+                <Text className="text-gray-500 font-[roboto] text-[15px]">
+                  Seach Order
+                </Text>
                 <EvilIcons name="search" size={24} color="black" />
               </Pressable>
               <FlatList

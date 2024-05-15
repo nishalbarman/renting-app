@@ -59,6 +59,11 @@ router.post(
         case "payment_intent.succeeded":
           const paymentIntentSucceeded = event.data.object;
 
+          console.log(
+            "Payment Intent Metadata -->",
+            paymentIntentSucceeded.metadata
+          );
+
           await OrderModel.updateMany(
             { paymentTxnId: paymentIntentSucceeded.metadata.paymentTxnId },
             { $set: { paymentStatus: "Success", orderStatus: "On Progress" } }
@@ -77,7 +82,11 @@ router.post(
             paymentTxnId: paymentIntentSucceeded.metadata.paymentTxnId,
           });
 
-          const productIds = orders.map((order) => order.product);
+          console.log("WebHook Orders -->", orders);
+
+          const productIds = orders?.map((order) => order.product);
+
+          console.log("WebHook Products -->", productIds);
 
           await Product.updateMany(
             {
@@ -88,25 +97,25 @@ router.post(
             }
           );
 
-          const user = await User.findById(
-            paymentIntentSucceeded.metadata.user
-          );
+          // const user = await User.findById(
+          //   paymentIntentSucceeded.metadata.user
+          // );
 
-          const address = await Address.findById(
-            paymentIntentSucceeded.metadata.address
-          );
+          // const address = await Address.findById(
+          //   paymentIntentSucceeded.metadata.address
+          // );
 
-          const orderDetails = await PaymentTransModel.find({
-            orderGroupID: paymentIntentSucceeded.metadata.orderGroupID,
-          }).populate("order");
+          // const orderDetails = await PaymentTransModel.find({
+          //   orderGroupID: paymentIntentSucceeded.metadata.orderGroupID,
+          // }).populate("order");
 
-          await ShiprocketUtils.createShiprocketOrder(
-            paymentIntentSucceeded.metadata.orderGroupID,
-            process.env.SHIPROCKET_CHANNELID,
-            user,
-            address,
-            orderDetails
-          );
+          // await ShiprocketUtils.createShiprocketOrder(
+          //   paymentIntentSucceeded.metadata.orderGroupID,
+          //   process.env.SHIPROCKET_CHANNELID,
+          //   user,
+          //   address,
+          //   orderDetails
+          // );
 
           // const centerDetails = await User.findOne({
           //   center: paymentIntentSucceeded.metadata.center,

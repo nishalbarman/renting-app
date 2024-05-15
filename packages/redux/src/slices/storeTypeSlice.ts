@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  productType: "rent",
+  // productType: "rent",
+  productType: "buy",
 };
 
 export const storeTypeSlice = createSlice({

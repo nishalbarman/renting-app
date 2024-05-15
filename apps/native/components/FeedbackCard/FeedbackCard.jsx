@@ -45,7 +45,7 @@ function FeedbackCard({
                 );
               })}
             </View>
-            <Text>{new Date(feedBackDate).toDateString()}</Text>
+            <Text className="text-sm">{new Date(feedBackDate).toDateString()}</Text>
           </View>
           <Text className="leading-[22px] font-[roboto] text-[16px] mt-2">
             {feedbackText}

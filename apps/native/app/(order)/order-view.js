@@ -103,9 +103,9 @@ const OrderView = () => {
                     ).toLocaleDateString()}
                   </Text>
                   {orderDetails?.order[0]?.orderType === "rent" && (
-                    <View className="bg-green-200 py-4 px-5 mt-3 rounded-md items-center">
+                    <View className="bg-green-200 py-4 px-3 mt-3 rounded-md items-center">
                       <Text className={"text-sm font-bold text-green-800"}>
-                        * This is a Rent Order, You need to pickup the item by
+                        This is a Rent Order, You need to pickup the item by
                         your self
                       </Text>
                     </View>
@@ -116,33 +116,33 @@ const OrderView = () => {
                   {/* <Text className="text-gray-500">Request Amount</Text> */}
                   <View className="mt-6">
                     <View className="flex-row justify-between items-center text-gray-700">
-                      <Text>Order ID</Text>
-                      <Text className="font-semibold">
+                      <Text className=" text-sm">Order ID</Text>
+                      <Text className="font-semibold text-sm">
                         {orderDetails?.order[0]?.orderGroupID}
                       </Text>
                     </View>
                     <View className="flex-row justify-between items-center text-gray-700 mt-1 ">
-                      <Text>Txn ID</Text>
-                      <Text className="font-semibold">
+                      <Text className=" text-sm">Txn ID</Text>
+                      <Text className="font-semibold text-sm">
                         {orderDetails?.order[0]?.paymentTxnId}
                       </Text>
                     </View>
 
                     <View className="flex-row justify-between items-center text-gray-700 mt-4">
-                      <Text>Subtotal:</Text>
-                      <Text className="font-semibold">
+                      <Text className=" text-sm">Subtotal:</Text>
+                      <Text className="font-semibold text-sm">
                         Rs.{orderDetails?.subTotalPrice}
                       </Text>
                     </View>
                     <View className="flex-row justify-between items-center text-gray-700 mt-1">
-                      <Text>Shipping Price:</Text>
-                      <Text className="font-semibold">
+                      <Text className=" text-sm">Shipping Price:</Text>
+                      <Text className="font-semibold text-sm">
                         Rs.{orderDetails?.shippingPrice}
                       </Text>
                     </View>
                     <View className="flex-row justify-between items-center text-gray-700 mt-1">
-                      <Text>Total Price:</Text>
-                      <Text className="font-semibold">
+                      <Text className=" text-sm">Total Price:</Text>
+                      <Text className="font-semibold text-sm">
                         Rs.{orderDetails?.totalPrice}
                       </Text>
                     </View>
@@ -208,12 +208,12 @@ const OrderView = () => {
                     renderItem={({ item }) => {
                       return (
                         <View className="flex flex-row">
-                          <Text>{item?.quantity}pc </Text>
+                          <Text className=" text-sm">{item?.quantity}pc </Text>
                           <Pressable
                             onPress={() => {
                               router.navigate(`/view?id=${item.product}`);
                             }}>
-                            <Text className="text-green-800">
+                            <Text className="text-green-800 text-sm">
                               {item?.title}
                             </Text>
                           </Pressable>

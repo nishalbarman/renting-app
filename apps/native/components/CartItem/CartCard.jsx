@@ -137,27 +137,27 @@ function CartCard({
           <View className="mt-2">
             {!!variant?.color && (
               <View className={`flex-row`}>
-                <Text className={`text-[#5e5e5e]`}>Color:</Text>
-                <Text className={`ml-1`}>{variant?.color}</Text>
+                <Text className={`text-[#5e5e5e] text-sm`}>Color:</Text>
+                <Text className={`ml-1 text-sm`}>{variant?.color}</Text>
               </View>
             )}
 
             <View className={`flex-row mt-1`}>
-              <Text className={`text-[#5e5e5e]`}>Qty:</Text>
-              <Text className={`ml-1`}>{quantity}</Text>
+              <Text className={`text-[#5e5e5e] text-sm`}>Qty:</Text>
+              <Text className={`ml-1 text-sm`}>{quantity}</Text>
             </View>
 
             {/* {productType === "rent" && (
               <View className={`flex-row mt-1`}>
-                <Text className={`text-[#5e5e5e]`}>Days:</Text>
-                <Text className={`ml-1`}>{rentDays}</Text>
+                <Text className={`text-[#5e5e5e] text-sm`}>Days:</Text>
+                <Text className={`ml-1 text-sm`}>{rentDays}</Text>
               </View>
             )} */}
 
             {!!variant?.size && (
               <View className={`flex-row mt-1`}>
-                <Text className={`text-[#5e5e5e]`}>Size:</Text>
-                <Text className={`ml-1`}>{variant?.size}</Text>
+                <Text className={`text-[#5e5e5e] text-sm`}>Size:</Text>
+                <Text className={`ml-1 text-sm`}>{variant?.size}</Text>
               </View>
             )}
           </View>

@@ -69,6 +69,7 @@ export default function RootLayout() {
           text1Style={{
             fontSize: 15,
             fontWeight: "400",
+            color: "black",
           }}
         />
       ),
@@ -101,7 +102,7 @@ export default function RootLayout() {
               <AntDesign name="checkcircleo" size={25} color="white" />
             </View>
           </View>
-          <Text>{text1}</Text>
+          <Text className="text-sm text-black">{text1}</Text>
         </View>
       ),
       err: ({ text1, props }) => (
@@ -111,7 +112,7 @@ export default function RootLayout() {
               <Entypo name="circle-with-cross" size={25} color="white" />
             </View>
           </View>
-          <Text>{text1}</Text>
+          <Text className="text-sm text-black">{text1}</Text>
         </View>
       ),
     };
@@ -130,7 +131,7 @@ export default function RootLayout() {
                 ? Linking.createURL("/--/")
                 : Linking.createURL("")
             }
-            merchantIdentifier="merchant.com.Savero">
+            merchantIdentifier="com.crafter.shop">
             <SheetProvider>
               <SafeAreaProvider>
                 <Stack

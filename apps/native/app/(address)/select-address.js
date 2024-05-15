@@ -127,29 +127,31 @@ export default function AddressList() {
                         }}
                         className={`h-22 bg-light-blue-200 p-4 rounded-md w-full border ${selectedAddress === item._id ? "border-black-600 border-[2px] bg-green-100 bg-white" : "border-gray-300"}`}>
                         <View className="w-full">
-                          <Text className="text-black font-medium mb-2">
+                          <Text className="text-black font-medium mb-2 text-sm">
                             {name}
                           </Text>
-                          <Text className="text-gray-700 mb-2">
+                          <Text className="text-gray-700 mb-2 text-sm">
                             Full Address:{" "}
                             <Text className="font-bold">
                               {item.prefix}, {item.streetName}, {item.city},{" "}
                               {item.postalCode}, {item.state}, {item.country}
                             </Text>
                           </Text>
-                          <Text className="text-gray-700 mb-2">
+                          <Text className="text-gray-700 mb-2 text-sm">
                             Road: {item.streetName}
                           </Text>
-                          <Text className="text-gray-700 mb-2">
+                          <Text className="text-gray-700 mb-2 text-sm">
                             City: {item.city}
                           </Text>
-                          <Text className="text-gray-700 mb-2">
+                          <Text className="text-gray-700 mb-2 text-sm">
                             State: {item.state}
                           </Text>
-                          <Text className="text-gray-700 mb-2">
+                          <Text className="text-gray-700 mb-2 text-sm">
                             PinCode: {item.postalCode}
                           </Text>
-                          <Text className="text-gray-700">{mobileNo}</Text>
+                          <Text className="text-gray-700 text-sm">
+                            {mobileNo}
+                          </Text>
                         </View>
                         {selectedAddress === item._id && (
                           <View className="w-full flex-row justify-end">

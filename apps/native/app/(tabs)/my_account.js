@@ -51,7 +51,7 @@ const AccountScreen = () => {
       <ScrollView className="bg-white">
         <View className="px-4 py-2">
           <View className="flex h-14 flex-row items-center justify-between bg-yellow-200 p-3 rounded-md mb-4">
-            <Text className="font-semibold">Hello! {name}</Text>
+            <Text className="font-semibold text-black text-sm">Hello! {name}</Text>
           </View>
 
           <View className="mt-1">
@@ -62,14 +62,14 @@ const AccountScreen = () => {
                 SheetManager.show("update-profile");
               }}
               className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center px-4 h-14 mb-2">
-              <Text className="text-md">Edit Profile</Text>
+              <Text className="text-md text-black text-sm">Edit Profile</Text>
               <Feather name="chevron-right" size={24} color="#787878" />
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={handleAddressSheetOpen}
               className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center px-4 h-14 mb-2">
-              <Text className="text-md">Saved Addresses</Text>
+              <Text className="text-md text-black text-sm">Saved Addresses</Text>
               <Feather name="chevron-right" size={24} color="#787878" />
             </TouchableOpacity>
 
@@ -83,13 +83,13 @@ const AccountScreen = () => {
             <TouchableOpacity
               onPress={handleLogout}
               className="rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center px-4 h-14 mb-2">
-              <Text className="text-md">Logout</Text>
+              <Text className="text-md text-black text-sm">Logout</Text>
               <Feather name="chevron-right" size={24} color="#787878" />
             </TouchableOpacity>
           </View>
 
           <View className="mt-2">
-            <Text className="font-semibold text-lg mb-1">Product Mode</Text>
+            <Text className="font-semibold text-lg mb-1 text-black">Product Mode</Text>
 
             <View className="w-full flex-row">
               <View className="flex flex-row h-11 rounded-md w-[40%] w-full bg-gray-100 mt-1 overflow-hidden">

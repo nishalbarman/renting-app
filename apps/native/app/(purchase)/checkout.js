@@ -204,7 +204,7 @@ export default function AddressList() {
         />
         <View className="min-h-screen flex-1 items-center justify-center">
           <ActivityIndicator color={"green"} size={35} />
-          <Text className="mt-4 text-center">
+          <Text className="mt-4 text-center text-sm">
             Please do not close or do not press back button..
           </Text>
         </View>

@@ -259,13 +259,13 @@ function ProductsList() {
                   onPress={handleProductSortSheetOpen}
                   className="h-12 bg-white flex-1 flex-row gap-x-2 items-center justify-center border-l border-gray-200">
                   <FontAwesome name="sliders" size={15} color="black" />
-                  <Text>Sort</Text>
+                  <Text className="text-sm">Sort</Text>
                 </Pressable>
                 <Pressable
                   onPress={handleProductFilter}
                   className="h-12 bg-white flex-1 flex-row gap-x-1 items-center justify-center">
                   <AntDesign name="down" size={15} color="black" />
-                  <Text>Filter</Text>
+                  <Text className="text-sm">Filter</Text>
                 </Pressable>
               </View>
             </View>

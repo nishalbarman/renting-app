@@ -7,6 +7,7 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  Pressable,
 } from "react-native";
 import { useGetCartQuery } from "@store/rtk";
 import { useSelector } from "react-redux";
@@ -254,14 +255,14 @@ const CartPage = () => {
                       )}
                     </View>
                     <View className="mt-3">
-                      <TouchableOpacity
+                      <Pressable
                         onPress={handleChangeCenter}
                         disabled={isGlobalButtonDisabled}
-                        className="flex items-center justify-center h-10 w-full bg-white border-orange-500 border-[1px] rounded-md">
-                        <Text className="text-orange-500 font-[roboto-mid] text-md">
+                        className="flex items-center justify-center h-11 w-full bg-white border-orange-500 border-[1px] rounded-md">
+                        <Text className="text-orange-500 font-[roboto-mid] text-[15px]">
                           {isCenterSelected ? "Change Center" : "Select Center"}
                         </Text>
-                      </TouchableOpacity>
+                      </Pressable>
                     </View>
                   </View>
                 )}
@@ -312,7 +313,7 @@ const CartPage = () => {
                     className={
                       "flex-row justify-center items-center mt-1 pt-5 bg-white w-full rounded-md"
                     }>
-                    <TouchableOpacity
+                    <Pressable
                       onPress={handleContinueClick}
                       disabled={productType === "rent" && !isCenterSelected}
                       style={{
@@ -327,7 +328,7 @@ const CartPage = () => {
                           Checkout
                         </Text>
                       )}
-                    </TouchableOpacity>
+                    </Pressable>
                   </View>
                 </View>
 

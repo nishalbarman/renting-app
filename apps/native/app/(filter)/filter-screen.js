@@ -237,7 +237,7 @@ function FilterScreen() {
                 }}
                 className={`w-[110px] h-20 mb-1 rounded-md items-center justify-center bg-gray-200 ${choosedFilterType === item.key ? "bg-green-500" : "bg-blue-100"}`}>
                 <Text
-                  className={`text-md font-[roboto-bold] ${choosedFilterType === item.key ? "text-white" : "text-black-900 "}`}>
+                  className={`text-sm font-[roboto-bold] ${choosedFilterType === item.key ? "text-white" : "text-black-900"}`}>
                   {item.label}
                 </Text>
               </Pressable>
@@ -396,6 +396,9 @@ function FilterScreen() {
 
           {choosedFilterType === "price" && (
             <RadioForm
+              labelStyle={{
+                fontSize: 15,
+              }}
               radio_props={staticFilterOptions.priceStaticData}
               initial={null}
               onPress={(value) => {
@@ -406,6 +409,9 @@ function FilterScreen() {
 
           {choosedFilterType === "rating" && (
             <RadioForm
+              labelStyle={{
+                fontSize: 15,
+              }}
               radio_props={staticFilterOptions.ratingStaticData}
               initial={null}
               onPress={(value) => {
@@ -416,6 +422,9 @@ function FilterScreen() {
 
           {choosedFilterType === "discount" && (
             <RadioForm
+              labelStyle={{
+                fontSize: 15,
+              }}
               radio_props={staticFilterOptions.discountStaticData}
               initial={null}
               onPress={(value) => {

@@ -143,7 +143,7 @@ const OrderResult = () => {
                           />
                         </View>
                       </View>
-                      <Text className="">
+                      <Text className=" text-[15px]">
                         #
                         {orderDetails?.order[0]?.orderGroupID
                           .toString()
@@ -152,23 +152,27 @@ const OrderResult = () => {
                       <Text className="text-2xl font-semibold text-gray-800 my-1">
                         Success
                       </Text>
-                      <Text className="text-gray-600">
+                      <Text className="text-gray-600 text-sm">
                         You're Successfully Placed Order.
                       </Text>
 
                       <View className="bg-green-100 text-green-700 py-2 px-4 rounded-lg my-4 text-3xl font-semibold">
-                        <Text>Rs. {orderDetails?.totalPrice}</Text>
+                        <Text className=" text-sm">
+                          Rs. {orderDetails?.totalPrice} /-
+                        </Text>
                       </View>
-                      <Text className="text-gray-500">Request Amount</Text>
+                      <Text className="text-gray-500 text-sm">
+                        Request Amount
+                      </Text>
                       <View className="mt-3">
                         <View className="flex-row flex-wrap justify-between items-center text-gray-700">
-                          <Text>Txn ID : </Text>
-                          <Text className="font-semibold">
+                          <Text className=" text-sm">Txn ID : </Text>
+                          <Text className="font-semibold text-sm">
                             {orderDetails?.order[0]?.paymentTxnId}
                           </Text>
                         </View>
                         <View className="flex-row justify-between items-center text-gray-700 mt-4">
-                          <Text>Items</Text>
+                          <Text className=" text-sm">Items</Text>
                           {/* <Text className="font-semibold">Lurch Schpellchek</Text> */}
                         </View>
                         <FlatList
@@ -177,12 +181,14 @@ const OrderResult = () => {
                           renderItem={({ item }) => {
                             return (
                               <View className="flex flex-row">
-                                <Text>{item?.quantity}pc </Text>
+                                <Text className=" text-sm">
+                                  {item?.quantity}pc{" "}
+                                </Text>
                                 <Pressable
                                   onPress={() => {
                                     router.navigate(`/view?id=${item.product}`);
                                   }}>
-                                  <Text className="text-green-800">
+                                  <Text className="text-green-800 text-sm">
                                     {item?.title}
                                   </Text>
                                 </Pressable>
@@ -192,7 +198,7 @@ const OrderResult = () => {
                         />
                       </View>
 
-                      <Text className="font-semibold my-1">
+                      <Text className="font-semibold my-1 text-sm">
                         {new Date(
                           orderDetails?.order[0]?.createdAt
                         ).toDateString()}
@@ -202,16 +208,11 @@ const OrderResult = () => {
                         onPress={() => {
                           router.replace("/my_orders");
                         }}
-                        className="mt-6 bg-green-600 py-3 rounded-full">
-                        <Text className="text-center text-white font-semibold">
+                        className="mt-6 bg-black py-3 rounded-full">
+                        <Text className="text-center text-white font-semibold text-sm">
                           My Order
                         </Text>
                       </TouchableOpacity>
-                      {/* <TouchableOpacity className="mt-2">
-            <Text className="text-center text-blue-600 underline">
-              Download Receipt
-            </Text>
-          </TouchableOpacity> */}
                     </View>
                   </View>
                 </>

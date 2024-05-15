@@ -211,7 +211,7 @@ function LocationMap() {
                   </Text>
                 </>
               ) : (
-                <Text>No Center Selected</Text>
+                <Text className="text-sm">No Center Selected</Text>
               )}
 
               <TouchableOpacity
@@ -226,8 +226,8 @@ function LocationMap() {
                 }
                 style={{
                   backgroundColor: !selectedCenterAddress
-                    ? "#b5b4d6"
-                    : "#514FB6",
+                    ? "gray"
+                    : "black",
                 }}
                 className="flex-row items-center justify-start p-1 pl-3 pr-3 rounded-md mt-2 disabled:bg-light-purple h-10 bg-dark-purple">
                 {loading ? (

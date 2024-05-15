@@ -30,11 +30,10 @@ export default function Tab() {
   const { data: cartItems } = useGetCartQuery(productType);
 
   return (
-    <SafeAreaView className="bg-white flex-1">
+    <SafeAreaView className="bg-white">
       <FlatList
         className="w-full"
         contentContainerStyle={{
-          display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
@@ -44,7 +43,7 @@ export default function Tab() {
           <>
             <View className="h-fit px-3 mt-3 flex-row justify-between items-center">
               <View>
-                <Text className="font-[roboto-bold] text-2xl">Discover</Text>
+                <Text className="font-[roboto-bold] text-xl">CRAFTER</Text>
               </View>
               <Pressable
                 onPress={() => {
@@ -75,7 +74,7 @@ export default function Tab() {
                   elevation: 0.7,
                 }}
                 className="h-12 flex-grow rounded-md flex-row items-center justify-between px-3 bg-gray-100">
-                <Text className="text-gray-500 font-[roboto]">
+                <Text className="text-gray-500 text-[15px] font-[roboto]">
                   Seach Products
                 </Text>
                 <EvilIcons name="search" size={24} color="black" />

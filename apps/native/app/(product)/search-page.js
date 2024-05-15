@@ -232,7 +232,7 @@ function searchPage() {
                     className="w-10 h-10"
                     contentPosition={"center"}
                   />
-                  <Text numberOfLines={3} className="mx-3 text-md">
+                  <Text numberOfLines={3} className="mx-3 text-md text-sm">
                     {item.title}
                   </Text>
                 </Pressable>
@@ -265,14 +265,14 @@ function searchPage() {
                     });
                   }}>
                   <Octicons name="history" size={24} color="black" />
-                  <Text className="ml-3 text-md">{item}</Text>
+                  <Text className="ml-3 text-md text-sm">{item}</Text>
                 </Pressable>
               );
             })}
         </ScrollView>
       ) : (
         <View className="w-full h-full bg-white items-center justify-center">
-          <Text>Click on the search icon to search something</Text>
+          <Text className="text-sm">Click on the search icon to search something</Text>
         </View>
       )}
     </SafeAreaView>

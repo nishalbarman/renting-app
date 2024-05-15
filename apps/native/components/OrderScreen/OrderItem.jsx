@@ -169,27 +169,27 @@ function OrderItem({
           <View className="mt-2">
             {!!color && (
               <View className={`flex-row`}>
-                <Text className={`text-[#5e5e5e]`}>Color:</Text>
-                <Text className={`ml-1`}>{color}</Text>
+                <Text className={`text-[#5e5e5e] text-sm`}>Color:</Text>
+                <Text className={`ml-1 text-sm`}>{color}</Text>
               </View>
             )}
 
             {!!size && (
               <View className={`flex-row mt-1`}>
-                <Text className={`text-[#5e5e5e]`}>Size:</Text>
-                <Text className={`ml-1`}>{size}</Text>
+                <Text className={`text-[#5e5e5e] text-sm`}>Size:</Text>
+                <Text className={`ml-1 text-sm`}>{size}</Text>
               </View>
             )}
 
             <View className={`flex-row mt-1`}>
-              <Text className={`text-[#5e5e5e]`}>Qty:</Text>
-              <Text className={`ml-1`}>{quantity}</Text>
+              <Text className={`text-[#5e5e5e] text-sm`}>Qty:</Text>
+              <Text className={`ml-1 text-sm`}>{quantity}</Text>
             </View>
 
             {orderType === "rent" && (
               <View className={`flex-row mt-1`}>
-                <Text className={`text-[#5e5e5e]`}>Days:</Text>
-                <Text className={`ml-1`}>{rentDays}</Text>
+                <Text className={`text-[#5e5e5e] text-sm`}>Days:</Text>
+                <Text className={`ml-1 text-sm`}>{rentDays}</Text>
               </View>
             )}
           </View>
@@ -220,8 +220,8 @@ function OrderItem({
           )}
         </View>
         <View className="flex-row mt-1">
-          <Text className="font-bold text-md">Status: </Text>
-          <Text className="text-md">{orderStatus}</Text>
+          <Text className="font-bold text-[15px] ">Status: </Text>
+          <Text className="text-[15px] ">{orderStatus}</Text>
         </View>
       </View>
       {/* <View className={`flex-row items-center h-fit justify-between px-2`}>
@@ -264,7 +264,7 @@ function OrderItem({
             ) : (
               <>
                 {/* <MaterialCommunityIcons name="cancel" size={24} color="black" /> */}
-                <Text className="font-semibold text-md text-black font-bold">
+                <Text className="font-semibold text-[15px] text-black font-bold">
                   Cancel
                 </Text>
               </>

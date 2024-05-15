@@ -59,7 +59,7 @@ export default function AddressList() {
         renderItem={() => {
           return (
             <View className="pt-3 flex flex-col items-center pb-10">
-              <Text className="font-[roboto-bold] text-[15px]">
+              <Text className="font-[roboto-bold] text-sm">
                 Your addresses
               </Text>
 
@@ -83,27 +83,27 @@ export default function AddressList() {
                             key={item._id}
                             className="bg-light-blue-200 p-4 rounded-md mb-3 w-[100%] border border-gray-300">
                             <View>
-                              <Text className="text-black font-medium mb-2">
+                              <Text className="text-black font-medium mb-2 text-[15px]">
                                 {name}
                               </Text>
-                              <Text className="text-gray-700 mb-2">
+                              <Text className="text-gray-700 mb-2 text-sm">
                                 Full Address:{" "}
-                                <Text className="font-bold">
+                                <Text className="font-bold text-sm">
                                   {item.prefix}, {item.streetName}, {item.city},{" "}
                                   {item.postalCode}, {item.state},{" "}
                                   {item.country}
                                 </Text>
                               </Text>
-                              <Text className="text-gray-700 mb-2">
+                              <Text className="text-gray-700 mb-2 text-sm">
                                 Road: {item.streetName}
                               </Text>
-                              <Text className="text-gray-700 mb-2">
+                              <Text className="text-gray-700 mb-2 text-sm">
                                 City: {item.city}
                               </Text>
-                              <Text className="text-gray-700 mb-2">
+                              <Text className="text-gray-700 mb-2 text-sm">
                                 State: {item.state}
                               </Text>
-                              <Text className="text-gray-700 mb-2">
+                              <Text className="text-gray-700 mb-2 text-sm">
                                 PinCode: {item.postalCode}
                               </Text>
                               <Text className="text-gray-700">{mobileNo}</Text>
@@ -114,7 +114,7 @@ export default function AddressList() {
                                 onPress={() => {
                                   handleDeleteAddress(item._id);
                                 }}
-                                className="flex items-center justify-center flex-0 p-1 rounded-full bg-dark-purple bg-green-600 w-10 h-10 mt-4">
+                                className="flex items-center justify-center flex-0 p-1 rounded-full bg-black w-10 h-10 mt-4">
                                 {isAddressDeleteLoading ? (
                                   <ActivityIndicator
                                     size={20}
@@ -142,8 +142,8 @@ export default function AddressList() {
                   {(!address || address?.length < 5) && (
                     <TouchableOpacity
                       onPress={handleAddAddressClick}
-                      className="mt-6 flex items-center justify-center self-center w-64 h-11 p-[0px_20px] bg-dark-purple bg-green-600 rounded-lg">
-                      <Text className="text-white font-bold">Add One</Text>
+                      className="mt-6 flex items-center justify-center self-center w-64 h-11 p-[0px_20px] bg-black rounded-lg">
+                      <Text className="text-white font-bold text-sm">Add One</Text>
                     </TouchableOpacity>
                   )}
                   {address.length >= 5 && (

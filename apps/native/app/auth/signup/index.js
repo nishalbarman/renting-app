@@ -29,21 +29,21 @@ import axios from "axios";
 import handleGlobalError from "../../../lib/handleError";
 
 export default function Page() {
-  // const [formData, setFormData] = useState({
-  //   name: { value: null, isTouched: null, isError: null },
-  //   email: { value: null, isTouched: null, isError: null },
-  //   mobileNo: { value: null, isTouched: null, isError: null },
-  //   isAgreementChecked: { value: null, isTouched: null, isError: null },
-  //   password: { value: null, isTouched: null, isError: null },
-  // });
-
   const [formData, setFormData] = useState({
-    name: { value: "Nishal Barman", isTouched: true, isError: null },
-    email: { value: "nishalbarman@gmail.com", isTouched: true, isError: null },
-    mobileNo: { value: "9101114906", isTouched: true, isError: null },
-    isAgreementChecked: { value: true, isTouched: true, isError: null },
-    password: { value: "@NishalBoss21", isTouched: true, isError: null },
+    name: { value: null, isTouched: null, isError: null },
+    email: { value: null, isTouched: null, isError: null },
+    mobileNo: { value: null, isTouched: null, isError: null },
+    isAgreementChecked: { value: null, isTouched: null, isError: null },
+    password: { value: null, isTouched: null, isError: null },
   });
+
+  // const [formData, setFormData] = useState({
+  //   name: { value: "Nishal Barman", isTouched: true, isError: null },
+  //   email: { value: "nishalbarman@gmail.com", isTouched: true, isError: null },
+  //   mobileNo: { value: "9101114906", isTouched: true, isError: null },
+  //   isAgreementChecked: { value: true, isTouched: true, isError: null },
+  //   password: { value: "@NishalBoss21", isTouched: true, isError: null },
+  // });
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
