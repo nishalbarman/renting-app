@@ -26,11 +26,11 @@
         "usesNonExemptEncryption": false,
         "usesCleartextTraffic": true
       },
-      "googleServicesFile": "./GoogleService-Info.plist",
+      "googleServicesFile": "./google-services-file/GoogleService-Info.plist",
       "bundleIdentifier": "com.ebrsavero.pro"
     },
     "android": {
-      "googleServicesFile": "./google-services.json",
+      "googleServicesFile": "./google-services-file/google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/appIcons/app_launcher.webp",
         "backgroundColor": "#ffffff"
