@@ -247,7 +247,7 @@ router.post("/:productType", async (req, res) => {
       },
       description: productNames,
       metadata: {
-        paymentTxnId,
+        // paymentTxnId,
         orderGroupID,
         address,
         user: userDetails._id.toString(),

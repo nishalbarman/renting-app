@@ -65,7 +65,7 @@ router.post(
           );
 
           await OrderModel.updateMany(
-            { paymentTxnId: paymentIntentSucceeded.metadata.paymentTxnId },
+            { paymentTxnId: paymentIntentSucceeded.id },
             { $set: { paymentStatus: "Success", orderStatus: "On Progress" } }
           );
 
@@ -79,7 +79,7 @@ router.post(
           );
 
           const orders = await OrderModel.find({
-            paymentTxnId: paymentIntentSucceeded.metadata.paymentTxnId,
+            paymentTxnId: paymentIntentSucceeded.id,
           });
 
           console.log("WebHook Orders -->", orders);
