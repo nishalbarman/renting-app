@@ -111,7 +111,7 @@ function Product({
   };
 
   const handleProductClick = () => {
-    router.push({
+    router.navigate({
       pathname: "view",
       params: {
         id: _id,
@@ -124,7 +124,7 @@ function Product({
       <TouchableOpacity
         onPress={handleProductClick}
         activeOpacity={0.6}
-        className={`relative border border-gray-100 flex flex-col h-fit ${width ? "w-[" + width + "px]" : "w-[150px]"} flex-1 mb-[0.5px] bg-transparent rounded-md pb-[1%]`}>
+        className={`relative border border-gray-100 flex flex-col h-fit ${width ? "w-[" + width + "]" : "w-[150px]"} flex-1 mb-[0.5px] bg-transparent rounded-md pb-[1%]`}>
         {/* border-[#F0F3F4] */}
         {/* shadow-sm  */}
         <View className="w-[100%] h-[200px] p-[3%] ">

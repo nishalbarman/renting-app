@@ -133,7 +133,7 @@ const CartPage = () => {
   }, [cartItems]);
 
   const handleChangeCenter = async () => {
-    router.push("/select-address");
+    router.navigate("/select-address");
   };
 
   const [isCenterSelected, setIsCenterSelected] = useState(false);
@@ -160,7 +160,7 @@ const CartPage = () => {
 
   const handleContinueClick = async () => {
     // product type is buy then goto select delivery address screen
-    if (productType === "buy") return router.push("/select-address");
+    if (productType === "buy") return router.navigate("/select-address");
 
     router.navigate({
       pathname: "checkout",

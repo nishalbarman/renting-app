@@ -106,7 +106,7 @@ function CartCard({
   const router = useRouter();
 
   const goToProductPage = () => {
-    router.push({
+    router.navigate({
       pathname: "view",
       params: {
         id: product._id,

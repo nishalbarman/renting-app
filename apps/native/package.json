@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "./entry.js",
   "scripts": {
-    "start": "expo start --dev-client",
+    "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web"
@@ -57,6 +57,7 @@
     "react-native-screens": "3.31.1",
     "react-native-simple-radio-button": "^2.7.4",
     "react-native-snackbar": "^2.6.2",
+    "react-native-super-grid": "^6.0.1",
     "react-native-toast-message": "^2.2.0",
     "react-native-web": "~0.19.6",
     "react-native-webview": "13.8.6",

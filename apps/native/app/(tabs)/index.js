@@ -2,36 +2,27 @@ import { FlatList, Pressable, Text, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import { SafeAreaView } from "react-native-safe-area-context";
-import ProductsList from "../../components/ProductSection/ProductsList";
+import HorizontalProductsList from "../../components/ProductSection/HorizontalProductsList";
 import Categories from "../../components/CategoryList/Categories";
 import { setProductType, useGetCartQuery } from "@store/rtk";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
-import { useState, useTransition } from "react";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Tab() {
-  const [isLoading, startTransition] = useTransition();
-
   const { productType } = useSelector((state) => state.product_store);
 
-  const [locProductType, setProductLocType] = useState(productType);
-
   const router = useRouter();
-  const dispatch = useDispatch();
-
-  const handleChangeProductType = (type) => {
-    setProductLocType(type);
-    startTransition(() => {
-      dispatch(setProductType(type));
-    });
-  };
 
   const { data: cartItems } = useGetCartQuery(productType);
 
   return (
     <SafeAreaView className="bg-white">
       <FlatList
+        decelerationRate="normal"
+        scrollEventThrottle={16}
+        initialNumToRender={10}
+        removeClippedSubviews={true}
         className="w-full"
         contentContainerStyle={{
           flexDirection: "column",
@@ -91,14 +82,14 @@ export default function Tab() {
             <Categories />
 
             <View className="flex-1 mt-3 w-screen min-h-screen">
-              <ProductsList
+              <HorizontalProductsList
                 title={`🔥 Popular`}
                 viewAllPath={productType}
                 bgColor="#def9ff"
                 titleColor="black"
                 sort={"popular"}
               />
-              <ProductsList
+              <HorizontalProductsList
                 title={`✌️ Our Products`}
                 viewAllPath={productType}
                 bgColor="#fff9f2"

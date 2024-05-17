@@ -19,7 +19,7 @@ export default function AddressList() {
 
   const router = useRouter();
   const handleAddAddressClick = () => {
-    router.push(`/add-address`);
+    router.navigate(`/add-address`);
     SheetManager.hide("address-list-sheet");
   };
 
@@ -59,9 +59,7 @@ export default function AddressList() {
         renderItem={() => {
           return (
             <View className="pt-3 flex flex-col items-center pb-10">
-              <Text className="font-[roboto-bold] text-sm">
-                Your addresses
-              </Text>
+              <Text className="font-[roboto-bold] text-sm">Your addresses</Text>
 
               {isAddressLoading ? (
                 <View className="w-full px-2">
@@ -143,7 +141,9 @@ export default function AddressList() {
                     <TouchableOpacity
                       onPress={handleAddAddressClick}
                       className="mt-6 flex items-center justify-center self-center w-64 h-11 p-[0px_20px] bg-black rounded-lg">
-                      <Text className="text-white font-bold text-sm">Add One</Text>
+                      <Text className="text-white font-bold text-sm">
+                        Add One
+                      </Text>
                     </TouchableOpacity>
                   )}
                   {address.length >= 5 && (

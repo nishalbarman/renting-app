@@ -22,7 +22,7 @@ function CategoryItem({
       className="w-[90px] h-36 pb-2 border border-gray-300 rounded-md mx-1"
       onPress={() => {
         if (categoryId === "cate_id_unique") {
-          return router.push(`/more-category`);
+          return router.navigate(`/more-category`);
         }
         // console.log(categoryImageUrl);
         router.navigate(

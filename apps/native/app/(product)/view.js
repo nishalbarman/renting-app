@@ -35,6 +35,8 @@ import SingleProductSkeleton from "../../Skeletons/SingleProductSkeleton";
 import FeedbackCardSkeleton from "../../Skeletons/FeedbackCardSkeleton";
 import ProductPageSkeleton from "../../Skeletons/ProductPageSkeleton";
 
+import ImageSldr from "../../components/ImageSldr";
+
 import { useAddOneToCartMutation } from "@store/rtk";
 import Toast from "react-native-toast-message";
 import handleGlobalError from "../../lib/handleError";
@@ -391,7 +393,14 @@ function product() {
           <>
             {/* carousel view */}
             <View className="w-[100%] px-5 flex items-center rounded-md">
-              <Carousel
+              <ImageSldr
+                images={
+                  filteredVariant?.slideImages ||
+                  productDetails?.slideImages ||
+                  []
+                }
+              />
+              {/* <Carousel
                 className="mb-3"
                 pagingEnabled={true}
                 width={width}
@@ -459,7 +468,7 @@ function product() {
                     quantity: 1,
                   },
                 ]}
-              />
+              /> */}
             </View>
 
             {/* product body */}
@@ -771,8 +780,8 @@ function product() {
                   {hasUserBoughtThisProduct && (
                     <TouchableOpacity
                       onPress={handleReviewSheetOpen}
-                      className="rounded-full w-[40px] h-[40px] flex flex-row self-start items-center justify-center bg-dark-purple shadow absolute right-0">
-                      <AntDesign name="plus" size={24} color="black" />
+                      className="rounded-full w-[40px] h-[40px] flex flex-row self-start items-center justify-center bg-black shadow absolute right-0">
+                      <AntDesign name="plus" size={24} color="white" />
                     </TouchableOpacity>
                   )}
                 </View>

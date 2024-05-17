@@ -44,7 +44,7 @@ export default function AddressList() {
   }, [address]);
 
   const handleAddAddressClick = () => {
-    router.push(`/add-address`);
+    router.navigate(`/add-address`);
   };
 
   const handleContinueClick = useCallback(() => {

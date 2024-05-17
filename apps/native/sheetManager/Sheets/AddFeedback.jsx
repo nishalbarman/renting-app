@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Pressable,
   ScrollView,
   Text,
   TextInput,
@@ -65,7 +66,7 @@ export default function AddFeedback({ payload }) {
   const handleSubmitReview = async () => {
     try {
       setIsReviewSubmitting(true);
-      const response = await axios.post(
+      await axios.post(
         `${process.env.EXPO_PUBLIC_API_URL}/feedbacks`,
         {
           starsGiven: currentUserReviewStar,
@@ -79,12 +80,11 @@ export default function AddFeedback({ payload }) {
           },
         }
       );
-      if (response.status === 200) {
-        Toast.show({
-          type: "sc",
-          message: "Review Added!",
-        });
-      }
+
+      Toast.show({
+        type: "sc",
+        message: "Review Added!",
+      });
     } catch (error) {
       console.error("Add Feedback Sheet ->");
       handleGlobalError(error);
@@ -105,7 +105,7 @@ export default function AddFeedback({ payload }) {
             <View className="flex flex-row items-center justify-center gap-x-3">
               {starsArray.map((item, index) => {
                 return (
-                  <TouchableOpacity
+                  <Pressable
                     key={index}
                     onPress={() => {
                       setCurrentUserReviewStar(index + 1);
@@ -123,7 +123,7 @@ export default function AddFeedback({ payload }) {
                           : "black"
                       }
                     />
-                  </TouchableOpacity>
+                  </Pressable>
                 );
               })}
             </View>
@@ -144,10 +144,10 @@ export default function AddFeedback({ payload }) {
                 placeholderTextColor={"grey"}
               />
             </View>
-            <TouchableOpacity
+            <Pressable
               disabled={isReviewSubmitting}
               onPress={handleSubmitReview}
-              className="flex items-center justify-center w-[200px] h-[52px] p-[0px_20px] bg-[#d875ff] rounded-lg">
+              className="flex items-center justify-center w-[200px] h-[52px] p-[0px_20px] bg-black rounded-lg">
               {isReviewSubmitting ? (
                 <ActivityIndicator size={25} color={"white"} />
               ) : Object.keys(alreadyGivenFeedback).length > 0 ? (
@@ -155,7 +155,7 @@ export default function AddFeedback({ payload }) {
               ) : (
                 <Text className="text-white font-bold">Add Review</Text>
               )}
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </ScrollView>
       </NativeViewGestureHandler>

@@ -111,7 +111,7 @@ app.use("/center", require("./routes/centers/center.routes"));
 
 // payment hooks
 app.use("/pay/razorpay/cart", require("./routes/payment/razorpay/cart.routes"));
-app.use("/pay/razorpay/hook", require("./hooks/hook.routes"));
+app.use("/pay/razorpay/hook", require("./hooks/razorpay-hook.routes"));
 
 // stripe payment gateway
 app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));

@@ -68,7 +68,7 @@ export default function Page() {
         extractedData
       );
 
-      router.push({
+      router.navigate({
         pathname: "/auth/verify_otp",
         params: extractedData,
       });

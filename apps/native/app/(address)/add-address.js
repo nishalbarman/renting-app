@@ -140,7 +140,7 @@ export default function AddAddress() {
 
   const router = useRouter();
   const handleChooseLocationOnMap = () => {
-    router.push("/location-map");
+    router.navigate("/location-map");
   };
 
   const [addNewAddress, { isError, isLoading }] = useAddAddressMutation();

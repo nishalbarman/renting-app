@@ -14,8 +14,8 @@ function FeedbackCard({
   }, []);
 
   return (
-    <View className="pl-2 mt-1 mb-[18px] w-full border border-gray-300 rounded-md">
-      <View className="relative w-[100%] h-fit p-1 w-full">
+    <View className="pl-2 mt-1 mb-[18px] w-full border-none border-gray-300 rounded-md">
+      <View className="relative w-full h-fit p-1 w-full">
         <Image
           className="h-[45px] w-[45px] rounded-full absolute top-[-15px] left-[-15px] z-[999]"
           source={{
@@ -24,7 +24,11 @@ function FeedbackCard({
           contentFit="cover"
           contentPosition={"center"}
         />
-        <View className="bg-white shadow rounded-md p-6 flex flex-col w-full">
+        <View
+          style={{
+            elevation: 2,
+          }}
+          className="bg-white rounded-md p-6 flex flex-col w-full">
           <Text className="font-[roboto-bold] text-[15px]">
             {feedbackGivenBy}
           </Text>
@@ -45,7 +49,9 @@ function FeedbackCard({
                 );
               })}
             </View>
-            <Text className="text-sm">{new Date(feedBackDate).toDateString()}</Text>
+            <Text className="text-sm">
+              {new Date(feedBackDate).toDateString()}
+            </Text>
           </View>
           <Text className="leading-[22px] font-[roboto] text-[16px] mt-2">
             {feedbackText}

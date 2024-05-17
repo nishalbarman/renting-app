@@ -56,7 +56,7 @@ function RelatedProduct({ query }) {
       showsHorizontalScrollIndicator={false}
       data={data}
       renderItem={({ item }) => (
-        <Product width={205} details={item} wishlistData={wishlistData} />
+        <Product width={"200px"} details={item} wishlistData={wishlistData} />
       )}
       numColumns={1}
       keyExtractor={(item, index) => index.toString()}

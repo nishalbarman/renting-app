@@ -50,7 +50,7 @@ function Product({ wishlistId, details, width, productType }) {
   };
 
   const handleProductClick = () => {
-    router.push(`/view?id=${details._id}`);
+    router.navigate(`/view?id=${details._id}`);
   };
 
   return (
