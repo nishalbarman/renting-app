@@ -72,12 +72,19 @@ router.post(
               },
             },
 
-            // Merge updated orders back into the orders collection
+            // Merge only updated fields back into the orders collection
             {
               $merge: {
                 into: "orders",
                 on: "_id",
-                whenMatched: "merge",
+                whenMatched: [
+                  {
+                    $set: {
+                      paymentStatus: "$$new.paymentStatus",
+                      orderStatus: "$$new.orderStatus",
+                    },
+                  },
+                ],
                 whenNotMatched: "discard",
               },
             },
@@ -100,12 +107,18 @@ router.post(
                   {
                     $set: { buyTotalOrders: { $add: ["$buyTotalOrders", 1] } },
                   },
-                  // Merge updated products back into the products collection
+                  // Merge only the updated buyTotalOrders field back into the products collection
                   {
                     $merge: {
                       into: "products",
                       on: "_id",
-                      whenMatched: "merge",
+                      whenMatched: [
+                        {
+                          $set: {
+                            buyTotalOrders: "$$new.buyTotalOrders",
+                          },
+                        },
+                      ],
                       whenNotMatched: "discard",
                     },
                   },
