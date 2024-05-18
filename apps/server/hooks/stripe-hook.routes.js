@@ -71,32 +71,16 @@ router.post(
               },
             },
 
-            // Merge only updated fields back into the orders collection
-            {
-              $merge: {
-                into: "orders",
-                on: "_id",
-                whenMatched: [
-                  {
-                    $set: {
-                      paymentStatus: "$$new.paymentStatus",
-                      orderStatus: "$$new.orderStatus",
-                    },
-                  },
-                ],
-                whenNotMatched: "discard",
-              },
-            },
-
             // Group to get unique product IDs
             {
               $group: {
                 _id: null,
                 productIds: { $addToSet: "$product" },
+                orders: { $push: "$$ROOT" },
               },
             },
 
-            // Lookup and update products
+            // Lookup products and update buyTotalOrders
             {
               $lookup: {
                 from: "products",
@@ -106,23 +90,16 @@ router.post(
                   {
                     $set: { buyTotalOrders: { $add: ["$buyTotalOrders", 1] } },
                   },
-                  // Merge only the updated buyTotalOrders field back into the products collection
-                  {
-                    $merge: {
-                      into: "products",
-                      on: "_id",
-                      whenMatched: [
-                        {
-                          $set: {
-                            buyTotalOrders: "$$new.buyTotalOrders",
-                          },
-                        },
-                      ],
-                      whenNotMatched: "discard",
-                    },
-                  },
                 ],
                 as: "updatedProducts",
+              },
+            },
+
+            // Output the results
+            {
+              $project: {
+                orders: 1,
+                updatedProducts: 1,
               },
             },
           ];
@@ -145,23 +122,29 @@ router.post(
           if (result.length > 0) {
             const { orders, updatedProducts } = result[0];
 
-            const bulkOps = [
-              ...orders.map((order) => ({
-                updateOne: {
-                  filter: { _id: order._id },
-                  update: { $set: order },
+            const orderBulkOps = orders.map((order) => ({
+              updateOne: {
+                filter: { _id: order._id },
+                update: {
+                  $set: {
+                    paymentStatus: "Success",
+                    orderStatus: "On Progress",
+                  },
                 },
-              })),
-              ...updatedProducts.map((product) => ({
-                updateOne: {
-                  filter: { _id: product._id },
-                  update: { $set: product },
-                },
-              })),
-            ];
+              },
+            }));
 
-            await OrderModel.bulkWrite(bulkOps);
-            await Product.bulkWrite(bulkOps);
+            const productBulkOps = updatedProducts.map((product) => ({
+              updateOne: {
+                filter: { _id: product._id },
+                update: {
+                  $inc: { buyTotalOrders: 1 },
+                },
+              },
+            }));
+
+            await OrderModel.bulkWrite(orderBulkOps);
+            await Product.bulkWrite(productBulkOps);
           }
 
           // console.log(
