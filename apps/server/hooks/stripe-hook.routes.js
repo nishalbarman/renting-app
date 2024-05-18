@@ -11,7 +11,6 @@ const Cart = require("../models/cart.model");
 const { default: mongoose } = require("mongoose");
 const PaymentTransModel = require("../models/transaction.model");
 const Address = require("../models/address.model");
-const Cart = require("../models/cart.model");
 const ShiprocketUtils = require("../helpter/ShiprocketUtils");
 const { Product } = require("../models/product.model");
 const router = Router();
