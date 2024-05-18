@@ -1,2 +1,2 @@
-export const PRIMARY_COLOR = "black";
-export const PRIMARY_COLOR_HOVER = "gray";
+export const PRIMARY_BG_COLOR = "black";
+export const PRIMARY_TEXT_COLOR = "white";

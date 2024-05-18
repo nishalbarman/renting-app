@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 
 import EmptyBag from "../../components/EmptyBag/EmptyBag";
 import { EvilIcons } from "@expo/vector-icons";
+import { useFocusEffect } from "expo-router";
 
 const OrderScreen = () => {
   const { productType } = useSelector((state) => state.product_store);
@@ -102,6 +103,7 @@ const OrderScreen = () => {
   const orderRefetch = useSelector((state) => state.refetch.orderRefetch);
 
   useEffect(() => {
+    setPaginationPage(0);
     getInitialOrder({ productType, paginationPage });
   }, [orderRefetch, productType]);
 

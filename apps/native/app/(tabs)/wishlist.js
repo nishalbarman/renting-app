@@ -4,9 +4,10 @@ import { useGetWishlistQuery } from "@store/rtk";
 import WishlistCard from "../../components/Wishlist/WishlistCard";
 
 import { useSelector } from "react-redux";
-import { memo, useEffect } from "react";
+import { memo, useCallback, useEffect } from "react";
 import EmptyBag from "../../components/EmptyBag/EmptyBag";
 import ProductListSkeleton from "../../Skeletons/ProductListSkeleton";
+import { useFocusEffect } from "expo-router";
 
 export default memo(function Tab() {
   const { productType } = useSelector((state) => state.product_store);
@@ -20,9 +21,17 @@ export default memo(function Tab() {
     refetch,
   } = useGetWishlistQuery();
 
-  useEffect(() => {
-    refetch();
-  }, [productType]);
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+
+      return () => {};
+    }, [])
+  );
+
+  // useEffect(() => {
+  //   refetch();
+  // }, [productType]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">

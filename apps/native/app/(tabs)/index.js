@@ -1,10 +1,10 @@
 import { FlatList, Pressable, Text, View } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import HorizontalProductsList from "../../components/ProductSection/HorizontalProductsList";
 import Categories from "../../components/CategoryList/Categories";
-import { setProductType, useGetCartQuery } from "@store/rtk";
+import { useGetCartQuery } from "@store/rtk";
 import { useRouter } from "expo-router";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { Ionicons } from "@expo/vector-icons";
@@ -81,7 +81,7 @@ export default function Tab() {
 
             <Categories />
 
-            <View className="flex-1 mt-3 w-screen min-h-screen">
+            <View className="flex-1 mt-3 w-screen">
               <HorizontalProductsList
                 title={`🔥 Popular`}
                 viewAllPath={productType}

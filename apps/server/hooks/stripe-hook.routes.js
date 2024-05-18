@@ -11,6 +11,7 @@ const Cart = require("../models/cart.model");
 const { default: mongoose } = require("mongoose");
 const PaymentTransModel = require("../models/transaction.model");
 const Address = require("../models/address.model");
+const Cart = require("../models/cart.model");
 const ShiprocketUtils = require("../helpter/ShiprocketUtils");
 const { Product } = require("../models/product.model");
 const router = Router();
@@ -59,43 +60,104 @@ router.post(
         case "payment_intent.succeeded":
           const paymentIntentSucceeded = event.data.object;
 
-          console.log(
-            "Payment Intent Metadata -->",
-            paymentIntentSucceeded.metadata
-          );
+          const pipeline = [
+            // Match orders with the given paymentTxnId
+            { $match: { paymentTxnId: paymentIntentSucceeded.id } },
 
-          await OrderModel.updateMany(
-            { paymentTxnId: paymentIntentSucceeded.id },
-            { $set: { paymentStatus: "Success", orderStatus: "On Progress" } }
-          );
-
-          await PaymentTransModel.updateOne(
-            { paymentTransactionID: paymentIntentSucceeded.id },
+            // Update matched orders
             {
               $set: {
-                paymentStatus: "Paid",
+                paymentStatus: "Success",
+                orderStatus: "On Progress",
               },
-            }
+            },
+
+            // Merge updated orders back into the orders collection
+            {
+              $merge: {
+                into: "orders",
+                on: "_id",
+                whenMatched: "merge",
+                whenNotMatched: "discard",
+              },
+            },
+
+            // Group to get unique product IDs
+            {
+              $group: {
+                _id: null,
+                productIds: { $addToSet: "$product" },
+              },
+            },
+
+            // Lookup and update products
+            {
+              $lookup: {
+                from: "products",
+                let: { productIds: "$productIds" },
+                pipeline: [
+                  { $match: { $expr: { $in: ["$_id", "$$productIds"] } } },
+                  {
+                    $set: { buyTotalOrders: { $add: ["$buyTotalOrders", 1] } },
+                  },
+                  // Merge updated products back into the products collection
+                  {
+                    $merge: {
+                      into: "products",
+                      on: "_id",
+                      whenMatched: "merge",
+                      whenNotMatched: "discard",
+                    },
+                  },
+                ],
+                as: "updatedProducts",
+              },
+            },
+          ];
+
+          const result = await OrderModel.aggregate(pipeline);
+
+          // Update PaymentTransModel
+          await PaymentTransModel.updateOne(
+            { paymentTransactionID: paymentIntentSucceeded.id },
+            { $set: { paymentStatus: "Paid" } }
           );
 
-          const orders = await OrderModel.find({
-            paymentTxnId: paymentIntentSucceeded.id,
+          // Delete cart items
+          await Cart.deleteMany({
+            _id: {
+              $in: paymentIntentSucceeded.metadata.cartProductIds.split(","),
+            },
           });
 
-          console.log("WebHook Orders -->", orders);
+          if (result.length > 0) {
+            const { orders, updatedProducts } = result[0];
 
-          const productIds = orders?.map((order) => order.product);
+            const bulkOps = [
+              ...orders.map((order) => ({
+                updateOne: {
+                  filter: { _id: order._id },
+                  update: { $set: order },
+                },
+              })),
+              ...updatedProducts.map((product) => ({
+                updateOne: {
+                  filter: { _id: product._id },
+                  update: { $set: product },
+                },
+              })),
+            ];
 
-          console.log("WebHook Products -->", productIds);
+            await OrderModel.bulkWrite(bulkOps);
+            await Product.bulkWrite(bulkOps);
+          }
 
-          await Product.updateMany(
-            {
-              _id: { $in: productIds },
-            },
-            {
-              $inc: { buyTotalOrders: 1 },
-            }
-          );
+          // console.log(
+          //   "Payment Intent Metadata -->",
+          //   paymentIntentSucceeded.metadata
+          // );
+          // console.log("WebHook Orders -->", orders);
+          // console.log("WebHook Products -->", productIds);
 
           // const user = await User.findById(
           //   paymentIntentSucceeded.metadata.user

@@ -1,4 +1,4 @@
-import React, { useTransition, useEffect, useState } from "react";
+import React, { useTransition, useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import CartCard from "../../components/CartItem/CartCard";
 import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
 
 import axios from "axios";
-import { Stack, useRouter } from "expo-router";
+import { Stack, useFocusEffect, useRouter } from "expo-router";
 import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";
 
 import EmptyBag from "../../components/EmptyBag/EmptyBag";
@@ -179,29 +179,36 @@ const CartPage = () => {
     setRefreshing(false);
   }, []);
 
-  const { orderRefetch } = useSelector((state) => state.refetch);
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+      return () => {};
+    }, [])
+  );
 
-  useEffect(() => {
-    // console.log("Hook is getting called~");
-    let timer;
-    (() => {
-      // console.log("cart status", isCartLoading, isCartFetching);
-      if (isCartLoading) return;
-      if (!cartItems || cartItems.length <= 0) return clearInterval(timer);
-      timer = setInterval(() => {
-        if (isCartFetching) return;
-        refetch();
-      }, 10000);
-    })();
+  // const { orderRefetch } = useSelector((state) => state.refetch);
 
-    return () => {
-      clearInterval(timer);
-    };
-  }, [orderRefetch]);
+  // useEffect(() => {
+  //   // console.log("Hook is getting called~");
+  //   let timer;
+  //   (() => {
+  //     // console.log("cart status", isCartLoading, isCartFetching);
+  //     if (isCartLoading) return;
+  //     if (!cartItems || cartItems.length <= 0) return clearInterval(timer);
+  //     timer = setInterval(() => {
+  //       if (isCartFetching) return;
+  //       refetch();
+  //     }, 10000);
+  //   })();
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  //   return () => {
+  //     clearInterval(timer);
+  //   };
+  // }, [orderRefetch]);
+
+  // useEffect(() => {
+  //   refetch();
+  // }, []);
 
   return (
     <SafeAreaView className={`flex-1 bg-white`}>
