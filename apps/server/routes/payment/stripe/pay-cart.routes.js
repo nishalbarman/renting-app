@@ -20,8 +20,6 @@ const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 const STRIPE_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY;
 
 const stripe = require("stripe")(STRIPE_SECRET_KEY);
-// This example sets up an endpoint using the Express framework.
-// Watch this video to get started: https://youtu.be/rPR2aJ6XnAc.
 
 router.post("/:productType", async (req, res) => {
   try {
@@ -61,7 +59,7 @@ router.post("/:productType", async (req, res) => {
     ]);
 
     if (!cartItemsForUser) {
-      return res.status(400).json({ message: "No items on cart" });
+      return res.status(400).json({ message: "Cart is empty" });
     }
 
     let shippingPrice = 0;
@@ -150,8 +148,6 @@ router.post("/:productType", async (req, res) => {
     }
 
     paymentObject.amount *= 100; // gateway takes amount as paisa (1 rupee = 100 paisa)
-
-    const paymentTxnId = uuidv4();
 
     const productNames = paymentObject.productinfo.join(", ");
 
@@ -247,12 +243,12 @@ router.post("/:productType", async (req, res) => {
       },
       description: productNames,
       metadata: {
-        // paymentTxnId,
         orderGroupID,
         address,
         user: userDetails._id.toString(),
         // center: centerAddresses[0]._id.toString(),
         cartProductIds: cartIds.join(","),
+        productIds: cartItemsForUser.map((item) => item.product._id).join(","),
       },
     });
 
@@ -278,7 +274,7 @@ router.post("/:productType", async (req, res) => {
 
           address: {
             address: {
-              prefix: addressDocument.prefix,
+              prefix: addressDocument?.prefix,
               streetName: addressDocument.streetName,
               locality: addressDocument.locality,
               city: addressDocument.locality,
@@ -327,7 +323,7 @@ router.post("/:productType", async (req, res) => {
       user: userDetails._id,
       order: orders.map((item) => item._id),
 
-      //! Status of Payment
+      //! initial status of payment
       paymentStatus: "Pending",
 
       //! PRICE related keys

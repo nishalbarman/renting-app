@@ -13,16 +13,18 @@ import { StripeProvider, useStripe } from "@stripe/stripe-react-native";
 import * as Linking from "expo-linking";
 import Constants from "expo-constants";
 import { useCallback, useEffect, useMemo } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
 import { Pressable, Text, View } from "react-native";
 import { AntDesign, Entypo, Ionicons } from "@expo/vector-icons";
 
+import "react-native-reanimated";
+
 export default function RootLayout() {
-  useEffect(() => {
-    const version = AsyncStorage.getItem("version");
-    console.log(version);
-  }, []);
+  // useEffect(() => {
+  //   const version = AsyncStorage.getItem("version");
+  //   console.log(version);
+  // }, []);
 
   const { handleURLCallback } = useStripe();
 

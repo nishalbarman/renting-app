@@ -395,7 +395,7 @@ export default function AddAddress() {
               underlayColor={"[#6C63FF"}
               onPress={handleAddNewAddress}
               disabled={isLoading}
-              className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-200" : "bg-green-600"} border-none outline-none rounded-lg`}>
+              className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-gray-400" : "bg-black"} border-none outline-none rounded-lg`}>
               <>
                 {isLoading || (
                   <Text className="text-lg text-white font-[roboto-bold]">

@@ -54,6 +54,7 @@ const OrderView = () => {
 
   const handleTrackPackage = () => {
     if (isLoading) return;
+    console.log(orderDetails?.order[0]?.trackingLink);
     Linking.canOpenURL(orderDetails?.order[0]?.trackingLink).then(
       (supported) => {
         if (supported) {
@@ -157,7 +158,7 @@ const OrderView = () => {
                   <>
                     <View className="border-t my-2 border-gray-300 mt-4"></View>
                     <View className={"my-2"}>
-                      <Text className="text-lg text-gray-500 font-bold">
+                      <Text className="text-lg text-black font-bold">
                         Tracking info
                       </Text>
 
@@ -167,20 +168,22 @@ const OrderView = () => {
 
                       {orderDetails?.order[0]?.orderStatus === "On The Way" && (
                         <View className={"flex flex-row justify-between mt-4"}>
-                          <TouchableOpacity
+                          <Pressable
                             onPress={handleTrackPackage}
-                            className={"bg-green-500 py-2 px-4 rounded-md"}>
-                            <Text className={"text-white font-semibold"}>
+                            className={
+                              "bg-black py-2 px-4 h-11 items-center justify-center w-full rounded-md"
+                            }>
+                            <Text className={"text-white text-sm font-bold"}>
                               Track Package
                             </Text>
-                          </TouchableOpacity>
+                          </Pressable>
                         </View>
                       )}
                     </View>
 
                     <View className="border-t my-2 border-gray-300 mt-4"></View>
                     <View className={"my-2"}>
-                      <Text className="text-lg text-gray-500 font-bold mb-1">
+                      <Text className="text-lg text-black font-bold mb-1">
                         Shipment Address
                       </Text>
                       <Text className={"text-sm text-gray-500"}>
@@ -192,14 +195,10 @@ const OrderView = () => {
                   </>
                 )}
 
-                {/* <TouchableOpacity className={"bg-gray-300 py-2 px-4 rounded-md"}>
-          <Text className={"text-gray-700 font-semibold"}>Raise an issue</Text>
-        </TouchableOpacity> */}
-
                 <View className="border-t my-2 border-gray-300 mt-4"></View>
 
                 <View className={"my-2"}>
-                  <Text className="text-lg text-gray-500 font-bold mb-1">
+                  <Text className="text-lg text-black font-bold mb-1">
                     Shipment Content
                   </Text>
                   <FlatList
@@ -213,7 +212,7 @@ const OrderView = () => {
                             onPress={() => {
                               router.navigate(`/view?id=${item.product}`);
                             }}>
-                            <Text className="text-green-800 text-sm">
+                            <Text className="text-green-800 text-sm underline">
                               {item?.title}
                             </Text>
                           </Pressable>
@@ -221,6 +220,24 @@ const OrderView = () => {
                       );
                     }}
                   />
+                </View>
+
+                <View className="border-t my-2 border-gray-300 mt-4"></View>
+
+                <View className={"my-2 mb-10"}>
+                  <Text className="text-lg text-black font-bold mb-1">
+                    Need Help?
+                  </Text>
+                  <View className="flex flex-row">
+                    <TouchableOpacity
+                      className={
+                        "bg-gray-300 py-2 px-4 rounded-md items-center justify-center h-10"
+                      }>
+                      <Text className={"text-black text-sm font-semibold"}>
+                        Request a Callback
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </>
             );

@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { useGetWishlistQuery } from "@store/rtk";
 
 import { InteractionManager } from "react-native";
+import handleGlobalError from "../../lib/handleError";
 
 function ProductsList({
   title,

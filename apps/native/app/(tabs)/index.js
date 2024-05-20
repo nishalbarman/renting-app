@@ -64,7 +64,7 @@ export default function Tab() {
                 style={{
                   elevation: 0.7,
                 }}
-                className="h-12 flex-grow rounded-md flex-row items-center justify-between px-3 bg-gray-100">
+                className="w-full rounded-lg border border-gray-300 shadow-sm bg-white flex justify-between flex-row items-center px-4 h-[49px] mb-2">
                 <Text className="text-gray-500 text-[15px] font-[roboto]">
                   Seach Products
                 </Text>
@@ -87,7 +87,7 @@ export default function Tab() {
                 viewAllPath={productType}
                 bgColor="#def9ff"
                 titleColor="black"
-                sort={"popular"}
+                sort={"popularity"}
               />
               <HorizontalProductsList
                 title={`✌️ Our Products`}
@@ -95,6 +95,7 @@ export default function Tab() {
                 bgColor="#fff9f2"
                 // bgColor="#f2f2f2"
                 titleColor="black"
+                sort={"newest"}
               />
             </View>
           </>

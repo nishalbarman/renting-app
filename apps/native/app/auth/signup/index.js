@@ -315,7 +315,7 @@ export default function Page() {
         <View className="w-[100%] flex flex-col gap-y-6 items-center mt-[-1px]">
           <Pressable
             disabled={isSubmitDisabled || isPending}
-            className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-300" : "bg-green-600"} border-none outline-none rounded-lg`}
+            className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-300 bg-gray-400" : "bg-green-600 bg-black"} border-none outline-none rounded-lg`}
             onPress={handleSignup}>
             {isPending ? (
               <ActivityIndicator size={30} color={"white"} />

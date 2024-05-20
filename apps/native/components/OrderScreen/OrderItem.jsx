@@ -101,13 +101,21 @@ function OrderItem({
 
   return (
     <Pressable
-      onPress={() => {
-        router.navigate({
-          pathname: "order-view",
-          params: { paymentTransactionId: paymentTxnId },
-        });
+      style={{
+        height: 375,
       }}
-      className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px] border border-gray-300">
+      onPress={() => {
+        try {
+          router.navigate({
+            pathname: "order-view",
+            params: { paymentTransactionId: paymentTxnId },
+          });
+        } catch (error) {
+          console.log("OrderItem.jsx ->");
+          handleGlobalError(error);
+        }
+      }}
+      className="bg-white shadow p-2 pb-4 pt-4 rounded-md mb-[10px] border border-gray-300 h-fit">
       {(orderStatus === "On Hold" || orderStatus === "On Progress") && (
         <View className="bg-orange-100 px-3 py-2 mt-[-5px] rounded-md mb-3 border border-orange-200">
           <Text className="text-[#e86813] font-[roboto] text-sm tracking-wide">
@@ -139,6 +147,14 @@ function OrderItem({
           <Text className="text-[#1d3345] font-[roboto] text-sm tracking-wide">
             Your order is in pending state, and will be procced automatically
             once confirmed.
+          </Text>
+        </View>
+      )}
+
+      {orderStatus === "Delivered" && (
+        <View className="bg-green-100 border border-green-400 px-3 py-2 mt-[-5px] rounded-md mb-3">
+          <Text className="text-green-900 font-[roboto] text-sm tracking-wide">
+            Your order was delivered successfuly.
           </Text>
         </View>
       )}
@@ -212,7 +228,12 @@ function OrderItem({
       <View className={`h-fit justify-between px-2 mt-2`}>
         <View className={`flex-col`}>
           {orderType === "buy" ? (
-            <Text className={`text-black font-bold text-xl`}>₹{price}</Text>
+            <>
+              <Text className={`text-black font-bold text-xl`}>₹{price}</Text>
+              <Text className={`text-black font-[roboto-mid] text-sm`}>
+                Shipping: ₹{shippingPrice}
+              </Text>
+            </>
           ) : (
             <Text className={`text-black font-bold text-xl`}>
               ₹{price} / Day

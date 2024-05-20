@@ -263,65 +263,41 @@ router.get("/view/:paymentTransactionId", checkRole(0), async (req, res) => {
 });
 
 //! ORDER LISTING ROUTE FOR NORMAL USERS
-router.get("/l/:productType", async (req, res) => {
+router.get("/l/:productType", checkRole(0), async (req, res) => {
   try {
-    const token = req?.jwt?.token;
-
-    if (!token) {
-      return res.status(400).json({
-        status: false,
-        message: "Token validation failed",
-      });
-    }
-
-    const userDetails = getTokenDetails(token);
-
-    if (!userDetails) {
-      return res.status(400).json({
-        status: false,
-        message: "Token validation failed",
-      });
-    }
-
     const searchQuery = req.query;
 
     const productType = req.params?.productType;
 
     console.log(productType);
 
+    const QUERY = searchQuery.q;
     const PAGE = searchQuery.page || 0;
     const LIMIT = searchQuery.limit || 20;
     const SKIP = PAGE * LIMIT;
 
     let orderDetails = undefined;
-    let countDocuments = undefined;
     let totalPages = 0;
 
+    const filterQuery = {
+      user: req.user._id,
+      orderType: productType,
+    };
+
+    if (!!QUERY) {
+      filterQuery["$text"] = { $search: QUERY };
+    }
+
+    let countDocuments = await Order.countDocuments(filterQuery);
+
     if (productType === "buy") {
-      countDocuments = await Order.countDocuments({
-        user: userDetails._id,
-        orderType: productType,
-      });
-
-      orderDetails = await Order.find({
-        user: userDetails._id,
-        orderType: productType,
-      })
-
+      orderDetails = await Order.find(filterQuery)
         .sort({ createdAt: "desc" })
         .skip(SKIP)
         .limit(LIMIT)
         .populate("orderGroupID");
     } else {
-      countDocuments = await Order.countDocuments({
-        user: userDetails._id,
-        orderType: productType,
-      });
-
-      orderDetails = await Order.find({
-        user: userDetails._id,
-        orderType: productType,
-      })
+      orderDetails = await Order.find(filterQuery)
         .sort({ createdAt: "desc" })
         .skip(SKIP)
         .limit(LIMIT);
@@ -346,6 +322,7 @@ router.patch("/update-status", checkRole(1, 2), async (req, res) => {
   try {
     const order = req.body?.order;
     const orderStatus = req.body?.orderStatus;
+    const trackingLink = req.body?.trackingLink;
 
     if (!order || !orderStatus) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -376,7 +353,9 @@ router.patch("/update-status", checkRole(1, 2), async (req, res) => {
       orderFilter.center = center;
     }
 
-    await Order.updateMany(orderFilter, { $set: { orderStatus } });
+    await Order.updateMany(orderFilter, {
+      $set: { orderStatus, trackingLink: trackingLink || "" },
+    });
 
     return res.json({
       message: "Order status updated",

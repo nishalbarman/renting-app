@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
   SafeAreaView,
@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Text,
   Pressable,
+  TextInput,
 } from "react-native";
 import OrderItem from "../../components/OrderScreen/OrderItem";
 import AddressCardSkeletop from "../../Skeletons/AddressCardSkeleton";
@@ -29,10 +30,10 @@ const OrderScreen = () => {
   // console.log("Order list length -->", orders.length);
 
   const [paginationTotalPages, setPaginationTotalPages] = useState(0);
-  const [paginationLimit, setPaginationLimit] = useState(15);
+  const [paginationLimit, setPaginationLimit] = useState(5);
 
   const getInitialOrder = useCallback(
-    async ({ productType, paginationPage }) => {
+    async ({ productType, paginationPage, searchValue }) => {
       try {
         setIsOrderLoading(true);
 
@@ -42,6 +43,10 @@ const OrderScreen = () => {
         );
         url.searchParams.append("page", paginationPage);
         url.searchParams.append("limit", paginationLimit);
+
+        if (searchValue) {
+          url.searchParams.append("q", searchValue);
+        }
 
         const response = await axios.get(url.href, {
           headers: {
@@ -61,7 +66,7 @@ const OrderScreen = () => {
   );
 
   const fetchMoreOrders = useCallback(
-    async ({ productType, paginationPage }) => {
+    async ({ productType, paginationPage, searchValue }) => {
       try {
         // If paginationPage is 0 then inititalOrder function will be called not this one.
         if (paginationPage === 0) return;
@@ -74,6 +79,10 @@ const OrderScreen = () => {
         );
         url.searchParams.append("page", paginationPage);
         url.searchParams.append("limit", paginationLimit);
+
+        if (searchValue) {
+          url.searchParams.append("q", searchValue);
+        }
 
         const response = await axios.get(url.href, {
           headers: {
@@ -97,7 +106,11 @@ const OrderScreen = () => {
   );
 
   useEffect(() => {
-    fetchMoreOrders({ productType, paginationPage });
+    fetchMoreOrders({
+      productType,
+      paginationPage,
+      searchValue: orderSearchValue,
+    });
   }, [paginationPage]);
 
   const orderRefetch = useSelector((state) => state.refetch.orderRefetch);
@@ -112,7 +125,7 @@ const OrderScreen = () => {
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     setPaginationPage(0);
-    await getInitialOrder({ productType, paginationPage });
+    await getInitialOrder({ productType, paginationPage: 0 });
     setRefreshing(false);
   }, [productType, paginationPage]);
 
@@ -127,49 +140,84 @@ const OrderScreen = () => {
       return (
         <View className="py-3 items-center justify-center">
           <ActivityIndicator size={30} color="black" />
-          <Text className="text-center">Please wait while loading...</Text>
+          <Text className="text-center text-sm mt-2">
+            Please wait while loading...
+          </Text>
         </View>
       );
     } else return null;
   }, [paginationPage, paginationTotalPages]);
 
+  const [orderSearchValue, setOrderSearchValue] = useState("");
+
+  const orderSearchRef = useRef();
+
+  useEffect(() => {
+    clearTimeout(orderSearchRef?.current);
+    orderSearchRef.current = setTimeout(() => {
+      getInitialOrder({
+        productType,
+        paginationPage,
+        searchValue: orderSearchValue,
+      });
+    }, 200);
+
+    return () => {
+      clearTimeout(orderSearchRef?.current);
+    };
+  }, [orderSearchValue]);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        clearTimeout(orderSearchRef?.current);
+      };
+    }, [])
+  );
+
   return (
     <SafeAreaView className={`flex-1 bg-white`}>
       {isOrderLoading ? (
-        <AddressCardSkeletop />
+        <View className="min-h-full items-center justify-center">
+          <ActivityIndicator size={35} color="black" />
+          {/* <AddressCardSkeletop /> */}
+        </View>
       ) : (
         <>
-          {!orders || orders.length === 0 ? (
+          {(!orders || orders.length === 0) && !orderSearchValue ? (
             <EmptyBag message={"Your order list is empty"} />
           ) : (
             <>
-              <Pressable
-                onPress={() => {
-                  // router.navigate("/search-page");
-                }}
+              <View
                 style={{
                   elevation: 0.7,
                 }}
-                className="h-12 flex-row rounded-md flex-row items-center justify-between px-3 bg-gray-100 mb-1 mx-2">
-                <Text className="text-gray-500 font-[roboto] text-[15px]">
-                  Seach Order
-                </Text>
+                className="h-12 flex-row rounded-md flex-row items-center justify-between px-3 bg-white border border-gray-200 mb-1 mx-2">
+                <TextInput
+                  value={orderSearchValue}
+                  onChangeText={setOrderSearchValue}
+                  className="placeholder:text-gray-500 text-black h-full font-[roboto-mid] text-[15px] flex-grow"
+                  placeholder="Seach Order"
+                />
                 <EvilIcons name="search" size={24} color="black" />
-              </Pressable>
+              </View>
               <FlatList
-                className={`bg-white`}
-                data={[""]}
-                renderItem={() => (
-                  <View className={`p-2`}>
-                    {orders?.map((item, index) => (
-                      <OrderItem
-                        key={index}
-                        order={item}
-                        productType={productType}
-                        jwtToken={jwtToken}
-                      />
-                    ))}
+                className={`bg-white px-2`}
+                data={orders || []}
+                ListEmptyComponent={() => (
+                  <View className="mt-10">
+                    <Text className="text-center text-sm text-[#000000] font-[roboto-mid]">
+                      No results found
+                    </Text>
                   </View>
+                )}
+                renderItem={({ item, index }) => (
+                  <OrderItem
+                    key={item.id || index}
+                    order={item}
+                    productType={productType}
+                    jwtToken={jwtToken}
+                  />
                 )}
                 showsHorizontalScrollIndicator={false}
                 refreshControl={

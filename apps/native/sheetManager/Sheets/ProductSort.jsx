@@ -24,13 +24,21 @@ export default function ProductSort() {
       },
       {
         id: 2,
-        label: <Text className="font-[roboto-mid] text-sm">Price -- Low to High</Text>,
+        label: (
+          <Text className="font-[roboto-mid] text-sm">
+            Price -- Low to High
+          </Text>
+        ),
         value: "low-to-hight-price",
         containerStyle: radiobuttonStyle,
       },
       {
         id: 3,
-        label: <Text className="font-[roboto-mid] text-sm">Price -- High to Low</Text>,
+        label: (
+          <Text className="font-[roboto-mid] text-sm">
+            Price -- High to Low
+          </Text>
+        ),
         value: "hight-to-low-price",
         containerStyle: radiobuttonStyle,
       },

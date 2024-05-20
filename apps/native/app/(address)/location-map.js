@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useTransition } from "react";
 import {
   ActivityIndicator,
   Dimensions,
+  Image,
   Text,
   TouchableOpacity,
   View,
@@ -44,7 +45,7 @@ function LocationMap() {
   useEffect(() => {
     // get address from the coordinates
     (async () => {
-      if (!selectedLocation) {
+      if (!selectedLocation || !mapViewRef.current) {
         return;
       }
       let resAddress = await mapViewRef?.current?.addressForCoordinate({
@@ -52,11 +53,30 @@ function LocationMap() {
         latitude: selectedLocation?.latitude,
       });
 
-      // console.log(resAddress);
-
       setAddress(resAddress);
     })();
-  }, [selectedLocation]);
+  }, [selectedLocation, mapViewRef.current]);
+
+  const [userCurrentLocation, setUserCurrentLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+
+  useEffect(() => {
+    // get address from the coordinates
+    if (userCurrentLocation || mapViewRef.current) {
+      mapViewRef?.current?.animateCamera(
+        {
+          center: {
+            longitude: userCurrentLocation?.longitude,
+            latitude: userCurrentLocation?.latitude,
+          },
+          zoom: 15,
+        },
+        500
+      );
+    }
+  }, [userCurrentLocation, mapViewRef.current]);
 
   const askLocationPermission = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -67,7 +87,8 @@ function LocationMap() {
     }
     // console.log("Location permission granted");
     let location = await Location.getCurrentPositionAsync({});
-    mapViewRef?.current?.animateToRegion(location.coords, 100);
+    // mapViewRef?.current?.animateToRegion(location.coords, 100);
+    setUserCurrentLocation(location.coords);
     setSelectedLocation(location.coords);
     setUserLocationEnabled(true);
     setIsLocationNotEnabledModalOpen(false);
@@ -78,8 +99,6 @@ function LocationMap() {
     // ask for location permission
     askLocationPermission();
   }, []);
-
-  const handleTryPermissionAgain = () => askLocationPermission();
 
   const handleSelectAddress = (e) => {
     if (!address) return;
@@ -110,7 +129,7 @@ function LocationMap() {
       />
 
       {isLocationNotEnabledModalOpen && (
-        <View className="min-h-screen absolute w-full justify-center items-center">
+        <View className="min-h-full absolute w-full justify-center items-center">
           <Text className="text-lg tex-bold text-center mb-3">
             You need to allow permission to be able to select location!. If you
             are seeing this message even after allowing the permission try to
@@ -119,7 +138,7 @@ function LocationMap() {
           </Text>
           <TouchableOpacity
             className="h-10 px-4 bg-green-600 flex items-center justify-center rounded-md"
-            onPress={handleTryPermissionAgain}>
+            onPress={askLocationPermission}>
             <Text className="text-md text-bold text-white">Ask Again</Text>
           </TouchableOpacity>
         </View>
@@ -148,12 +167,21 @@ function LocationMap() {
             }}>
             {!!selectedLocation && (
               <Marker
-                pinColor={"#c45041"}
+                stopPropagation={true}
                 coordinate={{
                   latitude: selectedLocation?.latitude,
                   longitude: selectedLocation?.longitude,
-                }}
-              />
+                }}>
+                <Image
+                  source={{
+                    uri: "https://cdn-icons-png.freepik.com/512/3183/3183012.png",
+                  }}
+                  style={{
+                    width: 60,
+                    height: 60,
+                  }}
+                />
+              </Marker>
             )}
           </MapView>
           <View className="w-[100%] items-center rounded-md flex-col gap-y-2">

@@ -18,7 +18,6 @@ import { Stack, useRouter } from "expo-router";
 
 import { useSelector } from "react-redux";
 import AddressCardSkeleton from "../../Skeletons/AddressCardSkeleton";
-import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";
 
 export default function AddressList() {
   const router = useRouter();
@@ -171,15 +170,17 @@ export default function AddressList() {
                 <View className="h-22 mb-22"></View>
               </>
             ) : (
-              <View className="w-full h-full flex-col items-center justify-center">
+              <View className="w-full h-full flex-col items-center justify-center px-3">
                 <Text className="font-[roboto-mid] text-[18px] text-center">
-                  No address found
+                  You do not have any address, would you like to add one?
                 </Text>
                 {(!address || address.length < 5) && (
                   <TouchableOpacity
                     onPress={handleAddAddressClick}
-                    className="mt-6 flex items-center justify-center self-center w-[200px] h-[45px] p-[0px_20px] bg-dark-purple rounded-lg">
-                    <Text className="text-white font-bold">Add One</Text>
+                    className="mt-6 flex items-center justify-center self-center w-[200px] h-[45px] p-[0px_20px] bg-black rounded-lg">
+                    <Text className="text-white font-[roboto-bold] text-sm">
+                      Add Address
+                    </Text>
                   </TouchableOpacity>
                 )}
               </View>

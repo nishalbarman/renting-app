@@ -16,10 +16,12 @@ export default memo(function Tab() {
     data: wishlistData,
     isLoading: isWishlistDataLoading,
     isFetching: isWishlistDataFetching,
-    // isError: isWishlistDataError,
-    // error: wishlistDataError,
+    isError: isWishlistDataError,
+    error: wishlistDataError,
     refetch,
   } = useGetWishlistQuery();
+
+  console.log("Wishlist error-->", wishlistDataError);
 
   useFocusEffect(
     useCallback(() => {
@@ -35,7 +37,7 @@ export default memo(function Tab() {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {isWishlistDataLoading || isWishlistDataFetching ? (
+      {isWishlistDataLoading ? (
         <ProductListSkeleton />
       ) : (
         <View>

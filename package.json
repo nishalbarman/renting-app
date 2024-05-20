@@ -21,9 +21,10 @@
     "packages/*"
   ],
   "dependencies": {
+    "concurrently": "^8.2.2",
+    "react-native-reanimated": "3.10.1",
     "tsup": "^8.0.2",
-    "typescript": "^5.3.3",
-    "concurrently": "^8.2.2"
+    "typescript": "^5.3.3"
   },
   "resolutions": {
     "wrap-ansi": "7.0.0",
@@ -31,6 +32,8 @@
     "@babel/core": "^7.24.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.74.2"
+    "react-native": "0.74.2",
+    "react-native-maps": "1.14.0",
+    "react-native-reanimated": "3.10.1"
   }
 }

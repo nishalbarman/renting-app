@@ -95,10 +95,13 @@ export default function Page() {
           width: "100%",
           backgroundColor: "white",
         }}>
-        <Image
+        {/* <Image
           source={require("../../../assets/appIcons/app_launcher.png")}
           className="w-20 h-20 rounded-full"
-        />
+        /> */}
+        <Text className="text-[18px] font-[roboto-mid]">
+          CRAFTER
+        </Text>
         <View className="w-full flex flex-col items-center px-4 bg-white">
           <View className="w-full flex-col items-center py-6 z-[999]">
             <Text className="text-[30px] font-[roboto-mid] mb-2">
@@ -205,7 +208,7 @@ export default function Page() {
         <View className="w-full flex flex-col gap-y-7 items-center mt-[-1px] bg-white">
           <Pressable
             disabled={isSubmitDisabled || isPending}
-            className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-300" : "bg-green-600"} rounded-lg`}
+            className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-300 bg-gray-400" : "bg-green-600 bg-black"} rounded-lg`}
             onPress={handleLogin}>
             {isPending ? (
               <ActivityIndicator size={30} color={"white"} />

@@ -272,7 +272,9 @@ function searchPage() {
         </ScrollView>
       ) : (
         <View className="w-full h-full bg-white items-center justify-center">
-          <Text className="text-sm">Click on the search icon to search something</Text>
+          <Text className="text-sm">
+            Click on the search icon to search something
+          </Text>
         </View>
       )}
     </SafeAreaView>

@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { SafeAreaView, View } from "react-native";
 
 import { Redirect } from "expo-router";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import AnimateSpin from "../components/AnimateSpin/AnimateSpin";
@@ -28,11 +28,9 @@ export default function Page() {
 
   const userToken = useSelector((state) => state.auth.jwtToken);
 
-  console.log(error);
-
-  const hideSplashScreen = async () => {
+  const hideSplashScreen = useCallback(async () => {
     await SplashScreen.hideAsync();
-  };
+  }, []);
 
   useEffect(() => {
     if (isFontLoaded) {
@@ -61,24 +59,29 @@ export default function Page() {
 
   useEffect(() => {
     const requestUserPermission = async () => {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+      try {
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-      if (enabled) {
-        console.log("Authorization status:", authStatus);
+        if (enabled) {
+          console.log("Authorization status:", authStatus);
 
-        messaging()
-          .getToken()
-          .then((token) => {
-            return saveTokenToDatabase(token, userToken);
+          messaging()
+            .getToken()
+            .then((token) => {
+              return saveTokenToDatabase(token, userToken);
+            });
+
+          // Listen to whether the token changes
+          return messaging().onTokenRefresh((token) => {
+            saveTokenToDatabase(token, userToken);
           });
-
-        // Listen to whether the token changes
-        return messaging().onTokenRefresh((token) => {
-          saveTokenToDatabase(token, userToken);
-        });
+        }
+      } catch (error) {
+        console.log("index.js --> Firebase error-->", error);
+        // handleGlobalError(error);
       }
     };
 

@@ -1,30 +1,17 @@
-import React, { useEffect, useRef, useState, useTransition } from "react";
-import {
-  ActivityIndicator,
-  Dimensions,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SheetManager } from "react-native-actions-sheet";
-import { NativeViewGestureHandler } from "react-native-gesture-handler";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import React, { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+
+import MapView, { Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps";
 
 import * as Location from "expo-location";
-import { setAddressDataFromMap } from "@store/rtk";
 import { useDispatch, useSelector } from "react-redux";
-import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
-import { EvilIcons } from "@expo/vector-icons";
 
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
-import { useGetCenterAddressQuery } from "@store/rtk";
+
 import { setCenterAddress } from "@store/rtk";
-import { useGetAddressQuery } from "@store/rtk";
 import axios from "axios";
+import handleGlobalError from "../../lib/handleError";
 
 function LocationMap() {
   const searchParams = useLocalSearchParams();
@@ -40,7 +27,10 @@ function LocationMap() {
 
   const [loading, setLoading] = useState(false); // loading for the select button
 
-  const mapViewRef = useRef(null);
+  const [userCurrentLocation, setUserCurrentLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
 
   const askLocationPermission = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -48,9 +38,12 @@ function LocationMap() {
       setIsLocationNotEnabledModalOpen(true);
       return;
     }
-    let location = await Location.getCurrentPositionAsync({});
 
-    mapViewRef?.current?.animateToRegion(location.coords, 100);
+    let location = await Location.getCurrentPositionAsync();
+    setUserCurrentLocation(location.coords);
+    // console.log(location);
+
+    // mapViewRef?.current?.animateToRegione(location.coords, 100);
 
     // setSelectedLocation(location.coords);
     setIsLocationNotEnabledModalOpen(false);
@@ -62,14 +55,30 @@ function LocationMap() {
     askLocationPermission();
   }, []);
 
-  const handleTryPermissionAgain = () => askLocationPermission();
-
   const [userCloseCenterList, setUserCloseCenterList] = useState([]);
   const [closestCenter, setClosestCenter] = useState(null);
 
+  const mapViewRef = useRef(null);
+
   useEffect(() => {
-    mapViewRef.current?.animateToRegion(closestCenter?.address, 100);
-  }, [closestCenter]);
+    if (!!closestCenter && !!mapViewRef.current) {
+      if (typeof mapViewRef.current.animateToRegion === "function") {
+        mapViewRef.current.animateCamera(
+          {
+            center: {
+              latitude: closestCenter?.address.latitude,
+              longitude: closestCenter?.address.longitude,
+            },
+            zoom: 15,
+            heading: 0,
+            pitch: 0,
+            altitude: 5,
+          },
+          500
+        );
+      }
+    }
+  }, [closestCenter, mapViewRef]);
 
   const getCenterLocations = async () => {
     try {
@@ -82,11 +91,11 @@ function LocationMap() {
           },
         }
       );
-      // console.log(response.data);
       setUserCloseCenterList(response.data.availableCenters);
       setClosestCenter(response.data.availableCenters[0]);
     } catch (error) {
       console.error(error);
+      handleGlobalError(error);
     }
   };
 
@@ -126,7 +135,7 @@ function LocationMap() {
       />
 
       {isLocationNotEnabledModalOpen && (
-        <View className="h-[90%] w-full flex justify-center items-center">
+        <View className="min-h-full w-full flex justify-center items-center">
           <Text className="text-lg tex-bold text-center mb-3">
             You need to allow permission to be able to select location!. If you
             are seeing this message even after allowing the permission try to
@@ -135,20 +144,22 @@ function LocationMap() {
           </Text>
           <TouchableOpacity
             className="h-10 px-4 bg-purple flex items-center justify-center rounded-md"
-            onPress={handleTryPermissionAgain}>
+            onPress={askLocationPermission}>
             <Text className="text-lg text-bold text-white">Ask Again</Text>
           </TouchableOpacity>
         </View>
       )}
 
       {isIntitalUILoading ? (
-        <View className="min-h-screen w-full flex items-center justify-center">
+        <View className="min-h-full w-full flex items-center justify-center">
           <ActivityIndicator size={40} />
         </View>
       ) : (
         <>
           <MapView
-            ref={mapViewRef}
+            ref={(mapView) => {
+              mapViewRef.current = mapView;
+            }}
             provider={PROVIDER_GOOGLE}
             className="h-full w-full"
             showsUserLocation={true}
@@ -175,15 +186,21 @@ function LocationMap() {
                       latitude: +center?.address?.latitude || 0,
                       longitude: +center?.address?.longitude || 0,
                     }}>
-                    <Image
-                      source={{
-                        uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Go-home.svg/1024px-Go-home.svg.png",
-                      }}
-                      style={{
-                        width: 60,
-                        height: 60,
-                      }}
-                    />
+                    <View>
+                      <Text className="text-sm text-white bg-black font-[roboto-bold] rounded-md px-2 py-2">
+                        {(center?.distance / 1000).toFixed(2)} KM
+                      </Text>
+                      <Image
+                        source={{
+                          // uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Go-home.svg/1024px-Go-home.svg.png",
+                          uri: "https://cdn-icons-png.freepik.com/512/3183/3183012.png",
+                        }}
+                        style={{
+                          width: 60,
+                          height: 60,
+                        }}
+                      />
+                    </View>
                   </Marker>
                 </>
               ))}
@@ -225,9 +242,7 @@ function LocationMap() {
                   Object.keys(selectedCenterAddress).length === 0
                 }
                 style={{
-                  backgroundColor: !selectedCenterAddress
-                    ? "gray"
-                    : "black",
+                  backgroundColor: !selectedCenterAddress ? "gray" : "black",
                 }}
                 className="flex-row items-center justify-start p-1 pl-3 pr-3 rounded-md mt-2 disabled:bg-light-purple h-10 bg-dark-purple">
                 {loading ? (

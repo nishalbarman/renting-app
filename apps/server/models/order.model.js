@@ -92,6 +92,8 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
+orderSchema.index({ "$**": "text" });
+
 const orderListSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Types.ObjectId, ref: "users" },

@@ -8,7 +8,7 @@ export default {
     icon: "./assets/appIcons/app_launcher.png",
     userInterfaceStyle: "light",
     splash: {
-      image: "./assets/appIcons/splash1.png",
+      image: "./assets/appIcons/splash.png",
       resizeMode: "contain",
       backgroundColor: "#ffffff",
     },
@@ -31,8 +31,8 @@ export default {
       bundleIdentifier: "com.crafter.shop",
     },
     android: {
-      versionCode: 1,
-      versionName: "1.0.0",
+      versionCode: 5,
+      versionName: "1.0.4",
       // googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
       googleServicesFile: "./google-services-file/google-services.json",
       adaptiveIcon: {
