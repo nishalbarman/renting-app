@@ -15,8 +15,6 @@ import axios from "axios";
 import { useStripe } from "@stripe/stripe-react-native";
 import handleGlobalError from "../../lib/handleError";
 import { useGetCartQuery } from "@store/rtk";
-// import PlaceOrderModal from "../../modal/Cart/PlaceRentOrderModal";
-// import { useGetCartQuery } from "@store/rtk";
 
 export default function AddressList() {
   const searchParams = useLocalSearchParams();
@@ -28,27 +26,39 @@ export default function AddressList() {
 
   const { productType } = useSelector((state) => state.product_store);
 
-  let selectedUserAddress = searchParams?.address;
-
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  const [paymentLoading, setPaymentLoading] = useState(true);
-
-  const [orderStatus, setOrderStatus] = useState("pending");
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [orderError, setOrderError] = useState("");
 
   const { refetch: refetchCart } = useGetCartQuery(productType);
 
   const fetchPaymentSheetParams = async () => {
-    const response = await axios.post(
-      `${process.env.EXPO_PUBLIC_API_URL}/stripe/cart/${productType}`,
-      { address: selectedUserAddress },
-      {
-        headers: {
-          authorization: `Bearer ${jwtToken}`,
+    let response;
+
+    if (searchParams?.checkoutSingleOrCart === "CART") {
+      response = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/stripe/cart/${productType}`,
+        { address: searchParams?.address },
+        {
+          headers: {
+            authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+    } else {
+      response = await axios.post(
+        `${process.env.EXPO_PUBLIC_API_URL}/stripe/single/purchase/${productType}`,
+        {
+          address: searchParams?.address,
+          productId: searchParams?.productId,
+          productVariantId: searchParams?.filteredVariantId,
+          quantity: searchParams?.quantity,
         },
-      }
-    );
+        {
+          headers: {
+            authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+    }
 
     const {
       paymentIntent,
@@ -123,16 +133,11 @@ export default function AddressList() {
 
   const openPaymentSheet = async () => {
     try {
-      setOrderStatus("pending");
-      setPaymentLoading(true);
       const paymentTransactionId = await initializePaymentSheet();
       const { error } = await presentPaymentSheet();
 
-      setIsModalVisible(true);
-
       if (error) {
         console.error("Error ->", error);
-        // setOrderStatus("failed");
         handleGlobalError(error);
         return router.dismiss();
         // setOrderError(error);
@@ -144,7 +149,6 @@ export default function AddressList() {
             paymentTransactionId: paymentTransactionId,
           },
         });
-        // setOrderStatus("success");
       }
     } catch (error) {
       console.error(error);
@@ -203,7 +207,7 @@ export default function AddressList() {
           }}
         />
         <View className="min-h-screen flex-1 items-center justify-center">
-          <ActivityIndicator color={"green"} size={35} />
+          <ActivityIndicator color={"black"} size={35} />
           <Text className="mt-4 text-center text-sm">
             Please do not close or do not press back button..
           </Text>

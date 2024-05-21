@@ -40,6 +40,10 @@ import ImageSldr from "../../components/ImageSldr";
 import { useAddOneToCartMutation } from "@store/rtk";
 import Toast from "react-native-toast-message";
 import handleGlobalError from "../../lib/handleError";
+import {
+  initPaymentSheet,
+  presentPaymentSheet,
+} from "@stripe/stripe-react-native";
 
 function product() {
   const { width } = useMemo(() => {
@@ -370,8 +374,21 @@ function product() {
     }
   };
 
-  const handleProductRentClick = () => {};
-  const handleProductBuyClick = () => {};
+  const handleBuyNow = () => {
+    try {
+      router.navigate({
+        pathname: "select-address",
+        params: {
+          checkoutSingleOrCart: "SINGLE",
+          productId: productId,
+          filteredVariantId: filteredVariant?._id,
+          quantity: quantity,
+        },
+      });
+    } catch (error) {
+      handleGlobalError(error);
+    }
+  };
 
   const freeDelivery = false;
 
@@ -588,7 +605,7 @@ function product() {
                   </View>
                 )}
 
-              {/* //!price and quantity section */}
+              {/* //price and quantity section */}
               <View className="rounded-md mt-1 bg-[#e3eeff]">
                 <View className="flex flex-row flex-wrap justify-between items-center px-3 py-3">
                   <View className="flex gap-y-2">
@@ -700,28 +717,27 @@ function product() {
                 {/* buy now or add to cart button */}
                 <View className="bg-transparent w-full h-fit flex-row px-2 py-2">
                   <Pressable
-                    onPress={handleGoToCart}
-                    className="bg-black border border-gray-300 h-12 w-14 justify-center items-center rounded-md">
-                    <Ionicons
+                    onPress={handleBuyNow}
+                    className="bg-black border border-gray-300 h-12 w-[48%] justify-center items-center rounded-md">
+                    {/* <Ionicons
                       name="bag-handle-outline"
                       size={24}
                       color="white"
-                    />
+                    /> */}
+                    <Text className="text-white font-[roboto-bold] text-sm">
+                      Buy Now
+                    </Text>
                   </Pressable>
 
                   {!inCart ? (
                     <>
                       <Pressable
                         onPress={handleAddToCart}
-                        className="ml-2 bg-black h-12 w-14 justify-center items-center rounded-md flex-grow">
+                        className="ml-2 bg-black h-12 w-[48%] justify-center items-center rounded-md flex-grow">
                         {isAddToCartLoading ? (
                           <ActivityIndicator size={20} color={"white"} />
                         ) : (
-                          <Text
-                            style={{
-                              color: "white",
-                            }}
-                            className="text-white text-[15px] font-[roboto-bold]">
+                          <Text className="text-white text-sm font-[roboto-bold]">
                             Add To Cart
                           </Text>
                         )}
@@ -730,8 +746,8 @@ function product() {
                   ) : (
                     <Pressable
                       onPress={handleGoToCart}
-                      className="ml-2 bg-black h-12 w-14 justify-center items-center rounded-md flex-grow">
-                      <Text className="text-white text-[15px] font-[roboto-bold]">
+                      className="ml-2 bg-black h-12 w-[48%] justify-center items-center rounded-md flex-grow">
+                      <Text className="text-white text-sm font-[roboto-bold]">
                         Go To Cart
                       </Text>
                     </Pressable>

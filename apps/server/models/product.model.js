@@ -94,7 +94,7 @@ const productVariantSchema = new mongoose.Schema(
 const Product =
   mongoose.models.products || mongoose.model("products", productSchema);
 
-Product.createSearchIndex;
+// Product.createSearchIndex;
 
 const ProductVariant =
   mongoose.models.product_varients ||

@@ -14,12 +14,14 @@ import {
 
 import { useGetAddressQuery } from "@store/rtk";
 
-import { Stack, useRouter } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 
 import { useSelector } from "react-redux";
 import AddressCardSkeleton from "../../Skeletons/AddressCardSkeleton";
 
 export default function AddressList() {
+  const searchParams = useLocalSearchParams();
+
   const router = useRouter();
 
   const { name, mobileNo } = useSelector((state) => state.auth);
@@ -52,8 +54,12 @@ export default function AddressList() {
       router.replace({
         pathname: "checkout",
         params: {
+          checkoutSingleOrCart: searchParams?.checkoutSingleOrCart,
           checkoutType: "buy",
           address: selectedAddress,
+          productId: searchParams?.productId,
+          filteredVariantId: searchParams?.filteredVariantId,
+          quantity: searchParams?.quantity,
         },
       });
     } else {
@@ -188,16 +194,6 @@ export default function AddressList() {
           </>
         )}
       </View>
-
-      {/* {paymentLoading ||
-        (isModalVisible && (
-          <PlaceOrderModal
-            modalVisible={isModalVisible}
-            setModalVisible={setIsModalVisible}
-            orderPlaceStatus={orderStatus}
-            errorMsg={orderError?.message}
-          />
-        ))} */}
     </SafeAreaView>
   );
 }

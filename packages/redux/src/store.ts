@@ -31,6 +31,7 @@ import { productSortingFilteringSlice } from "./slices/productSortingFiltering";
 import { authSlice } from "./slices/authSlice";
 import { refetchSlice } from "./slices/refetchSlice";
 import { globalMessage } from "./slices/messageSlice";
+import { checkoutInformationSlice } from "./slices/checkoutSlice";
 
 const rootReducer = combineReducers({
   [userAPI.reducerPath]: userAPI.reducer,
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
   [wishlistApi.reducerPath]: wishlistApi.reducer,
   [categoryApi.reducerPath]: categoryApi.reducer,
   [storeTypeSlice.name]: storeTypeSlice.reducer,
+  [checkoutInformationSlice.name]: checkoutInformationSlice.reducer,
   // [orderSlice.name]: orderSlice.reducer,
   [centerAddressApi.reducerPath]: centerAddressApi.reducer,
   [centerAddressSlice.name]: centerAddressSlice.reducer,

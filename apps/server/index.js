@@ -115,6 +115,10 @@ app.use("/pay/razorpay/hook", require("./hooks/razorpay-hook.routes"));
 
 // stripe payment gateway
 app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));
+app.use(
+  "/stripe/single/purchase",
+  require("./routes/payment/stripe/pay-single.routes")
+);
 app.use("/payment/summary", require("./routes/payment/summary.routes"));
 
 //shiprocket
