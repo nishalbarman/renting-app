@@ -112,16 +112,20 @@ app.use("/size", require("./routes/sizes/sizes.routes"));
 app.use("/center", require("./routes/centers/center.routes"));
 
 // payment hooks
-app.use("/pay/razorpay/cart", require("./routes/payment/razorpay/cart.routes"));
-app.use("/paytm/cart", require("./routes/payment/paytm/pay-cart.routes"));
-app.use("/paytm/hook", require("./hooks/razorpay-hook.routes"));
+app.use("/razorpay/hook", require("./hooks/razorpay-hook.routes"));
 
 // stripe payment gateway
+  /!* ---- paytm */
+app.use("/paytm/cart", require("./routes/payment/paytm/pay-cart.routes"));
+
+  /!*---- razorpay */
+app.use("/pay/razorpay/cart", require("./routes/payment/razorpay/pay-cart.routes"));
+
+  /!* ---- stripe */
 app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));
-app.use(
-  "/stripe/single/purchase",
-  require("./routes/payment/stripe/pay-single.routes")
-);
+app.use("/stripe/single/purchase", require("./routes/payment/stripe/pay-single.routes"));
+
+// payment summary
 app.use("/payment/summary", require("./routes/payment/summary.routes"));
 
 //shiprocket
@@ -138,10 +142,6 @@ app.use(
 app.get("/helloworld", (_, res) => {
   res.send("Hello World!");
 });
-
-// app.use("/*", (_, res) => {
-//   res.send({ message: "It's working nicely!" });
-// });
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
