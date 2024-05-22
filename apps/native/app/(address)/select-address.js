@@ -52,11 +52,13 @@ export default function AddressList() {
     setNextScreenClicked(true);
     if (productType === "buy") {
       router.replace({
-        pathname: "checkout",
+        pathname: "checkout-razorpay",
         params: {
           checkoutSingleOrCart: searchParams?.checkoutSingleOrCart,
           checkoutType: "buy",
           address: selectedAddress,
+
+          // these parameters will be available if checkout is for single product/direct buy
           productId: searchParams?.productId,
           filteredVariantId: searchParams?.filteredVariantId,
           quantity: searchParams?.quantity,

@@ -85,26 +85,6 @@ function MoreCategory() {
     getInitialCategoryData();
   }, []);
 
-  //   const {
-  //     data: wishlistData,
-  //     isLoading: isWishlistDataLoading,
-  //     // isError: isWishlistDataError,
-  //     // error: wishlistDataError,
-  //     refetch,
-  //   } = useGetWishlistQuery();
-
-  //   useEffect(() => {
-  //     refetch();
-  //   }, [productType]);
-
-  //   const wishlistIdMap = useMemo(() => {
-  //     const wishlistObjectWithIDAsKey = {};
-  //     wishlistData?.forEach((item) => {
-  //       wishlistObjectWithIDAsKey[item?.product?._id] = item?._id; // assigning product id as key and wishlist item id as value
-  //     });
-  //     return wishlistObjectWithIDAsKey;
-  //   }, [wishlistData]);
-
   const handleFetchNextPage = () => {
     if (paginationPage < paginationTotalPages - 1) {
       setPaginationPage((prev) => prev + 1);
@@ -170,8 +150,9 @@ function MoreCategory() {
         }}
       />
       {isCategoryLoading ? (
-        <>
-          <FlatList
+        <View className="h-full w-full items-center justify-center">
+          <ActivityIndicator size={35} color={"black"} />
+          {/* <FlatList
             className="px-2"
             data={[
               "",
@@ -191,14 +172,12 @@ function MoreCategory() {
               "",
               "",
             ]}
-            ListEmptyComponent={() => {
-              return <EmptyBag message={"No Category found"} />;
-            }}
             renderItem={({ item }) => <CategorySkeleton />}
+            ItemSeparatorComponent={<View className="w-5 h-2"></View>}
             numColumns={4}
             keyExtractor={(item, index) => index.toString()}
-          />
-        </>
+          /> */}
+        </View>
       ) : (
         <View className={`w-full h-full rounded bg-[rgba(0,0,0,0.1)]`}>
           <View className="flex-row flex-wrap justify-center">

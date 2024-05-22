@@ -27,7 +27,7 @@ const CategoryItemSkeleton = () => {
   });
 
   return (
-    <View className="w-fit h-fit flex flex-col align-center justify-center gap-y-2 m-2">
+    <View className="w-fit h-fit flex flex-col align-center justify-center gap-y-2 px-1">
       <Animated.View
         style={{ opacity: opacityAnimation }}
         className="bg-white w-fit h-fit rounded-full flex justify-center align-center">

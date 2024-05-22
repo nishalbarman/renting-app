@@ -69,17 +69,17 @@ function Categories() {
   }, [totalPages]);
 
   return (
-    <View className="w-screen pl-2 pr-2 mt-3 rounded-t-md">
+    <View className="w-screen px-2 mt-2 rounded-t-md px-3">
       {/* bg-[#c1ebbe]  */}
       {isLoading ? (
-        <View className="flex flex-row gap-x-2 ">
+        <View className="flex flex-row px-1">
           <CategorySkeleton />
           <CategorySkeleton />
           <CategorySkeleton />
         </View>
       ) : (
         <>
-          <Text className="font-[roboto-xbold] tracking-wider text-lg text-black mt-4 mb-1 ml-2">
+          <Text className="font-[roboto-xbold] tracking-wider text-lg text-black mb-2">
             Categories
           </Text>
           <FlatList

@@ -160,10 +160,17 @@ const CartPage = () => {
 
   const handleContinueClick = async () => {
     // product type is buy then goto select delivery address screen
-    if (productType === "buy") return router.navigate("/select-address");
+    if (productType === "buy")
+      return router.navigate({
+        pathname: "/select-address",
+        params: {
+          checkoutSingleOrCart: "CART",
+          checkoutType: "buy",
+        },
+      });
 
     router.navigate({
-      pathname: "checkout",
+      pathname: "checkout-stripe",
       params: {
         checkoutType: "rent",
         centerAddressId: selectedCenterAddress._id,

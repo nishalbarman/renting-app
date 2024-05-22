@@ -66,7 +66,7 @@ export default function RootLayout() {
       success: (props) => (
         <BaseToast
           {...props}
-          style={{ borderLeftColor: "pink" }}
+          style={{ borderLeftColor: "pink", margin: "0px 10px" }}
           contentContainerStyle={{ paddingHorizontal: 15 }}
           text1Style={{
             fontSize: 15,
@@ -98,23 +98,27 @@ export default function RootLayout() {
         They will be passed when calling the `show` method (see below)
       */
       sc: ({ text1, props }) => (
-        <View className="flex-row items-center justify-start px-2 py-2 h-fit border border-gray-300 rounded-md bg-white">
+        <View className="flex-row items-center justify-start px-2 py-2 h-fit border border-gray-300 rounded-md bg-white w-[95%] px-2">
           <View className="items-center mr-2">
             <View className="bg-green-500 rounded-full">
               <AntDesign name="checkcircleo" size={25} color="white" />
             </View>
           </View>
-          <Text className="text-sm text-black">{text1}</Text>
+          <Text lineBreakMode="tail" className="text-sm text-black text-wrap">
+            {text1}
+          </Text>
         </View>
       ),
       err: ({ text1, props }) => (
-        <View className="flex-row items-center justify-start px-2 py-2 h-fit border border-gray-300 rounded-md bg-white">
+        <View className="flex-row items-center justify-start px-2 py-2 h-fit border border-gray-300 rounded-md bg-white w-[95%] px-2">
           <View className="items-center mr-2">
             <View className="bg-red-500 rounded-full">
               <Entypo name="circle-with-cross" size={25} color="white" />
             </View>
           </View>
-          <Text className="text-sm text-black">{text1}</Text>
+          <Text lineBreakMode="tail" className="text-sm text-black text-wrap">
+            {text1}
+          </Text>
         </View>
       ),
     };

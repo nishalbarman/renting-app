@@ -5,7 +5,7 @@ export default {
     slug: "crafter-ecom",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/appIcons/app_launcher.png",
+    icon: "./assets/appIcons/logo.png",
     userInterfaceStyle: "light",
     splash: {
       image: "./assets/appIcons/splash.png",

@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const RazorPay = require("razorpay");
+const https = require("https");
+
+const PaytmChecksum = require("paytmchecksum");
+
 const { v4: uuidv4 } = require("uuid");
 
 const checkRole = require("../../../middlewares");
@@ -11,14 +14,11 @@ const Coupon = require("../../../models/coupon.model");
 const Order = require("../../../models/order.model");
 const Address = require("../../../models/address.model");
 const PaymentTransModel = require("../../../models/transaction.model");
+const { default: axios } = require("axios");
+const { resolve } = require("path");
 
-const RAZORPAY_KEY = process.env.RAZORPAY_KEY;
-const RAZORPAY_SECRET = process.env.RAZORPAY_SECRET;
-
-const razorpayInstance = new RazorPay({
-  key_id: RAZORPAY_KEY,
-  key_secret: RAZORPAY_SECRET,
-});
+const PAYTM_MERCHANT_KEY = process.env.PAYTM_MKEY;
+const PAYTM_MID = process.env.PAYTM_MID;
 
 router.post("/:productType", checkRole(0), async (req, res) => {
   try {
@@ -136,7 +136,7 @@ router.post("/:productType", checkRole(0), async (req, res) => {
       shippingApplied = true;
     }
 
-    paymentObject.amount *= 100; // gateway takes amount as paisa (1 rupee = 100 paisa)
+    // paymentObject.amount *= 100; // gateway takes amount as paisa (1 rupee = 100 paisa)
 
     const productNames = paymentObject.productinfo.join(", ");
 
@@ -144,62 +144,79 @@ router.post("/:productType", checkRole(0), async (req, res) => {
 
     const user = await User.findById(userDetails._id);
 
-    // if (!user.stripeCustomer) {
-    //   const customer = await stripe.customers.create({
-    //     email: user.email, // Provide the email address
-    //     name: user.name, // Provide the customer's name
-    //     phone: user.mobileNo,
-    //     // Add other details as needed
-    //   });
-    //   user.stripeCustomer = customer;
-    // }
-
-    // await user.save({ validateBeforeSave: false });
-
-    // const ephemeralKey = await stripe.ephemeralKeys.create(
-    //   { customer: user.stripeCustomer.id },
-    //   { apiVersion: "2024-04-10" }
-    // );
-
     const paymentTxnId = uuidv4();
     const orderGroupID = uuidv4();
 
-    // const paymentIntent = await stripe.paymentIntents.create({
+    // const razorpayOrder = await razorpayInstance.orders.create({
     //   amount: paymentObject.amount,
-    //   currency: "inr",
-    //   customer: user.stripeCustomer.id,
-    //   // In the latest version of the API, specifying the `automatic_payment_methods` parameter
-    //   // is optional because Stripe enables its functionality by default.
-    //   automatic_payment_methods: {
-    //     enabled: true,
-    //   },
-    //   description: productNames,
-    //   metadata: {
+    //   currency: "INR",
+    //   receipt: paymentTxnId,
+    //   partial_payment: false,
+    //   notes: {
     //     orderGroupID,
-    //     address,
     //     user: userDetails._id.toString(),
-    //     // center: centerAddresses[0]._id.toString(),
+    //     address,
     //     cartProductIds: cartIds.join(","),
     //     productIds: cartItemsForUser.map((item) => item.product._id).join(","),
+    //     description: productNames,
+    //     transactionId: paymentTxnId,
     //   },
     // });
 
-    // create one razor pay order with the amount
-    const razorpayOrder = await razorpayInstance.orders.create({
-      amount: paymentObject.amount,
-      currency: "INR",
-      receipt: paymentTxnId,
-      partial_payment: false,
-      notes: {
+    let paytmParams = {};
+
+    paytmParams.body = {
+      requestType: "Payment",
+      mid: PAYTM_MID,
+      websiteName: "WEBSTAGING",
+      orderId: orderGroupID,
+      callbackUrl:
+        "https://securegw-stage.paytm.in/theia/paytmCallback?ORDER_ID=" +
         orderGroupID,
-        user: userDetails._id.toString(),
-        address,
-        cartProductIds: cartIds.join(","),
-        productIds: cartItemsForUser.map((item) => item.product._id).join(","),
-        description: productNames,
-        paymentTxnId: paymentTxnId,
+      txnAmount: {
+        value: Number(paymentObject.amount).toFixed(2).toString(),
+        currency: "INR",
       },
-    });
+      userInfo: {
+        custId: user._id.toString(),
+        email: user.email, // Provide the email address
+        firstName: user.name, // Provide the customer's name
+        mobile: user.mobileNo,
+      },
+    };
+
+    console.log(paytmParams.body);
+
+    /*
+     * Generate checksum by parameters we have in body
+     * Find your Merchant Key in your Paytm Dashboard at https://dashboard.paytm.com/next/apikeys
+     */
+    const checksum = await PaytmChecksum.generateSignature(
+      JSON.stringify(paytmParams.body),
+      PAYTM_MERCHANT_KEY
+    );
+
+    paytmParams.head = {
+      channelId: "WAP",
+      signature: checksum,
+    };
+
+    console.log("Did I got the checksum", checksum);
+
+    const post_data = JSON.stringify(paytmParams);
+
+    const response = await axios.post(
+      `https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=${PAYTM_MID}&orderId=${orderGroupID}`,
+      paytmParams,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": post_data.length,
+        },
+      }
+    );
+
+    console.log(response.data);
 
     let orderItemsWithOrderIDandPaymentId;
 
@@ -272,29 +289,20 @@ router.post("/:productType", checkRole(0), async (req, res) => {
       user: userDetails._id,
       order: orders.map((item) => item._id),
 
+      //! initial status of payment
       paymentStatus: "Pending",
 
+      //! PRICE related keys
       shippingPrice: !!shippingApplied ? shippingPrice : 0,
       subTotalPrice:
         paymentObject.amount / 100 - (!!shippingApplied ? shippingPrice : 0),
       totalPrice: paymentObject.amount / 100,
     });
 
-    // res.json({
-    //   paymentTxnId: paymentIntent.id,
-    //   paymentIntent: paymentIntent.client_secret,
-    //   ephemeralKey: ephemeralKey.secret,
-    //   customer: user.stripeCustomer.id,
-    //   publishableKey: STRIPE_PUBLISHABLE_KEY,
-    // });
-
     return res.status(200).json({
-      razorpayOrderId: razorpayOrder.id,
-      amount: razorpayOrder.amount,
-      name: userDetails.name,
-      email: userDetails.email,
-      mobileNo: userDetails.mobileNo,
-      productinfo: productNames,
+      orderId: orderGroupID,
+      txnToken: response.data.body.txnToken,
+      amount: paymentObject.amount,
     });
   } catch (error) {
     console.log(error);

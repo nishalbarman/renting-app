@@ -44,6 +44,8 @@ const extractToken = async (req, res, next) => {
     // console.log("Request found for router -->>", req.url);
     // console.log("Request Method -->>", req.method);
 
+    console.log(req.url);
+
     const publicRoute =
       req.url === "/" ||
       req.url === "/helloworld" ||
@@ -69,7 +71,7 @@ const extractToken = async (req, res, next) => {
       return res.status(401).json({ message: "No token provided" });
     }
     req.jwt = { token: token };
-    console.log(req?.jwt);
+    // console.log(req?.jwt);
     return next();
   } catch (error) {
     console.log(error);
@@ -111,7 +113,8 @@ app.use("/center", require("./routes/centers/center.routes"));
 
 // payment hooks
 app.use("/pay/razorpay/cart", require("./routes/payment/razorpay/cart.routes"));
-app.use("/pay/razorpay/hook", require("./hooks/razorpay-hook.routes"));
+app.use("/paytm/cart", require("./routes/payment/paytm/pay-cart.routes"));
+app.use("/paytm/hook", require("./hooks/razorpay-hook.routes"));
 
 // stripe payment gateway
 app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));

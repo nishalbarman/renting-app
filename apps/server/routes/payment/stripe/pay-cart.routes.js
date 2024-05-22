@@ -313,8 +313,6 @@ router.post("/:productType", async (req, res) => {
       });
     }
 
-    console.log("Created At -->", orderItemsWithOrderIDandPaymentId);
-
     const orders = await Order.insertMany(orderItemsWithOrderIDandPaymentId);
 
     await PaymentTransModel.create({
