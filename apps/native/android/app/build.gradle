@@ -178,6 +178,8 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:4.2.1"
     implementation "com.squareup.okhttp3:logging-interceptor:4.2.1"
     implementation "com.squareup.okhttp3:okhttp-urlconnection:4.2.1"
+
+     implementation 'com.google.firebase:firebase-crashlytics:17.4.1'
 }
 
 apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim(), "../native_modules.gradle");

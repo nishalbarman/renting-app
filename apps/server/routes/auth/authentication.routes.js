@@ -143,13 +143,10 @@ router.post("/login", async (req, res) => {
       );
 
       return res.status(400).json({
-        status: false,
         message: errArray.join(", "),
       });
     }
-    return res
-      .status(500)
-      .json({ status: false, message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 

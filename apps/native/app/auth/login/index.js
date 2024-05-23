@@ -57,8 +57,8 @@ export default function Page() {
 
       router.replace("/(tabs)");
     } catch (error) {
+      console.log(error.response.data);
       handleGlobalError(error);
-      console.log(error);
     } finally {
       setIsPending(false);
     }
@@ -99,9 +99,7 @@ export default function Page() {
           source={require("../../../assets/appIcons/app_launcher.png")}
           className="w-20 h-20 rounded-full"
         /> */}
-        <Text className="text-[18px] font-[roboto-mid]">
-          CRAFTER
-        </Text>
+        <Text className="text-[18px] font-[roboto-mid]">CRAFTER</Text>
         <View className="w-full flex flex-col items-center px-4 bg-white">
           <View className="w-full flex-col items-center py-6 z-[999]">
             <Text className="text-[30px] font-[roboto-mid] mb-2">

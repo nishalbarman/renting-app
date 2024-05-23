@@ -98,7 +98,7 @@ export default function RootLayout() {
         They will be passed when calling the `show` method (see below)
       */
       sc: ({ text1, props }) => (
-        <View className="flex-row items-center justify-start px-2 py-2 h-fit border border-gray-300 rounded-md bg-white w-[95%] px-2">
+        <View className="flex-row items-center justify-start px-2 py-3 h-fit border border-gray-300 rounded-md bg-white w-[95%] px-2">
           <View className="items-center mr-2">
             <View className="bg-green-500 rounded-full">
               <AntDesign name="checkcircleo" size={25} color="white" />
@@ -110,7 +110,7 @@ export default function RootLayout() {
         </View>
       ),
       err: ({ text1, props }) => (
-        <View className="flex-row items-center justify-start px-2 py-2 h-fit border border-gray-300 rounded-md bg-white w-[95%] px-2">
+        <View className="flex-row items-center justify-start px-2 py-3 h-fit border border-gray-300 rounded-md bg-white w-[95%] px-2">
           <View className="items-center mr-2">
             <View className="bg-red-500 rounded-full">
               <Entypo name="circle-with-cross" size={25} color="white" />

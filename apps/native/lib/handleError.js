@@ -7,6 +7,8 @@ export default function handleGlobalError(error) {
   Toast.show({
     type: "err",
     text1:
-      error?.response?.message || error?.message || "Unkwown error occured",
+      error?.response?.data?.message ||
+      error?.message ||
+      "Unkwown error occured",
   });
 }
