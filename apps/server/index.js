@@ -53,7 +53,7 @@ const extractToken = async (req, res, next) => {
       req.url === "/auth/login" ||
       req.url === "/auth/signup" ||
       req.url === "/auth/sendOtp" ||
-      req.url === "/pay/razorpay/hook" ||
+      req.url === "/hook/razorpay" ||
       req.url === "/stripe/hook" ||
       req.url === "/get-image-bg-color" ||
       req.url === "/categories/view/:categoryId" ||
@@ -87,7 +87,6 @@ app.use(
 // payment hooks
 /!* these route need raw json data so thats why placing it before experss.json() *!/;
 app.use("/stripe/hook", require("./hooks/stripe-hook.routes"));
-app.use("/hook/razorpay", require("./hooks/razorpay-hook.routes"));
 
 app.use(limiter);
 app.use(express.json({ limit: "50mb" }));
@@ -112,15 +111,15 @@ app.use("/size", require("./routes/sizes/sizes.routes"));
 // center related routes
 app.use("/center", require("./routes/centers/center.routes"));
 
+// hooks
+app.use("/hook/razorpay", require("./hooks/razorpay-hook.routes"));
+
 // stripe payment gateway
 /!* ---- paytm */;
 app.use("/paytm/cart", require("./routes/payment/paytm/pay-cart.routes"));
 
 /!*---- razorpay */;
-app.use(
-  "/pay/razorpay/cart",
-  require("./routes/payment/razorpay/cart.routes")
-);
+app.use("/pay/razorpay/cart", require("./routes/payment/razorpay/pay-cart.routes"));
 
 /!* ---- stripe */;
 app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));

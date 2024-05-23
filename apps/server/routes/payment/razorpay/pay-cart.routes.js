@@ -164,26 +164,6 @@ router.post("/:productType", checkRole(0), async (req, res) => {
     const paymentTxnId = uuidv4();
     const orderGroupID = uuidv4();
 
-    // const paymentIntent = await stripe.paymentIntents.create({
-    //   amount: paymentObject.amount,
-    //   currency: "inr",
-    //   customer: user.stripeCustomer.id,
-    //   // In the latest version of the API, specifying the `automatic_payment_methods` parameter
-    //   // is optional because Stripe enables its functionality by default.
-    //   automatic_payment_methods: {
-    //     enabled: true,
-    //   },
-    //   description: productNames,
-    //   metadata: {
-    //     orderGroupID,
-    //     address,
-    //     user: userDetails._id.toString(),
-    //     // center: centerAddresses[0]._id.toString(),
-    //     cartProductIds: cartIds.join(","),
-    //     productIds: cartItemsForUser.map((item) => item.product._id).join(","),
-    //   },
-    // });
-
     // create one razor pay order with the amount
     const razorpayOrder = await razorpayInstance.orders.create({
       amount: paymentObject.amount,
@@ -200,6 +180,8 @@ router.post("/:productType", checkRole(0), async (req, res) => {
         paymentTxnId: paymentTxnId,
       },
     });
+
+    console.log(razorpayOrder);
 
     let orderItemsWithOrderIDandPaymentId;
 
@@ -279,14 +261,6 @@ router.post("/:productType", checkRole(0), async (req, res) => {
         paymentObject.amount / 100 - (!!shippingApplied ? shippingPrice : 0),
       totalPrice: paymentObject.amount / 100,
     });
-
-    // res.json({
-    //   paymentTxnId: paymentIntent.id,
-    //   paymentIntent: paymentIntent.client_secret,
-    //   ephemeralKey: ephemeralKey.secret,
-    //   customer: user.stripeCustomer.id,
-    //   publishableKey: STRIPE_PUBLISHABLE_KEY,
-    // });
 
     return res.status(200).json({
       razorpayOrderId: razorpayOrder.id,
