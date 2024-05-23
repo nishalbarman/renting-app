@@ -1,194 +1,178 @@
-const { Router } = require("express");
+const express = require("express");
+const { validateWebhookSignature } = require("razorpay");
+
 const OrderModel = require("../models/order.model");
 
-const router = Router();
+const webhookSecret = process.env.RAZOR_PAY_WEBHOOK_SECRET;
 
-router.post("/success", async (req, res) => {
-  try {
-    console.log(req.body.payload.entity);
-    const {
-      notes: {
-        orderGroupID,
-        user,
-        address,
-        cartProductIds,
-        productIds,
-        description,
-        paymentTxnId,
-      },
-    } = req.body.payload.entity;
+const router = express.Router();
 
-    // case "payment_intent.payment_failed":
-    //   const paymentIntentPaymentFailed = event.data.object;
-    //   // console.log(paymentIntentPaymentFailed);
+router.post(
+  "/",
+  express.raw({ type: "application/json" }),
+  async (req, res) => {
+    console.log("GOT AN REQUEST IN THE RAZORPAY HOOK -->");
+    try {
+      console.log("Raw Razorpay Request Body -->", requestBody);
 
-    //   await OrderModel.updateMany(
-    //     { paymentTxnId: paymentIntentPaymentFailed.metadata.paymentTxnId },
-    //     { $set: { paymentStatus: "Failed", orderStatus: "Rejected" } }
-    //   );
+      const webhookSignature = req.headers["X-Razorpay-Signature"];
 
-    //   await PaymentTransModel.updateOne(
-    //     { paymentTransactionID: paymentIntentPaymentFailed.id },
-    //     {
-    //       $set: {
-    //         paymentStatus: "Failed",
-    //       },
-    //     }
-    //   );
+      if (validateWebhookSignature(req.body, webhookSignature, webhookSecret)) {
+        const requestBody = JSON.parse(req.body);
 
-    //   break;
+        console.log("Parsed Razorpay Request Body -->", requestBody);
 
-    const pipeline = [
-      // Match orders with the given paymentTxnId
-      { $match: { paymentTxnId: paymentTxnId } },
-
-      // Update matched orders
-      {
-        $set: {
-          paymentStatus: "Success",
-          orderStatus: "On Progress",
-        },
-      },
-
-      // Group to get unique product IDs
-      {
-        $group: {
-          _id: null,
-          productIds: { $addToSet: "$product" },
-          orders: { $push: "$$ROOT" },
-        },
-      },
-
-      // Lookup products and update buyTotalOrders
-      {
-        $lookup: {
-          from: "products",
-          let: { productIds: "$productIds" },
-          pipeline: [
-            { $match: { $expr: { $in: ["$_id", "$$productIds"] } } },
-            {
-              $set: { buyTotalOrders: { $add: ["$buyTotalOrders", 1] } },
-            },
-          ],
-          as: "updatedProducts",
-        },
-      },
-
-      // Output the results
-      {
-        $project: {
-          orders: 1,
-          updatedProducts: 1,
-        },
-      },
-    ];
-
-    const result = await OrderModel.aggregate(pipeline);
-
-    // Update PaymentTransModel
-    await PaymentTransModel.updateOne(
-      { paymentTransactionID: paymentTxnId },
-      { $set: { paymentStatus: "Paid" } }
-    );
-
-    // Delete cart items
-    await Cart.deleteMany({
-      _id: {
-        $in: cartProductIds.split(","),
-      },
-    });
-
-    if (result.length > 0) {
-      const { orders, updatedProducts } = result[0];
-
-      const orderBulkOps = orders.map((order) => ({
-        updateOne: {
-          filter: { _id: order._id },
-          update: {
-            $set: {
-              paymentStatus: "Success",
-              orderStatus: "On Progress",
-            },
+        const {
+          notes: {
+            orderGroupID,
+            user,
+            address,
+            cartProductIds,
+            productIds,
+            description,
+            paymentTxnId,
           },
-        },
-      }));
+        } = requestBody.payload.entity;
 
-      const productBulkOps = updatedProducts.map((product) => ({
-        updateOne: {
-          filter: { _id: product._id },
-          update: {
-            $inc: { buyTotalOrders: 1 },
-          },
-        },
-      }));
+        switch (requestBody.event) {
+          case "payment.captured":
+            const pipeline = [
+              // Match orders with the given paymentTxnId
+              { $match: { paymentTxnId: paymentTxnId } },
 
-      await OrderModel.bulkWrite(orderBulkOps);
-      await Product.bulkWrite(productBulkOps);
-    }
+              // Update matched orders
+              {
+                $set: {
+                  paymentStatus: "Success",
+                  orderStatus: "On Progress",
+                },
+              },
 
-    await sendMail({
-      from: `"Rent Karo" <${process.env.SENDER_EMAIL_ADDRESS}>`, // sender address
-      // to: centerDetails.email, // list of receivers
-      to: "nishalbarman+admin@gmail.com", // list of receivers
-      // bcc: "nishalbarman@gmail.com", // can be the admin email address
-      subject: "RentKaro: New Order Recieved", // Subject line
-      html: `<html>
-                    <body>
-                      <div style="width: 100%; padding: 5px 0px; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid rgb(0,0,0,0.3)">
-                        <h2>Rent Karo</h2>
-                      </div>
-                      <div style="padding: 40px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
-                        <center>
-                          <span style="font-size: 18px;">Hey Yo Brother you just got a new order, You got a new order. Fullfill the order as soon as possible.
-                        </center>
-                      </div>
-                    </body>
-                  </html>`, // html body
-    });
+              // Group to get unique product IDs
+              {
+                $group: {
+                  _id: null,
+                  productIds: { $addToSet: "$product" },
+                  orders: { $push: "$$ROOT" },
+                },
+              },
 
-    // Return a 200 response to acknowledge receipt of the event
-    return res.send();
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
-  }
-});
+              // Lookup products and update buyTotalOrders
+              {
+                $lookup: {
+                  from: "products",
+                  let: { productIds: "$productIds" },
+                  pipeline: [
+                    { $match: { $expr: { $in: ["$_id", "$$productIds"] } } },
+                    {
+                      $set: {
+                        buyTotalOrders: { $add: ["$buyTotalOrders", 1] },
+                      },
+                    },
+                  ],
+                  as: "updatedProducts",
+                },
+              },
 
-router.post("/failed", async (req, res) => {
-  try {
-    console.log(req.body.payload.entity);
-    const {
-      notes: {
-        orderGroupID,
-        user,
-        address,
-        cartProductIds,
-        productIds,
-        description,
-        paymentTxnId,
-      },
-    } = req.body.payload.entity;
+              // Output the results
+              {
+                $project: {
+                  orders: 1,
+                  updatedProducts: 1,
+                },
+              },
+            ];
 
-    await OrderModel.updateMany(
-      { paymentTxnId: paymentTxnId },
-      { $set: { paymentStatus: "Failed", orderStatus: "Rejected" } }
-    );
+            const result = await OrderModel.aggregate(pipeline);
 
-    await PaymentTransModel.updateOne(
-      { paymentTransactionID: paymentTxnId },
-      {
-        $set: {
-          paymentStatus: "Failed",
-        },
+            // Update PaymentTransModel
+            await PaymentTransModel.updateOne(
+              { paymentTransactionID: paymentTxnId },
+              { $set: { paymentStatus: "Paid" } }
+            );
+
+            // Delete cart items
+            await Cart.deleteMany({
+              _id: {
+                $in: cartProductIds.split(","),
+              },
+            });
+
+            if (result.length > 0) {
+              const { orders, updatedProducts } = result[0];
+
+              const orderBulkOps = orders.map((order) => ({
+                updateOne: {
+                  filter: { _id: order._id },
+                  update: {
+                    $set: {
+                      paymentStatus: "Success",
+                      orderStatus: "On Progress",
+                    },
+                  },
+                },
+              }));
+
+              const productBulkOps = updatedProducts.map((product) => ({
+                updateOne: {
+                  filter: { _id: product._id },
+                  update: {
+                    $inc: { buyTotalOrders: 1 },
+                  },
+                },
+              }));
+
+              await OrderModel.bulkWrite(orderBulkOps);
+              await Product.bulkWrite(productBulkOps);
+            }
+
+            await sendMail({
+              from: `"Rent Karo" <${process.env.SENDER_EMAIL_ADDRESS}>`, // sender address
+              // to: centerDetails.email, // list of receivers
+              to: "nishalbarman+admin@gmail.com", // list of receivers
+              // bcc: "nishalbarman@gmail.com", // can be the admin email address
+              subject: "RentKaro: New Order Recieved", // Subject line
+              html: `<html>
+                          <body>
+                            <div style="width: 100%; padding: 5px 0px; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid rgb(0,0,0,0.3)">
+                              <h2>Rent Karo</h2>
+                            </div>
+                            <div style="padding: 40px; box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;">
+                              <center>
+                                <span style="font-size: 18px;">Hey Yo Brother you just got a new order, You got a new order. Fullfill the order as soon as possible.
+                              </center>
+                            </div>
+                          </body>
+                        </html>`, // html body
+            });
+            break;
+          case "payment.failed":
+            await OrderModel.updateMany(
+              { paymentTxnId: paymentTxnId },
+              { $set: { paymentStatus: "Failed", orderStatus: "Rejected" } }
+            );
+
+            await PaymentTransModel.updateOne(
+              { paymentTransactionID: paymentTxnId },
+              {
+                $set: {
+                  paymentStatus: "Failed",
+                },
+              }
+            );
+
+            break;
+          default:
+        }
       }
-    );
 
-    // Return a 200 response to acknowledge receipt of the event
-    return res.send();
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
+      // Return a 200 response to acknowledge receipt of the event
+      return res.send();
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
+    }
   }
-});
+);
 
 module.exports = router;

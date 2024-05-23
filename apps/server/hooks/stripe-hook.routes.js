@@ -21,7 +21,7 @@ router.post(
   "/",
   express.raw({ type: "application/json" }),
   async (req, res) => {
-    console.log("GOT AN REQUEST IN THE ENDPOINT-->");
+    console.log("GOT AN REQUEST IN THE STRIPE HOOK -->");
     try {
       const sig = req.headers["stripe-signature"];
 

@@ -84,9 +84,10 @@ app.use(
     origin: "*",
   })
 );
-
-// this route need raw json data so thats why placing it before experss.json()
+// payment hooks
+/!* these route need raw json data so thats why placing it before experss.json() *!/;
 app.use("/stripe/hook", require("./hooks/stripe-hook.routes"));
+app.use("/hook/razorpay", require("./hooks/razorpay-hook.routes"));
 
 app.use(limiter);
 app.use(express.json({ limit: "50mb" }));
@@ -111,19 +112,22 @@ app.use("/size", require("./routes/sizes/sizes.routes"));
 // center related routes
 app.use("/center", require("./routes/centers/center.routes"));
 
-// payment hooks
-app.use("/razorpay/hook", require("./hooks/razorpay-hook.routes"));
-
 // stripe payment gateway
-  /!* ---- paytm */
+/!* ---- paytm */;
 app.use("/paytm/cart", require("./routes/payment/paytm/pay-cart.routes"));
 
-  /!*---- razorpay */
-app.use("/pay/razorpay/cart", require("./routes/payment/razorpay/pay-cart.routes"));
+/!*---- razorpay */;
+app.use(
+  "/pay/razorpay/cart",
+  require("./routes/payment/razorpay/cart.routes")
+);
 
-  /!* ---- stripe */
+/!* ---- stripe */;
 app.use("/stripe/cart", require("./routes/payment/stripe/pay-cart.routes"));
-app.use("/stripe/single/purchase", require("./routes/payment/stripe/pay-single.routes"));
+app.use(
+  "/stripe/single/purchase",
+  require("./routes/payment/stripe/pay-single.routes")
+);
 
 // payment summary
 app.use("/payment/summary", require("./routes/payment/summary.routes"));
