@@ -13,8 +13,8 @@ import {
 import { FontAwesome6 } from "@expo/vector-icons";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useAddAddressMutation } from "@store/rtk/apis/addressApi";
-import { setAddressDataFromMap } from "@store/rtk/slices/addressSlice";
+import { useAddAddressMutation } from "@store/rtk";
+import { setAddressDataFromMap } from "@store/rtk";
 import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
 import { Toast } from "toastify-react-native";
 

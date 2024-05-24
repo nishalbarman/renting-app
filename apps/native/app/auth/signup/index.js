@@ -36,11 +36,11 @@ export default function Page() {
   // });
 
   const [formData, setFormData] = useState({
-    name: { value: "Nishal Barman", isTouched: true, isError: null },
-    email: { value: "nishalbarman@gmail.com", isTouched: true, isError: null },
-    mobileNo: { value: "9101114906", isTouched: true, isError: null },
-    isAgreementChecked: { value: true, isTouched: true, isError: null },
-    password: { value: "@NishalBoss21", isTouched: true, isError: null },
+    name: { value: "Test Account", isTouched: true, isError: null },
+    email: { value: "test_acc@mail.com", isTouched: true, isError: null },
+    mobileNo: { value: "9123456789", isTouched: true, isError: null },
+    isAgreementChecked: { value: true, isTouched: false, isError: null },
+    password: { value: "@Password321", isTouched: true, isError: null },
   });
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);

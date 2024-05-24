@@ -3,7 +3,7 @@ import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
-import { clearLoginSession } from "@store/rtk/slices/authSlice";
+import { clearLoginSession } from "@store/rtk";
 import { SheetManager } from "react-native-actions-sheet";
 
 function ReLogin({ modalVisible, setModalVisible }) {

@@ -18,7 +18,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
 import * as Location from "expo-location";
-import { setAddressDataFromMap } from "@store/rtk/slices/addressSlice";
+import { setAddressDataFromMap } from "@store/rtk";
 import { useDispatch } from "react-redux";
 import AnimateSpin from "../../components/AnimateSpin/AnimateSpin";
 import { EvilIcons } from "@expo/vector-icons";
