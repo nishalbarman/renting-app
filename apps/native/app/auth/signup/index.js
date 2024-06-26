@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Image,
+  Pressable,
   ScrollView,
   Text,
   TextInput,
@@ -312,7 +313,7 @@ export default function Page() {
         </View>
 
         <View className="w-[100%] flex flex-col gap-y-6 items-center mt-[-1px]">
-          <TouchableOpacity
+          <Pressable
             disabled={isSubmitDisabled || isPending}
             className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-300" : "bg-green-600"} border-none outline-none rounded-lg`}
             onPress={handleSignup}>
@@ -323,7 +324,7 @@ export default function Page() {
                 Create account
               </Text>
             )}
-          </TouchableOpacity>
+          </Pressable>
           <Text className="text-center font-[roboto-mid] text-[16px]">
             Already have an account?{" "}
             <Link

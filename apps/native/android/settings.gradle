@@ -1,4 +1,4 @@
-rootProject.name = 'RentKaro'
+rootProject.name = 'CrafterEcommerce'
 
 dependencyResolutionManagement {
   versionCatalogs {

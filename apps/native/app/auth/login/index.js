@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Image,
+  Pressable,
   ScrollView,
   Text,
   TextInput,
@@ -95,7 +96,7 @@ export default function Page() {
           backgroundColor: "white",
         }}>
         <Image
-          source={require("../../../assets/appIcons/app_launcher.webp")}
+          source={require("../../../assets/appIcons/app_launcher.png")}
           className="w-20 h-20 rounded-full"
         />
         <View className="w-full flex flex-col items-center px-4 bg-white">
@@ -202,7 +203,7 @@ export default function Page() {
           </Link>
         </View>
         <View className="w-full flex flex-col gap-y-7 items-center mt-[-1px] bg-white">
-          <TouchableOpacity
+          <Pressable
             disabled={isSubmitDisabled || isPending}
             className={`flex justify-center items-center h-12 w-[90%] ${isSubmitDisabled ? "bg-green-300" : "bg-green-600"} rounded-lg`}
             onPress={handleLogin}>
@@ -213,7 +214,7 @@ export default function Page() {
                 Login
               </Text>
             )}
-          </TouchableOpacity>
+          </Pressable>
           <Text className="text-center font-[roboto-mid] text-[16px]">
             New here?{" "}
             <Link

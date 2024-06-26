@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import {
   ActivityIndicator,
+  Pressable,
   ScrollView,
   Text,
   TextInput,
@@ -315,7 +316,7 @@ export default function Page() {
                 "Server error, kindly try after some time!"}
             </Text>
           )}
-          <TouchableOpacity
+          <Pressable
             disabled={formSubmitError.isError || !isFinalOTPValid}
             className={`flex justify-center items-center h-[55px] w-[90%] ${!isFinalOTPValid ? "bg-green-200" : "bg-green-500"} border-none outline-none rounded-lg`}
             onPress={handleOTPSubmit}>
@@ -326,7 +327,7 @@ export default function Page() {
                 Verify
               </Text>
             )}
-          </TouchableOpacity>
+          </Pressable>
         </View>
         <View className="flex flex-col gap-y-2">
           <Text className="font-[roboto-bold] text-[15.8px] text-center">

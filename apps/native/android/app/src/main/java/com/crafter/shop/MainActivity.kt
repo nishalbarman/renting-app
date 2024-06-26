@@ -1,4 +1,4 @@
-package com.nishalbarman.renting_app
+package com.crafter.shop
 
 import android.os.Build
 import android.os.Bundle
