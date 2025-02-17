@@ -36,7 +36,7 @@ export default {
       // googleServicesFile: process.env.GOOGLE_SERVICES_JSON,
       googleServicesFile: "./google-services-file/google-services.json",
       adaptiveIcon: {
-        foregroundImage: "./assets/appIcons/app_launcher.png",
+        foregroundImage: "./assets/appIcons/logo.png",
         backgroundColor: "#ffffff",
       },
       userInterfaceStyle: "light",
@@ -63,7 +63,7 @@ export default {
       },
     },
     web: {
-      favicon: "./assets/appIcons/favicon.png",
+      favicon: "./assets/appIcons/logo.png",
       bundler: "metro",
     },
     plugins: [

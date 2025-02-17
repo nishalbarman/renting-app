@@ -7,7 +7,7 @@ const checkRole = (...allowedRoles) => {
     try {
       const token = req?.jwt?.token;
       if (!token) {
-        return res.redirect("/#login/login");
+        return res.redirect("/auth/login");
       }
 
       const userDetails = getTokenDetails(token);
